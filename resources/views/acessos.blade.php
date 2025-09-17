@@ -7,7 +7,7 @@
 
     <title>Under Armour</title>
     <!-- Favicon -->
-    <link rel="icon" href="/images/Favicon_Olympikus.png" type="image/png">
+    <link rel="icon" href="/images/Favicon_Under_Armour.png" type="image/png">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />

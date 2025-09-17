@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Under Armour' }}</title>
     <!-- Favicon -->
-    <link rel="icon" href="/images/Favicon_Olympikus.png" type="image/png">
+    <link rel="icon" href="/images/Favicon_Under_Armour.png" type="image/png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
