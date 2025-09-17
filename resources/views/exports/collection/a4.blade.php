@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo - {{ $name }}</title>
+
+    <style>
+        @page {
+            margin: 0px;
+        }
+
+        @font-face {
+            font-family: 'fkolympikus';
+            src: url("{{ public_path('fonts/FKOlympikus-Upright.ttf') }}") format('truetype');
+        }
+
+        body {
+            font-family: 'fkolympikus', sans-serif;
+            margin: 0px;
+        }
+
+        .font-fko {
+            font-family: 'fkolympikus', sans-serif;
+            font-size: 50px;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        .capa {
+            text-align: center;
+            padding-top: 30%;
+        }
+    </style>
+</head>
+
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif;">
+    <!-- CAPA -->
+    <div class="capa">
+
+        <h2>CAPA</h2>
+
+    </div>
+    <div class="page-break"></div>
+
+    <!-- TECNOLOGIAS -->
+    <div class="capa">
+
+        <h2>TECNOLOGIAS</h2>
+
+    </div>
+    <div class="page-break"></div>
+
+    <!-- CATEGORIAS -->
+    <div class="capa">
+
+        <h2>CATEGORIAS</h2>
+
+    </div>
+    <div class="page-break"></div>
+
+    @foreach ($collections as $collection)
+        @php
+            $image =
+                $collection->first()->product->code .
+                '_' .
+                str_replace('/', '_', $collection->first()->color_code) .
+                '.jpg';
+            //dd(public_path('images/produtos/' . $image));
+            $image = public_path('images/produtos/' . $image);
+            //$image = '/images/produtos/' . $image;
+        @endphp
+        <table cellspacing="2" width="100%" cellpadding="2">
+            <tr>
+                <td width="70%">
+                    <table cellspacing="0" width="100%" cellpadding="0">
+                        <tr>
+                            <td width="75%">
+                                <img src="{{ $image }}" alt="{{ $collection->first()->product->name }}"
+                                    style="width: 100%; object-fit: cover; border-radius: 8px 0 0 8px; border-top:1px solid #CCC; border-left:1px solid #CCC; border-bottom:1px solid #CCC;  ">
+                            </td>
+                            <td width="24.8%">
+                                @php
+                                    $suffixes = ['_A', '_B', '_C'];
+                                    $vista = 1;
+                                @endphp
+
+                                @foreach ($suffixes as $suffix)
+                                    @php
+                                        if ($suffix == '_A') {
+                                            $rounded = '0 8px 0 0';
+                                        } elseif ($suffix == '_B') {
+                                            $rounded = '0 0 0 0';
+                                        } else {
+                                            $rounded = '0 0 8px 0';
+                                        }
+                                        $imagePath = public_path(
+                                            '/images/produtos/' .
+                                                $collection->first()->product->code .
+                                                '_' .
+                                                str_replace('/', '_', $collection->first()->color_code) .
+                                                $suffix .
+                                                '.jpg',
+                                        );
+
+                                        /* $imagePath =
+                                            '/images/produtos/' .
+                                            $collection->first()->product->code .
+                                            '_' .
+                                            str_replace('/', '_', $collection->first()->color_code) .
+                                            $suffix .
+                                            '.jpg';*/
+
+                                    @endphp
+                                    <img src="{{ $imagePath }}" alt="Tênis"
+                                        style="width: 100%; object-fit: cover; border-radius: {{ $rounded }}; border:1px solid #CCC; border-spacing:0;">
+                                    @php $vista++; @endphp
+                                @endforeach
+                            </td>
+
+
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <table
+                                    style="width: 100%; margin: 0 auto;  border-radius: 8px; border:1px solid #CCC; margin-top:5px;">
+                                    <tr>
+                                        @foreach ($collection as $color)
+                                            <!-- Tênis {{ $vista }} -->
+                                            <td
+                                                style="width: 16.66%; padding: 10px; text-align: center; vertical-align: top;">
+                                                <div style="padding: 15px; position: relative;">
+                                                    @if ($color->flagProduct)
+                                                        <div
+                                                            style="position: absolute; top: 10px; left: 10px; background: {{ $color->flagProduct->flag_bg }}; color: {{ $color->flagProduct->flag_color_text_bg }}; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold;">
+                                                            {{ $color->flagProduct->flag_title }}
+                                                        </div>
+                                                    @endif
+                                                    <div style="margin-top: 30px; margin-bottom: 15px;">
+                                                        <img width="100px"
+                                                            src="{{ public_path('/images/produtos/' . $collection->first()->product->code . '_' . str_replace('/', '_', $color->color_code) . '.jpg') }}"
+                                                            alt="{{ $color->color_name }}"
+                                                            class="width: 100px; height: auto; border-radius: 8px;" />
+                                                    </div>
+                                                    <div
+                                                        style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 5px;">
+                                                        {{ $color->color_name }}</div>
+                                                    <div style="font-size: 12px; color: #666;">
+                                                        {{ $color->color_description }}</div>
+                                                </div>
+                                            </td>
+                                        @endforeach
+
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td width="30%" style="border-radius: 8px; border:1px solid #CCC; vertical-align: top;">
+                    <!-- Cabeçalho do produto -->
+                    <div style="padding:10px;">
+                        <div style="font-size: 17px; color: #000; margin-bottom: 5px;">Corrida
+                            @if (!$remove_code)
+                                <span
+                                    style="color: #000; opacity: 0.5;">{{ $collection->first()->product->code }}</span>
+                            @endif
+                        </div>
+                        <h1
+                            style="font-family: 'fkolympikus', sans-serif; font-weight: normal; margin: 0 0 15px 0; line-height: 1.2;">
+                            {{ $collection->first()->product->name }}</h1>
+
+                        <table width="100%">
+                            <tr>
+                                @if (!$remove_price)
+                                    <td
+                                        style="font-size: 12px; margin-bottom: 2px; vertical-align: top; padding-bottom: 10px;">
+                                        <div>
+                                            <div
+                                                style="font-size: 12px; color: #000; opacity: 0.5;  margin-bottom: 2px;">
+                                                PDV</div>
+                                            <div style="font-size: 17px; ">{{ $collection->first()->product->price }}
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                @endif
+
+                                @if ($collection->first()->product->caracteristicasDestaque)
+                                    @if ($collection->first()->product->caracteristicasDestaque->first())
+                                        @php $caracteristica = $collection->first()->product->caracteristicasDestaque->first() @endphp
+                                        <td style="font-size: 12px;  margin-bottom: 2px; padding-bottom: 10px;">
+                                            <div
+                                                style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">
+                                                {{ $caracteristica->title }}
+                                            </div>
+                                            <div style="font-size: 14px; ">{!! nl2br(e($caracteristica->description)) !!}</div>
+                                        </td>
+                                    @endif
+                                @endif
+                            </tr>
+
+                            @if ($collection->first()->product->caracteristicas)
+                                @foreach ($collection->first()->product->caracteristicas->chunk(2) as $caracteristicasChunk)
+                                    <tr>
+                                        @foreach ($caracteristicasChunk as $caract)
+                                            <td style="font-size: 12px; margin-bottom: 2px; padding-bottom: 10px;">
+                                                <div>
+                                                    <div style="color: #000; opacity: 0.5; margin-bottom: 2px;">
+                                                        {{ $caract->title }}</div>
+                                                    <div style="font-size: 14px;">{!! nl2br(e($caract->description)) !!}</div>
+                                                </div>
+                                            </td>
+                                        @endforeach
+                                        @if ($caracteristicasChunk->count() == 1)
+                                            <td style="font-size: 12px; margin-bottom: 2px; padding-bottom: 10px;"></td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            @endif
+
+                        </table>
+
+                    </div>
+
+                    <!-- Descrição -->
+                    <div style="padding: 0 10px 10px 10px;">
+                        <div style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">Descrição</div>
+                        <p style="font-size: 13px; line-height: 1.3; color: #000; margin: 0;">
+                            {{ $collection->first()->product->description }}
+                        </p>
+                    </div>
+
+                    <!-- Tecnologias -->
+                    <div style="padding: 0 10px 10px 10px; margin-top:20px">
+                        <div style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">Tecnologias</div>
+                    </div>
+
+                    @if (count($collection->first()->product->technologyItems) > 0)
+                        <div style="padding: 0 10px 10px 10px;">
+
+                            @foreach ($collection->first()->product->technologyItems->chunk(5) as $itemsChunk)
+                                <div style="overflow: hidden;">
+                                    @foreach ($itemsChunk as $item)
+                                        <div
+                                            style="float: left; width: calc(20% - 12.8px); margin-right: 16px; text-align: center;">
+                                            <div
+                                                style="width: 70px; height: 70px; background-color: black; border-radius: 8px; display: inline-block; position: relative; margin: 0 auto 8px auto;">
+                                                <img src="{{ public_path('/' . $item->icon) }}"
+                                                    style="width: 70px; height: 70px; object-fit: contain; border-radius: 10px;"
+                                                    alt="{{ $item->name }}" />
+                                            </div>
+                                            <p
+                                                style="font-size: 10px; color: black; opacity: 0.5; text-align: center; line-height: 1.25; margin: 0; min-height:30px;">
+                                                {{ $item->name }}
+                                            </p>
+                                        </div>
+                                    @endforeach
+                                    <div style="clear:both;"></div>
+                                </div>
+                            @endforeach
+
+                        </div>
+                    @endif
+
+                </td>
+            </tr>
+        </table>
+    @endforeach
+</body>
+
+</html>

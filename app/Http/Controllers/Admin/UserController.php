@@ -1,0 +1,160 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Mail\UserMailable;
+use App\Models\Collection;
+use App\Models\User;
+use App\Services\GmailOAuthMailer;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
+
+class UserController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $users = User::with('collection')->paginate(15);
+        return view('admin.users.index', compact('users'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $collections = Collection::where('active', true)->get();
+        return view('admin.users.create', compact('collections'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'type' => ['required', 'string', 'in:admin,user'],
+            'collection_id' => ['nullable', 'exists:collections,id'],
+            'company' => ['nullable', 'string', 'max:255'],
+            'setor' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'type' => $request->type,
+            'collection_id' => $request->collection_id,
+            'company' => $request->company,
+            'setor' => $request->setor,
+            'phone' => $request->phone,
+        ]);
+
+        // Send welcome email with access information
+        $this->sendEmailUser($user, $request->password);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Usuário criado com sucesso!');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(User $user)
+    {
+        $user->load('collection');
+        return view('admin.users.show', compact('user'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(User $user)
+    {
+        $collections = Collection::where('active', true)->get();
+        return view('admin.users.edit', compact('user', 'collections'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, User $user)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+            'type' => ['required', 'string', 'in:admin,user'],
+            'collection_id' => ['nullable', 'exists:collections,id'],
+            'company' => ['nullable', 'string', 'max:255'],
+            'setor' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $userData = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'type' => $request->type,
+            'collection_id' => $request->collection_id,
+            'company' => $request->company,
+            'setor' => $request->setor,
+            'phone' => $request->phone,
+        ];
+
+        // Only update password if provided
+        if ($request->filled('password')) {
+            $userData['password'] = Hash::make($request->password);
+        }
+
+        $user->update($userData);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Usuário atualizado com sucesso!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(User $user)
+    {
+        // Prevent deleting the current authenticated user
+        if ($user->id === Auth::id()) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Você não pode excluir seu próprio usuário!');
+        }
+
+        $user->delete();
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Usuário excluído com sucesso!');
+    }
+
+    /**
+     * Send welcome email to user.
+     */
+    public function sendEmailUser(User $user, $password = null)
+    {
+        $mailer = new GmailOAuthMailer();
+        $mailer->send(
+            $user->email,
+            $user->name,
+            'Bem-vindo ao sistema!',
+            'emails.user-cadastrado',
+            [
+                'name' => $user->name,
+                'email' => $user->email,
+                'password' => $password,
+                'type' => $user->type
+            ]
+        );
+    }
+}
