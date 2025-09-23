@@ -160,6 +160,9 @@ class WishlistController extends Controller
                 }]);
             }
         }
+
+
+
         return view('user.wishlist', compact('produtos', 'colecoes', 'categories', 'years', 'numeracao', 'tamanhos', 'flags'));
     }
 

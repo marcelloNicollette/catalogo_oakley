@@ -31,4 +31,21 @@ class Segmentacao extends Model
     {
         return $this->hasMany(Collection::class);
     }
+
+    /**
+     * Relacionamento many-to-many com usuários
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_segmentacao')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Relacionamento many-to-many com cores
+     */
+    public function colors()
+    {
+        return $this->belongsToMany(Color::class, 'color_segmentacao');
+    }
 }

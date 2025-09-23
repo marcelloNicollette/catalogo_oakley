@@ -92,8 +92,56 @@ class frontendController extends Controller
 
         return view('user.colecoes', ['colecoes' => $colecoes, 'years' => $data_years]);
     }
-    public function produtos($slug, $colecao)
+    // Nova função para recuperar selectedSegmentacoes do localStorage
+    public function getSelectedSegmentacoes(Request $request)
     {
+        $selectedSegmentacoes = $request->input('selected_segmentacoes', []);
+
+        if (empty($selectedSegmentacoes)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nenhuma segmentação selecionada encontrada',
+                'data' => []
+            ]);
+        }
+
+        // Buscar as segmentações selecionadas no banco
+        $segmentacoes = \App\Models\SegmentacaoCliente::whereIn('id', $selectedSegmentacoes)
+            ->where('active', true)
+            ->get(['id', 'nome', 'descricao']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Segmentações recuperadas com sucesso',
+            'data' => [
+                'selected_ids' => $selectedSegmentacoes,
+                'segmentacoes' => $segmentacoes,
+                'total' => count($selectedSegmentacoes)
+            ]
+        ]);
+    }
+
+    public function produtos($slug, $colecao, Request $request)
+    {
+        // Exemplo de como acessar selectedSegmentacoes do localStorage via JavaScript/AJAX:
+        // No frontend (JavaScript), você pode fazer:
+        // 
+        // const selectedSegmentacoes = JSON.parse(localStorage.getItem('selectedSegmentacoes') || '[]');
+        // 
+        // fetch('/user/api/selected-segmentacoes', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        //     },
+        //     body: JSON.stringify({ selected_segmentacoes: selectedSegmentacoes })
+        // })
+        // .then(response => response.json())
+        // .then(data => {
+        //     console.log('Segmentações registradas:', data.data.segmentacoes);
+        // });
+
+        //dd($this->getSelectedSegmentacoes($request));
         $segmentacao = Segmentacao::where('slug', $slug)->first();
         $colecoes = Collection::where('segmentacao_id', $segmentacao->id)->get();
         $categories = Category::where('segmento_id', $segmentacao->id)->get();
@@ -106,29 +154,84 @@ class frontendController extends Controller
             $query->where('collection_id', $colecao->id);
         })->get();
 
-        $produtos = Color::where('collection_id', $colecao->id)
-            ->with(['product', 'product.caracteristicasDestaque', 'product.category', 'flagProduct'])
-            ->get();
+        // Verificar se o usuário logado tem segmentações de cliente
+        $user = Auth::user();
+        $userSegmentacoesCliente = $user->segmentacoesCliente;
+
+        $produtosQuery = Color::where('collection_id', $colecao->id)
+            ->with(['product', 'product.caracteristicasDestaque', 'product.category', 'flagProduct', 'segmentacoesCliente']);
+
+        // Verificar se há segmentações selecionadas no request (vindas do modal)
+        $selectedSegmentacoes = $request->input('selected_segmentacoes');
+        //dd($selectedSegmentacoes);
+        if ($selectedSegmentacoes && is_array($selectedSegmentacoes) && count($selectedSegmentacoes) > 0) {
+            // Filtrar cores baseado nas segmentações selecionadas no modal
+            $produtosQuery->whereHas('segmentacoesCliente', function ($query) use ($selectedSegmentacoes) {
+                $query->whereIn('segmentacao_cliente_id', $selectedSegmentacoes);
+            });
+        } elseif ($userSegmentacoesCliente->count() > 0) {
+            // Se não há seleção específica, usar todas as segmentações do usuário
+            $segmentacaoClienteIds = $userSegmentacoesCliente->pluck('id');
+            $produtosQuery->whereHas('segmentacoesCliente', function ($query) use ($segmentacaoClienteIds) {
+                $query->whereIn('segmentacao_cliente_id', $segmentacaoClienteIds);
+            });
+        }
+
+        $produtos = $produtosQuery->get();
+        //dd($produtos->first()->segmentacoesCliente);
         //dd($produtos->first()->product);
 
         return view('user.produtos', ['colecoes' => $colecoes, 'colecao' => $colecao, 'produtos' => $produtos, 'categories' => $categories, 'numeracao' => $numeracao, 'tamanhos' => $tamanhos, 'flags' => $flags]);
     }
-    public function detalhe_produto($slug, $colecao, $produto)
+    public function detalhe_produto($slug, $colecao, $produto, $codigo_cor)
     {
         $segmentacao = Segmentacao::where('slug', $slug)->first();
         $colecoes = Collection::where('segmentacao_id', $segmentacao->id)->get();
         $categories = Category::where('segmento_id', $segmentacao->id)->get();
-        $produto = Product::where('slug', $produto)->with(['category', 'sizes', 'numeracoes', 'colors', 'caracteristicas', 'links', 'caracteristicasDestaque'])->first();
-        //dd($produto);
 
+        // Verificar se o usuário logado tem segmentações de cliente
+        $user = Auth::user();
+        $userSegmentacoesCliente = $user->segmentacoesCliente;
 
+        // Buscar o produto com suas relações
+        $produto = Product::where('slug', $produto)->with(['category', 'sizes', 'numeracoes', 'caracteristicas', 'links', 'caracteristicasDestaque', 'colors'])->first();
+
+        // Buscar apenas as cores do produto que estão vinculadas às segmentações do cliente
+        if ($userSegmentacoesCliente->isNotEmpty()) {
+            $allColorsQuery = Color::where('product_id', $produto->id)
+                ->whereHas('segmentacoesCliente', function ($query) use ($userSegmentacoesCliente) {
+                    $segmentacaoIds = $userSegmentacoesCliente->pluck('id')->toArray();
+                    $query->whereIn('segmentacao_cliente_id', $segmentacaoIds);
+                })
+                ->with(['segmentacoesCliente', 'flagProduct']);
+        } else {
+            // Se o usuário não tem segmentações de cliente, buscar todas as cores
+            $allColorsQuery = Color::where('product_id', $produto->id)
+                ->with(['segmentacoesCliente', 'flagProduct']);
+        }
+
+        // Se $codigo_cor foi fornecido, ordenar para que essa cor seja a primeira
+        if ($codigo_cor) {
+            $allColorsQuery->orderByRaw("CASE WHEN color_code = ? THEN 0 ELSE 1 END", str_replace('_', '/', $codigo_cor));
+        }
+
+        $allColors = $allColorsQuery->get();
+        //dd($allColors);
+        // Adicionar as cores com segmentações ao produto para uso no JavaScript
+        $produto->allColors = $allColors;
+        $produto->colors = $allColors; // Manter compatibilidade
+        //dd($produto->colors);
         $colecao = Collection::where('slug', $colecao)->first();
 
-        $produtos = Color::where('collection_id', $colecao->id)
-            ->with(['product', 'product.caracteristicasDestaque', 'product.category'])
-            ->get()
-            ->groupBy('product_id');
-        //dd($produtos);
+        $produtosQuery = Color::where('collection_id', $colecao->id)
+            ->with(['product', 'product.caracteristicasDestaque', 'product.category']);
+
+        // Se $codigo_cor foi fornecido, ordenar para que o produto com essa cor seja o primeiro
+        if ($codigo_cor) {
+            $produtosQuery->orderByRaw("CASE WHEN color_code = ? THEN 0 ELSE 1 END", [$codigo_cor]);
+        }
+
+        $produtos = $produtosQuery->get()->groupBy('product_id');
 
         return view('user.detalhe-produto', ['produto' => $produto]);
     }

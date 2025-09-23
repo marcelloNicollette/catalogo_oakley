@@ -36,8 +36,9 @@ class ProductController extends Controller
         $technologies = TechnologyCategory::where('active', true)->with('items')->get();
         $sizes = Size::where('active', true)->get();
         $numeracoes = Numeracao::where('active', true)->get();
+        $segmentacoesCliente = \App\Models\SegmentacaoCliente::where('active', true)->get();
 
-        return view('admin.products.create', compact('collections', 'categories', 'colors', 'flags', 'technologies', 'sizes', 'numeracoes'));
+        return view('admin.products.create', compact('collections', 'categories', 'colors', 'flags', 'technologies', 'sizes', 'numeracoes', 'segmentacoesCliente'));
     }
 
     public function show(Product $product)
@@ -81,6 +82,7 @@ class ProductController extends Controller
                 'codes' => $request->input('color_code', []),
                 'collections' => $request->input('color_collection_id', []),
                 'flags' => $request->input('color_flag_product_id', []),
+                'segmentacoes_cliente' => $request->input('color_segmentacoes_cliente', []),
             ]);
         }
 
@@ -127,18 +129,19 @@ class ProductController extends Controller
     {
         $collections = Collection::where('active', true)->get();
         $categories = Category::where('active', true)->get();
-        $colors = Color::where('product_id', $product->id)->get();
+        $colors = Color::where('product_id', $product->id)->with('segmentacoesCliente')->get();
         $caracteristicas = CaracteristicaProduct::where('product_id', $product->id)->get();
         $links = LinksProduct::where('product_id', $product->id)->get();
         $flags = FlagProduct::where('status', true)->get();
         $technologies = TechnologyCategory::where('active', true)->with('items')->get();
         $sizes = Size::where('active', true)->get();
         $numeracoes = Numeracao::where('active', true)->get();
+        $segmentacoesCliente = \App\Models\SegmentacaoCliente::where('active', true)->get();
 
         // Carregar relacionamentos de sizes e numeração do produto
         $product->load(['sizes', 'numeracoes']);
 
-        return view('admin.products.edit', compact('product', 'collections', 'categories', 'colors', 'caracteristicas', 'flags', 'technologies', 'links', 'sizes', 'numeracoes'));
+        return view('admin.products.edit', compact('product', 'collections', 'categories', 'colors', 'caracteristicas', 'flags', 'technologies', 'links', 'sizes', 'numeracoes', 'segmentacoesCliente'));
     }
 
     public function update(Request $request, Product $product)
@@ -177,6 +180,7 @@ class ProductController extends Controller
                 'codes' => $request->input('color_code', []),
                 'collections' => $request->input('color_collection_id', []),
                 'flags' => $request->input('color_flag_product_id', []),
+                'segmentacoes_cliente' => $request->input('color_segmentacoes_cliente', []),
             ]);
         }
 

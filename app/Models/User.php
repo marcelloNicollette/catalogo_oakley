@@ -60,4 +60,54 @@ class User extends Authenticatable
             ->where('color_code', $colorCode)
             ->exists();
     }
+
+    /**
+     * Relacionamento many-to-many com segmentações
+     */
+    public function segmentacoes()
+    {
+        return $this->belongsToMany(Segmentacao::class, 'user_segmentacao')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Verificar se o usuário tem acesso a uma segmentação específica
+     */
+    public function hasAccessToSegmentacao($segmentacaoId)
+    {
+        return $this->segmentacoes()->where('segmentacao_id', $segmentacaoId)->exists();
+    }
+
+    /**
+     * Verificar se o usuário tem acesso a uma segmentação por slug
+     */
+    public function hasAccessToSegmentacaoBySlug($slug)
+    {
+        return $this->segmentacoes()->where('slug', $slug)->exists();
+    }
+
+    /**
+     * Relacionamento many-to-many com segmentações de cliente
+     */
+    public function segmentacoesCliente()
+    {
+        return $this->belongsToMany(SegmentacaoCliente::class, 'user_segmentacao_cliente')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Verificar se o usuário tem acesso a uma segmentação de cliente específica
+     */
+    public function hasAccessToSegmentacaoCliente($segmentacaoClienteId)
+    {
+        return $this->segmentacoesCliente()->where('segmentacao_cliente_id', $segmentacaoClienteId)->exists();
+    }
+
+    /**
+     * Verificar se o usuário tem acesso a uma segmentação de cliente por slug
+     */
+    public function hasAccessToSegmentacaoClienteBySlug($slug)
+    {
+        return $this->segmentacoesCliente()->where('slug', $slug)->exists();
+    }
 }

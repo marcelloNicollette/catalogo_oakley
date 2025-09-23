@@ -57,6 +57,33 @@
                 border-bottom: 0;
                 transition: all 0.2s ease;
             }
+
+
+            @media (min-width: 1280px) {
+
+                #produtos {
+                    min-height: 75vh;
+                }
+            }
+
+            @media (min-width: 1400px) {
+
+                #produtos {
+                    min-height: 79vh;
+                }
+            }
+
+            @media (min-width: 2566px) {
+                #produtos {
+                    min-height: 88vh;
+                }
+            }
+
+            @media (min-width: 3000px) {
+                #produtos {
+                    min-height: 91vh;
+                }
+            }
         </style>
 
         <!-- Menu lateral -->
@@ -175,7 +202,7 @@
                 </div>
 
                 <!-- Direita: Busca e outros -->
-                <div class="flex flex-wrap gap-2 items-end justify-end">
+                <div class="flex lg:flex-wrap gap-2 items-end justify-end">
                     <div class="flex items-center border-b border-b-black px-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-black ml-1" viewBox="0 0 20 20"
                             fill="currentColor">
@@ -206,7 +233,7 @@
                             </div>
                         </div>
 
-                        <div class="filter-dropdown" id="filterDropdown">
+                        <div class="filter-dropdown" id="filterDropdown" style="width: 310px;">
                             <div class="filter-section">
                                 <label class="filter-label">Numeração</label>
                                 <div class="filter-options" id="yearOptions">
@@ -285,58 +312,57 @@
 
             <!-- Lista de Produtos -->
             <div id="produtos"
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 ml-4 p-2 bg-[#E6E6E6] h-[76vh] lg:h-[65vh] xl:h-[76vh] rounded-xl overflow-auto">
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 ml-4 p-2 bg-[#E6E6E6] h-[76vh] lg:h-[65vh] rounded-xl overflow-auto">
 
                 <!-- Template de Produto -->
                 <template id="template-produto">
-                    <!--<a href="" class="block">-->
-                    <div
-                        class="bg-white shadow-sm hover:shadow-md transition relative rounded-md h-[60vh] lg:h-[75vh] xl:h-[60vh]">
-                        <div class="badge-container pt-1 px-2" style="position:absolute; min-height: 35px;">
+                    <a href="" class="block">
+                        <div class="bg-white shadow-sm hover:shadow-md transition relative rounded-md">
+                            <div class="badge-container pt-1 px-2" style="position:absolute; min-height: 35px;">
 
-                        </div>
-                        <!-- Botão de Favoritos -->
-                        <div class="absolute top-2 right-2 z-10">
-                            <button class="favoriteBtn text-black hover:text-black transition-colors"
-                                data-product-id="" data-color-code="">
-                                <!-- Ícone Outline (vazio) -->
-                                <svg class="iconOutline w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg"
-                                    width="18" height="16" viewBox="0 0 18 16" fill="none">
-                                    <path
-                                        d="M0 5.26362C0 8.97604 3.23565 12.6275 8.34743 15.7647C8.53776 15.878 8.80967 16 9 16C9.19033 16 9.46224 15.878 9.66163 15.7647C14.7644 12.6275 18 8.97604 18 5.26362C18 2.17865 15.7976 0 12.861 0C11.1843 0 9.82477 0.766885 9 1.94336C8.19335 0.775599 6.81571 0 5.13897 0C2.20242 0 0 2.17865 0 5.26362ZM1.45921 5.26362C1.45921 2.94553 3.01813 1.40305 5.12085 1.40305C6.82477 1.40305 7.80363 2.42266 8.38369 3.29412C8.6284 3.6427 8.78248 3.73856 9 3.73856C9.21752 3.73856 9.35347 3.63399 9.61631 3.29412C10.2417 2.44009 11.1843 1.40305 12.8792 1.40305C14.9819 1.40305 16.5408 2.94553 16.5408 5.26362C16.5408 8.50545 12.9789 12 9.19033 14.4227C9.0997 14.4837 9.03625 14.5272 9 14.5272C8.96375 14.5272 8.9003 14.4837 8.81873 14.4227C5.02115 12 1.45921 8.50545 1.45921 5.26362Z"
-                                        fill="black" />
-                                </svg>
-                                <!-- Ícone Preenchido (solid) -->
-                                <svg class="iconFilled w-5 h-5 text-black" xmlns="http://www.w3.org/2000/svg"
-                                    width="18" height="16" viewBox="0 0 18 16" fill="none">
-                                    <path
-                                        d="M0 5.26362C0 8.97604 3.23565 12.6275 8.34743 15.7647C8.53776 15.878 8.80967 16 9 16C9.19033 16 9.46224 15.878 9.66163 15.7647C14.7643 12.6275 18 8.97604 18 5.26362C18 2.17865 15.7976 0 12.861 0C11.1843 0 9.82477 0.766885 9 1.94336C8.19335 0.775599 6.81571 0 5.13897 0C2.20242 0 0 2.17865 0 5.26362Z"
-                                        fill="black" />
-                                </svg>
-                            </button>
-                        </div>
-                        <img src="/images/tenis-1.jpg" alt="Tênis" class="w-full object-contain rounded-md" />
-                        <div class="px-4 pt-0 pb-2">
-                            <h2 class="title font-normal font-fko text-[28px] leading-[24px] pb-2"></h2>
-                            <p class="text-sm pb-2">
-                                <span class="categoria text-black "></span> <span
-                                    class="codigo text-black opacity-50"></span>
-                            </p>
-                            <div class="float-right mr-[25%]">
-                                <p class="text-black opacity-50 text-xs title-caract-1"></p>
-                                <p class="numeracao text-black text-xs desc-caract-1"></p>
                             </div>
-                            <p class="text-black opacity-50 text-xs">Cor</p>
-                            <p class="cor text-black text-xs pb-2"></p>
+                            <!-- Botão de Favoritos -->
+                            <div class="absolute top-2 right-2 z-10">
+                                <button class="favoriteBtn text-black hover:text-black transition-colors"
+                                    data-product-id="" data-color-code="">
+                                    <!-- Ícone Outline (vazio) -->
+                                    <svg class="iconOutline w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg"
+                                        width="18" height="16" viewBox="0 0 18 16" fill="none">
+                                        <path
+                                            d="M0 5.26362C0 8.97604 3.23565 12.6275 8.34743 15.7647C8.53776 15.878 8.80967 16 9 16C9.19033 16 9.46224 15.878 9.66163 15.7647C14.7644 12.6275 18 8.97604 18 5.26362C18 2.17865 15.7976 0 12.861 0C11.1843 0 9.82477 0.766885 9 1.94336C8.19335 0.775599 6.81571 0 5.13897 0C2.20242 0 0 2.17865 0 5.26362ZM1.45921 5.26362C1.45921 2.94553 3.01813 1.40305 5.12085 1.40305C6.82477 1.40305 7.80363 2.42266 8.38369 3.29412C8.6284 3.6427 8.78248 3.73856 9 3.73856C9.21752 3.73856 9.35347 3.63399 9.61631 3.29412C10.2417 2.44009 11.1843 1.40305 12.8792 1.40305C14.9819 1.40305 16.5408 2.94553 16.5408 5.26362C16.5408 8.50545 12.9789 12 9.19033 14.4227C9.0997 14.4837 9.03625 14.5272 9 14.5272C8.96375 14.5272 8.9003 14.4837 8.81873 14.4227C5.02115 12 1.45921 8.50545 1.45921 5.26362Z"
+                                            fill="black" />
+                                    </svg>
+                                    <!-- Ícone Preenchido (solid) -->
+                                    <svg class="iconFilled w-5 h-5 text-black" xmlns="http://www.w3.org/2000/svg"
+                                        width="18" height="16" viewBox="0 0 18 16" fill="none">
+                                        <path
+                                            d="M0 5.26362C0 8.97604 3.23565 12.6275 8.34743 15.7647C8.53776 15.878 8.80967 16 9 16C9.19033 16 9.46224 15.878 9.66163 15.7647C14.7643 12.6275 18 8.97604 18 5.26362C18 2.17865 15.7976 0 12.861 0C11.1843 0 9.82477 0.766885 9 1.94336C8.19335 0.775599 6.81571 0 5.13897 0C2.20242 0 0 2.17865 0 5.26362Z"
+                                            fill="black" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <img src="/images/tenis-1.jpg" alt="Tênis" class="w-full object-contain rounded-md" />
+                            <div class="px-4 pt-0 pb-2">
+                                <h2 class="title font-normal font-fko text-[28px] leading-[24px] pb-2"></h2>
+                                <p class="text-sm pb-2">
+                                    <span class="categoria text-black "></span> <span
+                                        class="codigo text-black opacity-50"></span>
+                                </p>
+                                <div class="float-right mr-[25%]">
+                                    <p class="text-black opacity-50 text-xs title-caract-1"></p>
+                                    <p class="numeracao text-black text-xs desc-caract-1"></p>
+                                </div>
+                                <p class="text-black opacity-50 text-xs">Cor</p>
+                                <p class="cor text-black text-xs pb-2"></p>
 
-                            <p class="text-black opacity-50 mt-1 text-xs title-caract-1">Coleção</p>
-                            <p class="text-base collection text-black"></p>
+                                <p class="text-black opacity-50 mt-1 text-xs title-caract-1">Coleção</p>
+                                <p class="text-base collection text-black"></p>
 
-                            <p class="text-black opacity-50 mt-1 text-xs title-caract-1">PDV</p>
-                            <p class="text-base preco text-black"></p>
+                                <p class="text-black opacity-50 mt-1 text-xs title-caract-1">PDV</p>
+                                <p class="text-base preco text-black"></p>
+                            </div>
                         </div>
-                    </div>
-                    <!--</a>-->
+                    </a>
                 </template>
             </div>
 
@@ -352,7 +378,6 @@
                 const produtosData = [
                     @foreach ($produtos as $produto)
                         @php
-
                             $img = '/images/produtos/' . $produto->product->code . '_' . str_replace('/', '_', $produto->color_code) . '.jpg';
                         @endphp {
                             id: "{{ $produto->product->id }}",
@@ -363,11 +388,14 @@
                             'title-caract-1': "{{ $produto->product->caracteristicasDestaque->first()->title ?? '' }}",
                             'desc-caract-1': "{{ $produto->product->caracteristicasDestaque->first()->description ?? '' }}",
                             cor: "{{ $produto->color->color_name }}",
+                            codigo_cor: "{{ str_replace('/', '_', $produto->color->color_code) }}",
                             numeracao: "34/44",
                             categoria: "{{ $produto->product->category->name }}",
                             preco: "R${{ number_format($produto->product->price, 2, ',', '.') }}",
                             slug: "{{ $produto->product->slug }}",
-                            collection: "{{ $produto->color->collection->codigo_colecao }}"
+                            slug_collection: "{{ $produto->color->collection->slug }}",
+                            collection: "{{ $produto->color->collection->codigo_colecao }}",
+                            segmento: "{{ $produto->product->category->segmentacao->slug }}",
                         },
                     @endforeach
                 ];
@@ -394,7 +422,9 @@
 
                     listaParaRenderizar.forEach((produto) => {
                         const clone = template.content.cloneNode(true);
-
+                        const link = clone.querySelector("a");
+                        link.href =
+                            `/user/${produto.segmento}/colecoes/${produto.slug_collection}/${produto.slug}/${produto.codigo_cor}`;
                         // Adicionar classe product-card ao div principal
                         const productDiv = clone.querySelector('div');
                         if (productDiv) {

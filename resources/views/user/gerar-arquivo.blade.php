@@ -1,5 +1,32 @@
 <x-layout-user title="Olympikus - Segmentação">
     <style>
+        @media (min-width: 1280px) {
+
+            .colecao-card {
+                height: 35vh;
+            }
+        }
+
+        @media (min-width: 2566px) {
+            .height-ultra {
+                height: 88vh;
+            }
+
+            .colecao-card {
+                height: 28vh;
+            }
+        }
+
+        @media (min-width: 3000px) {
+            .height-ultra {
+                height: 91vh;
+            }
+
+            .colecao-card {
+                height: 25vh;
+            }
+        }
+
         .option {
             padding: 8px 16px;
             font-size: 14px;
@@ -7,6 +34,11 @@
             cursor: pointer;
             border-bottom: 0;
             transition: all 0.2s ease;
+        }
+
+        .select-estilizado,
+        .input-estilizado {
+            border: 0px;
         }
     </style>
     <main class="lg:flex flex-1">
@@ -128,26 +160,27 @@
 
 
             <!-- Grid de Coleções -->
-            <div id="colecoes-grid"
-                class="bg-[#E6E6E6] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 p-2 overflow-auto h-[80vh]"
-                style="border-radius: 10px 0 0 0;">
-                <!-- Cards serão renderizados via JavaScript -->
+            <div class="bg-[#E6E6E6] h-[80vh] xl:h-[90vh] ml-4 p-2 rounded-lg  overflow-auto">
+                <div id="colecoes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3"
+                    style="border-radius: 10px 0 0 0;">
+                    <!-- Cards serão renderizados via JavaScript -->
+                </div>
             </div>
+
 
             <!-- Template para os cards de coleções -->
             <template id="template-colecoes">
-                <div class="colecao-card relative h-[100%] rounded overflow-hidden cursor-pointer" data-id=""
-                    data-codigo="" data-name="" data-description="" data-slug="" data-segmentacao-id=""
+                <div class="colecao-card relative rounded overflow-hidden cursor-pointer" data-codigo=""
+                    data-name="" data-description="" data-slug="" data-segmentacao-id=""
                     onclick="openHistoryModalWithCollection(this.dataset.name, this)">
-                    <div class="overlay absolute inset-0 bg-black bg-opacity-40" style="display: none;"></div>
+                    <div class="overlay absolute inset-0 bg-black bg-opacity-40 " style="display: none;"></div>
                     <div
-                        class="absolute inset-0 flex flex-col justify-center items-center text-white p-6 gap-10 mt-10">
+                        class="absolute inset-0 flex flex-col justify-center items-center text-white p-6 gap-10 mt-10 hover:opacity-70">
                         <h2 class="text-7xl font-normal mb-2 codigo font-fko"></h2>
                         <p class="text-lg opacity-90 description uppercase"></p>
                     </div>
                 </div>
             </template>
-
 
             <x-gerar-arquivo-modal />
 
@@ -230,7 +263,36 @@
                     description.textContent = colecao.description || '';
 
                     grid.appendChild(clone);
+
                 });
+
+                // Verificar se há menos de 12 registros e criar boxes vazios
+                const totalRegistros = colecoesToRender.length;
+                if (totalRegistros < 12) {
+                    const boxesVazios = 12 - totalRegistros;
+
+                    for (let i = 0; i < boxesVazios; i++) {
+                        const clone = template.content.cloneNode(true);
+                        const card = clone.querySelector('.colecao-card');
+                        const overlay = clone.querySelector('.overlay');
+                        const codigo = clone.querySelector('.codigo');
+                        const description = clone.querySelector('.description');
+
+                        // Configurar box vazio
+                        card.style.backgroundColor = '#CFCFCF';
+                        card.style.backgroundImage = 'none';
+                        overlay.style.display = 'none';
+
+                        // Remover conteúdo
+                        codigo.textContent = '';
+                        description.textContent = '';
+
+                        // Remover evento de clique
+                        card.style.cursor = 'default';
+
+                        grid.appendChild(clone);
+                    }
+                }
             }
 
             // Função de busca

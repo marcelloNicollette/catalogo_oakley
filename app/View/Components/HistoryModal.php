@@ -18,7 +18,10 @@ class HistoryModal extends Component
     public function __construct()
     {
         if (Auth::check()) {
-            $this->exportUsers = ExportUser::where('user_id', Auth::user()->id)->get();
+            $this->exportUsers = ExportUser::where('user_id', Auth::user()->id)
+                ->with(['collection', 'user'])
+                ->orderBy('created_at', 'desc')
+                ->get();
         } else {
             $this->exportUsers = collect(); // Coleção vazia se não autenticado
         }

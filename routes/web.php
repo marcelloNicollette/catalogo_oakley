@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ConteudoCategoryController as AdminConteudoCatego
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SegmentacaoController;
+use App\Http\Controllers\Admin\SegmentacaoClienteController;
 use App\Http\Controllers\Admin\TechnologyCategoryController;
 use App\Http\Controllers\Admin\TechnologyItemController;
 use App\Http\Controllers\Admin\FlagProductController;
@@ -76,14 +77,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
             'update' => 'admin.banners.update',
             'destroy' => 'admin.banners.destroy'
         ]);
-    Route::resource('/admin/segmentacao', SegmentacaoController::class)
+    Route::resource('/admin/segmento', SegmentacaoController::class)
         ->names([
-            'index' => 'admin.segmentacao.index',
-            'create' => 'admin.segmentacao.create',
-            'store' => 'admin.segmentacao.store',
-            'edit' => 'admin.segmentacao.edit',
-            'update' => 'admin.segmentacao.update',
-            'destroy' => 'admin.segmentacao.destroy'
+            'index' => 'admin.segmento.index',
+            'create' => 'admin.segmento.create',
+            'store' => 'admin.segmento.store',
+            'edit' => 'admin.segmento.edit',
+            'update' => 'admin.segmento.update',
+            'destroy' => 'admin.segmento.destroy'
         ]);
     Route::resource('/admin/categories', CategoryController::class)
         ->names([
@@ -204,6 +205,17 @@ Route::middleware(['auth', 'admin'])->group(function () {
             'update' => 'admin.users.update',
             'destroy' => 'admin.users.destroy'
         ]);
+
+    Route::resource('/admin/segmentacao-cliente', SegmentacaoClienteController::class)
+        ->names([
+            'index' => 'admin.segmentacao-cliente.index',
+            'create' => 'admin.segmentacao-cliente.create',
+            'store' => 'admin.segmentacao-cliente.store',
+            'show' => 'admin.segmentacao-cliente.show',
+            'edit' => 'admin.segmentacao-cliente.edit',
+            'update' => 'admin.segmentacao-cliente.update',
+            'destroy' => 'admin.segmentacao-cliente.destroy'
+        ]);
 });
 
 Route::middleware(['auth', 'user'])->group(function () {
@@ -215,6 +227,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/user/conta', [frontendController::class, 'conta'])->name('user.conta');
     Route::post('/user/conta/update', [frontendController::class, 'updateUser'])->name('user.conta.update');
     Route::post('/user/conta/update-password', [frontendController::class, 'updatePassword'])->name('user.conta.update-password');
+
 
     Route::get('/user/{slug}', [frontendController::class, 'slug'])
         ->name('user.slug');
@@ -230,13 +243,14 @@ Route::middleware(['auth', 'user'])->group(function () {
         ->name('user.slug.colecoes');
     Route::get('/user/{slug}/colecoes/{colecao}', [frontendController::class, 'produtos'])
         ->name('user.colecao');
-    Route::get('/user/{slug}/colecoes/{colecao}/{produto}', [frontendController::class, 'detalhe_produto'])
+    Route::get('/user/{slug}/colecoes/{colecao}/{produto}/{codigo_cor}', [frontendController::class, 'detalhe_produto'])
         ->name('user.colecao.produto');
 
     // Export routes
     Route::post('/user/export/pdf', [ExportController::class, 'exportPdf'])->name('user.export.pdf');
     Route::get('/user/exports', [ExportController::class, 'index'])->name('exports.index');
     Route::get('/user/exports/{exportUser}', [ExportController::class, 'show'])->name('exports.show');
+    Route::get('/user/exports/{exportUser}/regenerate', [ExportController::class, 'regeneratePdf'])->name('exports.regenerate');
     Route::delete('/user/exports/{exportUser}', [ExportController::class, 'destroy'])->name('exports.destroy');
 
     // Wishlist routes
@@ -248,7 +262,10 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     // AJAX routes
     Route::get('/user/api/produtos-por-categoria', [frontendController::class, 'getProdutosPorCategoria'])->name('user.api.produtos-categoria');
-    
+    Route::post('/user/api/selected-segmentacoes', [frontendController::class, 'getSelectedSegmentacoes'])->name('user.api.selected-segmentacoes');
+
+
+
     // Suggestions routes
     Route::post('/suggestions', [\App\Http\Controllers\SuggestionController::class, 'store'])->name('suggestions.store');
 });

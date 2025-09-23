@@ -1,5 +1,12 @@
-<x-layout-user title="Olympikus - Segmentação">
+<x-layout-user title="Under Armour - Coleções">
     <style>
+        @media (min-width: 1280px) {
+
+            .colecao-card {
+                height: 35vh;
+            }
+        }
+
         @media (min-width: 2566px) {
             .height-ultra {
                 height: 88vh;
@@ -150,7 +157,7 @@
 
             <!-- Template para os cards de coleções -->
             <template id="template-colecoes">
-                <div class="colecao-card relative h-[32vh] ultra:h-[25vh] rounded overflow-hidden cursor-pointer"
+                <div class="colecao-card relative h-[32vh] xl:h-[25vh] rounded overflow-hidden cursor-pointer"
                     data-codigo="" data-name="" data-description="" data-slug="">
                     <div class="overlay absolute inset-0 bg-black bg-opacity-40 " style="display: none;"></div>
                     <div

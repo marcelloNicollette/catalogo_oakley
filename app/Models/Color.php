@@ -35,4 +35,13 @@ class Color extends Model
     {
         return $this->belongsTo(FlagProduct::class);
     }
+
+    /**
+     * Relacionamento many-to-many com segmentações de cliente
+     */
+    public function segmentacoesCliente()
+    {
+        return $this->belongsToMany(SegmentacaoCliente::class, 'color_segmentacao_cliente')
+                    ->withTimestamps();
+    }
 }

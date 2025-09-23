@@ -26,7 +26,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('collections', function (Blueprint $table) {
-            $table->dropColumn(['new_column1', 'new_column2', 'is_active']);
+            $table->dropColumn(['description', 'bg_color', 'codigo_colecao', 'image']);
         });
     }
 };

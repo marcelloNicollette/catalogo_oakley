@@ -54,7 +54,7 @@ class Product extends Model
 
     public function colors()
     {
-        return $this->hasMany(Color::class, 'product_id')->with(['collection', 'flagProduct']);
+        return $this->hasMany(Color::class, 'product_id')->with(['collection', 'flagProduct', 'segmentacoesCliente']);
     }
 
     public function caracteristicas()
@@ -90,12 +90,12 @@ class Product extends Model
     public function getTechnologyItemsAttribute()
     {
         $ids = json_decode($this->technologies, true);
-        
+
         // Verificar se $ids é um array válido e não está vazio
         if (!is_array($ids) || empty($ids)) {
             return collect(); // Retorna uma coleção vazia
         }
-        
+
         return TechnologyItem::whereIn('id', $ids)->get();
     }
 
@@ -103,7 +103,7 @@ class Product extends Model
     public function addColors(array $colorData): void
     {
         foreach ($colorData['names'] as $index => $name) {
-            $this->colors()->create([
+            $color = $this->colors()->create([
                 'color_name' => $name,
                 'color_description' => $colorData['descriptions'][$index] ?? null,
                 'color_code' => $colorData['codes'][$index] ?? null,
@@ -112,6 +112,11 @@ class Product extends Model
                 'is_new' => false,
                 'active' => true,
             ]);
+
+            // Sincronizar segmentações de cliente se fornecidas
+            if (isset($colorData['segmentacoes_cliente'][$index]) && is_array($colorData['segmentacoes_cliente'][$index])) {
+                $color->segmentacoesCliente()->sync($colorData['segmentacoes_cliente'][$index]);
+            }
         }
     }
 
@@ -143,7 +148,7 @@ class Product extends Model
         $this->colors()->delete();
 
         foreach ($colorData['names'] as $index => $name) {
-            $this->colors()->create([
+            $color = $this->colors()->create([
                 'color_name' => $name,
                 'color_description' => $colorData['descriptions'][$index] ?? null,
                 'color_code' => $colorData['codes'][$index] ?? null,
@@ -152,6 +157,11 @@ class Product extends Model
                 'is_new' => false,
                 'active' => true,
             ]);
+
+            // Sincronizar segmentações de cliente se fornecidas
+            if (isset($colorData['segmentacoes_cliente'][$index]) && is_array($colorData['segmentacoes_cliente'][$index])) {
+                $color->segmentacoesCliente()->sync($colorData['segmentacoes_cliente'][$index]);
+            }
         }
 
         ProductColorsSynced::dispatch($this);

@@ -1,4 +1,4 @@
-<x-layout-user-produto title="Olympikus - Segmentação">
+<x-layout-user title="Under Armour - Produtos">
     <main class="lg:flex flex-1 produtos-page">
         <style>
             .badge-icon-wrapper .badge-tooltip {
@@ -23,6 +23,32 @@
                 visibility: visible;
                 opacity: 1;
             }
+
+            @media (min-width: 1280px) {
+
+                #produtos {
+                    min-height: 75vh;
+                }
+            }
+
+            @media (min-width: 1280px) {
+
+                #produtos {
+                    min-height: 80vh;
+                }
+            }
+
+            @media (min-width: 2566px) {
+                #produtos {
+                    min-height: 88vh;
+                }
+            }
+
+            @media (min-width: 3000px) {
+                #produtos {
+                    min-height: 91vh;
+                }
+            }
         </style>
         <!-- Conteúdo principal -->
         <section class="flex-1 flex flex-col overflow-hidden">
@@ -43,7 +69,7 @@
             @endphp
             <!-- Filtros superiores -->
             <div
-                class="fixed top-16 left-0 right-0 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 px-[10px] bg-[#F1F1F1] z-50">
+                class="fixed top-[70px] left-0 right-0 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 px-[10px] bg-[#F1F1F1] z-10">
                 <!-- Esquerda: Coleção e Categoria -->
                 <div class="flex gap-2">
                     <div class="select-container">
@@ -173,7 +199,7 @@
                             </div>
                         </div>
 
-                        <div class="filter-dropdown" id="filterDropdown">
+                        <div class="filter-dropdown" style="width: 310px;" id="filterDropdown">
                             <div class="filter-section">
                                 <label class="filter-label">Numeração</label>
                                 <div class="filter-options" id="numeracaoOptions">
@@ -253,34 +279,46 @@
 
             <!-- Lista de Produtos -->
             <div id="produtos"
-                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[10px] p-1 bg-[#E6E6E6] lg:p-[10px] min-h-[81vh] mt-72 lg:mt-[9.3rem]">
-                <!-- Template de Produto -->
-                <template id="template-produto">
-                    <a href="" class="block">
-                        <div class="bg-white shadow-sm hover:shadow-md transition relative rounded-md">
-                            <div class="badge-container pt-1 px-2" style="position:absolute; min-height: 35px;">
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[10px] p-1 bg-[#E6E6E6] lg:p-[10px] min-h-[80vh] xl:min-h-[88vh] ultra:min-h-[88vh] mt-72 lg:mt-[4.8rem] overflow-auto h-[0vh]">
 
-                            </div>
-                            <img src="/images/tenis-1.jpg" alt="Tênis" class="w-full object-contain rounded-md" />
-                            <div class="px-4 pt-0 pb-2">
-                                <h2 class="title font-normal font-fko text-[28px] leading-[24px] pb-2"></h2>
-                                <p class="text-sm pb-2">
-                                    <span class="categoria text-black "></span> <span
-                                        class="codigo text-black opacity-50"></span>
-                                </p>
-                                <div class="float-right mr-[25%]">
-                                    <p class="text-black opacity-50 text-xs title-caract-1"></p>
-                                    <p class="numeracao text-black text-xs desc-caract-1"></p>
-                                </div>
-                                <p class="text-black opacity-50 text-xs">Cor</p>
-                                <p class="cor text-black text-xs pb-2"></p>
-
-                                <p class="text-black opacity-50 mt-1 text-xs title-caract-1">PDV</p>
-                                <p class="text-base preco text-black"></p>
-                            </div>
+                @if (empty($produtos) || count($produtos) == 0)
+                    <!-- Mensagem quando não há produtos -->
+                    <div class="col-span-full flex items-center justify-center h-[100vh]">
+                        <div class="text-center">
+                            <p class="text-gray-600 text-xl font-medium">Nenhum produto disponível</p>
                         </div>
-                    </a>
-                </template>
+                    </div>
+                @else
+                    <!-- Template de Produto -->
+                    <template id="template-produto">
+                        <a href="" class="block">
+                            <div
+                                class="bg-white hover:shadow-md transition relative rounded-md border border-[#DEDEDE]">
+                                <div class="badge-container pt-1 px-2" style="position:absolute; min-height: 35px;">
+
+                                </div>
+                                <img src="/images/tenis-1.jpg" alt="Tênis"
+                                    class="w-full object-contain rounded-md" />
+                                <div class="px-4 pt-0 pb-2">
+                                    <h2 class="title font-normal font-fko text-[28px] leading-[24px] pb-2"></h2>
+                                    <p class="text-sm pb-2">
+                                        <span class="categoria text-black "></span> <span
+                                            class="codigo text-black opacity-50"></span>
+                                    </p>
+                                    <div class="float-right mr-[25%]">
+                                        <p class="text-black opacity-50 text-xs title-caract-1"></p>
+                                        <p class="numeracao text-black text-xs desc-caract-1"></p>
+                                    </div>
+                                    <p class="text-black opacity-50 text-xs">Cor</p>
+                                    <p class="cor text-black text-xs pb-2"></p>
+
+                                    <p class="text-black opacity-50 mt-1 text-xs title-caract-1">PDV</p>
+                                    <p class="text-base preco text-black"></p>
+                                </div>
+                            </div>
+                        </a>
+                    </template>
+                @endif
             </div>
 
 
@@ -292,37 +330,43 @@
     @push('scripts')
         <script>
             const produtosData = [
-                @foreach ($produtos as $produtoGroup)
-                    @php
-                        $img = '/images/produtos/' . $produtoGroup->product->code . '_' . str_replace('/', '_', $produtoGroup->color_code) . '.jpg';
-                        $produto = $produtoGroup->product;
-                        $numeracaoIds = $produto->numeracoes->pluck('id')->toArray();
-                        $tamanhoIds = $produto->sizes->pluck('id')->toArray();
-                        $precoNumerico = $produto->price;
-                        $classificacaoId = $produtoGroup->flagProduct ? $produtoGroup->flagProduct->id : null;
-                    @endphp {
-                        title: "{{ $produto->name }}",
-                        imagem: "{{ $img }}",
-                        codigo: "{{ $produto->code }}",
-                        'title-caract-1': "{{ $produto->caracteristicasDestaque->first()->title ?? '' }}",
-                        'desc-caract-1': "{{ $produto->caracteristicasDestaque->first()->description ?? '' }}",
-                        cor: "{{ $produtoGroup->color_name }}",
-                        codigo_cor: "{{ str_replace('/', '_', $produtoGroup->color_code) }}",
-                        numeracao: "34/44",
-                        categoria: "{{ $produto->category->name }}",
-                        preco: "R${{ number_format($precoNumerico, 2, ',', '.') }}",
-                        precoNumerico: {{ $precoNumerico }},
-                        numeracaoIds: @json($numeracaoIds),
-                        tamanhoIds: @json($tamanhoIds),
-                        classificacaoId: {{ $classificacaoId ?? 'null' }},
-                        badge_title: "{{ $produtoGroup->flagProduct->flag_title ?? '' }}",
-                        badge_icon: "{{ $produtoGroup->flagProduct->icon ?? '' }}",
-                        badge_bg: "{{ $produtoGroup->flagProduct->flag_bg ?? '' }}",
-                        badge_color: "{{ $produtoGroup->flagProduct->flag_color_text_bg ?? '' }}",
-                        badge_icon_align: "{{ $produtoGroup->flagProduct->alinhamento ?? '' }}",
-                        slug: "{{ $produto->slug }}"
-                    },
-                @endforeach
+                @if (!empty($produtos) && count($produtos) > 0)
+                    @foreach ($produtos as $produtoGroup)
+                        @php
+                            $imgPath = '/images/produtos/' . $produtoGroup->product->code . '_' . str_replace('/', '_', $produtoGroup->color_code) . '.jpg';
+                            $imgFullPath = public_path($imgPath);
+                            $img = file_exists($imgFullPath) ? $imgPath : '/images/img-padrao-oly.png';
+                            $produto = $produtoGroup->product;
+                            $numeracaoIds = $produto->numeracoes->pluck('id')->toArray();
+                            $tamanhoIds = $produto->sizes->pluck('id')->toArray();
+                            $precoNumerico = $produto->price;
+                            $classificacaoId = $produtoGroup->flagProduct ? $produtoGroup->flagProduct->id : null;
+                            $segmentacaoIds = $produtoGroup->segmentacoesCliente->pluck('id')->toArray();
+                        @endphp {
+                            title: "{{ $produto->name }}",
+                            imagem: "{{ $img }}",
+                            codigo: "{{ $produto->code }}",
+                            'title-caract-1': "{{ $produto->caracteristicasDestaque->first()->title ?? '' }}",
+                            'desc-caract-1': "{{ $produto->caracteristicasDestaque->first()->description ?? '' }}",
+                            cor: "{{ $produtoGroup->color_name }}",
+                            codigo_cor: "{{ str_replace('/', '_', $produtoGroup->color_code) }}",
+                            numeracao: "34/44",
+                            categoria: "{{ $produto->category->name }}",
+                            preco: "R${{ number_format($precoNumerico, 2, ',', '.') }}",
+                            precoNumerico: {{ $precoNumerico }},
+                            numeracaoIds: @json($numeracaoIds),
+                            tamanhoIds: @json($tamanhoIds),
+                            classificacaoId: {{ $classificacaoId ?? 'null' }},
+                            segmentacaoIds: @json($segmentacaoIds),
+                            badge_title: "{{ $produtoGroup->flagProduct->flag_title ?? '' }}",
+                            badge_icon: "{{ $produtoGroup->flagProduct->icon ?? '' }}",
+                            badge_bg: "{{ $produtoGroup->flagProduct->flag_bg ?? '' }}",
+                            badge_color: "{{ $produtoGroup->flagProduct->flag_color_text_bg ?? '' }}",
+                            badge_icon_align: "{{ $produtoGroup->flagProduct->alinhamento ?? '' }}",
+                            slug: "{{ $produto->slug }}"
+                        },
+                    @endforeach
+                @endif
             ];
 
             const produtosContainer = document.getElementById("produtos");
@@ -333,7 +377,21 @@
             let selectedCategory = '';
 
             function renderProdutos(produtos, agrupado = false) {
-                produtosContainer.innerHTML = "";
+
+                if (!produtos || produtos.length == 0) {
+                    // Mensagem quando não há produtos
+                    produtosContainer.innerHTML = `
+                        <div class="col-span-full flex items-center justify-center h-[70vh]">
+                            <div class="text-center">
+                                <p class="text-gray-600 text-xl font-medium">Nenhum produto disponível</p>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                } else {
+                    produtosContainer.innerHTML = "";
+                }
+
                 let listaParaRenderizar = [];
 
                 if (agrupado) {
@@ -351,7 +409,7 @@
                 listaParaRenderizar.forEach((produto) => {
                     const clone = template.content.cloneNode(true);
                     const link = clone.querySelector("a");
-                    link.href = `{{ $currentSlug }}/${produto.slug}`;
+                    link.href = `{{ $currentSlug }}/${produto.slug}/${produto.codigo_cor}`;
                     clone.querySelector("img").src = produto.imagem;
                     clone.querySelector("h2").textContent = produto.title;
                     clone.querySelector(".codigo").textContent = produto.codigo;
@@ -450,6 +508,18 @@
                         const matchesClassificacao = selectedFilters.classification.length === 0 ||
                             (p.classificacaoId && selectedFilters.classification.includes(p.classificacaoId.toString()));
 
+                        // Filtro por segmentações do localStorage
+                        let matchesSegmentacao = true;
+                        try {
+                            const selectedSegmentacoes = JSON.parse(localStorage.getItem('selectedSegmentacoes') || '[]');
+                            if (selectedSegmentacoes.length > 0) {
+                                matchesSegmentacao = selectedSegmentacoes.some(segId => p.segmentacaoIds.includes(parseInt(
+                                    segId)));
+                            }
+                        } catch (e) {
+                            console.error('Erro ao processar segmentações do localStorage:', e);
+                        }
+
                         // Filtro por preço
                         let matchesPreco = true;
                         if (selectedFilters.priceMin !== null && selectedFilters.priceMin !== '') {
@@ -462,7 +532,7 @@
                         }
 
                         return matchesTermo && matchesCategoria && matchesNumeracao &&
-                            matchesTamanho && matchesClassificacao && matchesPreco;
+                            matchesTamanho && matchesClassificacao && matchesSegmentacao && matchesPreco;
                     }
                 );
             }
@@ -476,6 +546,24 @@
             }
 
             renderProdutos(produtosData, false);
+
+            // Listener para mudanças no localStorage das segmentações
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'selectedSegmentacoes') {
+                    console.log('Segmentações alteradas no localStorage, reaplicando filtros...');
+                    aplicarFiltros();
+                }
+            });
+
+            // Listener customizado para mudanças na mesma aba
+            let originalSetItem = localStorage.setItem;
+            localStorage.setItem = function(key, value) {
+                originalSetItem.apply(this, arguments);
+                if (key === 'selectedSegmentacoes') {
+                    console.log('Segmentações alteradas na mesma aba, reaplicando filtros...');
+                    aplicarFiltros();
+                }
+            };
 
             // Coleção dropdown
             const colecaoSelectButton = document.getElementById('colecaoSelectButton');
@@ -921,4 +1009,4 @@
         </script>
     @endpush
 
-</x-layout-user-produto>
+</x-layout-user>

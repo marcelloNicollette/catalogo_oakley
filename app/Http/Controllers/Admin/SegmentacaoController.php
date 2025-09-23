@@ -48,16 +48,16 @@ class SegmentacaoController extends Controller
         //dd($validated);
         Segmentacao::create($validated);
 
-        return redirect()->route('admin.segmentacao.index')
+        return redirect()->route('admin.segmento.index')
             ->with('success', 'Segmento criada com sucesso.');
     }
 
-    public function edit(Segmentacao $segmentacao)
+    public function edit(Segmentacao $segmento)
     {
-        return view('admin.segmentacao.edit', compact('segmentacao'));
+        return view('admin.segmentacao.edit', compact('segmento'));
     }
 
-    public function update(Request $request, Segmentacao $segmentacao)
+    public function update(Request $request, Segmentacao $segmento)
     {
         $validated = $request->validate([
             'segmento' => 'required|max:255',
@@ -81,17 +81,17 @@ class SegmentacaoController extends Controller
             $validated['image_mobile'] = 'images/segmentacao/' . $imageNameMobile;
         }
 
-        $segmentacao->update($validated);
+        $segmento->update($validated);
 
-        return redirect()->route('admin.segmentacao.index')
+        return redirect()->route('admin.segmento.index')
             ->with('success', 'Segmento atualizada com sucesso.');
     }
 
-    public function destroy(Segmentacao $segmentacao)
+    public function destroy(Segmentacao $segmento)
     {
-        $segmentacao->delete();
+        $segmento->delete();
 
-        return redirect()->route('admin.segmentacao.index')
+        return redirect()->route('admin.segmento.index')
             ->with('success', 'Segmento removida com sucesso.');
     }
 }

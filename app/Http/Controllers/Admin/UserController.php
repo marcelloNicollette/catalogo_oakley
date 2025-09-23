@@ -29,7 +29,8 @@ class UserController extends Controller
     public function create()
     {
         $collections = Collection::where('active', true)->get();
-        return view('admin.users.create', compact('collections'));
+        $segmentacoesCliente = \App\Models\SegmentacaoCliente::where('active', true)->get();
+        return view('admin.users.create', compact('collections', 'segmentacoesCliente'));
     }
 
     /**
@@ -46,6 +47,8 @@ class UserController extends Controller
             'company' => ['nullable', 'string', 'max:255'],
             'setor' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
+            'segmentacoes_cliente' => ['nullable', 'array'],
+            'segmentacoes_cliente.*' => ['exists:segmentacao_cliente,id'],
         ]);
 
         $user = User::create([
@@ -58,6 +61,11 @@ class UserController extends Controller
             'setor' => $request->setor,
             'phone' => $request->phone,
         ]);
+
+        // Sincronizar segmentações de cliente
+        if ($request->has('segmentacoes_cliente')) {
+            $user->segmentacoesCliente()->sync($request->segmentacoes_cliente);
+        }
 
         // Send welcome email with access information
         $this->sendEmailUser($user, $request->password);
@@ -81,7 +89,9 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $collections = Collection::where('active', true)->get();
-        return view('admin.users.edit', compact('user', 'collections'));
+        $segmentacoesCliente = \App\Models\SegmentacaoCliente::where('active', true)->get();
+        $user->load('segmentacoesCliente');
+        return view('admin.users.edit', compact('user', 'collections', 'segmentacoesCliente'));
     }
 
     /**
@@ -98,6 +108,8 @@ class UserController extends Controller
             'company' => ['nullable', 'string', 'max:255'],
             'setor' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
+            'segmentacoes_cliente' => ['nullable', 'array'],
+            'segmentacoes_cliente.*' => ['exists:segmentacao_cliente,id'],
         ]);
 
         $userData = [
@@ -116,6 +128,14 @@ class UserController extends Controller
         }
 
         $user->update($userData);
+
+        // Sincronizar segmentações de cliente
+        if ($request->has('segmentacoes_cliente')) {
+            $user->segmentacoesCliente()->sync($request->segmentacoes_cliente);
+        } else {
+            // Se não há segmentações de cliente selecionadas, remove todas
+            $user->segmentacoesCliente()->detach();
+        }
 
         return redirect()->route('admin.users.index')
             ->with('success', 'Usuário atualizado com sucesso!');

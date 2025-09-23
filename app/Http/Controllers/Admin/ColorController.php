@@ -16,7 +16,8 @@ class ColorController extends Controller
 
     public function create()
     {
-        return view('admin.colors.create');
+        $segmentacoesCliente = \App\Models\SegmentacaoCliente::where('active', true)->get();
+        return view('admin.colors.create', compact('segmentacoesCliente'));
     }
 
     public function store(Request $request)
@@ -24,10 +25,17 @@ class ColorController extends Controller
         $validated = $request->validate([
             'name' => 'required|max:255',
             'code' => 'required|max:7',
-            'active' => 'boolean'
+            'active' => 'boolean',
+            'segmentacoes_cliente' => 'nullable|array',
+            'segmentacoes_cliente.*' => 'exists:segmentacao_cliente,id'
         ]);
 
-        Color::create($validated);
+        $color = Color::create($validated);
+
+        // Sincronizar segmentações de cliente
+        if ($request->has('segmentacoes_cliente')) {
+            $color->segmentacoesCliente()->sync($request->segmentacoes_cliente);
+        }
 
         return redirect()->route('admin.colors.index')
             ->with('success', 'Cor criada com sucesso.');
@@ -35,7 +43,9 @@ class ColorController extends Controller
 
     public function edit(Color $color)
     {
-        return view('admin.colors.edit', compact('color'));
+        $segmentacoesCliente = \App\Models\SegmentacaoCliente::where('active', true)->get();
+        $color->load('segmentacoesCliente');
+        return view('admin.colors.edit', compact('color', 'segmentacoesCliente'));
     }
 
     public function update(Request $request, Color $color)
@@ -43,10 +53,20 @@ class ColorController extends Controller
         $validated = $request->validate([
             'name' => 'required|max:255',
             'code' => 'required|max:7',
-            'active' => 'boolean'
+            'active' => 'boolean',
+            'segmentacoes_cliente' => 'nullable|array',
+            'segmentacoes_cliente.*' => 'exists:segmentacao_cliente,id'
         ]);
 
         $color->update($validated);
+
+        // Sincronizar segmentações de cliente
+        if ($request->has('segmentacoes_cliente')) {
+            $color->segmentacoesCliente()->sync($request->segmentacoes_cliente);
+        } else {
+            // Se não há segmentações selecionadas, remove todas
+            $color->segmentacoesCliente()->detach();
+        }
 
         return redirect()->route('admin.colors.index')
             ->with('success', 'Cor atualizada com sucesso.');

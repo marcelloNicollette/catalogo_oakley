@@ -1,4 +1,4 @@
-<x-layout-user title="Under Armour - Segmentação">
+<x-layout-user title="Olympikus - Segmentação">
     <style>
         @media (max-width: 1024px) {
             .font-segmento {
@@ -27,7 +27,7 @@
         .full-height-container {
             height: 100vh;
             min-height: 100vh;
-            padding-bottom: 80px;
+            padding-bottom: 75px;
         }
 
         .grid-item {
@@ -83,7 +83,7 @@
                     <!-- Text Overlay -->
                     <div class="absolute drop-shadow-lg  inset-0 flex items-end justify-start p-9 xl:p-12">
                         <h2
-                            class="text-white font-bold text-4xl lg:text-7xl uppercase tracking-wide font-segmento font-fko xl:text-7xl 3xl:text-9xl">
+                            class="text-white text-4xl lg:text-7xl uppercase tracking-wide font-segmento font-fko xl:text-7xl 3xl:text-9xl">
                             {{ $segmento->segmento }}
                         </h2>
                     </div>

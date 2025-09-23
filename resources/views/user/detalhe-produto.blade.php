@@ -1,4 +1,4 @@
-<x-layout-user-produto title="Olympikus - Produto">
+<x-layout-user-produto title="Under Armour - Detalhe Produto">
     <style>
         .badge-icon-wrapper .badge-tooltip {
             visibility: hidden;
@@ -16,7 +16,6 @@
             padding: 0;
             border-radius: 4px;
             font-size: 8px;
-
         }
 
         .badge-icon-wrapper:hover .badge-tooltip {
@@ -25,7 +24,6 @@
         }
 
         #imageModal {
-
             .swiper img {
                 width: 70%;
                 height: 100%;
@@ -46,22 +44,36 @@
             .swiper-button-next {
                 right: 30px;
             }
+
+            .swiper-button-next,
+            .swiper-button-prev {
+                color: #000;
+                background: #fff;
+                opacity: 0.2;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                margin-top: -25px;
+                transition: all 0.3s;
+            }
+
+            .swiper-button-next:after,
+            .swiper-button-prev:after {
+                font-size: 15px;
+            }
         }
     </style>
     <main class="absolute top-20 lg:flex flex-1 produtos-page">
         @php
-
             $currentUrl = request()->path();
             $currentSlug = '';
 
             if (strpos($currentUrl, 'user') === 0) {
                 $parts = explode('/', $currentUrl);
-                //dd($parts);
                 if (count($parts) > 1) {
                     $currentSlug = $parts[4];
                 }
             }
-
         @endphp
         <div class="max-w-full px-2 pb-3">
             <div class="flex gap-2">
@@ -70,100 +82,14 @@
                     <!-- Grid de Imagens para Desktop (2 colunas x 4 linhas) -->
                     <div class="hidden lg:grid grid-cols-2 bg-white rounded-lg shadow-sm border border-[#CBCBCB]"
                         id="desktopGrid">
-
-                        @php
-                            $suffixes = [
-                                '',
-                                '_A',
-                                '_B',
-                                '_C',
-                                '_D',
-                                '_E',
-                                '_F',
-                                '_G',
-                                '_H',
-                                '_I',
-                                '_J',
-                                '_K',
-                                '_L',
-                                '_M',
-                                '_N',
-                            ];
-                            $vista = 1;
-                        @endphp
-
-                        @foreach ($suffixes as $suffix)
-                            @php
-                                $imagePath = public_path(
-                                    'images/produtos/' .
-                                        $produto->code .
-                                        '_' .
-                                        str_replace('/', '_', $produto->colors[0]->color_code) .
-                                        $suffix .
-                                        '.jpg',
-                                );
-                            @endphp
-                            @if (file_exists($imagePath))
-                                <div class="cursor-pointer hover:opacity-80 transition-opacity rounded-lg"
-                                    data-image="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
-                                    onclick="openImageModal(this)">
-                                    <img src="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
-                                        alt="Vista {{ $vista }}" class="w-full object-contain rounded-lg" />
-                                </div>
-                            @endif
-                            @php $vista++; @endphp
-                        @endforeach
+                        <!-- Imagens serão carregadas dinamicamente via JavaScript -->
                     </div>
 
                     <!-- Swiper para Tablet e Mobile -->
                     <div class="lg:hidden" id="mobileSwiper">
                         <div class="swiper thumbnailSwiper">
                             <div class="swiper-wrapper">
-                                @php
-                                    $suffixes = [
-                                        '',
-                                        '_A',
-                                        '_B',
-                                        '_C',
-                                        '_D',
-                                        '_E',
-                                        '_F',
-                                        '_G',
-                                        '_H',
-                                        '_I',
-                                        '_J',
-                                        '_K',
-                                        '_L',
-                                        '_M',
-                                        '_N',
-                                    ];
-                                    $vista = 1;
-                                @endphp
-
-                                @foreach ($suffixes as $suffix)
-                                    @php
-                                        $imagePath = public_path(
-                                            'images/produtos/' .
-                                                $produto->code .
-                                                '_' .
-                                                str_replace('/', '_', $produto->colors[0]->color_code) .
-                                                $suffix .
-                                                '.jpg',
-                                        );
-                                    @endphp
-                                    @if (file_exists($imagePath))
-                                        <div class="swiper-slide">
-                                            <div class="bg-white cursor-pointer flex items-center justify-center hover:opacity-80 transition-opacity aspect-square w-full"
-                                                data-image="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
-                                                onclick="openImageModal(this)">
-                                                <img src="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
-                                                    alt="Vista {{ $vista }}"
-                                                    class="max-w-[80%] max-h-[80%] object-contain" />
-                                            </div>
-                                        </div>
-                                    @endif
-                                    @php $vista++; @endphp
-                                @endforeach
+                                <!-- Slides serão carregados dinamicamente via JavaScript -->
                             </div>
                             <!-- Pagination dots -->
                             <div class="swiper-pagination mt-4"></div>
@@ -172,7 +98,7 @@
                 </div>
 
                 <!-- Seção de Detalhes - Direita -->
-                <div class="w-[460px] flex-shrink-0 space-y-6">
+                <div class="w-[500px] flex-shrink-0 space-y-6">
                     <!-- Cabeçalho do Produto -->
                     <div class="bg-white rounded-lg p-5 shadow-sm border border-[#CBCBCB]">
                         <div class="flex justify-between items-start">
@@ -183,7 +109,6 @@
                             </div>
                             <button id="favoriteBtn" class="text-black hover:text-black transition-colors">
                                 <!-- Ícone Outline (vazio) -->
-
                                 <svg id="iconOutline" class="w-6 h-6 float-right" xmlns="http://www.w3.org/2000/svg"
                                     width="18" height="16" viewBox="0 0 18 16" fill="none">
                                     <path
@@ -191,8 +116,7 @@
                                         fill="black" />
                                 </svg>
                                 <span id="favoriteText"
-                                    class="text-sm opacity-50 float-left pt-[2px] pr-2 hidden">Adicionado
-                                    aos
+                                    class="text-sm opacity-50 float-left pt-[2px] pr-2 hidden">Adicionado aos
                                     Favoritos</span>
                                 <!-- Ícone Preenchido (solid) -->
                                 <svg id="iconFilled" class="w-6 h-6 text-black hidden"
@@ -202,7 +126,6 @@
                                         d="M0 5.26362C0 8.97604 3.23565 12.6275 8.34743 15.7647C8.53776 15.878 8.80967 16 9 16C9.19033 16 9.46224 15.878 9.66163 15.7647C14.7643 12.6275 18 8.97604 18 5.26362C18 2.17865 15.7976 0 12.861 0C11.1843 0 9.82477 0.766885 9 1.94336C8.19335 0.775599 6.81571 0 5.13897 0C2.20242 0 0 2.17865 0 5.26362Z"
                                         fill="black" />
                                 </svg>
-
                             </button>
                         </div>
                         <div class=" mb-4">
@@ -216,16 +139,16 @@
                             <p class="text-xs text-black opacity-50 pb-2">Cores</p>
                             <!-- Primeira linha - 4 cores -->
                             <div class="grid grid-cols-3 lg:grid-cols-4 mb-4">
-
                                 @foreach ($produto->colors as $color)
                                     <!-- Cor 1 - Selecionada -->
                                     <div class="relative">
-                                        <div class="box-color bg-white {{ $loop->first ? 'border border-black' : '' }} rounded-lg cursor-pointer"
+                                        <div class="box-color bg-white {{ $loop->first ? 'border border-black' : '' }} rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md"
                                             data-color-code="{{ $color->color_code }}">
                                             <div class="relative">
                                                 <img src="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $color->color_code) }}.jpg"
                                                     alt="{{ $color->color_name }}"
-                                                    class="w-full object-contain rounded-t-lg" />
+                                                    class="w-full object-contain rounded-t-lg" loading="lazy"
+                                                    onerror="this.src='/images/img-padrao-oly.png'" />
                                                 @if ($color->flag_product_id)
                                                     @if ($color->flagProduct->icon != null)
                                                         <div
@@ -253,7 +176,6 @@
                                         </div>
                                     </div>
                                 @endforeach
-
                             </div>
                         </div>
 
@@ -266,6 +188,7 @@
                                 </p>
                             </div>
                         @endif
+
                         <!-- Preço -->
                         <div class="mb-6">
                             <div class="grid grid-cols-2 gap-4 text-sm mb-6">
@@ -292,7 +215,6 @@
                                         </div>
                                     @endforeach
                                 @endif
-
                             </div>
                         </div>
 
@@ -319,12 +241,12 @@
                             </div>
                         @endif
                         <div style="clear: both;"></div>
+
                         <!-- Arquivos/Links -->
-                        @if (count($produto->links) > 0)
-                            <div class="my-[30px]">
+                        <div class="my-[30px]">
+                            @if (count($produto->links) > 0)
                                 <h3 class="text-xs mb-5 text-black opacity-50">Arquivos/Links</h3>
                                 <div class="flex flex-wrap gap-2">
-
                                     @foreach ($produto->links as $link)
                                         <a href="{{ $link->link_url }}" target="_blank"
                                             class="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm transition-colors">
@@ -333,8 +255,8 @@
                                         </a>
                                     @endforeach
                                 </div>
-                            </div>
-                        @endif
+                            @endif
+                        </div>
 
                         <!-- Sugestão de Atualização -->
                         <div class="border-t pt-4">
@@ -354,33 +276,12 @@
                 </div>
             </div>
         </div>
-        <style>
-            #imageModal {
 
-                .swiper-button-next,
-                .swiper-button-prev {
-                    color: #000;
-                    background: #fff;
-                    opacity: 0.2;
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    margin-top: -25px;
-                    transition: all 0.3s;
-                }
-
-                .swiper-button-next:after,
-                .swiper-button-prev:after {
-                    font-size: 15px;
-                }
-            }
-        </style>
         <!-- Modal de Imagens -->
         <div id="imageModal"
             class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center">
             <div class="relative w-[100vw] h-[100vh] bg-white mx-4">
                 <!-- Botão Fechar -->
-
                 <a onclick="closeImageModal()"
                     class="absolute top-4 right-4 flex items-center border border-black rounded-full px-3 py-2 text-md bg-gray-100 hover:bg-gray-200 transition text-[14px] z-50">
                     Voltar
@@ -426,7 +327,8 @@
                                 <div class="swiper-slide flex items-center justify-center">
                                     <img src="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
                                         alt="Vista {{ $vista }}" class="max-w-full max-h-full object-contain"
-                                        data-modal-image="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg" />
+                                        data-modal-image="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
+                                        onerror="this.src='/images/img-padrao-oly.png'" />
                                 </div>
                             @endif
                             @php $vista++; @endphp
@@ -462,7 +364,6 @@
         </div>
 
         <x-suggestion-modal />
-
     </main>
 
     @push('scripts')
@@ -473,6 +374,16 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.27/sweetalert2.all.min.js"></script>
 
         <script>
+            // Cache para armazenar informações de imagens válidas
+            const imageCache = new Map();
+            const suffixes = ['', '_A', '_B', '_C', '_D', '_E', '_F', '_G', '_H', '_I', '_J', '_K', '_L', '_M', '_N'];
+            const productCode = '{{ str_replace('/', '_', $produto->code) }}';
+
+            // Variáveis globais
+            let currentColorCode = '{{ str_replace('/', '_', $produto->colors->first()->color_code) ?? '' }}';
+            const productId = {{ $produto->id }};
+            let modalSwiper;
+
             // Inicializar Swiper para mobile/tablet
             const swiper = new Swiper(".thumbnailSwiper", {
                 slidesPerView: 1,
@@ -483,7 +394,6 @@
                     clickable: true,
                 },
                 breakpoints: {
-                    // Quando a largura for >= 640px (tablet)
                     640: {
                         slidesPerView: 1,
                         spaceBetween: 15,
@@ -491,21 +401,151 @@
                 },
             });
 
-            // Inicializar Swiper para o modal
-            let modalSwiper;
+            // Função para verificar se imagem existe
+            function checkImageExists(imagePath) {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => resolve(true);
+                    img.onerror = () => resolve(false);
+                    img.src = imagePath;
+                });
+            }
 
+            // Pré-carrega informações sobre quais imagens existem para cada cor
+            async function preloadImageInfo() {
+                console.log('Pré-carregando informações das imagens...');
+
+                const promises = [];
+
+                coresData.forEach(cor => {
+                    const color = cor.color_code.replace(/\//g, '_');
+                    const colorImages = [];
+
+                    suffixes.forEach((suffix, index) => {
+                        const imagePath = `/images/produtos/${productCode}_${color}${suffix}.jpg`;
+
+                        const promise = checkImageExists(imagePath).then(exists => {
+                            if (exists) {
+                                colorImages.push({
+                                    suffix,
+                                    index,
+                                    path: imagePath
+                                });
+                            }
+                        });
+
+                        promises.push(promise);
+                    });
+
+                    imageCache.set(color, colorImages);
+                });
+
+                await Promise.all(promises);
+                console.log('Pré-carregamento concluído');
+            }
+
+            // Função otimizada para carregar imagens (usa cache)
+            function carregarImagensProdutoOtimizado(colorCode = null) {
+                if (!colorCode) {
+                    const coresFiltradas = filtrarCoresPorSegmentacao();
+                    if (coresFiltradas.length > 0) {
+                        colorCode = coresFiltradas[0].color_code;
+                    } else {
+                        return;
+                    }
+                }
+
+                const color = colorCode.replace(/\//g, '_');
+                const cachedImages = imageCache.get(color) || [];
+
+                // Atualizar imagens do desktop grid imediatamente
+                const desktopGrid = document.getElementById('desktopGrid');
+                if (desktopGrid) {
+                    desktopGrid.innerHTML = '';
+
+                    cachedImages.forEach(imgInfo => {
+                        const imageDiv = document.createElement('div');
+                        imageDiv.className = 'cursor-pointer transition-opacity';
+                        imageDiv.setAttribute('data-image', imgInfo.path);
+                        imageDiv.onclick = function() {
+                            openImageModal(this);
+                        };
+                        console.log('Carregando imagem:', imgInfo.index);
+                        const $css1 = imgInfo.index === 0 ? 'rounded-l-lg' : '';
+                        imageDiv.innerHTML = `
+                            <img src="${imgInfo.path}" 
+                                 alt="Vista ${imgInfo.index + 1}" 
+                                 class="w-full object-contain rounded-lg "
+                                 onerror="this.src='/images/img-padrao-oly.png'" />
+                        `;
+
+                        desktopGrid.appendChild(imageDiv);
+                    });
+                }
+
+                // Atualizar imagens do mobile swiper imediatamente
+                const swiperWrapper = document.querySelector('.swiper-wrapper');
+                if (swiperWrapper) {
+                    swiperWrapper.innerHTML = '';
+
+                    cachedImages.forEach(imgInfo => {
+                        const slide = document.createElement('div');
+                        slide.className = 'swiper-slide';
+
+                        slide.innerHTML = `
+                            <div class="bg-white cursor-pointer flex items-center justify-center hover:opacity-80 transition-opacity aspect-square w-full"
+                                 data-image="${imgInfo.path}"
+                                 onclick="openImageModal(this)">
+                                <img src="${imgInfo.path}"
+                                     alt="Vista ${imgInfo.index + 1}"
+                                     class="max-w-[80%] max-h-[80%] object-contain"
+                                     onerror="this.src='/images/img-padrao-oly.png'" />
+                            </div>
+                        `;
+
+                        swiperWrapper.appendChild(slide);
+                    });
+
+                    // Reinicializar o swiper se existir
+                    if (window.thumbnailSwiper) {
+                        window.thumbnailSwiper.update();
+                    }
+                }
+
+                // Atualizar imagens do modal imediatamente
+                atualizarImagensModalOtimizado(colorCode);
+            }
+
+            // Função otimizada para atualizar imagens do modal
+            function atualizarImagensModalOtimizado(colorCode) {
+                const color = colorCode.replace(/\//g, '_');
+                const cachedImages = imageCache.get(color) || [];
+
+                // Primeiro, esconder todas as imagens do modal
+                document.querySelectorAll('[data-modal-image]').forEach(img => {
+                    img.style.display = 'none';
+                });
+
+                // Depois, mostrar e atualizar apenas as imagens que existem
+                cachedImages.forEach(imgInfo => {
+                    const modalImages = document.querySelectorAll('[data-modal-image]');
+                    if (modalImages[imgInfo.index]) {
+                        modalImages[imgInfo.index].setAttribute('data-modal-image', imgInfo.path);
+                        modalImages[imgInfo.index].src = imgInfo.path;
+                        modalImages[imgInfo.index].style.display = 'block';
+                    }
+                });
+            }
+
+            // Inicializar Swiper para o modal
             function initModalSwiper() {
                 modalSwiper = new Swiper(".modalSwiper", {
                     slidesPerView: 'auto',
                     spaceBetween: 30,
                     centeredSlides: true,
                     loop: true,
-
-                    // Configuração para mostrar preview da próxima imagem
                     slidesPerView: 1.3,
                     spaceBetween: 30,
-
-
                     navigation: {
                         nextEl: ".swiper-button-next",
                         prevEl: ".swiper-button-prev",
@@ -513,19 +553,11 @@
                     keyboard: {
                         enabled: true,
                     },
-
-                    // Efeitos
                     effect: 'slide',
-
-                    // Configurações de toque
                     touchRatio: 1,
                     touchAngle: 45,
                     grabCursor: true,
-
-                    // Auto height
                     autoHeight: false,
-
-                    // Breakpoints para responsividade
                     breakpoints: {
                         768: {
                             slidesPerView: 1.4,
@@ -544,16 +576,13 @@
                 const imageModal = document.getElementById('imageModal');
                 const clickedImageSrc = element.getAttribute('data-image');
 
-                // Mostrar o modal
                 imageModal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
 
-                // Inicializar o Swiper se ainda não foi inicializado
                 if (!modalSwiper) {
                     initModalSwiper();
                 }
 
-                // Encontrar o índice da imagem clicada e ir para ela
                 const modalImages = document.querySelectorAll('[data-modal-image]');
                 let targetIndex = 0;
 
@@ -563,7 +592,6 @@
                     }
                 });
 
-                // Ir para o slide correto
                 modalSwiper.slideTo(targetIndex, 0);
             }
 
@@ -588,13 +616,10 @@
                 }
             });
 
+            // Funcionalidade de favoritar
             const favoriteBtn = document.getElementById("favoriteBtn");
             const iconOutline = document.getElementById("iconOutline");
             const iconFilled = document.getElementById("iconFilled");
-
-            // Funcionalidade de favoritar
-            let currentColorCode = '{{ str_replace('/', '_', $produto->colors->first()->color_code) ?? '' }}';
-            const productId = {{ $produto->id }};
 
             // Verificar estado inicial da wishlist
             checkWishlistStatus();
@@ -627,7 +652,6 @@
                             iconFilled.classList.remove("hidden");
                             iconOutline.classList.add("hidden");
 
-                            // Atualiza o texto do favoriteText e mostra por 5 segundos
                             const favoriteText = document.getElementById('favoriteText');
                             favoriteText.textContent = 'Adicionado aos Favoritos';
                             favoriteText.classList.remove('hidden');
@@ -636,7 +660,6 @@
                                 favoriteText.classList.add('hidden');
                             }, 5000);
                         } else {
-                            // Atualiza o texto do favoriteText para mostrar erro
                             const favoriteText = document.getElementById('favoriteText');
                             favoriteText.textContent = 'Erro ao adicionar aos favoritos';
                             favoriteText.classList.remove('hidden');
@@ -648,7 +671,6 @@
                     })
                     .catch(error => {
                         console.error('Erro:', error);
-                        // Atualiza o texto do favoriteText para mostrar erro
                         const favoriteText = document.getElementById('favoriteText');
                         favoriteText.textContent = 'Erro ao adicionar aos favoritos';
                         favoriteText.classList.remove('hidden');
@@ -677,7 +699,6 @@
                             iconFilled.classList.add("hidden");
                             iconOutline.classList.remove("hidden");
 
-                            // Atualiza o texto do favoriteText e mostra por 5 segundos
                             const favoriteText = document.getElementById('favoriteText');
                             favoriteText.textContent = 'Removido dos Favoritos';
                             favoriteText.classList.remove('hidden');
@@ -715,151 +736,263 @@
                     });
             }
 
-            // Funcionalidade de seleção de cor
-            const colorVariants = document.querySelectorAll('[class^="box-color"]');
-            colorVariants.forEach((variant) => {
-                variant.addEventListener("click", () => {
-                    // Remove seleção de todas as cores
-                    colorVariants.forEach((v) => {
-                        v.classList.remove("border-black", "border");
-                    });
+            // Event listener otimizado para seleção de cor
+            function ativarEventListenersCoresOtimizado() {
+                const colorVariants = document.querySelectorAll('[class^="box-color"]');
+                colorVariants.forEach((variant) => {
+                    variant.addEventListener("click", () => {
+                        // Adicionar indicador visual imediato
+                        variant.style.opacity = '0.7';
 
-                    // Adiciona seleção na cor clicada
-                    variant.classList.add("border-black", "border");
+                        // Usar requestAnimationFrame para suavizar a transição
+                        requestAnimationFrame(() => {
+                            // Remove seleção de todas as cores
+                            colorVariants.forEach((v) => {
+                                v.classList.remove("border-black", "border");
+                                v.style.opacity = '1';
+                            });
 
-                    // Obtém o código da cor selecionada
-                    const selectedColorCode = variant.getAttribute('data-color-code');
-                    const color = selectedColorCode.replace(/\//g, "_");
-                    // Atualiza a variável global da cor atual
-                    currentColorCode = selectedColorCode;
+                            // Adiciona seleção na cor clicada
+                            variant.classList.add("border-black", "border");
+                            variant.style.opacity = '1';
 
-                    // Verifica o status da wishlist para a nova cor
-                    checkWishlistStatus();
+                            // Obtém o código da cor selecionada
+                            const selectedColorCode = variant.getAttribute('data-color-code');
+                            currentColorCode = selectedColorCode;
 
-                    // Atualiza todas as imagens do produto com a nova cor
-                    const suffixes = ['', '_A', '_B', '_C', '_D', '_E', '_F', '_G', '_H', '_I', '_J', '_K',
-                        '_L', '_M', '_N'
-                    ];
-                    const productCode = '{{ str_replace('/', '_', $produto->code) }}';
+                            // Carregar imagens da cor selecionada (agora instantâneo)
+                            carregarImagensProdutoOtimizado(selectedColorCode);
 
-                    // Função para verificar se a imagem existe
-                    function checkImageExists(imagePath) {
-                        return new Promise((resolve) => {
-                            const img = new Image();
-                            img.onload = () => resolve(true);
-                            img.onerror = () => resolve(false);
-                            img.src = imagePath;
+                            // Verificar status da wishlist (pode ser assíncrono sem afetar UX)
+                            checkWishlistStatus();
                         });
-                    }
-
-                    // Atualiza as imagens do grid desktop
-                    document.querySelectorAll('#desktopGrid div[data-image]').forEach(async (div, index) => {
-                        const newImagePath =
-                            `/images/produtos/${productCode}_${color}${suffixes[index]}.jpg`;
-                        
-                        const imageExists = await checkImageExists(newImagePath);
-                        if (imageExists) {
-                            div.setAttribute('data-image', newImagePath);
-                            div.querySelector('img').src = newImagePath;
-                            div.style.display = 'block'; // Mostra o elemento
-                        } else {
-                            div.style.display = 'none'; // Esconde o elemento se a imagem não existir
-                        }
-                    });
-
-                    // Atualiza as imagens do Swiper mobile
-                    document.querySelectorAll('.swiper-slide div[data-image]').forEach(async (div, index) => {
-                        const newImagePath =
-                            `/images/produtos/${productCode}_${color}${suffixes[index]}.jpg`;
-                        
-                        const imageExists = await checkImageExists(newImagePath);
-                        if (imageExists) {
-                            div.setAttribute('data-image', newImagePath);
-                            div.querySelector('img').src = newImagePath;
-                            div.style.display = 'block'; // Mostra o elemento
-                        } else {
-                            div.style.display = 'none'; // Esconde o elemento se a imagem não existir
-                        }
-                    });
-
-                    // Atualiza as imagens do modal
-                    document.querySelectorAll('[data-modal-image]').forEach(async (img, index) => {
-                        const newImagePath =
-                            `/images/produtos/${productCode}_${color}${suffixes[index]}.jpg`;
-                        
-                        const imageExists = await checkImageExists(newImagePath);
-                        if (imageExists) {
-                            img.setAttribute('data-modal-image', newImagePath);
-                            img.src = newImagePath;
-                            img.style.display = 'block'; // Mostra o elemento
-                        } else {
-                            img.style.display = 'none'; // Esconde o elemento se a imagem não existir
-                        }
                     });
                 });
-            });
+            }
 
             // Funcionalidade do Modal de Sugestão
             const suggestionModal = document.getElementById("suggestionModal");
             const suggestionForm = document.getElementById("suggestionForm");
             const suggestionSuccess = document.getElementById("suggestionSuccess");
-            const openSuggestionModal = document.getElementById(
-                "openSuggestionModal"
-            );
-            const closeSuggestionModal = document.getElementById(
-                "closeSuggestionModal"
-            );
+            const openSuggestionModal = document.getElementById("openSuggestionModal");
+            const closeSuggestionModal = document.getElementById("closeSuggestionModal");
             const closeSuccessModal = document.getElementById("closeSuccessModal");
             const sendSuggestion = document.getElementById("sendSuggestion");
             const suggestionText = document.getElementById("suggestionText");
 
             // Abrir modal
-            openSuggestionModal.addEventListener("click", () => {
-                suggestionModal.classList.remove("hidden");
-                suggestionForm.classList.remove("hidden");
-                suggestionSuccess.classList.add("hidden");
-                suggestionText.value = "";
-            });
+            if (openSuggestionModal) {
+                openSuggestionModal.addEventListener("click", () => {
+                    suggestionModal.classList.remove("hidden");
+                    suggestionForm.classList.remove("hidden");
+                    suggestionSuccess.classList.add("hidden");
+                    suggestionText.value = "";
+                });
+            }
 
             // Fechar modal - botão voltar do formulário
-            closeSuggestionModal.addEventListener("click", () => {
-                suggestionModal.classList.add("hidden");
-            });
+            if (closeSuggestionModal) {
+                closeSuggestionModal.addEventListener("click", () => {
+                    suggestionModal.classList.add("hidden");
+                });
+            }
 
             // Fechar modal - botão voltar do sucesso
-            closeSuccessModal.addEventListener("click", () => {
-                suggestionModal.classList.add("hidden");
-            });
+            if (closeSuccessModal) {
+                closeSuccessModal.addEventListener("click", () => {
+                    suggestionModal.classList.add("hidden");
+                });
+            }
 
             // Fechar modal clicando fora
-            suggestionModal.addEventListener("click", (e) => {
-                if (e.target === suggestionModal) {
-                    suggestionModal.classList.add("hidden");
-                }
-            });
+            if (suggestionModal) {
+                suggestionModal.addEventListener("click", (e) => {
+                    if (e.target === suggestionModal) {
+                        suggestionModal.classList.add("hidden");
+                    }
+                });
+            }
 
             // Enviar sugestão
-            sendSuggestion.addEventListener("click", () => {
-                const suggestion = suggestionText.value.trim();
+            if (sendSuggestion) {
+                sendSuggestion.addEventListener("click", () => {
+                    const suggestion = suggestionText.value.trim();
 
-                if (suggestion) {
-                    // Simula envio da sugestão
-                    suggestionForm.classList.add("hidden");
-                    suggestionSuccess.classList.remove("hidden");
-                } else {
-                    alert("Por favor, digite sua sugestão antes de enviar.");
-                }
-            });
+                    if (suggestion) {
+                        suggestionForm.classList.add("hidden");
+                        suggestionSuccess.classList.remove("hidden");
+                    } else {
+                        alert("Por favor, digite sua sugestão antes de enviar.");
+                    }
+                });
+            }
 
             // Fechar modal com tecla ESC
             document.addEventListener("keydown", (e) => {
-                if (
-                    e.key === "Escape" &&
-                    !suggestionModal.classList.contains("hidden")
-                ) {
+                if (e.key === "Escape" && suggestionModal && !suggestionModal.classList.contains("hidden")) {
                     suggestionModal.classList.add("hidden");
                 }
             });
+
+            // Dados das cores do produto para filtro dinâmico
+            const coresData = [
+                @foreach ($produto->allColors as $color)
+                    {
+                        id: {{ $color->id }},
+                        color_code: "{{ $color->color_code }}",
+                        color_name: "{{ $color->color_name }}",
+                        color_description: "{{ $color->color_description }}",
+                        flag_product_id: {{ $color->flag_product_id ?? 'null' }},
+                        flagProduct: @if ($color->flagProduct)
+                            {
+                                flag_title: "{{ $color->flagProduct->flag_title }}",
+                                flag_bg: "{{ $color->flagProduct->flag_bg }}",
+                                flag_color_text_bg: "{{ $color->flagProduct->flag_color_text_bg }}",
+                                icon: "{{ $color->flagProduct->icon }}",
+                                alinhamento: "{{ $color->flagProduct->alinhamento }}"
+                            }
+                        @else
+                            null
+                        @endif ,
+                        segmentacaoIds: @json($color->segmentacoesCliente->pluck('id')->toArray())
+                    },
+                @endforeach
+            ];
+
+            // Função para filtrar cores baseado nas segmentações selecionadas
+            function filtrarCoresPorSegmentacao() {
+                let selectedSegmentacoes = [];
+                try {
+                    selectedSegmentacoes = JSON.parse(localStorage.getItem('selectedSegmentacoes') || '[]');
+                } catch (e) {
+                    console.error('Erro ao processar segmentações do localStorage:', e);
+                    selectedSegmentacoes = [];
+                }
+
+                if (selectedSegmentacoes.length === 0) {
+                    return coresData;
+                }
+
+                return coresData.filter(cor => {
+                    return selectedSegmentacoes.some(segId =>
+                        cor.segmentacaoIds.includes(parseInt(segId))
+                    );
+                });
+            }
+
+            // Função renderizar cores otimizada
+            function renderizarCoresOtimizado() {
+                const coresFiltradas = filtrarCoresPorSegmentacao();
+                const coresContainer = document.querySelector('.grid.grid-cols-3.lg\\:grid-cols-4.mb-4');
+
+                if (!coresContainer) return;
+
+                // Usar DocumentFragment para melhor performance
+                const fragment = document.createDocumentFragment();
+
+                // Renderizar cores filtradas
+                coresFiltradas.forEach((cor, index) => {
+                    const corElement = document.createElement('div');
+                    corElement.className = 'relative';
+
+                    const colorCodeFormatted = cor.color_code.replace(/\//g, '_');
+                    const isFirst = index === 0;
+
+                    let flagHtml = '';
+                    if (cor.flagProduct && cor.flagProduct.icon) {
+                        flagHtml = `
+                            <div class="badge-icon-wrapper absolute top-1 ${cor.flagProduct.alinhamento}-0">
+                                <img src="/${cor.flagProduct.icon}" 
+                                     alt="${cor.flagProduct.flag_title}" 
+                                     class="badge-icon" 
+                                     style="width:19px; height:19px; margin-right:3px">
+                                <span class="badge-tooltip" 
+                                      style="color: ${cor.flagProduct.flag_color_text_bg};">
+                                    ${cor.flagProduct.flag_title}
+                                </span>
+                            </div>
+                        `;
+                    } else if (cor.flagProduct) {
+                        flagHtml = `
+                            <span class="absolute top-2 left-1 bg-[${cor.flagProduct.flag_bg}] text-[${cor.flagProduct.flag_color_text_bg}] text-[10px] px-2 py-0.5 rounded-full">
+                                ${cor.flagProduct.flag_title}
+                            </span>
+                        `;
+                    }
+
+                    corElement.innerHTML = `
+                        <div class="box-color bg-white ${isFirst ? 'border border-black' : ''} rounded-lg cursor-pointer transition-all duration-200 " 
+                             data-color-code="${cor.color_code}">
+                            <div class="relative">
+                                <img src="/images/produtos/{{ $produto->code }}_${colorCodeFormatted}.jpg" 
+                                     alt="${cor.color_name}" 
+                                     class="w-full object-contain rounded-t-lg"
+                                     loading="lazy"
+                                     onerror="this.src='/images/img-padrao-oly.png'" />
+                                ${flagHtml}
+                            </div>
+                            <div class="text-center pb-2">
+                                <p class="text-xs text-black">${cor.color_name}</p>
+                                <p class="text-xs text-black opacity-50">${cor.color_description}</p>
+                            </div>
+                        </div>
+                    `;
+
+                    fragment.appendChild(corElement);
+                });
+
+                // Atualizar DOM uma única vez
+                coresContainer.innerHTML = '';
+                coresContainer.appendChild(fragment);
+
+                // Reativar event listeners para as novas cores
+                ativarEventListenersCoresOtimizado();
+
+                // Carregar imagens da primeira cor filtrada
+                if (coresFiltradas.length > 0) {
+                    carregarImagensProdutoOtimizado(coresFiltradas[0].color_code);
+                }
+            }
+
+            // Função de inicialização otimizada
+            async function inicializarPaginaProduto() {
+                // Renderizar cores inicialmente
+                renderizarCoresOtimizado();
+
+                // Pré-carregar informações das imagens em background
+                preloadImageInfo().then(() => {
+                    // Recarregar com cache depois do pré-carregamento
+                    const coresFiltradas = filtrarCoresPorSegmentacao();
+                    if (coresFiltradas.length > 0) {
+                        carregarImagensProdutoOtimizado(coresFiltradas[0].color_code);
+                    }
+                });
+            }
+
+            // Listener para mudanças no localStorage das segmentações
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'selectedSegmentacoes') {
+                    console.log('Segmentações alteradas no localStorage, reaplicando filtros de cores...');
+                    renderizarCoresOtimizado();
+                }
+            });
+
+            // Listener customizado para mudanças na mesma aba
+            let originalSetItem = localStorage.setItem;
+            localStorage.setItem = function(key, value) {
+                originalSetItem.apply(this, arguments);
+                if (key === 'selectedSegmentacoes') {
+                    console.log('Segmentações alteradas na mesma aba, reaplicando filtros de cores...');
+                    renderizarCoresOtimizado();
+                }
+            };
+
+            // Inicializar página quando DOM estiver pronto
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', inicializarPaginaProduto);
+            } else {
+                inicializarPaginaProduto();
+            }
         </script>
     @endpush
 

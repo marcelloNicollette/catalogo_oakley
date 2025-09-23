@@ -31,36 +31,46 @@
         }
 
         .capa {
-            text-align: center;
-            padding-top: 30%;
+            text-align: left;
         }
     </style>
 </head>
 
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif;">
-    <!-- CAPA -->
-    <div class="capa">
+    @unless ($remove_capa_retranca)
+        <!-- CAPA -->
+        <div class="capa" style="background: #2735D4; height: 100%;">
+            <div style="padding: 5rem;">
 
-        <h2>CAPA</h2>
+                <h1
+                    style="font-size: 350px; color: #fff; font-family: 'fkolympikus', sans-serif; font-weight: normal; margin:0; padding:0; line-height: 250px;">
+                    COLEÇÃO
+                </h1>
+                <h1
+                    style="font-size: 350px; color: #fff; font-family: 'fkolympikus', sans-serif; font-weight: normal; margin:0; padding:0; line-height: 220px;">
+                    {{ $collections->first()->first()->collection->name }}</h1>
 
-    </div>
-    <div class="page-break"></div>
+                <div style="position: absolute; bottom: 60px; right: 80px;">
+                    <img src="{{ public_path('/images/logo-branco.png') }}" alt="">
+                </div>
+            </div>
 
-    <!-- TECNOLOGIAS -->
-    <div class="capa">
+        </div>
+        <!-- CATEGORIAS -->
+        <div class="capa" style="background: #000; height: 100%;">
+            <div style="padding: 5rem;">
+                <h1
+                    style="font-size: 350px; color: #fff; font-family: 'fkolympikus', sans-serif; font-weight: normal;  margin:0; padding:0; line-height: 250px; text-transform: uppercase;">
+                    {{ $collections->first()->first()->product->category->name }}
+                </h1>
 
-        <h2>TECNOLOGIAS</h2>
-
-    </div>
-    <div class="page-break"></div>
-
-    <!-- CATEGORIAS -->
-    <div class="capa">
-
-        <h2>CATEGORIAS</h2>
-
-    </div>
-    <div class="page-break"></div>
+                <div style="position: absolute; bottom: 60px; right: 80px;">
+                    <img src="{{ public_path('/images/logo.png') }}" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="page-break"></div>
+    @endunless
 
     @foreach ($collections as $collection)
         @php
@@ -73,6 +83,13 @@
             $image = public_path('images/produtos/' . $image);
             //$image = '/images/produtos/' . $image;
         @endphp
+
+
+        @if ($remove_capa_retranca)
+            <div style="position: absolute; top: 30px; left: 30px;">
+                <img src="{{ public_path('/images/logo.png') }}" alt="">
+            </div>
+        @endif
         <table cellspacing="2" width="100%" cellpadding="2">
             <tr>
                 <td width="70%">
@@ -106,6 +123,12 @@
                                                 '.jpg',
                                         );
 
+                                        $fullImagePath = $imagePath;
+                                        $imageExists = file_exists($fullImagePath);
+                                        $imageSrc = $imageExists
+                                            ? $imagePath
+                                            : public_path('images/img-padrao-oly.png');
+
                                         /* $imagePath =
                                             '/images/produtos/' .
                                             $collection->first()->product->code .
@@ -115,7 +138,7 @@
                                             '.jpg';*/
 
                                     @endphp
-                                    <img src="{{ $imagePath }}" alt="Tênis"
+                                    <img src="{{ $imageSrc }}" alt="Tênis"
                                         style="width: 100%; object-fit: cover; border-radius: {{ $rounded }}; border:1px solid #CCC; border-spacing:0;">
                                     @php $vista++; @endphp
                                 @endforeach
@@ -140,8 +163,20 @@
                                                         </div>
                                                     @endif
                                                     <div style="margin-top: 30px; margin-bottom: 15px;">
-                                                        <img width="100px"
-                                                            src="{{ public_path('/images/produtos/' . $collection->first()->product->code . '_' . str_replace('/', '_', $color->color_code) . '.jpg') }}"
+                                                        @php
+                                                            $imagePath =
+                                                                'images/produtos/' .
+                                                                $collection->first()->product->code .
+                                                                '_' .
+                                                                str_replace('/', '_', $color->color_code) .
+                                                                '.jpg';
+                                                            $fullImagePath = public_path($imagePath);
+                                                            $imageExists = file_exists($fullImagePath);
+                                                            $imageSrc = $imageExists
+                                                                ? public_path($imagePath)
+                                                                : public_path('images/img-padrao-oly.png');
+                                                        @endphp
+                                                        <img width="100px" src="{{ $imageSrc }}"
                                                             alt="{{ $color->color_name }}"
                                                             class="width: 100px; height: auto; border-radius: 8px;" />
                                                     </div>
@@ -163,7 +198,8 @@
                 <td width="30%" style="border-radius: 8px; border:1px solid #CCC; vertical-align: top;">
                     <!-- Cabeçalho do produto -->
                     <div style="padding:10px;">
-                        <div style="font-size: 17px; color: #000; margin-bottom: 5px;">Corrida
+                        <div style="font-size: 17px; color: #000; margin-bottom: 5px;">
+                            {{ $collection->first()->product->category->name }}
                             @if (!$remove_code)
                                 <span
                                     style="color: #000; opacity: 0.5;">{{ $collection->first()->product->code }}</span>
@@ -234,38 +270,40 @@
                         </p>
                     </div>
 
-                    <!-- Tecnologias -->
-                    <div style="padding: 0 10px 10px 10px; margin-top:20px">
-                        <div style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">Tecnologias</div>
-                    </div>
-
-                    @if (count($collection->first()->product->technologyItems) > 0)
-                        <div style="padding: 0 10px 10px 10px;">
-
-                            @foreach ($collection->first()->product->technologyItems->chunk(5) as $itemsChunk)
-                                <div style="overflow: hidden;">
-                                    @foreach ($itemsChunk as $item)
-                                        <div
-                                            style="float: left; width: calc(20% - 12.8px); margin-right: 16px; text-align: center;">
-                                            <div
-                                                style="width: 70px; height: 70px; background-color: black; border-radius: 8px; display: inline-block; position: relative; margin: 0 auto 8px auto;">
-                                                <img src="{{ public_path('/' . $item->icon) }}"
-                                                    style="width: 70px; height: 70px; object-fit: contain; border-radius: 10px;"
-                                                    alt="{{ $item->name }}" />
-                                            </div>
-                                            <p
-                                                style="font-size: 10px; color: black; opacity: 0.5; text-align: center; line-height: 1.25; margin: 0; min-height:30px;">
-                                                {{ $item->name }}
-                                            </p>
-                                        </div>
-                                    @endforeach
-                                    <div style="clear:both;"></div>
-                                </div>
-                            @endforeach
-
+                    @unless ($remove_description)
+                        <!-- Tecnologias -->
+                        <div style="padding: 0 10px 10px 10px; margin-top:20px">
+                            <div style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">Tecnologias
+                            </div>
                         </div>
-                    @endif
 
+                        @if (count($collection->first()->product->technologyItems) > 0)
+                            <div style="padding: 0 10px 10px 10px;">
+
+                                @foreach ($collection->first()->product->technologyItems->chunk(5) as $itemsChunk)
+                                    <div style="overflow: hidden;">
+                                        @foreach ($itemsChunk as $item)
+                                            <div
+                                                style="float: left; width: calc(20% - 12.8px); margin-right: 16px; text-align: center;">
+                                                <div
+                                                    style="width: 70px; height: 70px; background-color: black; border-radius: 8px; display: inline-block; position: relative; margin: 0 auto 8px auto;">
+                                                    <img src="{{ public_path('/' . $item->icon) }}"
+                                                        style="width: 70px; height: 70px; object-fit: contain; border-radius: 10px;"
+                                                        alt="{{ $item->name }}" />
+                                                </div>
+                                                <p
+                                                    style="font-size: 10px; color: black; opacity: 0.5; text-align: center; line-height: 1.25; margin: 0; min-height:30px;">
+                                                    {{ $item->name }}
+                                                </p>
+                                            </div>
+                                        @endforeach
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                @endforeach
+
+                            </div>
+                        @endif
+                    @endunless
                 </td>
             </tr>
         </table>

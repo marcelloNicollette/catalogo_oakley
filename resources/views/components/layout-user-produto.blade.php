@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Under Armour' }}</title>
     <!-- Favicon -->
-    <link rel="icon" href="/images/Favicon_Under_Armour.png" type="image/png">
+    <link rel="icon" href="/images/Favicon_Olympikus.png" type="image/png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
@@ -33,7 +33,7 @@
 
 <body class="bg-[#F1F1F1] flex flex-col min-h-screen">
     <!-- Header -->
-    <x-header-fixed :user="auth()->user()" />
+    <x-header-fixed :user="auth()->user()" :type="'produto'" />
 
     <!-- Conteúdo principal -->
     <main class="flex-1">

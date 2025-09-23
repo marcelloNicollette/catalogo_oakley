@@ -19,6 +19,7 @@ class ExportUser extends Model
         'remove_code',
         'remove_description',
         'remove_tag',
+        'remove_capa_retranca',
         'filename',
     ];
 
@@ -29,6 +30,7 @@ class ExportUser extends Model
         'remove_code' => 'boolean',
         'remove_description' => 'boolean',
         'remove_tag' => 'boolean',
+        'remove_capa_retranca' => 'boolean',
     ];
 
     public function user(): BelongsTo
