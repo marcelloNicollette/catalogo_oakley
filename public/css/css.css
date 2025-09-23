@@ -1,12 +1,296 @@
+/* NEUE PLAK - CONDENSED */
 @font-face {
-    font-family: 'FKOlympikus';
-    src: url('../fonts/FKOlympikus-Upright.woff2') format('woff2'),
-         url('../fonts/FKOlympikus-Upright.woff') format('woff'),
-         url('../fonts/FKOlympikus-Upright.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+  font-family: 'Neue Plak Condensed';
+  src: url('../fonts/Neue-Plak-Condensed-UltraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
 }
+
+@font-face {
+  font-family: 'Neue Plak Condensed';
+  src: url('../fonts/Neue-Plak-Condensed-Thin.ttf') format('truetype');
+  font-weight: 250;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Condensed';
+  src: url('../fonts/Neue-Plak-Condensed-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Condensed';
+  src: url('../fonts/Neue-Plak-Condensed-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Condensed';
+  src: url('../fonts/Neue-Plak-Condensed-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Condensed';
+  src: url('../fonts/Neue-Plak-Condensed-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Condensed';
+  src: url('../fonts/Neue-Plak-Condensed-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Condensed';
+  src: url('../fonts/Neue-Plak-Condensed-ExtraBlack.ttf') format('truetype');
+  font-weight: 950;
+  font-style: normal;
+}
+
+/* NEUE PLAK - EXTENDED */
+@font-face {
+  font-family: 'Neue Plak Extended';
+  src: url('../fonts/Neue-Plak-Extended-UltraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Extended';
+  src: url('../fonts/Neue-Plak-Extended-Thin.ttf') format('truetype');
+  font-weight: 250;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Extended';
+  src: url('../fonts/Neue-Plak-Extended-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Extended';
+  src: url('../fonts/Neue-Plak-Extended-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Extended';
+  src: url('../fonts/Neue-Plak-Extended-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Extended';
+  src: url('../fonts/Neue-Plak-Extended-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Extended';
+  src: url('../fonts/Neue-Plak-Extended-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Extended';
+  src: url('../fonts/Neue-Plak-Extended-ExtraBlack.ttf') format('truetype');
+  font-weight: 950;
+  font-style: normal;
+}
+
+/* NEUE PLAK - REGULAR/NORMAL */
+@font-face {
+  font-family: 'Neue Plak';
+  src: url('../fonts/Neue-Plak-UltraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak';
+  src: url('../fonts/Neue-Plak-Thin.ttf') format('truetype');
+  font-weight: 250;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak';
+  src: url('../fonts/Neue-Plak-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak';
+  src: url('../fonts/Neue-Plak-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak';
+  src: url('../fonts/Neue-Plak-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak';
+  src: url('../fonts/Neue-Plak-ExtraBlack.ttf') format('truetype');
+  font-weight: 950;
+  font-style: normal;
+}
+
+/* NEUE PLAK TEXT - NORMAL */
+@font-face {
+  font-family: 'Neue Plak Text';
+  src: url('../fonts/Neue-Plak-Text-Thin.ttf') format('truetype');
+  font-weight: 250;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Text';
+  src: url('../fonts/Neue-Plak-Text-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Text';
+  src: url('../fonts/Neue-Plak-Text-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Text';
+  src: url('../fonts/Neue-Plak-Text-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Text';
+  src: url('../fonts/Neue-Plak-Text-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Plak Text';
+  src: url('../fonts/Neue-Plak-Text-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+/* NEUE PLAK TEXT - ITALIC */
+@font-face {
+  font-family: 'Neue Plak Text';
+  src: url('../fonts/Neue-Plak-Text-Thin-Italic.ttf') format('truetype');
+  font-weight: 250;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Neue Plak Text';
+  src: url('../fonts/Neue-Plak-Text-Light-Italic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Neue Plak Text';
+  src: url('../fonts/Neue-Plak-Text-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Neue Plak Text';
+  src: url('../fonts/Neue-Plak-Text-SemiBold-Italic.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Neue Plak Text';
+  src: url('../fonts/Neue-Plak-Text-Bold-Italic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Neue Plak Text';
+  src: url('../fonts/Neue-Plak-Text-Black-Italic.ttf') format('truetype');
+  font-weight: 900;
+  font-style: italic;
+}
+
+/* CLASSES DE UTILITÁRIO PARA USAR AS FONTES */
+.neue-plak-condensed {
+  font-family: 'Neue Plak Condensed', Arial, sans-serif;
+}
+
+.neue-plak-extended {
+  font-family: 'Neue Plak Extended', Arial, sans-serif;
+}
+
+.neue-plak {
+  font-family: 'Neue Plak', Arial, sans-serif;
+}
+
+.neue-plak-text {
+  font-family: 'Neue Plak Text', Arial, sans-serif;
+}
+
+/* CLASSES DE PESO */
+.ultra-light { font-weight: 200; }
+.thin { font-weight: 250; }
+.light { font-weight: 300; }
+.regular { font-weight: 400; }
+.semi-bold { font-weight: 600; }
+.bold { font-weight: 700; }
+.black { font-weight: 900; }
+.extra-black { font-weight: 950; }
+
+/* EXEMPLOS DE USO */
+.title {
+  font-family: 'Neue Plak Extended', Arial, sans-serif;
+  font-weight: 900; /* Black */
+}
+
+.subtitle {
+  font-family: 'Neue Plak Condensed', Arial, sans-serif;
+  font-weight: 600; /* SemiBold */
+}
+
+.body-text {
+  font-family: 'Neue Plak Text', Arial, sans-serif;
+  font-weight: 400; /* Regular */
+}
+
+.body-text-italic {
+  font-family: 'Neue Plak Text', Arial, sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+
 
 html {
     font-family: "Roboto", sans-serif !important;
@@ -458,10 +742,48 @@ html {
     font-weight: bold;
   }
 
-  .font-fko {
-    font-family: 'FKOlympikus';
+  .font-neueplak {
+    font-family: 'Neue Plak';
   }
   
+
+  .font-segmento {
+            color: #FFF;
+            text-align: center;
+            font-size: 50px;
+            font-style: normal;
+            font-weight: 800;
+            line-height: 40px;
+            /* 80% */
+            letter-spacing: -4px;
+            text-transform: uppercase;
+        }
+
+
+
+  .font-title-product {
+            color: #000;
+            font-size: 22px;
+            font-style: normal;
+            font-weight: 800;
+            line-height: 18px;
+            /* 80% */
+            letter-spacing: -0.44px;
+            text-transform: uppercase;
+        }
+
+
+  .font-title-product-destaque {
+            color: #000;
+            font-size: 35px;
+            font-style: normal;
+            font-weight: 900;
+            line-height: 30px;
+            /* 80% */
+            letter-spacing: -1.4px;
+            text-transform: uppercase;
+        }
+
   .py-5 {
     padding-top: 1.25rem;
     padding-bottom: 1.25rem;

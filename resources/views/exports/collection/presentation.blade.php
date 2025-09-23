@@ -12,17 +12,17 @@
         }
 
         @font-face {
-            font-family: 'fkolympikus';
-            src: url("{{ public_path('fonts/FKOlympikus-Upright.ttf') }}") format('truetype');
+            font-family: 'neueplak';
+            src: url("{{ public_path('fonts/Neue-Plak-Regular.ttf') }}") format('truetype');
         }
 
         body {
-            font-family: 'fkolympikus', sans-serif;
+            font-family: 'neueplak', sans-serif;
             margin: 0px;
         }
 
         .font-fko {
-            font-family: 'fkolympikus', sans-serif;
+            font-family: 'neueplak', sans-serif;
             font-size: 50px;
         }
     </style>
@@ -130,7 +130,7 @@
                             @endif
                         </div>
                         <h1
-                            style="font-family: 'fkolympikus', sans-serif; font-weight: normal; margin: 0 0 15px 0; line-height: 1.2;">
+                            style="font-family: 'neueplak', sans-serif; font-weight: normal; margin: 0 0 15px 0; line-height: 1.2;">
                             {{ $collection->first()->product->name }}</h1>
 
                         <table width="100%">

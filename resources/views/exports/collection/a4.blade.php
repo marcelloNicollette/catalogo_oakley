@@ -12,17 +12,17 @@
         }
 
         @font-face {
-            font-family: 'fkolympikus';
-            src: url("{{ public_path('fonts/FKOlympikus-Upright.ttf') }}") format('truetype');
+            font-family: 'neueplak';
+            src: url("{{ public_path('fonts/Neue-Plak-Regular.ttf') }}") format('truetype');
         }
 
         body {
-            font-family: 'fkolympikus', sans-serif;
+            font-family: 'neueplak', sans-serif;
             margin: 0px;
         }
 
-        .font-fko {
-            font-family: 'fkolympikus', sans-serif;
+        .font-neueplak {
+            font-family: 'neueplak', sans-serif;
             font-size: 50px;
         }
 
@@ -43,11 +43,11 @@
             <div style="padding: 5rem;">
 
                 <h1
-                    style="font-size: 350px; color: #fff; font-family: 'fkolympikus', sans-serif; font-weight: normal; margin:0; padding:0; line-height: 250px;">
+                    style="font-size: 350px; color: #fff; font-family: 'neueplak', sans-serif; font-weight: normal; margin:0; padding:0; line-height: 250px;">
                     COLEÇÃO
                 </h1>
                 <h1
-                    style="font-size: 350px; color: #fff; font-family: 'fkolympikus', sans-serif; font-weight: normal; margin:0; padding:0; line-height: 220px;">
+                    style="font-size: 350px; color: #fff; font-family: 'neueplak', sans-serif; font-weight: normal; margin:0; padding:0; line-height: 220px;">
                     {{ $collections->first()->first()->collection->name }}</h1>
 
                 <div style="position: absolute; bottom: 60px; right: 80px;">
@@ -60,7 +60,7 @@
         <div class="capa" style="background: #000; height: 100%;">
             <div style="padding: 5rem;">
                 <h1
-                    style="font-size: 350px; color: #fff; font-family: 'fkolympikus', sans-serif; font-weight: normal;  margin:0; padding:0; line-height: 250px; text-transform: uppercase;">
+                    style="font-size: 350px; color: #fff; font-family: 'neueplak', sans-serif; font-weight: normal;  margin:0; padding:0; line-height: 250px; text-transform: uppercase;">
                     {{ $collections->first()->first()->product->category->name }}
                 </h1>
 
@@ -206,7 +206,7 @@
                             @endif
                         </div>
                         <h1
-                            style="font-family: 'fkolympikus', sans-serif; font-weight: normal; margin: 0 0 15px 0; line-height: 1.2;">
+                            style="font-family: 'neueplak', sans-serif; font-weight: normal; margin: 0 0 15px 0; line-height: 1.2;">
                             {{ $collection->first()->product->name }}</h1>
 
                         <table width="100%">

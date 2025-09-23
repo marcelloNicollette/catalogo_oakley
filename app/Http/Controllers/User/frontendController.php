@@ -27,7 +27,7 @@ class frontendController extends Controller
     public function index()
     {
 
-        $segmentacao = Segmentacao::all();
+        $segmentacao = Segmentacao::with('collections')->get();
         return view('user.segmentacao', ['segmentacao' => $segmentacao]);
     }
 

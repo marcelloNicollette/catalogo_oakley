@@ -29,12 +29,12 @@ return [
 
     // Registro da fonte
     'custom_font_data' => [
-        'fkolympikus' => [
-            'R' => 'FKOlympikus-Upright.ttf', // Caminho relativo ao custom_font_dir
-            'B' => 'FKOlympikus-Bold.ttf',
-            'I' => 'FKOlympikus-Italic.ttf',
-            'BI' => 'FKOlympikus-BoldItalic.ttf',
-            'S' => 'FKOlympikus-SmallCaps.ttf',
+        'neueplak' => [
+            'R' => 'Neue-Plak-Regular.ttf', // Caminho relativo ao custom_font_dir
+            'B' => 'Neue-Plak-Regular.ttf',
+            'I' => 'Neue-Plak-Regular.ttf',
+            'BI' => 'Neue-Plak-Regular.ttf',
+            'S' => 'Neue-Plak-Regular.ttf',
         ],
     ],
 

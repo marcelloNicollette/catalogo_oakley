@@ -128,8 +128,8 @@
                                 </svg>
                             </button>
                         </div>
-                        <div class=" mb-4">
-                            <h1 class="text-[38px] lg:text-[55px] font-normal font-fko">
+                        <div class="my-4">
+                            <h1 class="font-title-product-destaque font-neueplak">
                                 {{ $produto->name }}
                             </h1>
                         </div>

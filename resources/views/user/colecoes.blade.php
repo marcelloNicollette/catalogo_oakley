@@ -147,7 +147,7 @@
             </div>
 
             <!-- Grid de Coleções -->
-            <div class="bg-[#E6E6E6] h-[80vh] ml-4 p-2 rounded-lg height-ultra overflow-auto">
+            <div class="bg-[#000000] h-[80vh] ml-4 p-2 rounded-lg height-ultra overflow-auto">
                 <div id="colecoes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3"
                     style="border-radius: 10px 0 0 0;">
                     <!-- Cards serão renderizados via JavaScript -->
@@ -162,7 +162,7 @@
                     <div class="overlay absolute inset-0 bg-black bg-opacity-40 " style="display: none;"></div>
                     <div
                         class="absolute inset-0 flex flex-col justify-center items-center text-white p-6 gap-10 mt-10 hover:opacity-70">
-                        <h2 class="text-7xl font-normal mb-2 codigo font-fko"></h2>
+                        <h2 class="mb-2 codigo font-segmento neue-plak-extended"></h2>
                         <p class="text-lg opacity-90 description uppercase"></p>
                     </div>
                 </div>

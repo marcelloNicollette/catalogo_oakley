@@ -29,7 +29,7 @@
                 {{ __('Segmentos') }}
             </h2>
         </div>
-        <a href="{{ route('admin.segmentacao.create') }}"
+        <a href="{{ route('admin.segmento.create') }}"
             class="flex items-center bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
@@ -86,7 +86,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center space-x-3">
-                                    <a href="{{ route('admin.segmentacao.edit', $segmentacao->id) }}"
+                                    <a href="{{ route('admin.segmento.edit', $segmentacao->id) }}"
                                         class="flex items-center text-indigo-600 hover:text-indigo-900 transition duration-150 ease-in-out">
                                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -96,7 +96,7 @@
                                         </svg>
                                         Editar
                                     </a>
-                                    <form action="{{ route('admin.segmentacao.destroy', $segmentacao->id) }}" method="POST"
+                                    <form action="{{ route('admin.segmento.destroy', $segmentacao->id) }}" method="POST"
                                         class="inline-block">
                                         @csrf
                                         @method('DELETE')

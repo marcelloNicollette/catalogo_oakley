@@ -16,11 +16,11 @@ $fontPath = 'file://' . __DIR__ . '/storage/fonts/LiberationMono-Regular.ttf';
 $html = '
     <style>
         @font-face {
-            font-family: "fkolympikus";
+            font-family: "neueplak";
             src: url("' . $fontPath . '") format("truetype");
         }
         body {
-            font-family: "fkolympikus";
+            font-family: "neueplak";
         }
     </style>
     <p>Teste fonte LiberationMono no DomPDF</p>

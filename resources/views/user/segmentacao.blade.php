@@ -1,5 +1,17 @@
 <x-layout-user title="Olympikus - Segmentação">
     <style>
+        .font-segmento {
+            color: #FFF;
+            text-align: center;
+            font-size: 50px;
+            font-style: normal;
+            font-weight: 800;
+            line-height: 40px;
+            /* 80% */
+            letter-spacing: -4px;
+            text-transform: uppercase;
+        }
+
         @media (max-width: 1024px) {
             .font-segmento {
                 font-size: 40px;
@@ -36,7 +48,8 @@
             /* altura mínima para mobile */
         }
 
-        .grid-item a {
+        .grid-item a,
+        .grid-item div.notColection {
             height: 100%;
             display: block;
             border-radius: 0.5rem;
@@ -67,28 +80,35 @@
         }
     </style>
 
-    <div id="produtos" class="grid grid-cols-1 lg:grid-cols-3 gap-2 full-height-container">
+    <div id="produtos" class="grid grid-cols-1 lg:grid-cols-2 gap-2 full-height-container">
         @foreach ($segmentacao as $segmento)
             <div class="relative group cursor-pointer rounded-lg grid-item">
-                <a href="/user/{{ $segmento->slug }}" class="block relative overflow-hidden">
-                    <!-- Desktop Image -->
-                    <img src="{{ '/' . $segmento->image }}"
-                        class="hidden lg:block transition-transform duration-300 group-hover:scale-110"
-                        alt="{{ $segmento->name }}" />
-                    <!-- Mobile Image -->
-                    <img src="{{ '/' . $segmento->image_mobile }}"
-                        class="block lg:hidden transition-transform duration-300 group-hover:scale-110"
-                        alt="{{ $segmento->name }}" />
+                @if ($segmento->collections->count() > 0)
+                    <a href="/user/{{ $segmento->slug }}" class="block relative overflow-hidden">
+                    @else
+                        <div class="block relative overflow-hidden notColection cursor-default">
+                @endif
+                <!-- Desktop Image -->
+                <img src="{{ '/' . $segmento->image }}"
+                    class="hidden lg:block transition-transform duration-300 group-hover:scale-110"
+                    alt="{{ $segmento->name }}" />
+                <!-- Mobile Image -->
+                <img src="{{ '/' . $segmento->image_mobile }}"
+                    class="block lg:hidden transition-transform duration-300 group-hover:scale-110"
+                    alt="{{ $segmento->name }}" />
 
-                    <!-- Text Overlay -->
-                    <div class="absolute drop-shadow-lg  inset-0 flex items-end justify-start p-9 xl:p-12">
-                        <h2
-                            class="text-white text-4xl lg:text-7xl uppercase tracking-wide font-segmento font-fko xl:text-7xl 3xl:text-9xl">
-                            {{ $segmento->segmento }}
-                        </h2>
-                    </div>
-                </a>
+                <!-- Text Overlay -->
+                <div style="position: absolute; right: 220px; top: 306px; background: #E31B23; padding: 20px 40px;">
+                    <h2 class="font-segmento">
+                        {{ $segmento->segmento }}
+                    </h2>
+                </div>
+                @if ($segmento->collections->count() > 0)
+                    </a>
+                @else
             </div>
-        @endforeach
+        @endif
+    </div>
+    @endforeach
     </div>
 </x-layout-user>

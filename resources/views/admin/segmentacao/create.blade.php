@@ -21,7 +21,7 @@
 
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900">
-            <form action="{{ route('admin.segmentacao.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.segmento.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="mb-6">
@@ -77,7 +77,7 @@
                 </div>
 
                 <div class="flex justify-end space-x-3">
-                    <a href="{{ route('admin.segmentacao.index') }}"
+                    <a href="{{ route('admin.segmento.index') }}"
                         class="flex items-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">

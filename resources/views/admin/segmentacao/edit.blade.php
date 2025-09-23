@@ -23,8 +23,7 @@
 
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900">
-            <form action="{{ route('admin.segmentacao.update', $segmentacao) }}" method="POST"
-                enctype="multipart/form-data">
+            <form action="{{ route('admin.segmento.update', $segmento) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -36,7 +35,7 @@
                     </label>
                     <input type="text" name="segmento" id="segmento"
                         class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition duration-150 ease-in-out"
-                        value="{{ old('name', $segmentacao->segmento) }}" required>
+                        value="{{ old('name', $segmento->segmento) }}" required>
                     @error('name')
                         <p class="mt-2 text-sm text-red-600 flex items-center">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -62,9 +61,9 @@
                     </label>
                     <input type="file" name="image" id="image"
                         class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition duration-150 ease-in-out">
-                    @if ($segmentacao->image)
+                    @if ($segmento->image)
                         <div class="mt-2 relative group">
-                            <img src="{{ asset('/' . $segmentacao->image) }}" alt="Imagem atual"
+                            <img src="{{ asset('/' . $segmento->image) }}" alt="Imagem atual"
                                 class="h-32 w-auto object-cover rounded-lg shadow-sm">
                             <div
                                 class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition duration-150 ease-in-out rounded-lg flex items-center justify-center">
@@ -97,9 +96,9 @@
                     </label>
                     <input type="file" name="image_mobile" id="image_mobile"
                         class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition duration-150 ease-in-out">
-                    @if ($segmentacao->image_mobile)
+                    @if ($segmento->image_mobile)
                         <div class="mt-2 relative group">
-                            <img src="{{ asset('/' . $segmentacao->image_mobile) }}" alt="Imagem atual"
+                            <img src="{{ asset('/' . $segmento->image_mobile) }}" alt="Imagem atual"
                                 class="h-32 w-auto object-cover rounded-lg shadow-sm">
                             <div
                                 class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition duration-150 ease-in-out rounded-lg flex items-center justify-center">
@@ -124,9 +123,9 @@
                     <label for="active" class="block text-sm font-medium text-gray-700">Status</label>
                     <select name="active" id="active"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                        <option value="1" {{ old('active', $segmentacao->active) == '1' ? 'selected' : '' }}>Ativo
+                        <option value="1" {{ old('active', $segmento->active) == '1' ? 'selected' : '' }}>Ativo
                         </option>
-                        <option value="0" {{ old('active', $segmentacao->active) == '0' ? 'selected' : '' }}>Inativo
+                        <option value="0" {{ old('active', $segmento->active) == '0' ? 'selected' : '' }}>Inativo
                         </option>
                     </select>
                     @error('active')
@@ -136,7 +135,7 @@
 
                 <!-- Botões -->
                 <div class="flex justify-end space-x-3">
-                    <a href="{{ route('admin.segmentacao.index') }}"
+                    <a href="{{ route('admin.segmento.index') }}"
                         class="flex items-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">
