@@ -13,13 +13,13 @@ class SegmentacaoController extends Controller
 
     public function index()
     {
-        $segmentacoes = Segmentacao::paginate(10);
-        return view('admin.segmentacao.index', compact('segmentacoes'));
+        $segmentos = Segmentacao::paginate(10);
+        return view('admin.segmento.index', compact('segmentos'));
     }
 
     public function create()
     {
-        return view('admin.segmentacao.create');
+        return view('admin.segmento.create');
     }
 
     public function store(Request $request)
@@ -54,7 +54,7 @@ class SegmentacaoController extends Controller
 
     public function edit(Segmentacao $segmento)
     {
-        return view('admin.segmentacao.edit', compact('segmento'));
+        return view('admin.segmento.edit', compact('segmento'));
     }
 
     public function update(Request $request, Segmentacao $segmento)

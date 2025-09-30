@@ -71,7 +71,7 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach ($segmentacoes as $segmentacao)
+                    @foreach ($segmentos as $segmentacao)
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $segmentacao->segmento }}</td>
                             <td class="px-6 py-4 whitespace-nowrap"><img src="{{ asset('/' . $segmentacao->image) }}"
@@ -120,7 +120,7 @@
             </table>
 
             <div class="mt-4">
-                {{ $segmentacoes->links() }}
+                {{ $segmentos->links() }}
             </div>
         </div>
     </div>
