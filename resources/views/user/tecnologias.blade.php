@@ -1,4 +1,4 @@
-<x-layout-user title="Olympikus - Tecnologias">
+<x-layout-user title="Under Armour - Tecnologias">
     <style>
         .check-icon {
             color: #000;
@@ -87,7 +87,8 @@
                 <div class="my-custom-bg p-12 max-w-[999px] mx-auto pb-0">
                     @foreach ($tecnologias as $item)
                         <div class="mb-10" data-categoria-id="{{ $item->id }}">
-                            <h2 class="font-fko text-[38px] pb-5 font-normal uppercase">{{ $item->name }}</h2>
+                            <h2 class="neue-plak-extended text-[38px] pb-5 font-black uppercase">{{ $item->name }}
+                            </h2>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                                 @if ($item->items->count() > 0)
                                     @foreach ($item->items as $tecnologia)

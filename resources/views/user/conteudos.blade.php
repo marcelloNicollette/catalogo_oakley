@@ -1,4 +1,4 @@
-<x-layout-user title="Olympikus - Conteúdos">
+<x-layout-user title="Under Armour - Conteúdos">
     <style>
         .options {
             width: 270px;
@@ -91,9 +91,10 @@
                 <div class="my-custom-bg p-12 max-w-[999px] mx-auto pb-0">
                     @foreach ($conteudos as $item)
                         <div class="mb-10" data-categoria-id="{{ $item->id }}">
-                            <div class="flex items-center p-2 w-[65px] h-[65px]">
-                                <img src="/{{ $item->icon }}" class="w-full pt-1" alt="{{ $item->category }}" />
-                                <h2 class="font-fko text-[38px] pl-4 font-normal uppercase">{{ $item->category }}</h2>
+                            <div class="flex items-center">
+                                <img src="/{{ $item->icon }}" class="" alt="{{ $item->category }}" />
+                                <h2 class="neue-plak-extended text-[38px] font-black uppercase pt-1 pl-1">
+                                    {{ $item->category }}</h2>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

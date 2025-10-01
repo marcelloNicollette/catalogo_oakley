@@ -1,4 +1,4 @@
-<x-layout-user title="Olympikus - Segmentação">
+<x-layout-user title="Under Armour">
     <main class="lg:flex flex-1 produtos-page">
         <style>
             .badge-icon-wrapper .badge-tooltip {

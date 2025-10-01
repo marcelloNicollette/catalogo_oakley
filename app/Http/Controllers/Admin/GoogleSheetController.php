@@ -175,7 +175,6 @@ class GoogleSheetController extends Controller
             'price' =>  str_replace('.', ',', $data['PDV']) ?? 0, // Preço não está na planilha atual
             'slug' => Str::slug($data['NOME']) . '-' . $data['CÓDIGO'],
             'category_id' => $category->id ?? null,
-            'subcategory_id' => $subcategory->id ?? null,
             'active' => true,
             'technologies' => json_encode($tecnologia),
             'flag_calendario' => !empty($data['LANÇAMENTO']) || !empty($data['LANÇAMENTO_DTC']) || !empty($data['LANÇAMENTO_TRADE']) || !empty($data['LANÇAMENTO_CLIENTE']),

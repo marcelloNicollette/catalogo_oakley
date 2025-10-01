@@ -1,4 +1,4 @@
-<x-layout-user title="Olympikus - Segmentação">
+<x-layout-user title="Under Armour - Segmentação">
     <style>
         .font-segmento {
             color: #FFF;
@@ -23,7 +23,6 @@
             .font-segmento {
                 font-size: 6rem;
                 line-height: 5rem;
-                padding-right: 3rem;
             }
         }
 
@@ -31,7 +30,6 @@
             .font-segmento {
                 font-size: 6rem;
                 line-height: 5rem;
-                padding: 0 13rem 2rem 3rem;
             }
         }
 
@@ -98,10 +96,12 @@
                     alt="{{ $segmento->name }}" />
 
                 <!-- Text Overlay -->
-                <div style="position: absolute; right: 220px; top: 306px; background: #E31B23; padding: 20px 40px;">
-                    <h2 class="font-segmento">
-                        {{ $segmento->segmento }}
-                    </h2>
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div class="bg-[#E31B23] px-10 py-5 pointer-events-auto">
+                        <h2 class="font-segmento text-center">
+                            {{ $segmento->segmento }}
+                        </h2>
+                    </div>
                 </div>
                 @if ($segmento->collections->count() > 0)
                     </a>

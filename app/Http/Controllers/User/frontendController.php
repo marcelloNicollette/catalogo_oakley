@@ -28,6 +28,7 @@ class frontendController extends Controller
     {
 
         $segmentacao = Segmentacao::with('collections')->get();
+        //dd($segmentacao);
         return view('user.segmentacao', ['segmentacao' => $segmentacao]);
     }
 
@@ -123,23 +124,6 @@ class frontendController extends Controller
 
     public function produtos($slug, $colecao, Request $request)
     {
-        // Exemplo de como acessar selectedSegmentacoes do localStorage via JavaScript/AJAX:
-        // No frontend (JavaScript), você pode fazer:
-        // 
-        // const selectedSegmentacoes = JSON.parse(localStorage.getItem('selectedSegmentacoes') || '[]');
-        // 
-        // fetch('/user/api/selected-segmentacoes', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        //     },
-        //     body: JSON.stringify({ selected_segmentacoes: selectedSegmentacoes })
-        // })
-        // .then(response => response.json())
-        // .then(data => {
-        //     console.log('Segmentações registradas:', data.data.segmentacoes);
-        // });
 
         //dd($this->getSelectedSegmentacoes($request));
         $segmentacao = Segmentacao::where('slug', $slug)->first();
@@ -194,7 +178,7 @@ class frontendController extends Controller
         $userSegmentacoesCliente = $user->segmentacoesCliente;
 
         // Buscar o produto com suas relações
-        $produto = Product::where('slug', $produto)->with(['category', 'sizes', 'numeracoes', 'caracteristicas', 'links', 'caracteristicasDestaque', 'colors'])->first();
+        $produto = Product::where('code', $produto)->with(['category', 'sizes', 'numeracoes', 'caracteristicas', 'links', 'caracteristicasDestaque', 'colors'])->first();
 
         // Buscar apenas as cores do produto que estão vinculadas às segmentações do cliente
         if ($userSegmentacoesCliente->isNotEmpty()) {
@@ -335,5 +319,15 @@ class frontendController extends Controller
         //dd($calendarios);
 
         return view('user.calendario', ['calendarios' => $calendarios, 'anos' => $anos]);
+    }
+
+    public function getSubcategories($categoryId)
+    {
+        $subcategories = \App\Models\Subcategory::where('category_id', $categoryId)
+            ->where('active', true)
+            ->orderBy('faixa')
+            ->get(['id', 'faixa as name']);
+
+        return response()->json($subcategories);
     }
 }

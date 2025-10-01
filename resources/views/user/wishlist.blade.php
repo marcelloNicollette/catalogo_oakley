@@ -1,4 +1,4 @@
-<x-layout-user title="Olympikus - Favoritos">
+<x-layout-user title="Under Armour - Favoritos">
     <main class="lg:flex flex-1 produtos-page">
         <style>
             .badge-icon-wrapper .badge-tooltip {

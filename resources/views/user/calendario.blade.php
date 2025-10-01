@@ -1,4 +1,4 @@
-<x-layout-user title="Olympikus - Segmentação">
+<x-layout-user title="Under Armour - Segmentação">
     <style>
         .select-container {
             position: relative;

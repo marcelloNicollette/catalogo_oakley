@@ -205,7 +205,7 @@
             <!-- Conteúdo central -->
             <div class="items-center justify-center w-[350px]">
                 <!-- Título -->
-                <h2 class="text-xl text-white text-center mb-8">Bem-vindo ao catálogo <br>digital da Olympikus.</h2>
+                <h2 class="text-xl text-white text-center mb-8">Bem-vindo ao catálogo <br>digital da Under Armour.</h2>
 
                 <!-- Formulário -->
                 <form class="" method="POST" action="{{ url('/admin/login') }}">

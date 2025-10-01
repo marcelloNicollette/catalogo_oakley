@@ -1,4 +1,4 @@
-<x-layout-user title="Olympikus - Segmentação">
+<x-layout-user title="Under Armour - Segmentação">
     <style>
         @media (min-width: 1280px) {
 
@@ -176,7 +176,7 @@
                     <div class="overlay absolute inset-0 bg-black bg-opacity-40 " style="display: none;"></div>
                     <div
                         class="absolute inset-0 flex flex-col justify-center items-center text-white p-6 gap-10 mt-10 hover:opacity-70">
-                        <h2 class="text-7xl font-normal mb-2 codigo font-fko"></h2>
+                        <h2 class="mb-2 codigo font-segmento neue-plak-extended"></h2>
                         <p class="text-lg opacity-90 description uppercase"></p>
                     </div>
                 </div>

@@ -38,9 +38,9 @@
         <span class="text-xs md:text-base mt-1">Gerar Arquivo</span>
     </a>
 
-    <a href="{{ route('user.calendario', request()->route('slug')) }}"
+    <!--<a href="{{ route('user.calendario', request()->route('slug')) }}"
         class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $activeItem === 'calendario' ? 'bg-[#E7E7E7]' : '' }}">
         <img src="/images/icones/calendario.svg" class="float-left pr-[0.5rem]" alt="Calendário" />
         <span class="text-xs md:text-base mt-1">Calendário</span>
-    </a>
+    </a>-->
 </aside>
