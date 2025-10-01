@@ -54,9 +54,7 @@
             <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Segmento
-                        </th>
+
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nome
                         </th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Código
@@ -70,7 +68,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach ($collections as $collection)
                         <tr class="hover:bg-gray-100">
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $collection->segmentacao->segmento }}</td>
+
                             <td class="px-6 py-4 whitespace-nowrap">{{ $collection->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $collection->codigo_colecao }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -114,9 +112,6 @@
                 </tbody>
             </table>
 
-            <div class="mt-4">
-                {{ $collections->links() }}
-            </div>
         </div>
     </div>
 @endsection
