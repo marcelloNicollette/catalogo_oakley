@@ -1,4 +1,4 @@
-<x-layout-user title="Olympikus - Segmentação">
+<x-layout-user title="Under Armour - Produtos">
     <main class="lg:flex flex-1 produtos-page">
         <style>
             .badge-icon-wrapper .badge-tooltip {
@@ -97,20 +97,26 @@
                             </div>
                         </div>
                         <div class="options" id="colecaoOptions">
-
+                            <div class="option" data-slug="" data-value="">
+                                <span class="check-icon" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 640 640">
+                                        <path
+                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
+                                    </svg></span>
+                                <span class="option-content">Selecione uma coleção</span>
+                                <span class="x-icon" style="display: none;">×</span>
+                            </div>
                             @foreach ($colecoes as $colecao)
                                 <div class="option text-[18px]" data-slug="{{ $colecao->slug }}"
                                     data-value="{{ $colecao->slug }}"
-                                    {{ $currentSlug == $colecao->slug ? 'selected' : '' }}
-                                    style=" {{ $currentSlug == $colecao->slug ? 'padding: 6px 15px 6px 1px;' : '' }}">
+                                    {{ $currentSlug == $colecao->slug ? 'selected' : '' }}>
                                     <span class="check-icon"
-                                        style="display: {{ $currentSlug == $colecao->slug ? 'inline; margin:0 10px;' : 'none' }};"><svg
+                                        style="display: {{ $currentSlug == $colecao->slug ? 'inline' : 'none' }};"><svg
                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                             <path
                                                 d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
                                         </svg></span>
-                                    <span class="option-content"
-                                        style="margin: {{ $currentSlug == $colecao->slug ? '0' : '0 20px' }};">
+                                    <span class="option-content">
                                         {{ $colecao->codigo_colecao }} -
                                         <span style="font-size: 14px;">{{ ucwords(strtolower($colecao->name)) }}</span>
                                     </span>
@@ -118,21 +124,12 @@
                                         style="display: {{ $currentSlug == $colecao->slug ? 'inline' : 'none' }};">×</span>
                                 </div>
                             @endforeach
-                            <div class="option" data-slug="" data-value="">
-                                <span class="check-icon" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 640 640">
-                                        <path
-                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
-                                    </svg></span>
-                                <span class="option-content">Todas</span>
-                                <span class="x-icon" style="display: none;">×</span>
-                            </div>
                         </div>
                     </div>
 
-                    <div class="select-container w-[160px]">
+                    <div class="select-container">
                         <div class="select-button" id="categorySelectButton">
-                            <span id="categorySelectedText">Categorias</span>
+                            <span id="categorySelectedText">Todas as categorias</span>
                             <div class="" id="categoryArrow">
                                 <div class="pt-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
@@ -144,45 +141,6 @@
                             </div>
                         </div>
                         <div class="options" id="categoryOptions">
-
-                            @foreach ($categories as $category)
-                                <div class="option" data-value="{{ $category->name }}" data-id="{{ $category->id }}">
-                                    <span class="check-icon" style="display: none;"><svg
-                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                            <path
-                                                d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
-                                        </svg></span>
-                                    <span class="option-content">{{ $category->name }}</span>
-                                    <span class="x-icon" style="display: none;">×</span>
-                                </div>
-                            @endforeach
-                            <div class="option selected" data-value="">
-                                <span class="check-icon" style="display: inline;"><svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 640 640"><!--!Font Awesome Free v7.0.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
-                                        <path
-                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
-                                    </svg></span>
-                                <span class="option-content">Todas</span>
-                                <span class="x-icon" style="display: inline;">×</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="select-container w-[190px]" id="subcategoryContainer" style="display: none;">
-                        <div class="select-button" id="subcategorySelectButton">
-                            <span id="subcategorySelectedText">Selecione uma categoria primeiro</span>
-                            <div class="" id="subcategoryArrow">
-                                <div class="pt-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
-                                        viewBox="0 0 12 8" fill="none">
-                                        <path d="M1 1L5.94975 5.94975L10.8995 1" stroke="black" stroke-width="1.5"
-                                            stroke-linecap="round" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="options" id="subcategoryOptions">
                             <div class="option" data-value="" selected>
                                 <span class="check-icon" style="display: inline;"><svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -190,9 +148,21 @@
                                         <path
                                             d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
                                     </svg></span>
-                                <span class="option-content">Todas as faixas</span>
+                                <span class="option-content">Todas as categorias</span>
                                 <span class="x-icon" style="display: inline;">×</span>
                             </div>
+                            @foreach ($categories as $category)
+                                <div class="option" data-value="{{ $category->name }}">
+                                    <span class="check-icon" style="display: none;"><svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 640 640"><!--!Font Awesome Free v7.0.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                                            <path
+                                                d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
+                                        </svg></span>
+                                    <span class="option-content">{{ $category->name }}</span>
+                                    <span class="x-icon" style="display: none;">×</span>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -309,7 +279,7 @@
 
             <!-- Lista de Produtos -->
             <div id="produtos"
-                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[10px] p-1 bg-[#E6E6E6] lg:p-[10px] min-h-[80vh] xl:min-h-[88vh] ultra:min-h-[88vh] mt-72 lg:mt-[4.8rem] overflow-auto h-[0vh]">
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[10px] p-1 bg-[#000000] lg:p-[10px] min-h-[80vh] xl:min-h-[88vh] ultra:min-h-[88vh] mt-72 lg:mt-[4.8rem] overflow-auto h-[0vh]">
 
                 @if (empty($produtos) || count($produtos) == 0)
                     <!-- Mensagem quando não há produtos -->
@@ -330,7 +300,7 @@
                                 <img src="/images/tenis-1.jpg" alt="Tênis"
                                     class="w-full object-contain rounded-md" />
                                 <div class="px-4 pt-0 pb-2">
-                                    <h2 class="title font-normal font-fko text-[28px] leading-[24px] pb-2"></h2>
+                                    <h2 class="neue-plak font-title-product pb-2"></h2>
                                     <p class="text-sm pb-2">
                                         <span class="categoria text-black "></span> <span
                                             class="codigo text-black opacity-50"></span>
@@ -382,9 +352,8 @@
                             codigo_cor: "{{ str_replace('/', '_', $produtoGroup->color_code) }}",
                             numeracao: "34/44",
                             categoria: "{{ $produto->category->name }}",
-                            subcategory_id: "{{ $produto->subcategory_id }}",
-                            preco: "R$ {{ $precoNumerico }}",
-                            precoNumerico: "R$ {{ $precoNumerico }}",
+                            preco: "R${{ number_format($precoNumerico, 2, ',', '.') }}",
+                            precoNumerico: {{ $precoNumerico }},
                             numeracaoIds: @json($numeracaoIds),
                             tamanhoIds: @json($tamanhoIds),
                             classificacaoId: {{ $classificacaoId ?? 'null' }},
@@ -406,14 +375,6 @@
 
             // Custom dropdown functionality
             let selectedCategory = '';
-            let selectedSubcategory = '';
-
-            // Subcategory dropdown elements
-            const subcategoryContainer = document.getElementById('subcategoryContainer');
-            const subcategorySelectButton = document.getElementById('subcategorySelectButton');
-            const subcategoryOptions = document.getElementById('subcategoryOptions');
-            const subcategorySelectedText = document.getElementById('subcategorySelectedText');
-            const subcategoryArrow = document.getElementById('subcategoryArrow');
 
             function renderProdutos(produtos, agrupado = false) {
 
@@ -448,7 +409,7 @@
                 listaParaRenderizar.forEach((produto) => {
                     const clone = template.content.cloneNode(true);
                     const link = clone.querySelector("a");
-                    link.href = `{{ $currentSlug }}/${produto.codigo}/${produto.codigo_cor}`;
+                    link.href = `{{ $currentSlug }}/${produto.slug}/${produto.codigo_cor}`;
                     clone.querySelector("img").src = produto.imagem;
                     clone.querySelector("h2").textContent = produto.title;
                     clone.querySelector(".codigo").textContent = produto.codigo;
@@ -535,9 +496,6 @@
                         // Filtro por categoria
                         const matchesCategoria = categoria === '' || p.categoria === categoria;
 
-                        // Filtro por subcategoria
-                        const matchesSubcategoria = selectedSubcategory === '' || p.subcategory_id == selectedSubcategory;
-
                         // Filtro por numeração
                         const matchesNumeracao = selectedFilters.numeracao.length === 0 ||
                             selectedFilters.numeracao.some(numId => p.numeracaoIds.includes(parseInt(numId)));
@@ -573,7 +531,7 @@
                             matchesPreco = matchesPreco && p.precoNumerico <= maxPrice;
                         }
 
-                        return matchesTermo && matchesCategoria && matchesSubcategoria && matchesNumeracao &&
+                        return matchesTermo && matchesCategoria && matchesNumeracao &&
                             matchesTamanho && matchesClassificacao && matchesSegmentacao && matchesPreco;
                     }
                 );
@@ -585,66 +543,6 @@
                 const agrupado = groupCheckbox.checked;
                 const filtrados = filtrarProdutos(termo, categoria);
                 renderProdutos(filtrados, agrupado);
-            }
-
-            // Função para carregar subcategorias
-            function loadSubcategories(categoryId) {
-                if (!categoryId || categoryId === '') {
-                    // Ocultar dropdown de subcategorias se nenhuma categoria selecionada
-                    subcategoryContainer.style.display = 'none';
-                    selectedSubcategory = '';
-                    return;
-                }
-
-                // Fazer requisição para buscar subcategorias
-                fetch(`/user/api/subcategories/${categoryId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Limpar opções existentes
-                        subcategoryOptions.innerHTML = '';
-
-                        // Adicionar opção "Todas as subcategorias"
-                        const allOption = document.createElement('div');
-                        allOption.className = 'option';
-                        allOption.setAttribute('data-value', '');
-                        allOption.innerHTML = `
-                            <div class="option-content">
-                                <span>Todas as faixas</span>
-                            </div>
-                            <i class="fas fa-check check-icon" style="display: none;"></i>
-                            <i class="fas fa-times x-icon" style="display: none;"></i>
-                        `;
-                        subcategoryOptions.appendChild(allOption);
-
-                        // Adicionar subcategorias
-                        data.forEach(subcategory => {
-                            const option = document.createElement('div');
-                            option.className = 'option';
-                            option.setAttribute('data-value', subcategory.id);
-                            option.innerHTML = `
-                                <div class="option-content">
-                                    <span>${subcategory.name}</span>
-                                </div>
-                                <i class="fas fa-check check-icon" style="display: none;"></i>
-                                <i class="fas fa-times x-icon" style="display: none;"></i>
-                            `;
-                            subcategoryOptions.appendChild(option);
-                        });
-
-                        // Resetar seleção de subcategoria
-                        subcategorySelectedText.textContent = 'Todas as faixas';
-                        selectedSubcategory = '';
-
-                        // Mostrar dropdown de subcategorias
-                        subcategoryContainer.style.display = 'block';
-
-                        // Aplicar filtros
-                        aplicarFiltros();
-                    })
-                    .catch(error => {
-                        console.error('Erro ao carregar subcategorias:', error);
-                        subcategoryContainer.style.display = 'none';
-                    });
             }
 
             renderProdutos(produtosData, false);
@@ -679,80 +577,6 @@
             const categorySelectedText = document.getElementById('categorySelectedText');
             const categoryArrow = document.getElementById('categoryArrow');
 
-            // Subcategory dropdown functions
-            function openSubcategoryDropdown() {
-                subcategoryOptions.classList.add('show');
-                subcategorySelectButton.classList.add('active');
-                subcategoryArrow.classList.add('up');
-            }
-
-            function closeSubcategoryDropdown() {
-                subcategoryOptions.classList.remove('show');
-                subcategorySelectButton.classList.remove('active');
-                subcategoryArrow.classList.remove('up');
-            }
-
-            // Subcategory dropdown event listeners
-            subcategorySelectButton.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const isOpen = subcategoryOptions.classList.contains('show');
-
-                if (isOpen) {
-                    closeSubcategoryDropdown();
-                } else {
-                    openSubcategoryDropdown();
-                }
-            });
-
-            subcategoryOptions.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-
-            // Handle subcategory selection
-            subcategoryOptions.addEventListener('click', function(e) {
-                // Handle X icon click to remove selection
-                if (e.target.classList.contains('x-icon')) {
-                    e.stopPropagation();
-                    const option = e.target.closest('.option');
-                    if (option) {
-                        // Remove selection and reset subcategory filter
-                        subcategorySelectedText.textContent = 'Todas as subcategorias';
-                        selectedSubcategory = '';
-                        closeSubcategoryDropdown();
-                        aplicarFiltros();
-                    }
-                    return;
-                }
-
-                let option = e.target;
-
-                // Find the option element if clicked on child elements
-                if (!option.classList.contains('option')) {
-                    option = option.closest('.option');
-                }
-
-                if (option && option.classList.contains('option')) {
-                    // Remove selected state from all options
-                    subcategoryOptions.querySelectorAll('.option').forEach(opt => {
-                        opt.classList.remove('selected');
-                        opt.querySelector('.check-icon').style.display = 'none';
-                        opt.querySelector('.x-icon').style.display = 'none';
-                    });
-
-                    // Add selected state to clicked option
-                    option.classList.add('selected');
-                    option.querySelector('.check-icon').style.display = 'inline';
-                    option.querySelector('.x-icon').style.display = 'inline';
-
-                    const value = option.getAttribute('data-value');
-                    const text = option.querySelector('.option-content').textContent;
-                    subcategorySelectedText.textContent = text;
-                    selectedSubcategory = value;
-                    closeSubcategoryDropdown();
-                    aplicarFiltros();
-                }
-            });
-
             function openColecaoDropdown() {
                 colecaoOptions.classList.add('show');
                 colecaoArrow.classList.add('up');
@@ -776,7 +600,7 @@
             // Coleção dropdown events
             colecaoSelectButton.addEventListener('click', function(e) {
                 e.stopPropagation();
-                //console.log(colecaoOptions);
+                console.log(colecaoOptions);
                 if (colecaoOptions.classList.contains('show')) {
                     closeColecaoDropdown();
                 } else {
@@ -819,8 +643,6 @@
 
                     // Add selected state to clicked option
                     option.classList.add('selected');
-                    //console.log('opa');
-                    option.style.padding = '6px 15px 6px 1px';
                     option.querySelector('.check-icon').style.display = 'inline';
                     option.querySelector('.x-icon').style.display = 'inline';
 
@@ -856,7 +678,7 @@
                     const option = e.target.closest('.option');
                     if (option) {
                         // Remove selection and reset category filter
-                        categorySelectedText.textContent = 'Todas as categorias';
+                        categorySelectedText.textContent = 'Selecione uma categoria';
                         selectedCategory = '';
                         closeCategoryDropdown();
                         aplicarFiltros();
@@ -885,15 +707,10 @@
                     option.querySelector('.x-icon').style.display = 'inline';
 
                     const value = option.getAttribute('data-value');
-                    const categoryId = option.getAttribute('data-id');
                     const text = option.querySelector('.option-content').textContent;
                     categorySelectedText.textContent = text;
                     selectedCategory = value;
                     closeCategoryDropdown();
-
-                    // Carregar subcategorias quando categoria for selecionada
-                    loadSubcategories(categoryId);
-
                     aplicarFiltros();
                 }
             });
@@ -1179,7 +996,6 @@
             document.addEventListener('click', function() {
                 closeColecaoDropdown();
                 closeCategoryDropdown();
-                closeSubcategoryDropdown();
                 closeFilterDropdown();
                 closeSortDropdown();
             });

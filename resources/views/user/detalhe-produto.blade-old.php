@@ -1,4 +1,4 @@
-<x-layout-user-produto title="Olympikus - Produto">
+<x-layout-user-produto title="Under Armour - Detalhe Produto">
     <style>
         .badge-icon-wrapper .badge-tooltip {
             visibility: hidden;
@@ -128,8 +128,8 @@
                                 </svg>
                             </button>
                         </div>
-                        <div class=" mb-4">
-                            <h1 class="text-[38px] lg:text-[55px] font-normal font-fko">
+                        <div class="my-4">
+                            <h1 class="font-title-product-destaque font-neueplak">
                                 {{ $produto->name }}
                             </h1>
                         </div>
@@ -194,7 +194,7 @@
                             <div class="grid grid-cols-2 gap-4 text-sm mb-6">
                                 <div>
                                     <p class="text-xs text-black opacity-50">PDV</p>
-                                    <p class="text-base">R$ {{ $produto->price }}</p>
+                                    <p class="text-base">R$ {{ number_format($produto->price, 2, ',', '.') }}</p>
                                 </div>
 
                                 @if ($produto->caracteristicasDestaque)
@@ -229,7 +229,7 @@
                                                 <img src="/{{ $item->icon }}" class="w-100 h-100 my-0 rounded-lg"
                                                     alt="{{ $item->name }}" />
                                             </div>
-                                            <div class="min-h-[65px]">
+                                            <div>
                                                 <p class="text-xs text-black opacity-50">{{ $item->name }}</p>
                                                 <p class="text-xs">
                                                     {{ $item->description }}

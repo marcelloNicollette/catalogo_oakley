@@ -3,7 +3,6 @@
 use App\Http\Controllers\Admin\BannersController;
 use App\Http\Controllers\Admin\CaracteristicaProductController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\Admin\CollectionController;
 use App\Http\Controllers\Admin\ConteudoCategoryController as AdminConteudoCategoryController;
 use App\Http\Controllers\Admin\LeadController;
@@ -55,11 +54,6 @@ Route::get('/user/login', function () {
 })->name('user.login');
 Route::post('/user/login', [AuthenticatedSessionController::class, 'store']);
 
-Route::get('/admin/sync', [AdminGoogleSheetController::class, 'index'])
-    ->name('admin.sync');
-Route::get('/admin/sync-sheet', [AdminGoogleSheetController::class, 'sync'])
-    ->name('admin.sync-sheet');
-
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
@@ -101,7 +95,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
             'update' => 'admin.categories.update',
             'destroy' => 'admin.categories.destroy'
         ]);
-
     Route::resource('/admin/products', ProductController::class)
         ->names([
             'index' => 'admin.products.index',
@@ -112,10 +105,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
             'update' => 'admin.products.update',
             'destroy' => 'admin.products.destroy'
         ]);
-
-    // Rota para buscar subcategorias por categoria
-    Route::get('/admin/products/subcategories/{category}', [ProductController::class, 'getSubcategories'])
-        ->name('admin.products.subcategories');
     Route::resource('/admin/technology/categories', TechnologyCategoryController::class)
         ->names([
             'index' => 'admin.technology.categories.index',
@@ -202,6 +191,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ]);
     Route::get('/admin/leads', [LeadController::class, 'index'])
         ->name('admin.leads');
+    Route::get('/admin/sync-sheet', [AdminGoogleSheetController::class, 'sync'])
+        ->name('admin.sync-sheet');
 
 
     Route::resource('/admin/users', UserController::class)
@@ -252,7 +243,7 @@ Route::middleware(['auth', 'user'])->group(function () {
         ->name('user.slug.colecoes');
     Route::get('/user/{slug}/colecoes/{colecao}', [frontendController::class, 'produtos'])
         ->name('user.colecao');
-    Route::get('/user/{slug}/colecoes/{colecao}/{code}/{codigo_cor}', [frontendController::class, 'detalhe_produto'])
+    Route::get('/user/{slug}/colecoes/{colecao}/{produto}/{codigo_cor}', [frontendController::class, 'detalhe_produto'])
         ->name('user.colecao.produto');
 
     // Export routes
@@ -272,7 +263,6 @@ Route::middleware(['auth', 'user'])->group(function () {
     // AJAX routes
     Route::get('/user/api/produtos-por-categoria', [frontendController::class, 'getProdutosPorCategoria'])->name('user.api.produtos-categoria');
     Route::post('/user/api/selected-segmentacoes', [frontendController::class, 'getSelectedSegmentacoes'])->name('user.api.selected-segmentacoes');
-    Route::get('/user/api/subcategories/{categoryId}', [frontendController::class, 'getSubcategories'])->name('user.api.subcategories');
 
 
 
