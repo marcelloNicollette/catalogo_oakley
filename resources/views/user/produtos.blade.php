@@ -330,7 +330,7 @@
                                 <img src="/images/tenis-1.jpg" alt="Tênis"
                                     class="w-full object-contain rounded-md" />
                                 <div class="px-4 pt-0 pb-2">
-                                    <h2 class="title font-normal font-fko text-[28px] leading-[24px] pb-2"></h2>
+                                    <h2 class="title  font-black font-fko text-[28px] leading-[24px] pb-2"></h2>
                                     <p class="text-sm pb-2">
                                         <span class="categoria text-black "></span> <span
                                             class="codigo text-black opacity-50"></span>
