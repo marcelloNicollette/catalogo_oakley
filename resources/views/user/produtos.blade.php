@@ -1,4 +1,4 @@
-<x-layout-user title="Under Armour">
+<x-layout-user title="Olympikus - Segmentação">
     <main class="lg:flex flex-1 produtos-page">
         <style>
             .badge-icon-wrapper .badge-tooltip {
@@ -330,7 +330,7 @@
                                 <img src="/images/tenis-1.jpg" alt="Tênis"
                                     class="w-full object-contain rounded-md" />
                                 <div class="px-4 pt-0 pb-2">
-                                    <h2 class="title  font-black font-fko text-[28px] leading-[24px] pb-2"></h2>
+                                    <h2 class="title font-normal font-fko text-[28px] leading-[24px] pb-2"></h2>
                                     <p class="text-sm pb-2">
                                         <span class="categoria text-black "></span> <span
                                             class="codigo text-black opacity-50"></span>
@@ -362,40 +362,42 @@
             const produtosData = [
                 @if (!empty($produtos) && count($produtos) > 0)
                     @foreach ($produtos as $produtoGroup)
-                        @php
-                            $imgPath = '/images/produtos/' . $produtoGroup->product->code . '_' . str_replace('/', '_', $produtoGroup->color_code) . '.jpg';
-                            $imgFullPath = public_path($imgPath);
-                            $img = file_exists($imgFullPath) ? $imgPath : '/images/img-padrao-oly.png';
-                            $produto = $produtoGroup->product;
-                            $numeracaoIds = $produto->numeracoes->pluck('id')->toArray();
-                            $tamanhoIds = $produto->sizes->pluck('id')->toArray();
-                            $precoNumerico = $produto->price;
-                            $classificacaoId = $produtoGroup->flagProduct ? $produtoGroup->flagProduct->id : null;
-                            $segmentacaoIds = $produtoGroup->segmentacoesCliente->pluck('id')->toArray();
-                        @endphp {
-                            title: "{{ $produto->name }}",
-                            imagem: "{{ $img }}",
-                            codigo: "{{ $produto->code }}",
-                            'title-caract-1': "{{ $produto->caracteristicasDestaque->first()->title ?? '' }}",
-                            'desc-caract-1': "{{ $produto->caracteristicasDestaque->first()->description ?? '' }}",
-                            cor: "{{ $produtoGroup->color_name }}",
-                            codigo_cor: "{{ str_replace('/', '_', $produtoGroup->color_code) }}",
-                            numeracao: "34/44",
-                            categoria: "{{ $produto->category->name }}",
-                            subcategory_id: "{{ $produto->subcategory_id }}",
-                            preco: "R$ {{ $precoNumerico }}",
-                            precoNumerico: "R$ {{ $precoNumerico }}",
-                            numeracaoIds: @json($numeracaoIds),
-                            tamanhoIds: @json($tamanhoIds),
-                            classificacaoId: {{ $classificacaoId ?? 'null' }},
-                            segmentacaoIds: @json($segmentacaoIds),
-                            badge_title: "{{ $produtoGroup->flagProduct->flag_title ?? '' }}",
-                            badge_icon: "{{ $produtoGroup->flagProduct->icon ?? '' }}",
-                            badge_bg: "{{ $produtoGroup->flagProduct->flag_bg ?? '' }}",
-                            badge_color: "{{ $produtoGroup->flagProduct->flag_color_text_bg ?? '' }}",
-                            badge_icon_align: "{{ $produtoGroup->flagProduct->alinhamento ?? '' }}",
-                            slug: "{{ $produto->slug }}"
-                        },
+                        @if ($produtoGroup && $produtoGroup->product)
+                            @php
+                                $produto = $produtoGroup->product;
+                                $imgPath = '/images/produtos/' . $produto->code . '_' . str_replace('/', '_', $produtoGroup->color_code) . '.jpg';
+                                $imgFullPath = public_path($imgPath);
+                                $img = file_exists($imgFullPath) ? $imgPath : '/images/img-padrao-oly.png';
+                                $numeracaoIds = $produto->numeracoes ? $produto->numeracoes->pluck('id')->toArray() : [];
+                                $tamanhoIds = $produto->sizes ? $produto->sizes->pluck('id')->toArray() : [];
+                                $precoNumerico = $produto->price ?? 0;
+                                $classificacaoId = $produtoGroup->flagProduct ? $produtoGroup->flagProduct->id : null;
+                                $segmentacaoIds = $produtoGroup->segmentacoesCliente ? $produtoGroup->segmentacoesCliente->pluck('id')->toArray() : [];
+                            @endphp {
+                                title: "{{ $produto->name ?? '' }}",
+                                imagem: "{{ $img }}",
+                                codigo: "{{ $produto->code ?? '' }}",
+                                'title-caract-1': "{{ $produto->caracteristicasDestaque && $produto->caracteristicasDestaque->first() ? $produto->caracteristicasDestaque->first()->title : '' }}",
+                                'desc-caract-1': "{{ $produto->caracteristicasDestaque && $produto->caracteristicasDestaque->first() ? $produto->caracteristicasDestaque->first()->description : '' }}",
+                                cor: "{{ $produtoGroup->color_name ?? '' }}",
+                                codigo_cor: "{{ str_replace('/', '_', $produtoGroup->color_code ?? '') }}",
+                                numeracao: "34/44",
+                                categoria: "{{ $produto->category ? $produto->category->name : '' }}",
+                                subcategory_id: "{{ $produto->subcategory_id ?? '' }}",
+                                preco: "R$ {{ $precoNumerico }}",
+                                precoNumerico: "R$ {{ $precoNumerico }}",
+                                numeracaoIds: @json($numeracaoIds),
+                                tamanhoIds: @json($tamanhoIds),
+                                classificacaoId: {{ $classificacaoId ?? 'null' }},
+                                segmentacaoIds: @json($segmentacaoIds),
+                                badge_title: "{{ $produtoGroup->flagProduct->flag_title ?? '' }}",
+                                badge_icon: "{{ $produtoGroup->flagProduct->icon ?? '' }}",
+                                badge_bg: "{{ $produtoGroup->flagProduct->flag_bg ?? '' }}",
+                                badge_color: "{{ $produtoGroup->flagProduct->flag_color_text_bg ?? '' }}",
+                                badge_icon_align: "{{ $produtoGroup->flagProduct->alinhamento ?? '' }}",
+                                slug: "{{ $produto->slug ?? '' }}"
+                            },
+                        @endif
                     @endforeach
                 @endif
             ];
