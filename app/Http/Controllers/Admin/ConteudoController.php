@@ -71,9 +71,9 @@ class ConteudoController extends Controller
             ->with('success', 'Conteúdo atualizado com sucesso!');
     }
 
-    public function destroy(Conteudo $conteudo)
+    public function destroy(Conteudo $item)
     {
-        $conteudo->delete();
+        $item->delete();
 
         return redirect()->route('admin.conteudos.items.index')
             ->with('success', 'Conteúdo removido com sucesso!');

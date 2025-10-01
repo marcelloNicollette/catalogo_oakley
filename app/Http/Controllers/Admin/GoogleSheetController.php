@@ -172,7 +172,7 @@ class GoogleSheetController extends Controller
             'description' => $data['DESCRIÇÃO'] ?? '',
             'code' => $data['CÓDIGO'],
             'sku' => $data['CÓDIGO'], // Usando CÓDIGO como SKU
-            'price' =>  str_replace('.', ',', $data['PDV']) ?? 0, // Preço não está na planilha atual
+            'price' => ($data['PDV'] != "") ? str_replace(',', '.', $data['PDV']) : 0, // Preço não está na planilha atual
             'slug' => Str::slug($data['NOME']) . '-' . $data['CÓDIGO'],
             'category_id' => $category->id ?? null,
             'active' => true,

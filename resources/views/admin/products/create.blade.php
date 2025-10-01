@@ -26,7 +26,7 @@
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="mb-4">
+                    <div class="">
                         <label for="name" class="block text-sm font-medium text-gray-700">Nome do Produto</label>
                         <input type="text" name="name" id="name"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -36,7 +36,7 @@
                         @enderror
                     </div>
 
-                    <div class="mb-4">
+                    <div class="">
                         <label for="description" class="block text-sm font-medium text-gray-700">Descrição do
                             Produto</label>
                         <textarea name="description" id="description"
@@ -46,7 +46,7 @@
                         @enderror
                     </div>
 
-                    <div class="mb-4">
+                    <div class="">
                         <label for="code" class="block text-sm font-medium text-gray-700">Código do Produto</label>
                         <input type="text" name="code" id="code"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -56,7 +56,7 @@
                         @enderror
                     </div>
 
-                    <div class="mb-4">
+                    <div class="">
                         <label for="sku" class="block text-sm font-medium text-gray-700">SKU do Produto</label>
                         <input type="text" name="sku" id="sku"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -66,7 +66,7 @@
                         @enderror
                     </div>
 
-                    <div class="mb-4">
+                    <div class="">
                         <label for="price" class="block text-sm font-medium text-gray-700">Preço do Produto</label>
                         <input type="number" step="0.01" name="price" id="price"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -76,7 +76,7 @@
                         @enderror
                     </div>
 
-                    <div class="mb-4">
+                    <div class="">
                         <label for="category_id" class="block text-sm font-medium text-gray-700">Categoria do
                             Produto</label>
                         <select name="category_id" id="category_id"
@@ -94,6 +94,19 @@
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    <div class="mb-4">
+                        <label for="subcategory_id" class="block text-sm font-medium text-gray-700">Subcategoria do
+                            Produto</label>
+                        <select name="subcategory_id" id="subcategory_id"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            disabled>
+                            <option value="">Selecione uma categoria primeiro</option>
+                        </select>
+                        @error('subcategory_id')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="mb-4">
@@ -101,9 +114,9 @@
                         <legend class="block text-sm font-medium text-gray-700">Cores disponíveis
                         </legend>
                         <div class="bg-gray-50 " x-data="{
-                            campos: [{ color_name: '', color_description: '', color_code: '', color_collection_id: '', color_flag_product_id: '' }],
+                            campos: [{ color_name: '', color_description: '', color_code: '', color_collection_id: '', color_flag_product_id: '', segmentacoes_cliente: [] }],
                             adicionarCampo() {
-                                this.campos.push({ color_name: '', color_description: '', color_code: '', color_collection_id: '', color_flag_product_id: '' });
+                                this.campos.push({ color_name: '', color_description: '', color_code: '', color_collection_id: '', color_flag_product_id: '', segmentacoes_cliente: [] });
                             },
                             removerCampo(index) {
                                 this.campos.splice(index, 1);
@@ -112,68 +125,104 @@
 
                             <div class="grid grid-cols-1">
                                 <template x-for="(campo, index) in campos" :key="index">
-                                    <div
-                                        class="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_1fr_1fr_auto] gap-2 bg-gray-100 p-4">
-                                        <!-- Coluna 1: Título -->
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700">Cor (Title)</label>
-                                            <input type="text" :name="`color_name[]`" x-model="campo.color_name"
-                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                                name="color_name[]">
-                                        </div>
-                                        <!-- Coluna 2: Descrição -->
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700">Descrição</label>
-                                            <input :name="`color_description[]`" x-model="campo.color_description"
-                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                                rows="2" name="color_description[]"></input>
-                                        </div>
-                                        <!-- Coluna 3: Código Cor -->
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700">Color Code</label>
-                                            <input :name="`color_code[]`" x-model="campo.color_code"
-                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                                name="color_code[]"></input>
-                                        </div>
-                                        <!-- Coluna 4: Coleção -->
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700">Coleção</label>
-                                            <select :name="`color_collection_id[]`" x-model="campo.color_collection_id"
-                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                required>
-                                                <option value="">Selecione uma coleção</option>
-                                                @foreach ($collections as $collection)
-                                                    <option value="{{ $collection->id }}"
-                                                        {{ old('collection_id') == $collection->id ? 'selected' : '' }}>
-                                                        {{ $collection->codigo_colecao . ' - ' . $collection->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <!-- Coluna 5: Flag -->
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700">Flag</label>
-                                            <select :name="`color_flag_product_id[]`" x-model="campo.color_flag_product_id"
-                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                required>
-                                                <option value="">Selecione a Flag</option>
-                                                @foreach ($flags as $flag)
-                                                    <option value="{{ $flag->id }}"
-                                                        {{ old('flag_product_id') == $flag->id ? 'selected' : '' }}>
-                                                        {{ $flag->flag_title }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                    <div class="bg-gray-100 p-4 border border-gray-200 rounded-lg mb-4">
+                                        <!-- Grid para os campos principais -->
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+                                            <!-- Coluna 1: Título -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Cor (Title)</label>
+                                                <input type="text" :name="`color_name[]`" x-model="campo.color_name"
+                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                                    name="color_name[]">
+                                            </div>
+                                            <!-- Coluna 2: Descrição -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Descrição</label>
+                                                <input :name="`color_description[]`" x-model="campo.color_description"
+                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                                    rows="2" name="color_description[]"></input>
+                                            </div>
+                                            <!-- Coluna 3: Código Cor -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Color Code</label>
+                                                <input :name="`color_code[]`" x-model="campo.color_code"
+                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                                    name="color_code[]"></input>
+                                            </div>
+                                            <!-- Coluna 4: Coleção -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Coleção</label>
+                                                <select :name="`color_collection_id[]`" x-model="campo.color_collection_id"
+                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    required>
+                                                    <option value="">Selecione uma coleção</option>
+                                                    @foreach ($collections as $collection)
+                                                        <option value="{{ $collection->id }}"
+                                                            {{ old('collection_id') == $collection->id ? 'selected' : '' }}>
+                                                            {{ $collection->codigo_colecao . ' - ' . $collection->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <!-- Coluna 5: Flag -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Flag</label>
+                                                <select :name="`color_flag_product_id[]`"
+                                                    x-model="campo.color_flag_product_id"
+                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    required>
+                                                    <option value="">Selecione a Flag</option>
+                                                    @foreach ($flags as $flag)
+                                                        <option value="{{ $flag->id }}"
+                                                            {{ old('flag_product_id') == $flag->id ? 'selected' : '' }}>
+                                                            {{ $flag->flag_title }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
 
-                                        <!-- Coluna 6: CTAS -->
-                                        <div class="mt-6 flex items-start justify-start w-auto">
+                                        <!-- Seção de Segmentação Cliente -->
+                                        <div class="mb-4">
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Segmentação
+                                                Cliente</label>
+                                            @if ($segmentacoesCliente->count() > 0)
+                                                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                                                    @foreach ($segmentacoesCliente as $segmentacao)
+                                                        <label class="flex items-center space-x-2 text-sm">
+                                                            <input type="checkbox"
+                                                                :name="`color_segmentacoes_cliente[${index}][]`"
+                                                                value="{{ $segmentacao->id }}"
+                                                                @change="
+                                                                    if ($event.target.checked) {
+                                                                        if (!campo.segmentacoes_cliente.includes({{ $segmentacao->id }})) {
+                                                                            campo.segmentacoes_cliente.push({{ $segmentacao->id }});
+                                                                        }
+                                                                    } else {
+                                                                        campo.segmentacoes_cliente = campo.segmentacoes_cliente.filter(id => id !== {{ $segmentacao->id }});
+                                                                    }
+                                                                "
+                                                                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                                            <span>{{ $segmentacao->nome }}</span>
+                                                        </label>
+                                                    @endforeach
+                                                </div>
+                                            @else
+                                                <p class="text-sm text-gray-500">Nenhuma segmentação de cliente disponível.
+                                                </p>
+                                            @endif
+                                        </div>
+
+                                        <!-- Botões de ação -->
+                                        <div class="flex items-center justify-start space-x-2">
                                             <button type="button" @click="adicionarCampo()"
-                                                class="px-3 py-1 h-8 mr-2 bg-green-500 text-white rounded hover:bg-green-600">+</button>
+                                                class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-sm">+
+                                                Adicionar Cor</button>
 
                                             <template x-if="campos.length > 1">
                                                 <button type="button" @click="removerCampo(index)"
-                                                    class="px-3 py-1 h-8 bg-red-500 text-white rounded hover:bg-red-600">−</button>
+                                                    class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm">−
+                                                    Remover</button>
                                             </template>
                                         </div>
                                     </div>
@@ -515,5 +564,61 @@
 @endsection
 
 @push('scripts')
-    <script></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categorySelect = document.getElementById('category_id');
+            const subcategorySelect = document.getElementById('subcategory_id');
+
+            categorySelect.addEventListener('change', function() {
+                const categoryId = this.value;
+
+                // Limpar subcategorias
+                subcategorySelect.innerHTML = '<option value="">Carregando...</option>';
+                subcategorySelect.disabled = true;
+
+                if (categoryId) {
+                    // Fazer requisição para buscar subcategorias
+                    fetch(`{{ url('/admin/products/subcategories') }}/${categoryId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            subcategorySelect.innerHTML =
+                                '<option value="">Selecione uma subcategoria</option>';
+
+                            if (data.length > 0) {
+                                data.forEach(subcategory => {
+                                    const option = document.createElement('option');
+                                    option.value = subcategory.id;
+                                    option.textContent = subcategory.faixa;
+
+                                    // Manter seleção se houver old value
+                                    if ('{{ old('subcategory_id') }}' == subcategory.id) {
+                                        option.selected = true;
+                                    }
+
+                                    subcategorySelect.appendChild(option);
+                                });
+                                subcategorySelect.disabled = false;
+                            } else {
+                                subcategorySelect.innerHTML =
+                                    '<option value="">Nenhuma subcategoria encontrada</option>';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro ao carregar subcategorias:', error);
+                            subcategorySelect.innerHTML =
+                                '<option value="">Erro ao carregar subcategorias</option>';
+                        });
+                } else {
+                    subcategorySelect.innerHTML =
+                        '<option value="">Selecione uma categoria primeiro</option>';
+                    subcategorySelect.disabled = true;
+                }
+            });
+
+            // Carregar subcategorias se já houver uma categoria selecionada (para casos de erro de validação)
+            if (categorySelect.value) {
+                categorySelect.dispatchEvent(new Event('change'));
+            }
+        });
+    </script>
 @endpush

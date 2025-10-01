@@ -64,7 +64,7 @@
 
                             <td class="px-6 py-4 whitespace-nowrap">{{ $product->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $product->code }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">R$ {{ number_format($product->price, 2, ',', '.') }}
+                            <td class="px-6 py-4 whitespace-nowrap">R$ {{ $product->price }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $product->category->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
