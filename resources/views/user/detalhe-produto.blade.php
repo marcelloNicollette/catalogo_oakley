@@ -149,7 +149,7 @@
                                                     alt="{{ $color->color_name }}"
                                                     class="w-full object-contain rounded-t-lg" loading="lazy"
                                                     onerror="this.src='/images/img-padrao-oly.png'" />
-                                                @if ($color->flag_product_id)
+                                                @if ($color->flag_product_id && $color->flagProduct)
                                                     @if ($color->flagProduct->icon != null)
                                                         <div
                                                             class="badge-icon-wrapper absolute top-1 {{ $color->flagProduct->alinhamento }}-0">
