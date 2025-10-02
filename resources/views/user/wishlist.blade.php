@@ -424,7 +424,7 @@
                         const clone = template.content.cloneNode(true);
                         const link = clone.querySelector("a");
                         link.href =
-                            `/user/${produto.segmento}/colecoes/${produto.slug_collection}/${produto.slug}/${produto.codigo_cor}`;
+                            `/user/${produto.segmento}/colecoes/${produto.slug_collection}/${produto.codigo}/${produto.codigo_cor}`;
                         // Adicionar classe product-card ao div principal
                         const productDiv = clone.querySelector('div');
                         if (productDiv) {
