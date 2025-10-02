@@ -129,7 +129,7 @@
                             </button>
                         </div>
                         <div class=" mb-4">
-                            <h1 class="text-[38px] lg:text-[55px] font-normal font-fko">
+                            <h1 class="title font-black text-[30px] lg:text-[40px] font-fko line-height-[20px]">
                                 {{ $produto->name }}
                             </h1>
                         </div>
