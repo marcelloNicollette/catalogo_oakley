@@ -279,7 +279,7 @@
                         const description = clone.querySelector('.description');
 
                         // Configurar box vazio
-                        card.style.backgroundColor = '#CFCFCF';
+                        card.style.backgroundColor = '#4A4A4A';
                         card.style.backgroundImage = 'none';
                         overlay.style.display = 'none';
 
