@@ -1,4 +1,4 @@
-<x-layout-user title="Olympikus - Segmentação">
+<x-layout-user title="Under Armour - Segmentação">
     <main class="lg:flex flex-1 produtos-page">
         <style>
             .badge-icon-wrapper .badge-tooltip {
@@ -78,13 +78,13 @@
                                 @if (!empty($currentSlug))
                                     @foreach ($colecoes as $colecao)
                                         @if ($currentSlug == $colecao->slug)
-                                            {{ $colecao->codigo_colecao }} - <span
-                                                style="font-size: 14px;">{{ $colecao->name }}</span>
-                                        @endif
-                                    @endforeach
-                                @else
-                                    Selecione uma coleção
-                                @endif
+                                            {{ $colecao->name }}
+                            </span>
+                            @endif
+                            @endforeach
+                        @else
+                            Selecione uma coleção
+                            @endif
                             </span>
                             <div class="" id="colecaoArrow">
                                 <div class="pt-1">
