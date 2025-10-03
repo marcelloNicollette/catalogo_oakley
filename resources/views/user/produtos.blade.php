@@ -111,8 +111,9 @@
                                         </svg></span>
                                     <span class="option-content"
                                         style="margin: {{ $currentSlug == $colecao->slug ? '0' : '0 20px' }};">
-                                        {{ $colecao->codigo_colecao }} -
-                                        <span style="font-size: 14px;">{{ ucwords(strtolower($colecao->name)) }}</span>
+                                        {{ $colecao->codigo_colecao }}
+                                        <!---
+                                        <span style="font-size: 14px;">{{ ucwords(strtolower($colecao->name)) }}</span>-->
                                     </span>
                                     <span class="x-icon"
                                         style="display: {{ $currentSlug == $colecao->slug ? 'inline' : 'none' }};">×</span>
@@ -130,7 +131,7 @@
                         </div>
                     </div>
 
-                    <div class="select-container w-[160px]">
+                    <div class="select-container w-[210px]">
                         <div class="select-button" id="categorySelectButton">
                             <span id="categorySelectedText">Categorias</span>
                             <div class="" id="categoryArrow">
@@ -330,7 +331,8 @@
                                 <img src="/images/tenis-1.jpg" alt="Tênis"
                                     class="w-full object-contain rounded-md" />
                                 <div class="px-4 pt-0 pb-2">
-                                    <h2 class="title font-black font-fko text-[28px] leading-[24px] pb-2"></h2>
+                                    <h2 class="title font-black font-fko text-[28px] leading-[24px] pb-2 min-h-[5rem]">
+                                    </h2>
                                     <p class="text-sm pb-2">
                                         <span class="categoria text-black "></span> <span
                                             class="codigo text-black opacity-50"></span>
