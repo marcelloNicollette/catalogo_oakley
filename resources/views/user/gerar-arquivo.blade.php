@@ -1,13 +1,36 @@
-<x-layout-user title="Under Armour - Segmentação">
+<x-layout-user title="Olympikus - Segmentação">
     <style>
         @media (min-width: 1280px) {
+            .grid-colecao-gerar {
+                height: 77vh;
+            }
 
             .colecao-card {
                 height: 35vh;
             }
         }
 
+        @media (min-width: 1366px) {
+            .grid-colecao-gerar {
+                height: 79vh;
+            }
+
+            .colecao-card {
+                height: 35vh;
+            }
+        }
+
+        @media (min-width: 1470px) {
+            .grid-colecao-gerar {
+                height: 79vh;
+            }
+        }
+
         @media (min-width: 2566px) {
+            .grid-colecao-gerar {
+                height: 88vh;
+            }
+
             .height-ultra {
                 height: 88vh;
             }
@@ -18,6 +41,10 @@
         }
 
         @media (min-width: 3000px) {
+            .grid-colecao-gerar {
+                height: 91vh;
+            }
+
             .height-ultra {
                 height: 91vh;
             }
@@ -160,7 +187,7 @@
 
 
             <!-- Grid de Coleções -->
-            <div class="bg-[#E6E6E6] h-[80vh] xl:h-[90vh] ml-4 p-2 rounded-lg  overflow-auto">
+            <div class="bg-[#E6E6E6] h-[80vh] xl:h-[90vh] p-2 rounded-lg  overflow-auto">
                 <div id="colecoes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3"
                     style="border-radius: 10px 0 0 0;">
                     <!-- Cards serão renderizados via JavaScript -->
@@ -198,7 +225,7 @@
             // Dados das coleções vindos do backend
             const colecoes = @json($colecoes);
             let colecoesFiltered = [...colecoes];
-
+            console.log(colecoesFiltered);
             // Dados das categorias do backend
             const categorias = @json($categorias ?? []);
             //console.log(categorias);
@@ -232,7 +259,7 @@
                     const codigo = clone.querySelector('.codigo');
                     const title = clone.querySelector('.title');
                     const description = clone.querySelector('.description');
-                    const formattedDescription = removerFormatacao(colecao.description).toLowerCase();
+                    const formattedDescription = colecao.description;
 
 
                     const currentDate = new Date();
