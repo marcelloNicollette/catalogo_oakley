@@ -322,30 +322,38 @@
                 @else
                     <!-- Template de Produto -->
                     <template id="template-produto">
-                        <a href="" class="block">
+                        <a href="" class="block h-full">
                             <div
-                                class="bg-white hover:shadow-md transition relative rounded-md border border-[#DEDEDE]">
+                                class="bg-white hover:shadow-md transition relative rounded-md border border-[#DEDEDE] h-full flex flex-col">
                                 <div class="badge-container pt-1 px-2" style="position:absolute; min-height: 35px;">
 
                                 </div>
                                 <img src="/images/tenis-1.jpg" alt="Tênis"
                                     class="w-full object-contain rounded-md" />
-                                <div class="px-4 pt-0 pb-2">
-                                    <h2 class="title font-black font-fko text-[28px] leading-[24px] pb-2 min-h-[5rem]">
-                                    </h2>
-                                    <p class="text-sm pb-2">
-                                        <span class="categoria text-black "></span> <span
-                                            class="codigo text-black opacity-50"></span>
-                                    </p>
-                                    <div class="float-right mr-[25%]">
-                                        <p class="text-black opacity-50 text-xs title-caract-1"></p>
-                                        <p class="numeracao text-black text-xs desc-caract-1"></p>
-                                    </div>
-                                    <p class="text-black opacity-50 text-xs">Cor</p>
-                                    <p class="cor text-black text-xs pb-2"></p>
 
-                                    <p class="text-black opacity-50 mt-1 text-xs title-caract-1">PDV</p>
-                                    <p class="text-base preco text-black"></p>
+                                <div class="p-4 flex-1 flex flex-col">
+                                    <h2 class="title font-black font-fko text-[28px] leading-[24px] pb-2">
+                                    </h2>
+
+                                    <!-- Wrapper para empurrar preço para baixo -->
+                                    <div class="flex-1 flex flex-col justify-between">
+                                        <div class="mt-auto">
+                                            <p class="text-sm pb-2">
+                                                <span class="categoria text-black "></span> <span
+                                                    class="codigo text-black opacity-50"></span>
+                                            </p>
+                                            <div class="float-right mr-[25%]">
+                                                <p class="text-black opacity-50 text-xs title-caract-1"></p>
+                                                <p class="numeracao text-black text-xs desc-caract-1"></p>
+                                            </div>
+                                            <p class="text-black opacity-50 text-xs">Cor</p>
+                                            <p class="cor text-black text-xs pb-2"></p>
+
+
+                                            <p class="text-black opacity-50 mt-1 text-xs title-caract-1">PDV</p>
+                                            <p class="text-base preco text-black"></p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </a>
