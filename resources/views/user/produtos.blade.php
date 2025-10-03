@@ -332,7 +332,7 @@
                                     class="w-full object-contain rounded-md" />
 
                                 <div class="p-4 flex-1 flex flex-col">
-                                    <h2 class="title font-black font-fko text-[28px] leading-[24px] pb-2">
+                                    <h2 class="title uppercase font-black font-fko text-[22px] leading-[18px] pb-2">
                                     </h2>
 
                                     <!-- Wrapper para empurrar preço para baixo -->
