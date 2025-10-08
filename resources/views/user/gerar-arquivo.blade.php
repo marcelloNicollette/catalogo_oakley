@@ -264,7 +264,7 @@
 
                     const currentDate = new Date();
                     const formattedDateTime = currentDate.toISOString().slice(0, 19).replace(/[T:-]/g, '').slice(0, 12);
-                    const newSlug = colecao.slug + '-' + formattedDescription + '-' + formattedDateTime;
+                    const newSlug = colecao.slug + '-' + formattedDateTime;
 
                     // Definir dados do card
                     card.setAttribute('data-id', colecao.id);
