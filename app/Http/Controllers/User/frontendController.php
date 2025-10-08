@@ -275,20 +275,22 @@ class frontendController extends Controller
         $produtosFormatados = [];
         foreach ($produtos as $produtoGroup) {
             $produto = $produtoGroup;
-            dd($produto);
-            $img = "/images/produtos/" . $produto->product->code . "_" . $produto->color_code . ".jpg";
+            if ($produto->product->code != null) {
 
-            $produtosFormatados[] = [
-                'id' => $produto->product->id,
-                'title' => $produto->product->name,
-                'imagem' => $img,
-                'codigo' => $produto->product->code,
-                'cor' => $produto->color_name,
-                'categoria' => $produto->product->category->name,
-                'preco' => 'R$' . $produto->product->price,
-                'slug' => $produto->product->slug,
-                'selected' => false
-            ];
+                $img = "/images/produtos/" . $produto->product->code . "_" . $produto->color_code . ".jpg";
+
+                $produtosFormatados[] = [
+                    'id' => $produto->product->id,
+                    'title' => $produto->product->name,
+                    'imagem' => $img,
+                    'codigo' => $produto->product->code,
+                    'cor' => $produto->color_name,
+                    'categoria' => $produto->product->category->name,
+                    'preco' => 'R$' . $produto->product->price,
+                    'slug' => $produto->product->slug,
+                    'selected' => false
+                ];
+            }
         }
 
         return response()->json($produtosFormatados);
