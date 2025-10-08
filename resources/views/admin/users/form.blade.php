@@ -141,8 +141,18 @@
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-3">Segmentações de Cliente</label>
         @if (isset($segmentacoesCliente) && $segmentacoesCliente->count() > 0)
+            <div class="mb-2">
+                <div class="flex items-center">
+                    <input type="checkbox" id="segmentacoes_cliente_select_all"
+                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="segmentacoes_cliente_select_all" class="ml-2 block text-sm text-gray-900">
+                        Selecionar todos
+                    </label>
+                </div>
+            </div>
             <div
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-4 border border-gray-200 rounded-md bg-gray-50">
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-4 border border-gray-200 rounded-md bg-gray-50"
+                data-segmentacoes-cliente-container>
                 @foreach ($segmentacoesCliente as $segmentacaoCliente)
                     <div class="flex items-center">
                         <input type="checkbox" name="segmentacoes_cliente[]" value="{{ $segmentacaoCliente->id }}"
@@ -182,3 +192,31 @@
         </button>
     </div>
 </form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const container = document.querySelector('[data-segmentacoes-cliente-container]');
+        const selectAll = document.getElementById('segmentacoes_cliente_select_all');
+        if (!container || !selectAll) return;
+
+        const itemCheckboxes = container.querySelectorAll('input[type="checkbox"][name="segmentacoes_cliente[]"]');
+
+        function updateSelectAllState() {
+            const total = itemCheckboxes.length;
+            const checked = Array.from(itemCheckboxes).filter(cb => cb.checked).length;
+            selectAll.checked = total > 0 && checked === total;
+            selectAll.indeterminate = checked > 0 && checked < total;
+        }
+
+        selectAll.addEventListener('change', function () {
+            itemCheckboxes.forEach(cb => { cb.checked = selectAll.checked; });
+            updateSelectAllState();
+        });
+
+        itemCheckboxes.forEach(cb => {
+            cb.addEventListener('change', updateSelectAllState);
+        });
+
+        updateSelectAllState();
+    });
+</script>
