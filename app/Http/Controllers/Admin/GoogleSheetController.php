@@ -13,14 +13,19 @@ use App\Models\Category;
 use App\Models\Collection;
 use App\Models\FlagProduct;
 use App\Models\Segmentacao;
+use App\Models\SegmentacaoCliente;
 use App\Models\Subcategory;
 use App\Models\TechnologyCategory;
 use App\Models\TechnologyItem;
+use App\Models\User;
 use App\Services\GoogleSheetsService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class GoogleSheetController extends Controller
 {
@@ -36,7 +41,14 @@ class GoogleSheetController extends Controller
      */
     public function index()
     {
-        return view('admin.sync.sync');
+        return view('admin.sync.sync-produtos');
+    }
+    /**
+     * Exibe a página de sincronização
+     */
+    public function indexRepresentantes()
+    {
+        return view('admin.sync.sync-representantes');
     }
 
     public function sync()
@@ -53,7 +65,7 @@ class GoogleSheetController extends Controller
             DB::beginTransaction();
 
             // Lê os cabeçalhos das colunas
-            $headerRange = "UA-Catalogo!A2:AM";
+            $headerRange = "PaginaVestuario!A2:AM";
             $headerRows = $this->sheetService->readSheet($spreadsheetId, $headerRange);
 
             if (empty($headerRows) || empty($headerRows[0])) {
@@ -63,7 +75,7 @@ class GoogleSheetController extends Controller
             $headers = $headerRows[0];
 
             // Lê os dados da planilha
-            $dataRange = "UA-Catalogo!A4:AM";
+            $dataRange = "PaginaVestuario!A4:AM";
             $rows = $this->sheetService->readSheet($spreadsheetId, $dataRange);
 
             if (empty($rows)) {
@@ -104,7 +116,8 @@ class GoogleSheetController extends Controller
                 if (!empty($productData['COR_COD'])) {
                     $groupedProducts[$sku]['colors'][] = [
                         'code' => $productData['COR_COD'],
-                        'description' => $productData['COR_DESCRIÇÃO'] ?? $productData['COR_COD']
+                        'description' => $productData['COR_DESCRIÇÃO'] ?? $productData['COR_COD'],
+                        'flag' => $productData['COR_CLASSIFICAÇÃO']
                     ];
                 }
 
@@ -158,10 +171,12 @@ class GoogleSheetController extends Controller
      */
     private function syncProductWithColors($data, $colors)
     {
+
         $segmentacao = $this->findOrCreateSegmentacao($data['PRODUTOS_SEGMENTO'] ?? '');
 
         // Busca ou cria categoria
         $category = $this->findOrCreateCategory($data['CATEGORIA'] ?? '', $segmentacao);
+        $subcategory = $this->findOrCreateSubcategory($data['FAIXA GTM'] ?? '', $category->id ?? null);
         $collection = $this->findOrCreateCollection($data['COLEÇÃO'] ?? '');
         $flag = $this->findOrCreateFlag($data['COR_CLASSIFICAÇÃO'] ?? '');
         $tecnologia = $this->findOrCreateTecnologia($data['TECNOLOGIAS'] ?? '');
@@ -172,9 +187,10 @@ class GoogleSheetController extends Controller
             'description' => $data['DESCRIÇÃO'] ?? '',
             'code' => $data['CÓDIGO'],
             'sku' => $data['CÓDIGO'], // Usando CÓDIGO como SKU
-            'price' => ($data['PDV'] != "") ? str_replace(',', '.', $data['PDV']) : 0, // Preço não está na planilha atual
+            'price' =>  str_replace('.', ',', $data['PDV']) ?? 0, // Preço não está na planilha atual
             'slug' => Str::slug($data['NOME']) . '-' . $data['CÓDIGO'],
             'category_id' => $category->id ?? null,
+            'subcategory_id' => $subcategory->id ?? null,
             'active' => true,
             'technologies' => json_encode($tecnologia),
             'flag_calendario' => !empty($data['LANÇAMENTO']) || !empty($data['LANÇAMENTO_DTC']) || !empty($data['LANÇAMENTO_TRADE']) || !empty($data['LANÇAMENTO_CLIENTE']),
@@ -183,7 +199,7 @@ class GoogleSheetController extends Controller
             'data_cliente' => $this->parseDate($data['LANÇAMENTO_CLIENTE'] ?? ''),
             'data_dtc' => $this->parseDate($data['LANÇAMENTO_DTC'] ?? ''),
         ];
-
+        //dd($productData);
         // Cria ou atualiza o produto
         $product = Product::updateOrCreate(
             ['sku' => $data['CÓDIGO']],
@@ -191,7 +207,7 @@ class GoogleSheetController extends Controller
         );
 
         // Sincroniza cores agrupadas
-        $this->syncColorsGrouped($product, $colors, $collection, $flag);
+        $this->syncColorsGrouped($product, $colors, $collection, $flag, $data);
 
         // Sincroniza tecnologias
         //$this->syncTecnologias($product, $tecnologia);
@@ -258,25 +274,80 @@ class GoogleSheetController extends Controller
         if (empty($tecnologias)) {
             return null;
         }
-        // Antes da linha 137
-        //Log::info('Debug - Dados recebidos:', ['$tecnologias' => $tecnologias]);
+        // Ícone padrão para tecnologias sem imagem
+        $defaultIcon = 'images/technology/1759344921.png';
 
-        $tec = explode(',', $tecnologias);
+        // Normaliza e separa os nomes das tecnologias (remove entradas vazias)
+        $tec = array_filter(array_map(function ($t) {
+            return trim($t);
+        }, explode(',', $tecnologias)), function ($t) {
+            return $t !== '';
+        });
 
         $array_id_tec = [];
-        foreach ($tec as $item) {
-            $array_id_tec[] = TechnologyItem::firstOrCreate(
-                [
-                    'name' => trim($item),
+        foreach ($tec as $name) {
+            // Busca por tecnologia existente apenas pelo nome, para evitar duplicidade
+            // Busca todos os itens com o mesmo nome para tratar duplicidades
+            $itemsSameName = TechnologyItem::where('name', $name)
+                ->orderBy('created_at', 'asc')
+                ->get();
+
+            if ($itemsSameName->isNotEmpty()) {
+                // Prioriza manter o mais antigo que possua ícone diferente do padrão
+                $nonDefaultItems = $itemsSameName->filter(function ($ti) use ($defaultIcon) {
+                    return !empty($ti->icon) && $ti->icon !== $defaultIcon;
+                })->values();
+
+                $keeper = $nonDefaultItems->first() ?: $itemsSameName->first();
+
+                // Se o item escolhido não tiver ícone, define o padrão
+                if (empty($keeper->icon)) {
+                    $keeper->icon = $defaultIcon;
+                    $keeper->save();
+                }
+
+                // Exclui (soft delete) os demais itens duplicados
+                foreach ($itemsSameName as $ti) {
+                    if ($ti->id !== $keeper->id) {
+                        $ti->delete();
+                    }
+                }
+
+                $array_id_tec[] = $keeper->id;
+            } else {
+                // Não existe: cria com categoria padrão, descrição igual ao nome e ícone padrão
+                $created = TechnologyItem::create([
                     'technology_category_id' => 1,
-                    'description' => trim($item)
-                ]
-            )->id;
+                    'name' => $name,
+                    'description' => $name,
+                    'icon' => $defaultIcon,
+                    'active' => true,
+                ]);
+                $array_id_tec[] = $created->id;
+            }
         }
-        return $array_id_tec;
+
+        // Evita IDs duplicados caso a lista tenha tecnologias repetidas
+        return array_values(array_unique($array_id_tec));
     }
 
+    /**
+     * Busca ou cria uma subcategoria
+     */
+    private function findOrCreateSubcategory($subcategoryName, $categoryId)
+    {
+        if (empty($subcategoryName) || empty($categoryId)) {
+            return null;
+        }
 
+        return Subcategory::firstOrCreate(
+            ['faixa' => $subcategoryName, 'category_id' => $categoryId],
+            [
+                'slug' => Str::slug($subcategoryName),
+                'active' => true
+            ]
+        );
+    }
 
     /**
      * Busca ou cria uma coleção
@@ -304,20 +375,53 @@ class GoogleSheetController extends Controller
         if (empty($flagName)) {
             return null;
         }
+        // Busca todos os itens com o mesmo título de flag
+        $flagsSameTitle = FlagProduct::where('flag_title', $flagName)
+            ->orderBy('created_at', 'asc')
+            ->get();
 
-        return FlagProduct::firstOrCreate(
-            [
+        if ($flagsSameTitle->isEmpty()) {
+            // Nenhum existente: cria novo e retorna
+            return FlagProduct::create([
                 'flag_title' => $flagName,
                 'flag_description' => $flagName,
                 'flag_bg' => '#000000',
-                'flag_color_text_bg' => '#ffffff'
-            ],
-            [
-                'slug' => Str::slug($flagName),
+                'flag_color_text_bg' => '#ffffff',
                 'alinhamento' => 'left',
-                'status' => true
-            ]
-        );
+                'status' => true,
+            ]);
+        }
+
+        if ($flagsSameTitle->count() === 1) {
+            // Apenas um: garante os campos e retorna
+            $flag = $flagsSameTitle->first();
+            $flag->update([
+                'flag_description' => $flagName,
+                'flag_bg' => '#000000',
+                'flag_color_text_bg' => '#ffffff',
+                'alinhamento' => 'left',
+                'status' => true,
+            ]);
+            return $flag;
+        }
+
+        // Mais de um: cria um novo com os valores desejados e exclui os duplicados
+        $created = FlagProduct::create([
+            'flag_title' => $flagName,
+            'flag_description' => $flagName,
+            'flag_bg' => '#000000',
+            'flag_color_text_bg' => '#ffffff',
+            'alinhamento' => 'left',
+            'status' => true,
+        ]);
+
+        foreach ($flagsSameTitle as $flag) {
+            // Exclui (soft delete) todos os anteriores
+            $flag->delete();
+        }
+
+        // Usa o item criado
+        return $created;
     }
 
     /**
@@ -364,14 +468,15 @@ class GoogleSheetController extends Controller
             ];
         }
 
-        $this->syncColorsGrouped($product, $colors, $collection, $flag);
+        $this->syncColorsGrouped($product, $colors, $collection, $flag, $data);
     }
 
     /**
      * Sincroniza cores agrupadas do produto
      */
-    private function syncColorsGrouped($product, $colors, $collection, $flag)
+    private function syncColorsGrouped($product, $colors, $collection, $flag, $data)
     {
+
         // Remove cores existentes (hasMany relationship)
         Color::where('product_id', $product->id)->delete();
 
@@ -386,17 +491,31 @@ class GoogleSheetController extends Controller
             $uniqueColors[$color['code']] = $color;
         }
 
-        // Cria as cores encontradas no banco de dados usando findOrCreate
-        foreach ($uniqueColors as $cor) {
-            $this->findOrCreateColor($product, $cor, $collection, $flag);
-        }
+        // Processa segmentações de cliente da coluna CLIENTE_SEGMENTO
+        $segmentacoesCliente = $this->processClienteSegmento($data['CLIENTE_SEGMENTO'] ?? '');
 
         // Log para debug das cores sincronizadas
         Log::info("Cores sincronizadas para produto {$product->sku}", [
             'product_id' => $product->id,
             'cores_count' => count($uniqueColors),
-            'cores' => array_values($uniqueColors)
+            'cores' => array_values($uniqueColors),
+            'segmentacoes_cliente' => $segmentacoesCliente,
+            'flag' => $flag
         ]);
+        // Cria as cores encontradas no banco de dados usando findOrCreate
+        foreach ($uniqueColors as $cor) {
+            $flag_id = $this->findOrCreateFlag($cor['flag']);
+
+            $colorModel = $this->findOrCreateColor($product, $cor, $collection, $flag_id->id);
+
+            // Sincroniza segmentações de cliente para esta cor
+            if (!empty($segmentacoesCliente)) {
+                $colorModel->segmentacoesCliente()->sync($segmentacoesCliente);
+            } else {
+                // Se não há segmentações informadas, remove quaisquer vínculos existentes
+                $colorModel->segmentacoesCliente()->detach();
+            }
+        }
     }
 
     /**
@@ -404,7 +523,8 @@ class GoogleSheetController extends Controller
      */
     private function findOrCreateColor($product, $corData, $collection, $flag)
     {
-        return Color::firstOrCreate(
+
+        return Color::updateOrCreate(
             [
                 'color_code' => $corData['code'],
                 'product_id' => $product->id
@@ -413,7 +533,7 @@ class GoogleSheetController extends Controller
                 'color_name' => $corData['code'],
                 'color_description' => $corData['description'],
                 'collection_id' => $collection->id ?? null,
-                'flag_product_id' => $flag->id ?? null,
+                'flag_product_id' => $flag ?? null,
                 'active' => true
             ]
         );
@@ -488,7 +608,7 @@ class GoogleSheetController extends Controller
 
         foreach ($allSizes as $numero) {
             $numero = trim($numero);
-            if (!empty($numero)) {
+            if (!empty($numero) && $numero !== '-') {
                 $numeracao = Numeracao::firstOrCreate(
                     ['numero' => $numero],
                     ['active' => true]
@@ -519,7 +639,7 @@ class GoogleSheetController extends Controller
         ];
 
         foreach ($links as $linkData) {
-            if (!empty($linkData['url'])) {
+            if (!empty($linkData['url']) && $linkData['url'] !== '-') {
                 LinksProduct::create([
                     'product_id' => $product->id,
                     'link_url' => $linkData['url'],
@@ -560,5 +680,634 @@ class GoogleSheetController extends Controller
                 'product_id' => $product->id
             ]);
         }
+    }
+
+    /**
+     * Processa a coluna CLIENTE_SEGMENTO e retorna array de IDs das segmentações
+     */
+    private function processClienteSegmento($clienteSegmentoString)
+    {
+        if (empty($clienteSegmentoString)) {
+            return [];
+        }
+
+        // Separa os valores por vírgula
+        $segmentos = explode(',', $clienteSegmentoString);
+        $segmentacaoIds = [];
+
+        foreach ($segmentos as $segmento) {
+            $segmento = trim($segmento);
+
+            if (!empty($segmento) && $segmento !== '-') {
+                // Busca ou cria a segmentação de cliente
+                $segmentacaoCliente = SegmentacaoCliente::firstOrCreate(
+                    ['nome' => $segmento],
+                    [
+                        'descricao' => 'Segmentação criada automaticamente via sincronização',
+                        'slug' => Str::slug($segmento),
+                        'active' => true
+                    ]
+                );
+
+                $segmentacaoIds[] = $segmentacaoCliente->id;
+            }
+        }
+
+        return $segmentacaoIds;
+    }
+
+    /**
+     * Sincroniza usuários/representantes da planilha
+     */
+    public function syncUsers()
+    {
+        // Aumentar o tempo limite de execução para 10 minutos
+        set_time_limit(600);
+
+        // Aumentar o limite de memória
+        ini_set('memory_limit', '512M');
+
+        $spreadsheetId = "1skMcMlapMDLis7oZCz2dyRzFPMBfEmDoMLzYqqIInkU";
+        $syncResults = [
+            'success' => 0,
+            'errors' => 0,
+            'skipped' => 0,
+            'messages' => [],
+            'created_users' => [] // Para armazenar usuários criados com senhas
+        ];
+
+        try {
+            // Lê os dados da aba REPRESENTANTES
+            $dataRange = "REPRESENTANTES!A2:F";
+            $rows = $this->sheetService->readSheet($spreadsheetId, $dataRange);
+
+            if (empty($rows)) {
+                throw new \Exception('Nenhum dado encontrado na aba REPRESENTANTES.');
+            }
+
+            $batchSize = 100; // Processar em lotes de 100
+            $totalRows = count($rows);
+            $processedRows = 0;
+
+            // Processar em lotes para evitar timeout
+            for ($batch = 0; $batch < $totalRows; $batch += $batchSize) {
+                $endBatch = min($batch + $batchSize - 1, $totalRows - 1);
+
+                DB::beginTransaction();
+
+                try {
+                    for ($rowIndex = $batch; $rowIndex <= $endBatch; $rowIndex++) {
+                        $row = $rows[$rowIndex];
+
+                        // Mapeia os dados conforme especificado
+                        $userData = [
+                            'representante_nome' => $row[0] ?? '', // Coluna A
+                            'lider_ebm_comercial' => $row[1] ?? '', // Coluna B
+                            'nome_fantasia_ebm' => $row[2] ?? '', // Coluna C
+                            'email' => $row[4] ?? '', // Coluna E
+                            'segmentacao_cliente' => $row[5] ?? '' // Coluna F
+                        ];
+
+                        // Pula linhas vazias ou sem dados essenciais
+                        if (empty($userData['representante_nome']) || empty($userData['email'])) {
+                            $syncResults['skipped']++;
+                            $syncResults['messages'][] = "Linha " . ($rowIndex + 2) . " ignorada: Nome do representante ou email vazio";
+                            continue;
+                        }
+
+                        try {
+                            $result = $this->syncUserWithSegmentacao($userData);
+                            if ($result['created']) {
+                                $syncResults['created_users'][] = [
+                                    'name' => $result['user']->name,
+                                    'email' => $result['user']->email,
+                                    'password' => $result['password']
+                                ];
+                            }
+                            $syncResults['success']++;
+                            $processedRows++;
+                        } catch (\Exception $e) {
+                            $syncResults['errors']++;
+                            $syncResults['messages'][] = "Erro no usuário {$userData['representante_nome']} (linha " . ($rowIndex + 2) . "): " . $e->getMessage();
+                            Log::error("Erro ao sincronizar usuário {$userData['representante_nome']}", [
+                                'error' => $e->getMessage(),
+                                'data' => $userData
+                            ]);
+                        }
+                    }
+
+                    DB::commit();
+
+                    // Log do progresso
+                    Log::info("Lote processado: {$processedRows}/{$totalRows} usuários");
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    throw $e;
+                }
+            }
+
+            // Gera arquivo Excel com usuários criados e suas senhas
+            if (!empty($syncResults['created_users'])) {
+                $this->generateUsersPasswordsFile($syncResults['created_users']);
+            }
+
+            $message = "Sincronização de usuários concluída! Sucessos: {$syncResults['success']}, Erros: {$syncResults['errors']}, Ignorados: {$syncResults['skipped']}";
+
+            if (!empty($syncResults['created_users'])) {
+                $message .= "\n\nForam criados " . count($syncResults['created_users']) . " novos usuários. Arquivo com senhas gerado em storage/app/users_passwords.xlsx";
+            }
+
+            if (!empty($syncResults['messages'])) {
+                $message .= "\n\nDetalhes dos erros:\n" . implode("\n", $syncResults['messages']);
+            }
+
+            return back()->with('success', $message);
+        } catch (\Exception $e) {
+            if (DB::transactionLevel() > 0) {
+                DB::rollback();
+            }
+            Log::error('Erro geral na sincronização de usuários', ['error' => $e->getMessage()]);
+            return back()->with('error', 'Erro na sincronização de usuários: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Sincroniza um usuário individual com suas segmentações
+     */
+    private function syncUserWithSegmentacao($data)
+    {
+        $password = null;
+        $created = false;
+
+        // Verifica se o usuário já existe
+        $user = User::where('email', $data['email'])->first();
+
+        if (!$user) {
+            // Gera senha aleatória para novos usuários
+            $password = $this->generateRandomPassword();
+
+            // Cria novo usuário com hash mais rápido
+            $user = User::create([
+                'name' => $data['representante_nome'],
+                'email' => $data['email'],
+                'password' => Hash::make($password, ['rounds' => 4]), // Reduz custo do hash
+                'type' => 'user', // Tipo padrão para representantes
+                'company' => $data['nome_fantasia_ebm'],
+                'codigo_lider_comercial' => $data['lider_ebm_comercial']
+            ]);
+
+            $created = true;
+        } else {
+            // Atualiza dados do usuário existente
+            $user->update([
+                'name' => $data['representante_nome'],
+                'company' => $data['nome_fantasia_ebm'],
+                'codigo_lider_comercial' => $data['lider_ebm_comercial']
+            ]);
+        }
+
+        // Processa segmentações de cliente
+        $segmentacaoIds = $this->processClienteSegmentoForUser($data['segmentacao_cliente']);
+
+        // Sincroniza segmentações de cliente
+        if (!empty($segmentacaoIds)) {
+            $user->segmentacoesCliente()->sync($segmentacaoIds);
+        }
+
+        return [
+            'user' => $user,
+            'password' => $password,
+            'created' => $created
+        ];
+    }
+
+    /**
+     * Processa segmentações de cliente para usuários
+     */
+    private function processClienteSegmentoForUser($segmentacaoString)
+    {
+        if (empty($segmentacaoString)) {
+            return [];
+        }
+
+        // Separa os valores por vírgula
+        $segmentos = explode(',', $segmentacaoString);
+        $segmentacaoIds = [];
+
+        foreach ($segmentos as $segmento) {
+            $segmento = trim($segmento);
+
+            if (!empty($segmento)) {
+                // Busca ou cria a segmentação de cliente
+                $segmentacaoCliente = SegmentacaoCliente::firstOrCreate(
+                    ['nome' => $segmento],
+                    [
+                        'descricao' => 'Segmentação criada automaticamente via sincronização de usuários',
+                        'slug' => Str::slug($segmento),
+                        'active' => true
+                    ]
+                );
+
+                $segmentacaoIds[] = $segmentacaoCliente->id;
+            }
+        }
+
+        return $segmentacaoIds;
+    }
+
+    /**
+     * Gera uma senha aleatória de forma mais eficiente
+     */
+    private function generateRandomPassword($length = 8)
+    {
+        // Usar método mais eficiente para gerar senhas
+        return substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $length);
+    }
+
+    /**
+     * Processa um lote de usuários (usado pelos jobs assíncronos)
+     */
+    public function processBatchUsers($batchData, $batchNumber)
+    {
+        $results = [
+            'success' => 0,
+            'errors' => 0,
+            'created_users' => [],
+            'batch_number' => $batchNumber
+        ];
+
+        DB::beginTransaction();
+
+        try {
+            foreach ($batchData as $rowIndex => $userData) {
+                try {
+                    $result = $this->syncUserWithSegmentacao($userData);
+
+                    if ($result['created']) {
+                        $results['created_users'][] = [
+                            'name' => $result['user']->name,
+                            'email' => $result['user']->email,
+                            'password' => $result['password']
+                        ];
+                    }
+
+                    $results['success']++;
+                } catch (\Exception $e) {
+                    $results['errors']++;
+                    Log::error("Erro ao processar usuário no lote {$batchNumber}", [
+                        'error' => $e->getMessage(),
+                        'data' => $userData
+                    ]);
+                }
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
+        return $results;
+    }
+
+    /**
+     * Sincronização assíncrona para grandes volumes (via jobs)
+     */
+    public function syncUsersAsync()
+    {
+        try {
+            $spreadsheetId = "1skMcMlapMDLis7oZCz2dyRzFPMBfEmDoMLzYqqIInkU";
+            $dataRange = "REPRESENTANTES!A2:F";
+            $rows = $this->sheetService->readSheet($spreadsheetId, $dataRange);
+
+            if (empty($rows)) {
+                return redirect()->route('admin.sync')->with('error', 'Nenhum dado encontrado na aba REPRESENTANTES.');
+            }
+
+            $batchSize = 50; // Lotes menores para jobs
+            $totalRows = count($rows);
+            $totalBatches = ceil($totalRows / $batchSize);
+
+            // Preparar dados em lotes
+            for ($batch = 0; $batch < $totalRows; $batch += $batchSize) {
+                $endBatch = min($batch + $batchSize - 1, $totalRows - 1);
+                $batchData = [];
+
+                for ($i = $batch; $i <= $endBatch; $i++) {
+                    $row = $rows[$i];
+
+                    if (count($row) < 5) continue;
+
+                    $userData = [
+                        'representante_nome' => $row[0] ?? '',
+                        'lider_ebm_comercial' => $row[1] ?? '',
+                        'nome_fantasia_ebm' => $row[2] ?? '',
+                        'email' => $row[4] ?? '',
+                        'segmentacao_cliente' => $row[5] ?? ''
+                    ];
+
+                    if (!empty($userData['email']) && filter_var($userData['email'], FILTER_VALIDATE_EMAIL)) {
+                        $batchData[] = $userData;
+                    }
+                }
+
+                if (!empty($batchData)) {
+                    $batchNumber = ($batch / $batchSize) + 1;
+                    \App\Jobs\SyncUsersJob::dispatch($batchData, $batchNumber, $totalBatches);
+                }
+            }
+
+            $message = "Sincronização assíncrona iniciada! {$totalBatches} lotes foram enviados para processamento. ";
+            $message .= "Verifique os logs para acompanhar o progresso.";
+
+            return redirect()->route('admin.sync')->with('success', $message);
+        } catch (\Exception $e) {
+            Log::error('Erro na sincronização assíncrona de usuários: ' . $e->getMessage());
+            return redirect()->route('admin.sync')->with('error', 'Erro na sincronização assíncrona: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Gera arquivo Excel com usuários e senhas
+     */
+    private function generateUsersPasswordsFile($users)
+    {
+        $data = [];
+        $data[] = ['Nome', 'Email', 'Senha']; // Cabeçalho
+
+        foreach ($users as $user) {
+            $data[] = [
+                $user['name'],
+                $user['email'],
+                $user['password']
+            ];
+        }
+
+        // Cria arquivo CSV simples (compatível com Excel)
+        $filename = 'users_passwords_' . date('Y-m-d_H-i-s') . '.csv';
+        $filepath = storage_path('app/' . $filename);
+
+        $file = fopen($filepath, 'w');
+
+        // Adiciona BOM para UTF-8
+        fwrite($file, "\xEF\xBB\xBF");
+
+        foreach ($data as $row) {
+            fputcsv($file, $row, ';'); // Usa ponto e vírgula como separador
+        }
+
+        fclose($file);
+
+        Log::info("Arquivo de senhas gerado: {$filename}");
+
+        return $filename;
+    }
+
+    /**
+     * Exporta lista de usuários com senhas (para download)
+     */
+    public function exportUsersWithPasswords()
+    {
+        // Busca todos os usuários do tipo 'user' (representantes)
+        $users = User::where('type', 'user')
+            ->with('segmentacoesCliente')
+            ->orderBy('name')
+            ->get();
+
+        $data = [];
+        $data[] = ['Nome', 'Email', 'Empresa', 'Código Líder Comercial', 'Segmentações']; // Cabeçalho
+
+        foreach ($users as $user) {
+            $segmentacoes = $user->segmentacoesCliente->pluck('nome')->implode(', ');
+
+            $data[] = [
+                $user->name,
+                $user->email,
+                $user->company,
+                $user->codigo_lider_comercial,
+                $segmentacoes
+            ];
+        }
+
+        // Cria arquivo CSV
+        $filename = 'representantes_' . date('Y-m-d_H-i-s') . '.csv';
+        $filepath = storage_path('app/' . $filename);
+
+        $file = fopen($filepath, 'w');
+
+        // Adiciona BOM para UTF-8
+        fwrite($file, "\xEF\xBB\xBF");
+
+        foreach ($data as $row) {
+            fputcsv($file, $row, ';');
+        }
+
+        fclose($file);
+
+        // Retorna o arquivo para download
+        return response()->download($filepath)->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Prepara lotes de sincronização de usuários
+     */
+    public function prepareBatches()
+    {
+        try {
+            $spreadsheetId = "1skMcMlapMDLis7oZCz2dyRzFPMBfEmDoMLzYqqIInkU";
+            $representantesData = $this->sheetService->readSheet($spreadsheetId, 'REPRESENTANTES!A:Z');
+
+            if (empty($representantesData)) {
+                return redirect()->route('admin.sync')->with('error', 'Nenhum dado encontrado na aba REPRESENTANTES.');
+            }
+
+            // Remove cabeçalho
+            array_shift($representantesData);
+
+            // Divide em lotes de 1000
+            $batches = array_chunk($representantesData, 1000);
+            $totalBatches = count($batches);
+            $totalRecords = count($representantesData);
+
+            // Armazena informações dos lotes na sessão
+            session([
+                'sync_batches' => $batches,
+                'total_batches' => $totalBatches,
+                'total_records' => $totalRecords,
+                'batch_status' => array_fill(0, $totalBatches, 'pending') // pending, processing, completed, error
+            ]);
+
+            return redirect()->route('admin.sync-representantes')->with('success', "Preparados {$totalBatches} lotes com {$totalRecords} registros. Use os botões abaixo para executar cada lote.");
+        } catch (\Exception $e) {
+            Log::error('Erro ao preparar lotes: ' . $e->getMessage());
+            return redirect()->route('admin.sync-representantes')->with('error', 'Erro ao preparar lotes: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Executa um lote específico
+     */
+    public function executeBatch($batchIndex)
+    {
+        try {
+            $batches = session('sync_batches');
+            $batchStatus = session('batch_status', []);
+            $batchResults = session('batch_results', []);
+
+            if (!$batches || !isset($batches[$batchIndex])) {
+                return response()->json(['error' => 'Lote não encontrado'], 404);
+            }
+
+            // Marca lote como processando
+            $batchStatus[$batchIndex] = 'processing';
+            session(['batch_status' => $batchStatus]);
+
+            $batchData = $batches[$batchIndex];
+            $processedUsers = [];
+            $errors = 0;
+            $success = 0;
+
+            // Configurações de performance
+            ini_set('max_execution_time', 300); // 5 minutos
+            ini_set('memory_limit', '512M');
+
+            foreach ($batchData as $row) {
+                try {
+                    // Mapeia os dados conforme especificado
+                    $userData = [
+                        'representante_nome' => $row[0] ?? '', // Coluna A
+                        'lider_ebm_comercial' => $row[1] ?? '', // Coluna B
+                        'nome_fantasia_ebm' => $row[2] ?? '', // Coluna C
+                        'email' => $row[4] ?? '', // Coluna E
+                        'segmentacao_cliente' => $row[5] ?? '' // Coluna F
+                    ];
+
+                    // Pula linhas vazias ou sem dados essenciais
+                    if (empty($userData['representante_nome']) || empty($userData['email'])) {
+                        continue;
+                    }
+
+                    $result = $this->syncUserWithSegmentacao($userData);
+                    if ($result) {
+                        $processedUsers[] = [
+                            'name' => $result['user']->name,
+                            'email' => $result['user']->email,
+                            'password' => $result['password']
+                        ];
+                        $success++;
+                    }
+                } catch (\Exception $e) {
+                    $errors++;
+                    Log::error('Erro ao processar usuário no lote ' . ($batchIndex + 1) . ': ' . $e->getMessage());
+                }
+            }
+
+            // Gera arquivo de senhas para este lote
+            $filename = null;
+            if (!empty($processedUsers)) {
+                $filename = $this->generateBatchPasswordsFile($processedUsers, $batchIndex + 1);
+            }
+
+            // Marca lote como concluído
+            $batchStatus[$batchIndex] = 'completed';
+            session(['batch_status' => $batchStatus]);
+
+            // Persiste resultados do lote para exibir após recarregar a página
+            $batchResults[$batchIndex] = [
+                'success' => $success,
+                'errors' => $errors,
+                'filename' => $filename,
+                'message' => "Lote " . ($batchIndex + 1) . " processado com sucesso!",
+            ];
+            session(['batch_results' => $batchResults]);
+
+            Log::info("Lote " . ($batchIndex + 1) . " processado com sucesso", [
+                'success' => $success,
+                'errors' => $errors,
+                'filename' => $filename
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => "Lote " . ($batchIndex + 1) . " processado com sucesso!",
+                'stats' => [
+                    'success' => $success,
+                    'errors' => $errors,
+                    'filename' => $filename
+                ]
+            ]);
+        } catch (\Exception $e) {
+            // Marca lote como erro
+            $batchStatus = session('batch_status', []);
+            $batchStatus[$batchIndex] = 'error';
+            session(['batch_status' => $batchStatus]);
+
+            Log::error('Erro ao executar lote ' . ($batchIndex + 1) . ': ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'error' => 'Erro ao executar lote: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Gera arquivo de senhas para um lote específico
+     */
+    private function generateBatchPasswordsFile($users, $batchNumber)
+    {
+        $data = [];
+        $data[] = ['Nome', 'Email', 'Senha']; // Cabeçalho
+
+        foreach ($users as $user) {
+            $data[] = [
+                $user['name'],
+                $user['email'],
+                $user['password']
+            ];
+        }
+
+        $filename = 'lote_' . $batchNumber . '_senhas_' . date('Y-m-d_H-i-s') . '.csv';
+        $dir = storage_path('app/public/export-users');
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0775, true);
+        }
+        $filepath = $dir . '/' . $filename;
+
+        $file = fopen($filepath, 'w');
+
+        // Adiciona BOM para UTF-8
+        fwrite($file, "\xEF\xBB\xBF");
+
+        foreach ($data as $row) {
+            fputcsv($file, $row, ';');
+        }
+
+        fclose($file);
+
+        @chmod($filepath, 0644);
+
+        return $filename;
+    }
+
+    /**
+     * Limpa dados dos lotes da sessão
+     */
+    public function clearBatches()
+    {
+        session()->forget(['sync_batches', 'total_batches', 'total_records', 'batch_status', 'batch_results']);
+        return redirect()->route('admin.sync-representantes')->with('success', 'Dados dos lotes limpos com sucesso.');
+    }
+
+    /**
+     * Retorna status dos lotes via AJAX
+     */
+    public function getBatchStatus()
+    {
+        return response()->json([
+            'total_batches' => session('total_batches', 0),
+            'total_records' => session('total_records', 0),
+            'batch_status' => session('batch_status', [])
+        ]);
     }
 }

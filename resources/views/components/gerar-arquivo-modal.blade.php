@@ -1,6 +1,6 @@
 <!-- Modal de Histórico -->
 <div id="gerarArquivoModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-lg max-w-xl w-full py-10 px-7">
+    <div class="bg-white rounded-lg max-w-xl w-full p-7">
         <form action="{{ route('user.export.pdf') }}" method="POST">
             @csrf
             <input type="hidden" name="collection_id" id="collectionId">
@@ -18,7 +18,7 @@
                             class="w-full font-normal text-base border-b border-black pb-2 outline-none" />
                     </div>
 
-                    <div>
+                    <div class="hidden">
                         <label class="block text-xs font-normal text-black mb-2">Categorias</label>
                         <div id="categorias-container" class="flex flex-wrap gap-3">
                             <label class="inline-flex items-center">
@@ -42,7 +42,7 @@
                                 <span class="text-xs text-black ml-2">*Gera o arquivo somente com os itens
                                     selecionados.</span>
                             </label>
-                            <label class="inline-flex items-center">
+                            <!--<label class="inline-flex items-center">
                                 <input type="radio" name="produtos" class="form-radio" value="favoritos">
                                 <span class="ml-2 text-base">Favoritos</span>
                                 <span class="text-xs text-black ml-2">*Gera o arquivo somente com os itens
@@ -52,7 +52,7 @@
                             <label class="inline-flex items-center">
                                 <input type="radio" name="produtos" class="form-radio" value="todos" checked>
                                 <span class="ml-2 text-base">Todos</span>
-                            </label>
+                            </label>-->
                         </div>
                     </div>
 
@@ -75,6 +75,11 @@
                                 <input type="checkbox" name="opcoes[]" class="form-checkbox" value="remover_tag">
                                 <span class="ml-2 text-sm">Remover Tag Exclusivo</span>
                             </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="opcoes[]" class="form-checkbox"
+                                    value="remover_capa_retranca">
+                                <span class="ml-2 text-sm">Remover Capa e Retrancas</span>
+                            </label>
                         </div>
                     </div>
 
@@ -86,12 +91,12 @@
                                 <span class="ml-2 text-sm">Impressão A4</span>
                             </label>
                             <label class="inline-flex items-center">
-                                <input type="radio" name="formato" class="form-radio" value="16_9">
-                                <span class="ml-2 text-sm">Apresentação 16:9</span>
+                                <input disabled type="radio" name="formato" class="form-radio" value="16_9">
+                                <span class="ml-2 text-sm opacity-50">Apresentação 16:9</span>
                             </label>
                             <label class="inline-flex items-center">
-                                <input type="radio" name="formato" class="form-radio" value="planilha">
-                                <span class="ml-2 text-sm">Planilha</span>
+                                <input disabled type="radio" name="formato" class="form-radio" value="planilha">
+                                <span class="ml-2 text-sm opacity-50">Planilha</span>
                             </label>
                         </div>
                     </div>
@@ -188,8 +193,9 @@
         <div class="py-1 px-4 grid grid-cols-12 gap-4 text-xs">
             <div class="col-span-1">Incluir</div>
             <div class="col-span-2">Código</div>
-            <div class="col-span-5">Nome</div>
-            <div class="col-span-2">Categoria</div>
+            <div class="col-span-3">Nome</div>
+            <div class="col-span-2">Cor</div>
+            <!--<div class="col-span-2">Categoria</div>-->
             <div class="col-span-2">Preço</div>
         </div>
 
@@ -277,7 +283,7 @@
 
         // Armazenar collection ID atual
         collectionIdAtual = element.getAttribute('data-collection-id') || element.getAttribute('data-id');
-        //console.log(collectionIdAtual);
+        console.log(collectionName);
         // Preencher dados do modal
         if (collectionInput) {
             collectionInput.value = collectionName;
@@ -286,10 +292,9 @@
         document.getElementById('collectionId').value = collectionIdAtual;
 
         if (collectionText) {
-            collectionText.textContent = element.getAttribute('data-codigo') + ' - ' + element.getAttribute(
-                'data-description') || collectionName;
+            collectionText.textContent = element.getAttribute('data-codigo') || collectionName;
         }
-
+        console.log(collectionText.textContent);
         // Renderizar categorias baseadas na segmentação
         if (segmentacaoId) {
             renderizarCategorias(segmentacaoId);
@@ -342,9 +347,9 @@
                     'input[name="categoria"]:checked');
 
                 if (selecaoRadio && selecaoRadio.checked) {
-                    // Verificar se produtos foram selecionados
+                    // Verificar se produtos foram selecionados (novo formato id+cor)
                     const produtosSelecionadosInputs = document.querySelectorAll(
-                        'input[name="produtos_selecionados[]"]');
+                        'input[name^="produtos_selecionados["]');
                     if (produtosSelecionadosInputs.length === 0) {
                         // Verificar se uma categoria específica está selecionada (não "todas")
                         if (categoriasSelecionadas.length === 0 || categoriasSelecionadas[0].value ===
@@ -352,7 +357,10 @@
                             alert(
                                 'Por favor, selecione uma categoria específica para usar a seleção de produtos.'
                             );
-                            return;
+                            // Evitar envio e propagação quando alertar
+                            event.preventDefault();
+                            event.stopPropagation();
+                            return false;
                         }
 
                         // Prevenir o comportamento padrão e abrir o modal de seleção
@@ -447,12 +455,14 @@
                     <input type="checkbox" 
                            id="produto_${produto.id}" 
                            value="${produto.id}" 
+                           data-cor="${produto.cor}"
                            class="produto-checkbox" 
                            ${produto.selected ? 'checked' : ''}>
                 </div>
                 <div class="col-span-2 text-sm ">${produto.codigo}</div>
-                <div class="col-span-5 text-sm ">${produto.title}</div>
-                <div class="col-span-2 text-sm ">${produto.categoria}</div>
+                <div class="col-span-3 text-sm ">${produto.title}</div>
+                <div class="col-span-2 text-sm ">${produto.cor}</div>
+                <!--<div class="col-span-2 text-sm ">${produto.categoria}</div>-->
                 <div class="col-span-2 text-sm ">${produto.preco}</div>
             </div>
         `).join('');
@@ -461,12 +471,17 @@
         document.querySelectorAll('.produto-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', function() {
                 const produtoId = parseInt(this.value);
+                const produtoCor = this.getAttribute('data-cor');
                 if (this.checked) {
-                    if (!produtosSelecionados.includes(produtoId)) {
-                        produtosSelecionados.push(produtoId);
+                    if (!produtosSelecionados.some(p => p.id === produtoId && p.cor === produtoCor)) {
+                        produtosSelecionados.push({
+                            id: produtoId,
+                            cor: produtoCor
+                        });
                     }
                 } else {
-                    produtosSelecionados = produtosSelecionados.filter(id => id !== produtoId);
+                    produtosSelecionados = produtosSelecionados.filter(p => !(p.id === produtoId && p
+                        .cor === produtoCor));
                 }
                 atualizarContador();
             });
@@ -528,13 +543,18 @@
             if (row.style.display !== 'none') {
                 checkbox.checked = isChecked;
                 const produtoId = parseInt(checkbox.value);
+                const produtoCor = checkbox.getAttribute('data-cor');
 
                 if (isChecked) {
-                    if (!produtosSelecionados.includes(produtoId)) {
-                        produtosSelecionados.push(produtoId);
+                    if (!produtosSelecionados.some(p => p.id === produtoId && p.cor === produtoCor)) {
+                        produtosSelecionados.push({
+                            id: produtoId,
+                            cor: produtoCor
+                        });
                     }
                 } else {
-                    produtosSelecionados = produtosSelecionados.filter(id => id !== produtoId);
+                    produtosSelecionados = produtosSelecionados.filter(p => !(p.id === produtoId && p
+                        .cor === produtoCor));
                 }
             }
         });
@@ -558,13 +578,19 @@
         const existingProductInputs = form.querySelectorAll('input[name="produtos_selecionados[]"]');
         existingProductInputs.forEach(input => input.remove());
 
-        // Adicionar os produtos selecionados como inputs hidden
-        produtosSelecionados.forEach(produtoId => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'produtos_selecionados[]';
-            input.value = produtoId;
-            form.appendChild(input);
+        // Adicionar os produtos selecionados (id e cor) como inputs hidden
+        produtosSelecionados.forEach((produto, index) => {
+            const inputId = document.createElement('input');
+            inputId.type = 'hidden';
+            inputId.name = `produtos_selecionados[${index}][id]`;
+            inputId.value = produto.id;
+            form.appendChild(inputId);
+
+            const inputCor = document.createElement('input');
+            inputCor.type = 'hidden';
+            inputCor.name = `produtos_selecionados[${index}][cor]`;
+            inputCor.value = produto.cor;
+            form.appendChild(inputCor);
         });
 
         console.log('Produtos selecionados:', produtosSelecionados);

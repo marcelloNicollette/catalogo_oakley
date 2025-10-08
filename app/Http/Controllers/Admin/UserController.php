@@ -17,9 +17,25 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with('collection')->paginate(15);
+        $query = User::with('collection');
+        
+        // Aplicar filtro de busca se fornecido
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('email', 'LIKE', "%{$search}%")
+                  ->orWhere('codigo_lider_comercial', 'LIKE', "%{$search}%")
+                  ->orWhere('company', 'LIKE', "%{$search}%")
+                  ->orWhere('setor', 'LIKE', "%{$search}%")
+                  ->orWhere('phone', 'LIKE', "%{$search}%")
+                  ->orWhere('type', 'LIKE', "%{$search}%");
+            });
+        }
+        
+        $users = $query->paginate(15)->appends($request->query());
         return view('admin.users.index', compact('users'));
     }
 
@@ -47,6 +63,7 @@ class UserController extends Controller
             'company' => ['nullable', 'string', 'max:255'],
             'setor' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
+            'codigo_lider_comercial' => ['nullable', 'string', 'max:50'],
             'segmentacoes_cliente' => ['nullable', 'array'],
             'segmentacoes_cliente.*' => ['exists:segmentacao_cliente,id'],
         ]);
@@ -60,6 +77,7 @@ class UserController extends Controller
             'company' => $request->company,
             'setor' => $request->setor,
             'phone' => $request->phone,
+            'codigo_lider_comercial' => $request->codigo_lider_comercial,
         ]);
 
         // Sincronizar segmentações de cliente
@@ -108,6 +126,7 @@ class UserController extends Controller
             'company' => ['nullable', 'string', 'max:255'],
             'setor' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
+            'codigo_lider_comercial' => ['nullable', 'string', 'max:50'],
             'segmentacoes_cliente' => ['nullable', 'array'],
             'segmentacoes_cliente.*' => ['exists:segmentacao_cliente,id'],
         ]);
@@ -120,6 +139,7 @@ class UserController extends Controller
             'company' => $request->company,
             'setor' => $request->setor,
             'phone' => $request->phone,
+            'codigo_lider_comercial' => $request->codigo_lider_comercial,
         ];
 
         // Only update password if provided
@@ -176,5 +196,24 @@ class UserController extends Controller
                 'type' => $user->type
             ]
         );
+    }
+
+    /**
+     * Generate and set a new password for the user, emailing them the new credentials.
+     */
+    public function resetPassword(Request $request, User $user)
+    {
+        // Generate a random strong password
+        $newPassword = bin2hex(random_bytes(4)) . random_int(10, 99);
+
+        // Update user's password
+        $user->password = Hash::make($newPassword);
+        $user->save();
+
+        // Email the new password to the user
+        $this->sendEmailUser($user, $newPassword);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Nova senha gerada e enviada para o usuário!');
     }
 }

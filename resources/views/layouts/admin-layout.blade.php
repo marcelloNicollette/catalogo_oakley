@@ -143,6 +143,15 @@
 
                         <span>Banners</span>
                     </a>
+                    <a href="{{ route('admin.product-images.index') }}"
+                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/product-images') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4h16v16H4V4zm4 12l3-4 2 3 3-4 4 5H8z" />
+                        </svg>
+                        <span>Imagens</span>
+                    </a>
                     <a href="{{ url('/admin/segmento') }}"
                         class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/segmento') ? 'bg-indigo-50 text-indigo-600' : '' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -152,6 +161,7 @@
                         </svg>
                         <span>Segmentação</span>
                     </a>
+
                     <a href="{{ url('/admin/collections') }}"
                         class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/collections') ? 'bg-indigo-50 text-indigo-600' : '' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -226,7 +236,7 @@
                         </button>
 
                         <div x-show="open" @click.away="open = false"
-                            class="absolute left-0 w-full mt-2 origin-top-right rounded-md shadow-lg">
+                            class="absolute left-0 w-full mt-2 origin-top-right rounded-md shadow-lg z-10">
                             <div class="px-2 py-2 bg-white rounded-md shadow">
                                 <a href="{{ route('admin.technology.categories.index') }}"
                                     class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ str_contains($currentRoute, 'admin/technology/categories') ? 'bg-indigo-50 text-indigo-600' : '' }}">
@@ -248,6 +258,37 @@
                         </svg>
                         <span>Produtos</span>
                     </a>
+
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/sync') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                </path>
+                            </svg>
+                            <span>{{ __('Sincronismo') }}</span>
+                            <svg class="w-4 h-4 ml-2" :class="{ 'rotate-180': open }" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+
+                        <div x-show="open" @click.away="open = false"
+                            class="absolute left-0 w-full mt-2 origin-top-right rounded-md shadow-lg z-10">
+                            <div class="px-2 py-2 bg-white rounded-md shadow">
+                                <a href="{{ route('admin.sync-produtos') }}"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ str_contains($currentRoute, 'admin/sync-produtos') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                                    {{ __('Produtos') }}
+                                </a>
+                                <a href="{{ route('admin.sync-representantes') }}"
+                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ str_contains($currentRoute, 'admin/sync-representantes') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                                    {{ __('Representantes') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
 
                     <a href="{{ route('admin.calendario.index') }}"
                         class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/calendario') ? 'bg-indigo-50 text-indigo-600' : '' }}">
@@ -307,6 +348,15 @@
                         <span>Usuários</span>
                     </a>
 
+                    <a href="{{ route('admin.suggestions.index') }}"
+                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/suggestions') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 8h10M7 12h6m-6 4h8M5 7a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V7z">
+                            </path>
+                        </svg>
+                        <span>Sugestões enviadas</span>
+                    </a>
                 </nav>
             </div>
         </aside>

@@ -38,8 +38,9 @@ class frontendController extends Controller
         $user = Auth::user();
         return view('user.conta-user', ['user' => $user]);
     } //
-    public function updateUser(Request $request, User $user)
+    public function updateUser(Request $request)
     {
+        $user = Auth::user();
 
         $validationRules = [
             'name' => ['required', 'string', 'max:255'],
@@ -68,10 +69,27 @@ class frontendController extends Controller
             $userData['password'] = Hash::make($request->password);
         }
 
-        $user->update($userData);
+        // Atualiza via query builder para evitar alertas de tipo sobre métodos no Authenticatable
+        User::where('id', $user->id)->update($userData);
 
         return redirect()->route('user.conta')
             ->with('success', 'Usuário atualizado com sucesso!');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        User::where('id', $user->id)->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->route('user.conta')
+            ->with('success', 'Senha atualizada com sucesso!');
     }
 
     public function slug($slug)
@@ -250,11 +268,13 @@ class frontendController extends Controller
             });
         }
 
-        $produtos = $query->get()->groupBy('product_id');
+        //$produtos = $query->get()->groupBy('product_id');
+        $produtos = $query->get();
+        //dd($produtos);
 
         $produtosFormatados = [];
         foreach ($produtos as $produtoGroup) {
-            $produto = $produtoGroup->first();
+            $produto = $produtoGroup;
             $img = "/images/produtos/" . $produto->product->code . "_" . $produto->color_code . ".jpg";
 
             $produtosFormatados[] = [
@@ -264,7 +284,7 @@ class frontendController extends Controller
                 'codigo' => $produto->product->code,
                 'cor' => $produto->color_name,
                 'categoria' => $produto->product->category->name,
-                'preco' => 'R$' . number_format($produto->product->price, 2, ',', '.'),
+                'preco' => 'R$' . $produto->product->price,
                 'slug' => $produto->product->slug,
                 'selected' => false
             ];

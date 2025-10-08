@@ -77,6 +77,10 @@
                             <p class="text-gray-900">{{ $user->phone ?? 'Não informado' }}</p>
                         </div>
                         <div>
+                            <label class="block text-sm font-medium text-gray-500">Código Líder Comercial</label>
+                            <p class="text-gray-900">{{ $user->codigo_lider_comercial ?? 'Não informado' }}</p>
+                        </div>
+                        <div>
                             <label class="block text-sm font-medium text-gray-500">Coleção</label>
                             @if($user->collection)
                                 <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">

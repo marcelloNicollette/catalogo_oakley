@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\TechnologyCategoryController;
 use App\Http\Controllers\Admin\TechnologyItemController;
 use App\Http\Controllers\Admin\FlagProductController;
 use App\Http\Controllers\Admin\SizeController;
+use App\Http\Controllers\Admin\SuggestionController as AdminSuggestionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\User\ExportController;
 use App\Http\Controllers\User\WishlistController;
@@ -27,7 +28,10 @@ use App\Http\Controllers\Admin\GoogleSheetController as AdminGoogleSheetControll
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\GoogleSheetController;
 use App\Http\Controllers\User\frontendController;
+use App\Http\Controllers\Admin\ProductImageController;
 use App\Models\Collection;
+
+
 
 Route::get('/', function () {
     return view('acessos');
@@ -55,11 +59,6 @@ Route::get('/user/login', function () {
 })->name('user.login');
 Route::post('/user/login', [AuthenticatedSessionController::class, 'store']);
 
-Route::get('/admin/sync', [AdminGoogleSheetController::class, 'index'])
-    ->name('admin.sync');
-Route::get('/admin/sync-sheet', [AdminGoogleSheetController::class, 'sync'])
-    ->name('admin.sync-sheet');
-
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
@@ -83,6 +82,18 @@ Route::middleware(['auth', 'admin'])->group(function () {
             'update' => 'admin.banners.update',
             'destroy' => 'admin.banners.destroy'
         ]);
+
+    // Product Images Upload and Sync
+    Route::get('/admin/product-images', [ProductImageController::class, 'index'])
+        ->name('admin.product-images.index');
+    Route::get('/admin/product-images/search', [ProductImageController::class, 'search'])
+        ->name('admin.product-images.search');
+    Route::post('/admin/product-images', [ProductImageController::class, 'store'])
+        ->name('admin.product-images.store');
+    Route::post('/admin/product-images/sync', [ProductImageController::class, 'syncFolder'])
+        ->name('admin.product-images.sync');
+    Route::delete('/admin/product-images/{productImage}', [ProductImageController::class, 'destroy'])
+        ->name('admin.product-images.destroy');
     Route::resource('/admin/segmento', SegmentacaoController::class)
         ->names([
             'index' => 'admin.segmento.index',
@@ -101,6 +112,29 @@ Route::middleware(['auth', 'admin'])->group(function () {
             'update' => 'admin.categories.update',
             'destroy' => 'admin.categories.destroy'
         ]);
+
+    // Rotas para Subcategorias (Faixas)
+    Route::resource('/admin/subcategories', SubcategoryController::class)->names([
+        'index' => 'admin.subcategories.index',
+        'create' => 'admin.subcategories.create',
+        'store' => 'admin.subcategories.store',
+        'show' => 'admin.subcategories.show',
+        'edit' => 'admin.subcategories.edit',
+        'update' => 'admin.subcategories.update',
+        'destroy' => 'admin.subcategories.destroy',
+    ]);
+
+    // Rota AJAX para buscar subcategorias por categoria
+    Route::get('/admin/subcategories/by-category/{category}', [SubcategoryController::class, 'getByCategory'])
+        ->name('admin.subcategories.by-category');
+
+    // Listagem de produtos excluídos (soft deleted) - precisa vir antes da rota resource para evitar conflito com {product}
+    Route::get('/admin/products/deleted', [ProductController::class, 'deleted'])
+        ->name('admin.products.deleted');
+
+    // Restaurar produto soft-deletado
+    Route::post('/admin/products/{id}/restore', [ProductController::class, 'restore'])
+        ->name('admin.products.restore');
 
     Route::resource('/admin/products', ProductController::class)
         ->names([
@@ -153,6 +187,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
             'update' => 'admin.sizes.update',
             'destroy' => 'admin.sizes.destroy'
         ]);
+
+    // Admin - Sugestões
+    Route::get('/admin/suggestions', [AdminSuggestionController::class, 'index'])->name('admin.suggestions.index');
+    Route::put('/admin/suggestions/{suggestion}', [AdminSuggestionController::class, 'update'])->name('admin.suggestions.update');
     Route::resource('/admin/numeracao', NumeracaoController::class)
         ->names([
             'index' => 'admin.numeracao.index',
@@ -215,6 +253,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
             'destroy' => 'admin.users.destroy'
         ]);
 
+    // Reset de senha por admin
+    Route::post('/admin/users/{user}/reset-password', [UserController::class, 'resetPassword'])
+        ->name('admin.users.reset-password');
+
     Route::resource('/admin/segmentacao-cliente', SegmentacaoClienteController::class)
         ->names([
             'index' => 'admin.segmentacao-cliente.index',
@@ -225,6 +267,29 @@ Route::middleware(['auth', 'admin'])->group(function () {
             'update' => 'admin.segmentacao-cliente.update',
             'destroy' => 'admin.segmentacao-cliente.destroy'
         ]);
+
+
+
+    Route::get('/admin/sync-produtos', [AdminGoogleSheetController::class, 'index'])
+        ->name('admin.sync-produtos');
+    Route::get('/admin/sync-representantes', [AdminGoogleSheetController::class, 'indexRepresentantes'])
+        ->name('admin.sync-representantes');
+    Route::get('/admin/sync-sheet', [AdminGoogleSheetController::class, 'sync'])
+        ->name('admin.sync-sheet');
+    Route::get('/admin/sync-users', [AdminGoogleSheetController::class, 'syncUsers'])
+        ->name('admin.sync-users');
+    Route::get('/admin/sync-users-async', [AdminGoogleSheetController::class, 'syncUsersAsync'])
+        ->name('admin.sync-users-async');
+    Route::get('/admin/export-users-passwords', [AdminGoogleSheetController::class, 'exportUsersWithPasswords'])
+        ->name('admin.export-users-passwords');
+    Route::get('/admin/prepare-batches', [AdminGoogleSheetController::class, 'prepareBatches'])
+        ->name('admin.prepare-batches');
+    Route::post('/admin/execute-batch/{batchIndex}', [AdminGoogleSheetController::class, 'executeBatch'])
+        ->name('admin.execute-batch');
+    Route::get('/admin/clear-batches', [AdminGoogleSheetController::class, 'clearBatches'])
+        ->name('admin.clear-batches');
+    Route::get('/admin/batch-status', [AdminGoogleSheetController::class, 'getBatchStatus'])
+        ->name('admin.batch-status');
 });
 
 Route::middleware(['auth', 'user'])->group(function () {

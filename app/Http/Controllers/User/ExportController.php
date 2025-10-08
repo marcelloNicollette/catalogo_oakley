@@ -14,22 +14,50 @@ class ExportController extends Controller
 {
     public function exportPdf(Request $request)
     {
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '2048M');
         //dd($request->all());
         // Verificar se produtos específicos foram selecionados
         $produtosSelecionados = $request->input('produtos_selecionados', []);
         $tipoProdutos = $request->input('produtos', 'todos');
 
         $query = Color::where('collection_id', $request->collection_id)
-            ->with(['product', 'product.caracteristicas', 'product.caracteristicasDestaque', 'product.category', 'flagProduct', 'collection']);
+            ->with(['product', 'product.caracteristicas', 'product.caracteristicasDestaque', 'product.category', 'product.numeracoes', 'product.links',  'flagProduct', 'collection']);
 
         // Se produtos específicos foram selecionados, filtrar por eles
         if ($tipoProdutos === 'selecao' && !empty($produtosSelecionados)) {
-            $query->whereIn('product_id', $produtosSelecionados);
+            // Compatibilidade: pode ser um array de IDs ou um array de objetos {id, cor}
+            $first = is_array($produtosSelecionados) ? reset($produtosSelecionados) : null;
+            $isAssociativeSelection = is_array($first);
+
+            if ($isAssociativeSelection && isset($first['id'])) {
+                // Filtrar por par (product_id, cor). Preferir color_code se fornecido; caso contrário, color_name
+                $query->where(function ($q) use ($produtosSelecionados) {
+                    foreach ($produtosSelecionados as $sel) {
+                        $productId = $sel['id'] ?? null;
+                        $colorName = $sel['cor'] ?? ($sel['color_name'] ?? null);
+                        $colorCode = $sel['color_code'] ?? null;
+
+                        $q->orWhere(function ($q2) use ($productId, $colorName, $colorCode) {
+                            if ($productId !== null) {
+                                $q2->where('product_id', $productId);
+                            }
+                            if ($colorCode) {
+                                $q2->where('color_code', $colorCode);
+                            } elseif ($colorName) {
+                                $q2->where('color_name', $colorName);
+                            }
+                        });
+                    }
+                });
+            } else {
+                // Tratar como array de IDs simples
+                $ids = array_map('intval', (array) $produtosSelecionados);
+                $query->whereIn('product_id', $ids);
+            }
         }
 
-        $produtos = $query->get()->groupBy('product_id');
-        //dd($produtos->first()->first()->product);
+        $produtos = $query->get();
+        //dd($produtos);
         $opcoes = $request->input('opcoes', []);
         //dd($opcoes);
         $data = [
@@ -43,7 +71,7 @@ class ExportController extends Controller
             'name' => $request->user()->name,
             'request' => $request,
         ];
-        //dd($produtos);
+        //dd($data);
 
         $view = $request->formato === '16_9' ? 'exports.collection.presentation' : 'exports.collection.a4';
 
@@ -126,7 +154,32 @@ class ExportController extends Controller
 
         // Se produtos específicos foram selecionados, filtrar por eles
         if ($tipoProdutos === 'selecao' && !empty($produtosSelecionados)) {
-            $query->whereIn('product_id', $produtosSelecionados);
+            $first = is_array($produtosSelecionados) ? reset($produtosSelecionados) : null;
+            $isAssociativeSelection = is_array($first);
+
+            if ($isAssociativeSelection && isset($first['id'])) {
+                $query->where(function ($q) use ($produtosSelecionados) {
+                    foreach ($produtosSelecionados as $sel) {
+                        $productId = $sel['id'] ?? null;
+                        $colorName = $sel['cor'] ?? ($sel['color_name'] ?? null);
+                        $colorCode = $sel['color_code'] ?? null;
+
+                        $q->orWhere(function ($q2) use ($productId, $colorName, $colorCode) {
+                            if ($productId !== null) {
+                                $q2->where('product_id', $productId);
+                            }
+                            if ($colorCode) {
+                                $q2->where('color_code', $colorCode);
+                            } elseif ($colorName) {
+                                $q2->where('color_name', $colorName);
+                            }
+                        });
+                    }
+                });
+            } else {
+                $ids = array_map('intval', (array) $produtosSelecionados);
+                $query->whereIn('product_id', $ids);
+            }
         }
 
         $produtos = $query->get()->groupBy('product_id');
