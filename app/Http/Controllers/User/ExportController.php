@@ -14,7 +14,7 @@ class ExportController extends Controller
 {
     public function exportPdf(Request $request)
     {
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '512M');
         //dd($request->all());
         // Verificar se produtos específicos foram selecionados
         $produtosSelecionados = $request->input('produtos_selecionados', []);

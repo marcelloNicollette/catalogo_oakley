@@ -61,7 +61,6 @@
                 }
             @endphp
 
-
             <div class="relative inline-block text-left">
                 @if (count($parts) != 4 && count($parts) != 5)
                     @if ($currentSlug != 'segmentacao')
@@ -87,11 +86,172 @@
 
 
 
+            @if ($user)
+                @if ($currentSlug != 'segmentacao')
+
+                    @if ($user->segmentacoesCliente->count() != 1)
+                        <!-- CTA Segmentações Cliente -->
+                        <div x-data="{
+                            showModal: false,
+                            selectedSegmentacoes: [],
+                            segmentacoesDisponiveis: @js($user && $user->segmentacoesCliente->count() > 0 ? $user->segmentacoesCliente : \App\Models\SegmentacaoCliente::where('active', true)->get()),
+                            toggleSegmentacao(id) {
+                                const index = this.selectedSegmentacoes.indexOf(id);
+                                if (index > -1) {
+                                    this.selectedSegmentacoes.splice(index, 1);
+                                } else {
+                                    this.selectedSegmentacoes.push(id);
+                                }
+                                this.persistSelected();
+                            },
+                            toggleSelectAll(checked) {
+                                if (checked) {
+                                    this.selectedSegmentacoes = this.segmentacoesDisponiveis.map(s => s.id);
+                                } else {
+                                    this.selectedSegmentacoes = [];
+                                }
+                                this.persistSelected();
+                            },
+                            persistSelected() {
+                                try {
+                                    localStorage.setItem('selectedSegmentacoes', JSON.stringify(this.selectedSegmentacoes));
+                                } catch (e) {
+                                    console.error('Erro ao salvar segmentações selecionadas:', e);
+                                }
+                            },
+                            init() {
+                                const saved = localStorage.getItem('selectedSegmentacoes');
+                                if (saved) {
+                                    try {
+                                        this.selectedSegmentacoes = JSON.parse(saved);
+                                    } catch (e) {
+                                        this.selectedSegmentacoes = [];
+                                    }
+                                }
+                            }
+                        }" class="relative pl-[10px] pr-[20px]">
+                            <!-- Botão CTA -->
+                            <button @click="showModal = true"
+                                class="flex items-center space-x-2 px-3 py-[6px] bg-white text-black  rounded-full hover:opacity-80 transition-colors border border-black">
+
+                                <div class="flex flex-row items-start">
+                                    <span class="text-sm ">Segmentos: </span>
+                                    <div class="text-sm max-w-[200px] truncate px-2 py-0">
+                                        <span class="text-[#7A7A7A]"
+                                            x-text="selectedSegmentacoes.length === 0 ? 'Todos' : selectedSegmentacoes.length === 1 ? '1 seleção' : selectedSegmentacoes.length + ' seleções'"></span>
+                                    </div>
+                                </div>
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"
+                                    fill="none">
+                                    <path d="M1.10938 1.5L6.05912 6.44975L11.0089 1.5" stroke="black" stroke-width="1.5"
+                                        stroke-linecap="round" />
+                                </svg>
+                            </button>
+
+                            <!-- Modal -->
+                            <div x-show="showModal" x-transition:enter="ease-out duration-300"
+                                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                                x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100"
+                                x-transition:leave-end="opacity-0" @click.away="showModal = false"
+                                @keydown.escape.window="showModal = false" class="fixed inset-0 z-50 overflow-y-auto"
+                                style="display: none;">
+
+                                <!-- Overlay -->
+                                <div class="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+
+                                <!-- Modal Content -->
+                                <div class="flex items-center justify-center min-h-screen px-4 py-6">
+                                    <div
+                                        class="relative z-50 bg-white rounded-lg max-w-xl w-full mx-4 p-6 max-h-[80vh] overflow-hidden flex flex-col">
+                                        <div class="flex justify-center items-center mb-6">
+                                            <h2 class="text-2xl font-semibold text-gray-900">Selecionar Segmentos</h2>
+                                        </div>
+
+                                        <!-- Header com controles -->
+                                        <div class="flex justify-between items-center mb-4">
+                                            <div class="flex items-center gap-4">
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" id="selecionarTodosSegmentacoes"
+                                                        class="mr-2 text-base"
+                                                        :checked="selectedSegmentacoes.length === segmentacoesDisponiveis
+                                                            .length && segmentacoesDisponiveis.length > 0"
+                                                        @change="toggleSelectAll($event.target.checked)">
+                                                    <span>Selecionar todos</span>
+                                                </label>
+                                                <span class="text-xs opacity-50">Selecionados: <span
+                                                        x-text="selectedSegmentacoes.length"></span></span>
+                                                <span class="text-xs opacity-50">Total: <span
+                                                        x-text="segmentacoesDisponiveis.length"></span></span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <div class="flex items-center border-b border-b-black px-2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-4 w-4 text-black ml-1" viewBox="0 0 20 20"
+                                                        fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                            d="M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387a1 1 0 01-1.414 1.414l-4.387-4.387zM8 14a6 6 0 100-12 6 6 0 000 12z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    <input id="searchSegmentacaoInput" type="text"
+                                                        placeholder="Buscar"
+                                                        class="input-estilizado bg-transparent border-0 focus:outline-none focus:ring-0 p-1" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Cabeçalho da tabela -->
+                                        <div class="py-1 px-4 grid grid-cols-12 gap-4 text-xs">
+                                            <div class="col-span-12">Segmentação</div>
+                                        </div>
+
+                                        <!-- Lista de segmentações -->
+                                        <div class="flex-1 overflow-y-auto" id="segmentacoesList">
+                                            <table class="min-w-full bg-white" id="segmentacaoTable">
+                                                <tbody id="segmentacaoTableBody">
+                                                    <template x-for="segmentacao in segmentacoesDisponiveis"
+                                                        :key="segmentacao.id">
+                                                        <tr class="segmentacao-row">
+                                                            <td class="py-[10px] px-4 text-sm">
+                                                                <label
+                                                                    class="inline-flex items-center gap-3 cursor-pointer">
+                                                                    <input type="checkbox"
+                                                                        :checked="selectedSegmentacoes.includes(segmentacao.id)"
+                                                                        @change="toggleSegmentacao(segmentacao.id)"
+                                                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                                                    <span x-text="segmentacao.nome"
+                                                                        class="text-sm text-gray-900"></span>
+                                                                </label>
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <!-- Footer com botões -->
+                                        <div class="pt-4 mt-4">
+                                            <div class="flex justify-center gap-4">
+                                                <button @click="showModal = false" type="button"
+                                                    class="flex items-center border border-black rounded-full px-6 py-3 text-sm hover:bg-gray-200 transition">
+                                                    Voltar
+                                                    <img src="/images/icon-voltar.png" alt=""
+                                                        class="ml-2 w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endif
+            @endif
 
 
             @if ($user)
                 @if (count($parts) != 4 && count($parts) != 5)
-                    <button class="text-gray-700 font-normal hover:text-gray-400 pl-5">
+                    <button class="text-gray-700 font-normal hover:text-gray-400">
                         {{ $user->name ?? 'Usuário' }}
                     </button>
                     <a href="/user/conta" class="px-5" rel="noopener noreferrer">
@@ -127,10 +287,27 @@
     // Interceptar navegações para páginas de produtos e adicionar segmentações selecionadas
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM fully loaded and parsed');
+        // Filtro de busca para Segmentações no modal
+        const searchInput = document.getElementById('searchSegmentacaoInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const rows = document.querySelectorAll('.segmentacao-row');
+                rows.forEach(function(row) {
+                    const nameCell = row.querySelector('td');
+                    const text = nameCell ? nameCell.textContent.toLowerCase() : '';
+                    if (text.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        }
         // Função para adicionar parâmetros de segmentação aos links de produtos
         function addSegmentacaoParams(url) {
             const selectedSegmentacoes = localStorage.getItem('selectedSegmentacoes');
-            console.log('selectedSegmentacoes:', selectedSegmentacoes);
+
             if (selectedSegmentacoes) {
                 try {
                     const segmentacoes = JSON.parse(selectedSegmentacoes);
