@@ -377,7 +377,7 @@
                                 $produto = $produtoGroup->product;
                                 $imgPath = '/images/produtos/' . $produto->code . '_' . str_replace('/', '_', $produtoGroup->color_code) . '.jpg';
                                 $imgFullPath = public_path($imgPath);
-                                $img = file_exists($imgFullPath) ? $imgPath : '/images/img-padrao-oly.png';
+                                $img = file_exists($imgFullPath) ? $imgPath : '/images/img-padrao-ua.png';
                                 $numeracaoIds = $produto->numeracoes ? $produto->numeracoes->pluck('id')->toArray() : [];
                                 $tamanhoIds = $produto->sizes ? $produto->sizes->pluck('id')->toArray() : [];
                                 $precoNumerico = $produto->price ?? 0;

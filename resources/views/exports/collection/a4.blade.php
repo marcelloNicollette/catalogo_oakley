@@ -12,31 +12,8 @@
         }
 
         @font-face {
-            font-family: 'neueplak';
-            src: url("{{ public_path('fonts/Neue-Plak-Regular.ttf') }}") format('truetype');
-        }
-
-        @font-face {
-            font-family: 'fkolympikus';
-            src: url("{{ public_path('fonts/Neue-Plak-Regular.ttf') }}") format('truetype');
-        }
-
-        body {
             font-family: 'Neue-Plak';
-            margin: 0px;
-        }
-
-        .font-fko {
-            font-family: 'Neue-Plak';
-            font-size: 50px;
-        }
-
-        .page-break {
-            page-break-after: always;
-        }
-
-        .capa {
-            text-align: left;
+            src: url("{{ public_path('fonts/Neue-Plak-Regular.ttf') }}") format('truetype');
         }
 
 
@@ -47,6 +24,11 @@
 
         .font-neueplak {
             font-family: 'Neue-Plak', sans-serif;
+            font-size: 50px;
+        }
+
+        .font-fko {
+            font-family: 'Neue-Plak';
             font-size: 50px;
         }
 
@@ -63,11 +45,11 @@
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif;">
     @unless ($remove_capa_retranca)
         <!-- CAPA -->
-        <div class="capa" style="background: #2735D4; height: 100%;">
+        <div class="capa" style="background: #E31B23; height: 100%;">
             <div style="padding: 5rem;">
 
-                <h1
-                    style="font-size: 350px; color: #fff; font-family: 'neueplak', sans-serif; font-weight: normal; margin:0; padding:0; line-height: 250px;">
+                <h1 class="font-neueplak"
+                    style="font-size: 350px; color: #fff; font-family: 'Neue-Plak', sans-serif; font-weight: normal; margin:0; padding:0; line-height: 250px;">
                     COLEÇÃO
                 </h1>
                 <h1
@@ -76,7 +58,7 @@
                 </h1>
 
                 <div style="position: absolute; bottom: 60px; right: 80px;">
-                    <img src="{{ public_path('/images/logo-branco.png') }}" alt="">
+                    <img src="{{ public_path('/images/logo-preto.png') }}" alt="">
                 </div>
             </div>
 
@@ -85,12 +67,12 @@
         <div class="capa" style="background: #000; height: 100%;">
             <div style="padding: 5rem;">
                 <h1
-                    style="font-size: 350px; color: #fff; font-family: 'neueplak', sans-serif; font-weight: normal;  margin:0; padding:0; line-height: 250px; text-transform: uppercase;">
+                    style="font-size: 350px; color: #fff; font-family: 'Neue-Plak', sans-serif; font-weight: normal;  margin:0; padding:0; line-height: 250px; text-transform: uppercase;">
                     {{ $collections->first()->first()->product->category->name }}
                 </h1>
 
                 <div style="position: absolute; bottom: 60px; right: 80px;">
-                    <img src="{{ public_path('/images/logo.png') }}" alt="">
+                    <img src="{{ public_path('/images/logo-vermelho.png') }}" alt="">
                 </div>
             </div>
         </div>
@@ -104,6 +86,7 @@
             $image = public_path('images/produtos/' . $image);
             //$image = '/images/produtos/' . $image;
             $imageExists = $image && file_exists($image) && !is_dir($image);
+            $imageSrc = $imageExists ? $image : public_path('images/img-padrao-ua.png');
         @endphp
 
 
@@ -118,7 +101,7 @@
                     <table cellspacing="0" width="100%" cellpadding="0">
                         <tr>
                             <td width="75%">
-                                <img src="{{ $image }}" alt="{{ $collection->product->name }}"
+                                <img src="{{ $imageSrc }}" alt="{{ $collection->product->name }}"
                                     style="width: 100%; object-fit: cover; border-radius: 8px 0 0 8px; border-top:1px solid #CCC; border-left:1px solid #CCC; border-bottom:1px solid #CCC;  ">
                             </td>
                             <td width="24.8%">
@@ -146,10 +129,8 @@
                                         );
 
                                         $fullImagePath = $imagePath;
-                                        $imageExists = file_exists($fullImagePath);
-                                        $imageSrc = $imageExists
-                                            ? $imagePath
-                                            : public_path('images/img-padrao-oly.png');
+                                        $imageExists = file_exists($fullImagePath) && !is_dir($fullImagePath);
+                                        $imageSrc = $imageExists ? $imagePath : public_path('images/img-padrao-ua.png');
 
                                         /* $imagePath =
                             '/images/produtos/' .
@@ -197,7 +178,7 @@
                                                         $imageExists = file_exists($fullImagePath);
                                                         $imageSrc = $imageExists
                                                             ? public_path($imagePath)
-                                                            : public_path('images/img-padrao-oly.png');
+                                                            : public_path('images/img-padrao-ua.png');
                                                     @endphp
                                                     <img width="100px" src="{{ $imageSrc }}"
                                                         alt="{{ $collection->color_name }}"
@@ -328,7 +309,14 @@
                                                 style="float: left; width: calc(20% - 12.8px); margin-right: 16px; text-align: center;">
                                                 <div
                                                     style="width: 70px; height: 70px; background-color: black; border-radius: 8px; display: inline-block; position: relative; margin: 0 auto 8px auto;">
-                                                    <img src="{{ public_path('/' . $item->icon) }}"
+                                                    @php
+                                                        $iconPath = public_path('/' . $item->icon);
+                                                        $iconSrc =
+                                                            $item->icon && file_exists($iconPath) && !is_dir($iconPath)
+                                                                ? $iconPath
+                                                                : public_path('images/img-padrao-ua.png');
+                                                    @endphp
+                                                    <img src="{{ $iconSrc }}"
                                                         style="width: 70px; height: 70px; object-fit: contain; border-radius: 10px;"
                                                         alt="{{ $item->name }}" />
                                                 </div>

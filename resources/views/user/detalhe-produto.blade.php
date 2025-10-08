@@ -148,7 +148,7 @@
                                                 <img src="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $color->color_code) }}.jpg"
                                                     alt="{{ $color->color_name }}"
                                                     class="w-full object-contain rounded-t-lg" loading="lazy"
-                                                    onerror="this.src='/images/img-padrao-oly.png'" />
+                                                    onerror="this.src='/images/img-padrao-ua.png'" />
                                                 @if ($color->flag_product_id && $color->flagProduct)
                                                     @if ($color->flagProduct->icon != null)
                                                         <div
@@ -328,7 +328,7 @@
                                     <img src="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
                                         alt="Vista {{ $vista }}" class="max-w-full max-h-full object-contain"
                                         data-modal-image="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
-                                        onerror="this.src='/images/img-padrao-oly.png'" />
+                                        onerror="this.src='/images/img-padrao-ua.png'" />
                                 </div>
                             @endif
                             @php $vista++; @endphp
@@ -476,7 +476,7 @@
                             <img src="${imgInfo.path}" 
                                  alt="Vista ${imgInfo.index + 1}" 
                                  class="w-full object-contain rounded-lg "
-                                 onerror="this.src='/images/img-padrao-oly.png'" />
+                                 onerror="this.src='/images/img-padrao-ua.png'" />
                         `;
 
                         desktopGrid.appendChild(imageDiv);
@@ -499,7 +499,7 @@
                                 <img src="${imgInfo.path}"
                                      alt="Vista ${imgInfo.index + 1}"
                                      class="max-w-[80%] max-h-[80%] object-contain"
-                                     onerror="this.src='/images/img-padrao-oly.png'" />
+                                     onerror="this.src='/images/img-padrao-ua.png'" />
                             </div>
                         `;
 
@@ -928,7 +928,7 @@
                                      alt="${cor.color_name}" 
                                      class="w-full object-contain rounded-t-lg"
                                      loading="lazy"
-                                     onerror="this.src='/images/img-padrao-oly.png'" />
+                                     onerror="this.src='/images/img-padrao-ua.png'" />
                                 ${flagHtml}
                             </div>
                             <div class="text-center pb-2">

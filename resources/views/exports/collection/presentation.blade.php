@@ -38,6 +38,8 @@
                 '.jpg';
             //dd(public_path('images/produtos/' . $image));
             $image = public_path('images/produtos/' . $image);
+            $imageMainExists = $image && file_exists($image) && !is_dir($image);
+            $imageMainSrc = $imageMainExists ? $image : public_path('images/img-padrao-ua.png');
             //$image = '/images/produtos/' . $image;
         @endphp
         <table cellspacing="2" width="100%" cellpadding="2">
@@ -46,7 +48,7 @@
                     <table cellspacing="0" width="100%" cellpadding="0">
                         <tr>
                             <td width="75%">
-                                <img src="{{ $image }}" alt="{{ $collection->first()->product->name }}"
+                                <img src="{{ $imageMainSrc }}" alt="{{ $collection->first()->product->name }}"
                                     style="width: 100%; object-fit: cover; border-radius: 8px 0 0 8px; border-top:1px solid #CCC; border-left:1px solid #CCC; border-bottom:1px solid #CCC;  ">
                             </td>
                             <td width="24.8%">
@@ -65,6 +67,8 @@
                                                 $suffix .
                                                 '.jpg',
                                         );
+                                        $imageExists = file_exists($imagePath) && !is_dir($imagePath);
+                                        $imageSrc = $imageExists ? $imagePath : public_path('images/img-padrao-ua.png');
 
                                         /* $imagePath =
                                             '/images/produtos/' .
@@ -75,7 +79,7 @@
                                             '.jpg';*/
 
                                     @endphp
-                                    <img src="{{ $imagePath }}" alt="Tênis"
+                                    <img src="{{ $imageSrc }}" alt="Tênis"
                                         style="width: 100%; object-fit: cover; border-radius: 0 0 8px 0; border:1px solid #CCC; border-spacing:0;">
                                     @php $vista++; @endphp
                                 @endforeach
@@ -100,8 +104,21 @@
                                                         </div>
                                                     @endif
                                                     <div style="margin-top: 30px; margin-bottom: 15px;">
-                                                        <img width="100px"
-                                                            src="{{ public_path('/images/produtos/' . $collection->first()->product->code . '_' . str_replace('/', '_', $color->color_code) . '.jpg') }}"
+                                                        @php
+                                                            $thumbPath = public_path(
+                                                                '/images/produtos/' .
+                                                                    $collection->first()->product->code .
+                                                                    '_' .
+                                                                    str_replace('/', '_', $color->color_code) .
+                                                                    '.jpg',
+                                                            );
+                                                            $thumbExists =
+                                                                file_exists($thumbPath) && !is_dir($thumbPath);
+                                                            $thumbSrc = $thumbExists
+                                                                ? $thumbPath
+                                                                : public_path('images/img-padrao-ua.png');
+                                                        @endphp
+                                                        <img width="100px" src="{{ $thumbSrc }}"
                                                             alt="{{ $color->color_name }}"
                                                             class="width: 100px; height: auto; border-radius: 8px;" />
                                                     </div>
