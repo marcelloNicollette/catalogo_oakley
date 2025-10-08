@@ -275,7 +275,7 @@ class frontendController extends Controller
         $produtosFormatados = [];
         foreach ($produtos as $produtoGroup) {
             $produto = $produtoGroup;
-            dd($produto->product . $produto->product->code);
+            dd($produto);
             $img = "/images/produtos/" . $produto->product->code . "_" . $produto->color_code . ".jpg";
 
             $produtosFormatados[] = [
