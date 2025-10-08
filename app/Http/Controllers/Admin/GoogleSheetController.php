@@ -65,7 +65,7 @@ class GoogleSheetController extends Controller
             DB::beginTransaction();
 
             // Lê os cabeçalhos das colunas
-            $headerRange = "PaginaVestuario!A2:AM";
+            $headerRange = "UA-Catalogo!A2:AM";
             $headerRows = $this->sheetService->readSheet($spreadsheetId, $headerRange);
 
             if (empty($headerRows) || empty($headerRows[0])) {
@@ -75,7 +75,7 @@ class GoogleSheetController extends Controller
             $headers = $headerRows[0];
 
             // Lê os dados da planilha
-            $dataRange = "PaginaVestuario!A4:AM";
+            $dataRange = "UA-Catalogo!A4:AM";
             $rows = $this->sheetService->readSheet($spreadsheetId, $dataRange);
 
             if (empty($rows)) {

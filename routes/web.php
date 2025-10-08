@@ -322,6 +322,8 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     // Export routes
     Route::post('/user/export/pdf', [ExportController::class, 'exportPdf'])->name('user.export.pdf');
+    // HTML preview for debugging fonts/layout
+    Route::get('/user/export/preview', [ExportController::class, 'previewHtml'])->name('user.export.preview');
     Route::get('/user/exports', [ExportController::class, 'index'])->name('exports.index');
     Route::get('/user/exports/{exportUser}', [ExportController::class, 'show'])->name('exports.show');
     Route::get('/user/exports/{exportUser}/regenerate', [ExportController::class, 'regeneratePdf'])->name('exports.regenerate');
@@ -343,5 +345,10 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     // Suggestions routes
     Route::post('/suggestions', [\App\Http\Controllers\SuggestionController::class, 'store'])->name('suggestions.store');
+
+    // Debug de fontes: página HTML simples para verificar carregamento das variações
+    Route::get('/debug/fonts', function () {
+        return view('debug.fonts');
+    })->name('debug.fonts');
 });
 require __DIR__ . '/auth.php';

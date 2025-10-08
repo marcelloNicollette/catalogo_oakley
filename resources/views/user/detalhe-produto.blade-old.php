@@ -65,15 +65,15 @@
     </style>
     <main class="absolute top-20 lg:flex flex-1 produtos-page">
         @php
-            $currentUrl = request()->path();
-            $currentSlug = '';
+        $currentUrl = request()->path();
+        $currentSlug = '';
 
-            if (strpos($currentUrl, 'user') === 0) {
-                $parts = explode('/', $currentUrl);
-                if (count($parts) > 1) {
-                    $currentSlug = $parts[4];
-                }
-            }
+        if (strpos($currentUrl, 'user') === 0) {
+        $parts = explode('/', $currentUrl);
+        if (count($parts) > 1) {
+        $currentSlug = $parts[4];
+        }
+        }
         @endphp
         <div class="max-w-full px-2 pb-3">
             <div class="flex gap-2">
@@ -140,53 +140,54 @@
                             <!-- Primeira linha - 4 cores -->
                             <div class="grid grid-cols-3 lg:grid-cols-4 mb-4">
                                 @foreach ($produto->colors as $color)
-                                    <!-- Cor 1 - Selecionada -->
-                                    <div class="relative">
-                                        <div class="box-color bg-white {{ $loop->first ? 'border border-black' : '' }} rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md"
-                                            data-color-code="{{ $color->color_code }}">
-                                            <div class="relative">
-                                                <img src="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $color->color_code) }}.jpg"
-                                                    alt="{{ $color->color_name }}"
-                                                    class="w-full object-contain rounded-t-lg" loading="lazy"
-                                                    onerror="this.src='/images/img-padrao-oly.png'" />
-                                                @if ($color->flag_product_id)
-                                                    @if ($color->flagProduct->icon != null)
-                                                        <div
-                                                            class="badge-icon-wrapper absolute top-1 {{ $color->flagProduct->alinhamento }}-0">
-                                                            <img src="/{{ $color->flagProduct->icon }}"
-                                                                alt="{{ $color->flagProduct->flag_title }}"
-                                                                class="badge-icon"
-                                                                style="width:19px; height:19px; margin-right:3px">
-                                                            <span class="badge-tooltip"
-                                                                style="color: {{ $color->flagProduct->flag_color_text_bg }};">
-                                                                {{ $color->flagProduct->flag_title }}
-                                                            </span>
-                                                        </div>
-                                                    @else
-                                                        <span
-                                                            class="absolute top-2 left-1 bg-[{{ $color->flagProduct->flag_bg }}] text-[{{ $color->flagProduct->flag_color_text_bg }}] text-[10px] px-2 py-0.5 rounded-full">{{ $color->flagProduct->flag_title }}</span>
-                                                    @endif
-                                                @endif
+                                <!-- Cor 1 - Selecionada -->
+                                <div class="relative">
+                                    <div class="box-color bg-white {{ $loop->first ? 'border border-black' : '' }} rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md"
+                                        data-color-code="{{ $color->color_code }}">
+                                        <div class="relative">
+                                            <img src="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $color->color_code) }}.jpg"
+                                                alt="{{ $color->color_name }}"
+                                                class="w-full object-contain rounded-t-lg" loading="lazy"
+                                                onerror="this.src='/images/img-padrao-ua.png'" />
+                                            @if ($color->flag_product_id)
+                                            @if ($color->flagProduct->icon != null)
+                                            <div
+                                                class="badge-icon-wrapper absolute top-1 {{ $color->flagProduct->alinhamento }}-0">
+                                                <img src="/{{ $color->flagProduct->icon }}"
+                                                    alt="{{ $color->flagProduct->flag_title }}"
+                                                    class="badge-icon"
+                                                    style="width:19px; height:19px; margin-right:3px">
+                                                <span class="badge-tooltip"
+                                                    style="color: {{ $color->flagProduct->flag_color_text_bg }};">
+                                                    {{ $color->flagProduct->flag_title }}
+                                                </span>
                                             </div>
-                                            <div class="text-center pb-2">
-                                                <p class="text-xs text-black">{{ $color->color_name }}</p>
-                                                <p class="text-xs text-black opacity-50">
-                                                    {{ $color->color_description }}</p>
-                                            </div>
+                                            @else
+                                            <span
+                                                class="absolute top-2 left-1 bg-[{{ $color->flagProduct->flag_bg }}] text-[{{ $color->flagProduct->flag_color_text_bg }}] text-[10px] px-2 py-0.5 rounded-full">{{ $color->flagProduct->flag_title }}</span>
+                                            @endif
+                                            @endif
+                                        </div>
+                                        <div class="text-center pb-2">
+                                            <p class="text-xs text-black">{{ $color->color_name }}</p>
+                                            <p class="text-xs text-black opacity-50">
+                                                {{ $color->color_description }}
+                                            </p>
                                         </div>
                                     </div>
+                                </div>
                                 @endforeach
                             </div>
                         </div>
 
                         <!-- Descrição -->
                         @if ($produto->description)
-                            <div class="mb-6">
-                                <h3 class="text-xs text-black opacity-50">Descrição</h3>
-                                <p class="text-xs">
-                                    {{ $produto->description }}
-                                </p>
-                            </div>
+                        <div class="mb-6">
+                            <h3 class="text-xs text-black opacity-50">Descrição</h3>
+                            <p class="text-xs">
+                                {{ $produto->description }}
+                            </p>
+                        </div>
                         @endif
 
                         <!-- Preço -->
@@ -198,63 +199,64 @@
                                 </div>
 
                                 @if ($produto->caracteristicasDestaque)
-                                    @foreach ($produto->caracteristicasDestaque as $caracteristica)
-                                        <div>
-                                            <p class="text-xs text-black opacity-50">
-                                                {{ $caracteristica->title }}</p>
-                                            <p class="text-sm">{!! nl2br(e($caracteristica->description)) !!}</p>
-                                        </div>
-                                    @endforeach
+                                @foreach ($produto->caracteristicasDestaque as $caracteristica)
+                                <div>
+                                    <p class="text-xs text-black opacity-50">
+                                        {{ $caracteristica->title }}
+                                    </p>
+                                    <p class="text-sm">{!! nl2br(e($caracteristica->description)) !!}</p>
+                                </div>
+                                @endforeach
                                 @endif
 
                                 @if ($produto->caracteristicas)
-                                    @foreach ($produto->caracteristicas as $caract)
-                                        <div>
-                                            <p class="text-xs text-black opacity-50">{{ $caract->title }}</p>
-                                            <p class="text-sm">{!! nl2br(e($caract->description)) !!}</p>
-                                        </div>
-                                    @endforeach
+                                @foreach ($produto->caracteristicas as $caract)
+                                <div>
+                                    <p class="text-xs text-black opacity-50">{{ $caract->title }}</p>
+                                    <p class="text-sm">{!! nl2br(e($caract->description)) !!}</p>
+                                </div>
+                                @endforeach
                                 @endif
                             </div>
                         </div>
 
                         <!-- Tecnologias -->
                         @if (count($produto->technologyItems) > 0)
-                            <div class="mb-6">
-                                <h3 class="text-xs mb-3 text-black opacity-50">Tecnologias</h3>
-                                <div class="">
-                                    @foreach ($produto->technologyItems as $item)
-                                        <div class="mb-[30px]">
-                                            <div class="w-[65px] h-[65px] float-left mr-[10px] bg-black rounded-lg ">
-                                                <img src="/{{ $item->icon }}" class="w-100 h-100 my-0 rounded-lg"
-                                                    alt="{{ $item->name }}" />
-                                            </div>
-                                            <div>
-                                                <p class="text-xs text-black opacity-50">{{ $item->name }}</p>
-                                                <p class="text-xs">
-                                                    {{ $item->description }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    @endforeach
+                        <div class="mb-6">
+                            <h3 class="text-xs mb-3 text-black opacity-50">Tecnologias</h3>
+                            <div class="">
+                                @foreach ($produto->technologyItems as $item)
+                                <div class="mb-[30px]">
+                                    <div class="w-[65px] h-[65px] float-left mr-[10px] bg-black rounded-lg ">
+                                        <img src="/{{ $item->icon }}" class="w-100 h-100 my-0 rounded-lg"
+                                            alt="{{ $item->name }}" />
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-black opacity-50">{{ $item->name }}</p>
+                                        <p class="text-xs">
+                                            {{ $item->description }}
+                                        </p>
+                                    </div>
                                 </div>
+                                @endforeach
                             </div>
+                        </div>
                         @endif
                         <div style="clear: both;"></div>
 
                         <!-- Arquivos/Links -->
                         <div class="my-[30px]">
                             @if (count($produto->links) > 0)
-                                <h3 class="text-xs mb-5 text-black opacity-50">Arquivos/Links</h3>
-                                <div class="flex flex-wrap gap-2">
-                                    @foreach ($produto->links as $link)
-                                        <a href="{{ $link->link_url }}" target="_blank"
-                                            class="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm transition-colors">
-                                            <img src="/images/icones/clip.png" alt="" />
-                                            <span>{{ $link->link_title }}</span>
-                                        </a>
-                                    @endforeach
-                                </div>
+                            <h3 class="text-xs mb-5 text-black opacity-50">Arquivos/Links</h3>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach ($produto->links as $link)
+                                <a href="{{ $link->link_url }}" target="_blank"
+                                    class="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm transition-colors">
+                                    <img src="/images/icones/clip.png" alt="" />
+                                    <span>{{ $link->link_title }}</span>
+                                </a>
+                                @endforeach
+                            </div>
                             @endif
                         </div>
 
@@ -292,46 +294,46 @@
                 <div class="swiper modalSwiper h-full">
                     <div class="swiper-wrapper">
                         @php
-                            $suffixes = [
-                                '',
-                                '_A',
-                                '_B',
-                                '_C',
-                                '_D',
-                                '_E',
-                                '_F',
-                                '_G',
-                                '_H',
-                                '_I',
-                                '_J',
-                                '_K',
-                                '_L',
-                                '_M',
-                                '_N',
-                            ];
-                            $vista = 1;
+                        $suffixes = [
+                        '',
+                        '_A',
+                        '_B',
+                        '_C',
+                        '_D',
+                        '_E',
+                        '_F',
+                        '_G',
+                        '_H',
+                        '_I',
+                        '_J',
+                        '_K',
+                        '_L',
+                        '_M',
+                        '_N',
+                        ];
+                        $vista = 1;
                         @endphp
 
                         @foreach ($suffixes as $suffix)
-                            @php
-                                $imagePath = public_path(
-                                    'images/produtos/' .
-                                        $produto->code .
-                                        '_' .
-                                        str_replace('/', '_', $produto->colors[0]->color_code) .
-                                        $suffix .
-                                        '.jpg',
-                                );
-                            @endphp
-                            @if (file_exists($imagePath))
-                                <div class="swiper-slide flex items-center justify-center">
-                                    <img src="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
-                                        alt="Vista {{ $vista }}" class="max-w-full max-h-full object-contain"
-                                        data-modal-image="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
-                                        onerror="this.src='/images/img-padrao-oly.png'" />
-                                </div>
-                            @endif
-                            @php $vista++; @endphp
+                        @php
+                        $imagePath = public_path(
+                        'images/produtos/' .
+                        $produto->code .
+                        '_' .
+                        str_replace('/', '_', $produto->colors[0]->color_code) .
+                        $suffix .
+                        '.jpg',
+                        );
+                        @endphp
+                        @if (file_exists($imagePath))
+                        <div class="swiper-slide flex items-center justify-center">
+                            <img src="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
+                                alt="Vista {{ $vista }}" class="max-w-full max-h-full object-contain"
+                                data-modal-image="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
+                                onerror="this.src='/images/img-padrao-ua.png'" />
+                        </div>
+                        @endif
+                        @php $vista++; @endphp
                         @endforeach
                     </div>
 
@@ -367,310 +369,306 @@
     </main>
 
     @push('scripts')
-        <!-- Swiper JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.7/swiper-bundle.min.js"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.7/swiper-bundle.min.js"></script>
 
-        <!-- SweetAlert2 JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.27/sweetalert2.all.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.27/sweetalert2.all.min.js"></script>
 
-        <script>
-            // Cache para armazenar informações de imagens válidas
-            const imageCache = new Map();
-            const suffixes = ['', '_A', '_B', '_C', '_D', '_E', '_F', '_G', '_H', '_I', '_J', '_K', '_L', '_M', '_N'];
-            const productCode = '{{ str_replace('/', '_', $produto->code) }}';
+    <script>
+        // Cache para armazenar informações de imagens válidas
+        const imageCache = new Map();
+        const suffixes = ['', '_A', '_B', '_C', '_D', '_E', '_F', '_G', '_H', '_I', '_J', '_K', '_L', '_M', '_N'];
+        const productCode = '{{ str_replace(' / ', '
+        _ ', $produto->code) }}';
 
-            // Variáveis globais
-            let currentColorCode = '{{ str_replace('/', '_', $produto->colors->first()->color_code) ?? '' }}';
-            const productId = {{ $produto->id }};
-            let modalSwiper;
-
-            // Inicializar Swiper para mobile/tablet
-            const swiper = new Swiper(".thumbnailSwiper", {
-                slidesPerView: 1,
-                spaceBetween: 10,
-                loop: false,
-                pagination: {
-                    el: ".swiper-pagination",
-                    clickable: true,
-                },
-                breakpoints: {
-                    640: {
-                        slidesPerView: 1,
-                        spaceBetween: 15,
-                    },
-                },
-            });
-
-            // Função para verificar se imagem existe
-            function checkImageExists(imagePath) {
-                return new Promise((resolve) => {
-                    const img = new Image();
-                    img.onload = () => resolve(true);
-                    img.onerror = () => resolve(false);
-                    img.src = imagePath;
-                });
+        // Variáveis globais
+        let currentColorCode = '{{ str_replace(' / ', '
+        _ ', $produto->colors->first()->color_code) ?? '
+        ' }}';
+        const productId = {
+            {
+                $produto - > id
             }
+        };
+        let modalSwiper;
 
-            // Pré-carrega informações sobre quais imagens existem para cada cor
-            async function preloadImageInfo() {
-                console.log('Pré-carregando informações das imagens...');
+        // Inicializar Swiper para mobile/tablet
+        const swiper = new Swiper(".thumbnailSwiper", {
+            slidesPerView: 1,
+            spaceBetween: 10,
+            loop: false,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 1,
+                    spaceBetween: 15,
+                },
+            },
+        });
 
-                const promises = [];
+        // Função para verificar se imagem existe
+        function checkImageExists(imagePath) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = imagePath;
+            });
+        }
 
-                coresData.forEach(cor => {
-                    const color = cor.color_code.replace(/\//g, '_');
-                    const colorImages = [];
+        // Pré-carrega informações sobre quais imagens existem para cada cor
+        async function preloadImageInfo() {
+            console.log('Pré-carregando informações das imagens...');
 
-                    suffixes.forEach((suffix, index) => {
-                        const imagePath = `/images/produtos/${productCode}_${color}${suffix}.jpg`;
+            const promises = [];
 
-                        const promise = checkImageExists(imagePath).then(exists => {
-                            if (exists) {
-                                colorImages.push({
-                                    suffix,
-                                    index,
-                                    path: imagePath
-                                });
-                            }
-                        });
+            coresData.forEach(cor => {
+                const color = cor.color_code.replace(/\//g, '_');
+                const colorImages = [];
 
-                        promises.push(promise);
+                suffixes.forEach((suffix, index) => {
+                    const imagePath = `/images/produtos/${productCode}_${color}${suffix}.jpg`;
+
+                    const promise = checkImageExists(imagePath).then(exists => {
+                        if (exists) {
+                            colorImages.push({
+                                suffix,
+                                index,
+                                path: imagePath
+                            });
+                        }
                     });
 
-                    imageCache.set(color, colorImages);
+                    promises.push(promise);
                 });
 
-                await Promise.all(promises);
-                console.log('Pré-carregamento concluído');
+                imageCache.set(color, colorImages);
+            });
+
+            await Promise.all(promises);
+            console.log('Pré-carregamento concluído');
+        }
+
+        // Função otimizada para carregar imagens (usa cache)
+        function carregarImagensProdutoOtimizado(colorCode = null) {
+            if (!colorCode) {
+                const coresFiltradas = filtrarCoresPorSegmentacao();
+                if (coresFiltradas.length > 0) {
+                    colorCode = coresFiltradas[0].color_code;
+                } else {
+                    return;
+                }
             }
 
-            // Função otimizada para carregar imagens (usa cache)
-            function carregarImagensProdutoOtimizado(colorCode = null) {
-                if (!colorCode) {
-                    const coresFiltradas = filtrarCoresPorSegmentacao();
-                    if (coresFiltradas.length > 0) {
-                        colorCode = coresFiltradas[0].color_code;
-                    } else {
-                        return;
-                    }
-                }
+            const color = colorCode.replace(/\//g, '_');
+            const cachedImages = imageCache.get(color) || [];
 
-                const color = colorCode.replace(/\//g, '_');
-                const cachedImages = imageCache.get(color) || [];
+            // Atualizar imagens do desktop grid imediatamente
+            const desktopGrid = document.getElementById('desktopGrid');
+            if (desktopGrid) {
+                desktopGrid.innerHTML = '';
 
-                // Atualizar imagens do desktop grid imediatamente
-                const desktopGrid = document.getElementById('desktopGrid');
-                if (desktopGrid) {
-                    desktopGrid.innerHTML = '';
-
-                    cachedImages.forEach(imgInfo => {
-                        const imageDiv = document.createElement('div');
-                        imageDiv.className = 'cursor-pointer transition-opacity';
-                        imageDiv.setAttribute('data-image', imgInfo.path);
-                        imageDiv.onclick = function() {
-                            openImageModal(this);
-                        };
-                        console.log('Carregando imagem:', imgInfo.index);
-                        const $css1 = imgInfo.index === 0 ? 'rounded-l-lg' : '';
-                        imageDiv.innerHTML = `
+                cachedImages.forEach(imgInfo => {
+                    const imageDiv = document.createElement('div');
+                    imageDiv.className = 'cursor-pointer transition-opacity';
+                    imageDiv.setAttribute('data-image', imgInfo.path);
+                    imageDiv.onclick = function() {
+                        openImageModal(this);
+                    };
+                    console.log('Carregando imagem:', imgInfo.index);
+                    const $css1 = imgInfo.index === 0 ? 'rounded-l-lg' : '';
+                    imageDiv.innerHTML = `
                             <img src="${imgInfo.path}" 
                                  alt="Vista ${imgInfo.index + 1}" 
                                  class="w-full object-contain rounded-lg "
-                                 onerror="this.src='/images/img-padrao-oly.png'" />
+                                 onerror="this.src='/images/img-padrao-ua.png'" />
                         `;
 
-                        desktopGrid.appendChild(imageDiv);
-                    });
-                }
+                    desktopGrid.appendChild(imageDiv);
+                });
+            }
 
-                // Atualizar imagens do mobile swiper imediatamente
-                const swiperWrapper = document.querySelector('.swiper-wrapper');
-                if (swiperWrapper) {
-                    swiperWrapper.innerHTML = '';
+            // Atualizar imagens do mobile swiper imediatamente
+            const swiperWrapper = document.querySelector('.swiper-wrapper');
+            if (swiperWrapper) {
+                swiperWrapper.innerHTML = '';
 
-                    cachedImages.forEach(imgInfo => {
-                        const slide = document.createElement('div');
-                        slide.className = 'swiper-slide';
+                cachedImages.forEach(imgInfo => {
+                    const slide = document.createElement('div');
+                    slide.className = 'swiper-slide';
 
-                        slide.innerHTML = `
+                    slide.innerHTML = `
                             <div class="bg-white cursor-pointer flex items-center justify-center hover:opacity-80 transition-opacity aspect-square w-full"
                                  data-image="${imgInfo.path}"
                                  onclick="openImageModal(this)">
                                 <img src="${imgInfo.path}"
                                      alt="Vista ${imgInfo.index + 1}"
                                      class="max-w-[80%] max-h-[80%] object-contain"
-                                     onerror="this.src='/images/img-padrao-oly.png'" />
+                                     onerror="this.src='/images/img-padrao-ua.png'" />
                             </div>
                         `;
 
-                        swiperWrapper.appendChild(slide);
-                    });
+                    swiperWrapper.appendChild(slide);
+                });
 
-                    // Reinicializar o swiper se existir
-                    if (window.thumbnailSwiper) {
-                        window.thumbnailSwiper.update();
-                    }
+                // Reinicializar o swiper se existir
+                if (window.thumbnailSwiper) {
+                    window.thumbnailSwiper.update();
                 }
-
-                // Atualizar imagens do modal imediatamente
-                atualizarImagensModalOtimizado(colorCode);
             }
 
-            // Função otimizada para atualizar imagens do modal
-            function atualizarImagensModalOtimizado(colorCode) {
-                const color = colorCode.replace(/\//g, '_');
-                const cachedImages = imageCache.get(color) || [];
+            // Atualizar imagens do modal imediatamente
+            atualizarImagensModalOtimizado(colorCode);
+        }
 
-                // Primeiro, esconder todas as imagens do modal
-                document.querySelectorAll('[data-modal-image]').forEach(img => {
-                    img.style.display = 'none';
-                });
+        // Função otimizada para atualizar imagens do modal
+        function atualizarImagensModalOtimizado(colorCode) {
+            const color = colorCode.replace(/\//g, '_');
+            const cachedImages = imageCache.get(color) || [];
 
-                // Depois, mostrar e atualizar apenas as imagens que existem
-                cachedImages.forEach(imgInfo => {
-                    const modalImages = document.querySelectorAll('[data-modal-image]');
-                    if (modalImages[imgInfo.index]) {
-                        modalImages[imgInfo.index].setAttribute('data-modal-image', imgInfo.path);
-                        modalImages[imgInfo.index].src = imgInfo.path;
-                        modalImages[imgInfo.index].style.display = 'block';
-                    }
-                });
-            }
+            // Primeiro, esconder todas as imagens do modal
+            document.querySelectorAll('[data-modal-image]').forEach(img => {
+                img.style.display = 'none';
+            });
 
-            // Inicializar Swiper para o modal
-            function initModalSwiper() {
-                modalSwiper = new Swiper(".modalSwiper", {
-                    slidesPerView: 'auto',
-                    spaceBetween: 30,
-                    centeredSlides: true,
-                    loop: true,
-                    slidesPerView: 1.3,
-                    spaceBetween: 30,
-                    navigation: {
-                        nextEl: ".swiper-button-next",
-                        prevEl: ".swiper-button-prev",
-                    },
-                    keyboard: {
-                        enabled: true,
-                    },
-                    effect: 'slide',
-                    touchRatio: 1,
-                    touchAngle: 45,
-                    grabCursor: true,
-                    autoHeight: false,
-                    breakpoints: {
-                        768: {
-                            slidesPerView: 1.4,
-                            spaceBetween: 40,
-                        },
-                        1024: {
-                            slidesPerView: 1.3,
-                            spaceBetween: 30,
-                        }
-                    },
-                });
-            }
-
-            // Função para abrir o modal de imagens
-            function openImageModal(element) {
-                const imageModal = document.getElementById('imageModal');
-                const clickedImageSrc = element.getAttribute('data-image');
-
-                imageModal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-
-                if (!modalSwiper) {
-                    initModalSwiper();
-                }
-
+            // Depois, mostrar e atualizar apenas as imagens que existem
+            cachedImages.forEach(imgInfo => {
                 const modalImages = document.querySelectorAll('[data-modal-image]');
-                let targetIndex = 0;
+                if (modalImages[imgInfo.index]) {
+                    modalImages[imgInfo.index].setAttribute('data-modal-image', imgInfo.path);
+                    modalImages[imgInfo.index].src = imgInfo.path;
+                    modalImages[imgInfo.index].style.display = 'block';
+                }
+            });
+        }
 
-                modalImages.forEach((img, index) => {
-                    if (img.getAttribute('data-modal-image') === clickedImageSrc) {
-                        targetIndex = index;
+        // Inicializar Swiper para o modal
+        function initModalSwiper() {
+            modalSwiper = new Swiper(".modalSwiper", {
+                slidesPerView: 'auto',
+                spaceBetween: 30,
+                centeredSlides: true,
+                loop: true,
+                slidesPerView: 1.3,
+                spaceBetween: 30,
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+                keyboard: {
+                    enabled: true,
+                },
+                effect: 'slide',
+                touchRatio: 1,
+                touchAngle: 45,
+                grabCursor: true,
+                autoHeight: false,
+                breakpoints: {
+                    768: {
+                        slidesPerView: 1.4,
+                        spaceBetween: 40,
+                    },
+                    1024: {
+                        slidesPerView: 1.3,
+                        spaceBetween: 30,
                     }
-                });
+                },
+            });
+        }
 
-                modalSwiper.slideTo(targetIndex, 0);
+        // Função para abrir o modal de imagens
+        function openImageModal(element) {
+            const imageModal = document.getElementById('imageModal');
+            const clickedImageSrc = element.getAttribute('data-image');
+
+            imageModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            if (!modalSwiper) {
+                initModalSwiper();
             }
 
-            // Função para fechar o modal de imagens
-            function closeImageModal() {
-                const imageModal = document.getElementById('imageModal');
-                imageModal.classList.add('hidden');
-                document.body.style.overflow = 'auto';
+            const modalImages = document.querySelectorAll('[data-modal-image]');
+            let targetIndex = 0;
+
+            modalImages.forEach((img, index) => {
+                if (img.getAttribute('data-modal-image') === clickedImageSrc) {
+                    targetIndex = index;
+                }
+            });
+
+            modalSwiper.slideTo(targetIndex, 0);
+        }
+
+        // Função para fechar o modal de imagens
+        function closeImageModal() {
+            const imageModal = document.getElementById('imageModal');
+            imageModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Fechar modal com tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeImageModal();
             }
+        });
 
-            // Fechar modal com tecla ESC
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closeImageModal();
-                }
-            });
+        // Fechar modal clicando fora da imagem
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImageModal();
+            }
+        });
 
-            // Fechar modal clicando fora da imagem
-            document.getElementById('imageModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeImageModal();
-                }
-            });
+        // Funcionalidade de favoritar
+        const favoriteBtn = document.getElementById("favoriteBtn");
+        const iconOutline = document.getElementById("iconOutline");
+        const iconFilled = document.getElementById("iconFilled");
 
-            // Funcionalidade de favoritar
-            const favoriteBtn = document.getElementById("favoriteBtn");
-            const iconOutline = document.getElementById("iconOutline");
-            const iconFilled = document.getElementById("iconFilled");
+        // Verificar estado inicial da wishlist
+        checkWishlistStatus();
 
-            // Verificar estado inicial da wishlist
-            checkWishlistStatus();
+        favoriteBtn.addEventListener("click", () => {
+            const isFavorited = iconFilled.classList.contains("hidden");
 
-            favoriteBtn.addEventListener("click", () => {
-                const isFavorited = iconFilled.classList.contains("hidden");
+            if (isFavorited) {
+                addToWishlist();
+            } else {
+                removeFromWishlist();
+            }
+        });
 
-                if (isFavorited) {
-                    addToWishlist();
-                } else {
-                    removeFromWishlist();
-                }
-            });
-
-            function addToWishlist() {
-                fetch('/user/wishlist/add', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({
-                            product_id: productId,
-                            color_code: currentColorCode
-                        })
+        function addToWishlist() {
+            fetch('/user/wishlist/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        color_code: currentColorCode
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            iconFilled.classList.remove("hidden");
-                            iconOutline.classList.add("hidden");
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        iconFilled.classList.remove("hidden");
+                        iconOutline.classList.add("hidden");
 
-                            const favoriteText = document.getElementById('favoriteText');
-                            favoriteText.textContent = 'Adicionado aos Favoritos';
-                            favoriteText.classList.remove('hidden');
+                        const favoriteText = document.getElementById('favoriteText');
+                        favoriteText.textContent = 'Adicionado aos Favoritos';
+                        favoriteText.classList.remove('hidden');
 
-                            setTimeout(() => {
-                                favoriteText.classList.add('hidden');
-                            }, 5000);
-                        } else {
-                            const favoriteText = document.getElementById('favoriteText');
-                            favoriteText.textContent = 'Erro ao adicionar aos favoritos';
-                            favoriteText.classList.remove('hidden');
-
-                            setTimeout(() => {
-                                favoriteText.classList.add('hidden');
-                            }, 5000);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro:', error);
+                        setTimeout(() => {
+                            favoriteText.classList.add('hidden');
+                        }, 5000);
+                    } else {
                         const favoriteText = document.getElementById('favoriteText');
                         favoriteText.textContent = 'Erro ao adicionar aos favoritos';
                         favoriteText.classList.remove('hidden');
@@ -678,229 +676,246 @@
                         setTimeout(() => {
                             favoriteText.classList.add('hidden');
                         }, 5000);
-                    });
-            }
-
-            function removeFromWishlist() {
-                fetch('/user/wishlist/remove', {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({
-                            product_id: productId,
-                            color_code: currentColorCode
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            iconFilled.classList.add("hidden");
-                            iconOutline.classList.remove("hidden");
-
-                            const favoriteText = document.getElementById('favoriteText');
-                            favoriteText.textContent = 'Removido dos Favoritos';
-                            favoriteText.classList.remove('hidden');
-
-                            setTimeout(() => {
-                                favoriteText.classList.add('hidden');
-                            }, 5000);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro:', error);
-                    });
-            }
-
-            function checkWishlistStatus() {
-                fetch(`/user/wishlist/check?product_id=${productId}&color_code=${currentColorCode}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.is_favorited) {
-                            iconFilled.classList.remove("hidden");
-                            iconOutline.classList.add("hidden");
-                        } else {
-                            iconFilled.classList.add("hidden");
-                            iconOutline.classList.remove("hidden");
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro ao verificar status da wishlist:', error);
-                    });
-            }
-
-            // Event listener otimizado para seleção de cor
-            function ativarEventListenersCoresOtimizado() {
-                const colorVariants = document.querySelectorAll('[class^="box-color"]');
-                colorVariants.forEach((variant) => {
-                    variant.addEventListener("click", () => {
-                        // Adicionar indicador visual imediato
-                        variant.style.opacity = '0.7';
-
-                        // Usar requestAnimationFrame para suavizar a transição
-                        requestAnimationFrame(() => {
-                            // Remove seleção de todas as cores
-                            colorVariants.forEach((v) => {
-                                v.classList.remove("border-black", "border");
-                                v.style.opacity = '1';
-                            });
-
-                            // Adiciona seleção na cor clicada
-                            variant.classList.add("border-black", "border");
-                            variant.style.opacity = '1';
-
-                            // Obtém o código da cor selecionada
-                            const selectedColorCode = variant.getAttribute('data-color-code');
-                            currentColorCode = selectedColorCode;
-
-                            // Carregar imagens da cor selecionada (agora instantâneo)
-                            carregarImagensProdutoOtimizado(selectedColorCode);
-
-                            // Verificar status da wishlist (pode ser assíncrono sem afetar UX)
-                            checkWishlistStatus();
-                        });
-                    });
-                });
-            }
-
-            // Funcionalidade do Modal de Sugestão
-            const suggestionModal = document.getElementById("suggestionModal");
-            const suggestionForm = document.getElementById("suggestionForm");
-            const suggestionSuccess = document.getElementById("suggestionSuccess");
-            const openSuggestionModal = document.getElementById("openSuggestionModal");
-            const closeSuggestionModal = document.getElementById("closeSuggestionModal");
-            const closeSuccessModal = document.getElementById("closeSuccessModal");
-            const sendSuggestion = document.getElementById("sendSuggestion");
-            const suggestionText = document.getElementById("suggestionText");
-
-            // Abrir modal
-            if (openSuggestionModal) {
-                openSuggestionModal.addEventListener("click", () => {
-                    suggestionModal.classList.remove("hidden");
-                    suggestionForm.classList.remove("hidden");
-                    suggestionSuccess.classList.add("hidden");
-                    suggestionText.value = "";
-                });
-            }
-
-            // Fechar modal - botão voltar do formulário
-            if (closeSuggestionModal) {
-                closeSuggestionModal.addEventListener("click", () => {
-                    suggestionModal.classList.add("hidden");
-                });
-            }
-
-            // Fechar modal - botão voltar do sucesso
-            if (closeSuccessModal) {
-                closeSuccessModal.addEventListener("click", () => {
-                    suggestionModal.classList.add("hidden");
-                });
-            }
-
-            // Fechar modal clicando fora
-            if (suggestionModal) {
-                suggestionModal.addEventListener("click", (e) => {
-                    if (e.target === suggestionModal) {
-                        suggestionModal.classList.add("hidden");
                     }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    const favoriteText = document.getElementById('favoriteText');
+                    favoriteText.textContent = 'Erro ao adicionar aos favoritos';
+                    favoriteText.classList.remove('hidden');
+
+                    setTimeout(() => {
+                        favoriteText.classList.add('hidden');
+                    }, 5000);
                 });
-            }
+        }
 
-            // Enviar sugestão
-            if (sendSuggestion) {
-                sendSuggestion.addEventListener("click", () => {
-                    const suggestion = suggestionText.value.trim();
+        function removeFromWishlist() {
+            fetch('/user/wishlist/remove', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        color_code: currentColorCode
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        iconFilled.classList.add("hidden");
+                        iconOutline.classList.remove("hidden");
 
-                    if (suggestion) {
-                        suggestionForm.classList.add("hidden");
-                        suggestionSuccess.classList.remove("hidden");
+                        const favoriteText = document.getElementById('favoriteText');
+                        favoriteText.textContent = 'Removido dos Favoritos';
+                        favoriteText.classList.remove('hidden');
+
+                        setTimeout(() => {
+                            favoriteText.classList.add('hidden');
+                        }, 5000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
+        }
+
+        function checkWishlistStatus() {
+            fetch(`/user/wishlist/check?product_id=${productId}&color_code=${currentColorCode}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.is_favorited) {
+                        iconFilled.classList.remove("hidden");
+                        iconOutline.classList.add("hidden");
                     } else {
-                        alert("Por favor, digite sua sugestão antes de enviar.");
+                        iconFilled.classList.add("hidden");
+                        iconOutline.classList.remove("hidden");
                     }
+                })
+                .catch(error => {
+                    console.error('Erro ao verificar status da wishlist:', error);
                 });
-            }
+        }
 
-            // Fechar modal com tecla ESC
-            document.addEventListener("keydown", (e) => {
-                if (e.key === "Escape" && suggestionModal && !suggestionModal.classList.contains("hidden")) {
+        // Event listener otimizado para seleção de cor
+        function ativarEventListenersCoresOtimizado() {
+            const colorVariants = document.querySelectorAll('[class^="box-color"]');
+            colorVariants.forEach((variant) => {
+                variant.addEventListener("click", () => {
+                    // Adicionar indicador visual imediato
+                    variant.style.opacity = '0.7';
+
+                    // Usar requestAnimationFrame para suavizar a transição
+                    requestAnimationFrame(() => {
+                        // Remove seleção de todas as cores
+                        colorVariants.forEach((v) => {
+                            v.classList.remove("border-black", "border");
+                            v.style.opacity = '1';
+                        });
+
+                        // Adiciona seleção na cor clicada
+                        variant.classList.add("border-black", "border");
+                        variant.style.opacity = '1';
+
+                        // Obtém o código da cor selecionada
+                        const selectedColorCode = variant.getAttribute('data-color-code');
+                        currentColorCode = selectedColorCode;
+
+                        // Carregar imagens da cor selecionada (agora instantâneo)
+                        carregarImagensProdutoOtimizado(selectedColorCode);
+
+                        // Verificar status da wishlist (pode ser assíncrono sem afetar UX)
+                        checkWishlistStatus();
+                    });
+                });
+            });
+        }
+
+        // Funcionalidade do Modal de Sugestão
+        const suggestionModal = document.getElementById("suggestionModal");
+        const suggestionForm = document.getElementById("suggestionForm");
+        const suggestionSuccess = document.getElementById("suggestionSuccess");
+        const openSuggestionModal = document.getElementById("openSuggestionModal");
+        const closeSuggestionModal = document.getElementById("closeSuggestionModal");
+        const closeSuccessModal = document.getElementById("closeSuccessModal");
+        const sendSuggestion = document.getElementById("sendSuggestion");
+        const suggestionText = document.getElementById("suggestionText");
+
+        // Abrir modal
+        if (openSuggestionModal) {
+            openSuggestionModal.addEventListener("click", () => {
+                suggestionModal.classList.remove("hidden");
+                suggestionForm.classList.remove("hidden");
+                suggestionSuccess.classList.add("hidden");
+                suggestionText.value = "";
+            });
+        }
+
+        // Fechar modal - botão voltar do formulário
+        if (closeSuggestionModal) {
+            closeSuggestionModal.addEventListener("click", () => {
+                suggestionModal.classList.add("hidden");
+            });
+        }
+
+        // Fechar modal - botão voltar do sucesso
+        if (closeSuccessModal) {
+            closeSuccessModal.addEventListener("click", () => {
+                suggestionModal.classList.add("hidden");
+            });
+        }
+
+        // Fechar modal clicando fora
+        if (suggestionModal) {
+            suggestionModal.addEventListener("click", (e) => {
+                if (e.target === suggestionModal) {
                     suggestionModal.classList.add("hidden");
                 }
             });
+        }
 
-            // Dados das cores do produto para filtro dinâmico
-            const coresData = [
-                @foreach ($produto->allColors as $color)
+        // Enviar sugestão
+        if (sendSuggestion) {
+            sendSuggestion.addEventListener("click", () => {
+                const suggestion = suggestionText.value.trim();
+
+                if (suggestion) {
+                    suggestionForm.classList.add("hidden");
+                    suggestionSuccess.classList.remove("hidden");
+                } else {
+                    alert("Por favor, digite sua sugestão antes de enviar.");
+                }
+            });
+        }
+
+        // Fechar modal com tecla ESC
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && suggestionModal && !suggestionModal.classList.contains("hidden")) {
+                suggestionModal.classList.add("hidden");
+            }
+        });
+
+        // Dados das cores do produto para filtro dinâmico
+        const coresData = [
+            @foreach($produto - > allColors as $color) {
+                id: {
                     {
-                        id: {{ $color->id }},
-                        color_code: "{{ $color->color_code }}",
-                        color_name: "{{ $color->color_name }}",
-                        color_description: "{{ $color->color_description }}",
-                        flag_product_id: {{ $color->flag_product_id ?? 'null' }},
-                        flagProduct: @if ($color->flagProduct)
-                            {
-                                flag_title: "{{ $color->flagProduct->flag_title }}",
-                                flag_bg: "{{ $color->flagProduct->flag_bg }}",
-                                flag_color_text_bg: "{{ $color->flagProduct->flag_color_text_bg }}",
-                                icon: "{{ $color->flagProduct->icon }}",
-                                alinhamento: "{{ $color->flagProduct->alinhamento }}"
-                            }
-                        @else
-                            null
-                        @endif ,
-                        segmentacaoIds: @json($color->segmentacoesCliente->pluck('id')->toArray())
-                    },
-                @endforeach
-            ];
-
-            // Função para filtrar cores baseado nas segmentações selecionadas
-            function filtrarCoresPorSegmentacao() {
-                let selectedSegmentacoes = [];
-                try {
-                    selectedSegmentacoes = JSON.parse(localStorage.getItem('selectedSegmentacoes') || '[]');
-                } catch (e) {
-                    console.error('Erro ao processar segmentações do localStorage:', e);
-                    selectedSegmentacoes = [];
+                        $color - > id
+                    }
+                },
+                color_code: "{{ $color->color_code }}",
+                color_name: "{{ $color->color_name }}",
+                color_description: "{{ $color->color_description }}",
+                flag_product_id: {
+                    {
+                        $color - > flag_product_id ?? 'null'
+                    }
+                },
+                flagProduct: @if($color - > flagProduct) {
+                    flag_title: "{{ $color->flagProduct->flag_title }}",
+                    flag_bg: "{{ $color->flagProduct->flag_bg }}",
+                    flag_color_text_bg: "{{ $color->flagProduct->flag_color_text_bg }}",
+                    icon: "{{ $color->flagProduct->icon }}",
+                    alinhamento: "{{ $color->flagProduct->alinhamento }}"
                 }
+                @else
+                null
+                @endif,
+                segmentacaoIds: @json($color - > segmentacoesCliente - > pluck('id') - > toArray())
+            },
+            @endforeach
+        ];
 
-                if (selectedSegmentacoes.length === 0) {
-                    return coresData;
-                }
-
-                return coresData.filter(cor => {
-                    return selectedSegmentacoes.some(segId =>
-                        cor.segmentacaoIds.includes(parseInt(segId))
-                    );
-                });
+        // Função para filtrar cores baseado nas segmentações selecionadas
+        function filtrarCoresPorSegmentacao() {
+            let selectedSegmentacoes = [];
+            try {
+                selectedSegmentacoes = JSON.parse(localStorage.getItem('selectedSegmentacoes') || '[]');
+            } catch (e) {
+                console.error('Erro ao processar segmentações do localStorage:', e);
+                selectedSegmentacoes = [];
             }
 
-            // Função renderizar cores otimizada
-            function renderizarCoresOtimizado() {
-                const coresFiltradas = filtrarCoresPorSegmentacao();
-                const coresContainer = document.querySelector('.grid.grid-cols-3.lg\\:grid-cols-4.mb-4');
+            if (selectedSegmentacoes.length === 0) {
+                return coresData;
+            }
 
-                if (!coresContainer) return;
+            return coresData.filter(cor => {
+                return selectedSegmentacoes.some(segId =>
+                    cor.segmentacaoIds.includes(parseInt(segId))
+                );
+            });
+        }
 
-                // Usar DocumentFragment para melhor performance
-                const fragment = document.createDocumentFragment();
+        // Função renderizar cores otimizada
+        function renderizarCoresOtimizado() {
+            const coresFiltradas = filtrarCoresPorSegmentacao();
+            const coresContainer = document.querySelector('.grid.grid-cols-3.lg\\:grid-cols-4.mb-4');
 
-                // Renderizar cores filtradas
-                coresFiltradas.forEach((cor, index) => {
-                    const corElement = document.createElement('div');
-                    corElement.className = 'relative';
+            if (!coresContainer) return;
 
-                    const colorCodeFormatted = cor.color_code.replace(/\//g, '_');
-                    const isFirst = index === 0;
+            // Usar DocumentFragment para melhor performance
+            const fragment = document.createDocumentFragment();
 
-                    let flagHtml = '';
-                    if (cor.flagProduct && cor.flagProduct.icon) {
-                        flagHtml = `
+            // Renderizar cores filtradas
+            coresFiltradas.forEach((cor, index) => {
+                const corElement = document.createElement('div');
+                corElement.className = 'relative';
+
+                const colorCodeFormatted = cor.color_code.replace(/\//g, '_');
+                const isFirst = index === 0;
+
+                let flagHtml = '';
+                if (cor.flagProduct && cor.flagProduct.icon) {
+                    flagHtml = `
                             <div class="badge-icon-wrapper absolute top-1 ${cor.flagProduct.alinhamento}-0">
                                 <img src="/${cor.flagProduct.icon}" 
                                      alt="${cor.flagProduct.flag_title}" 
@@ -912,15 +927,15 @@
                                 </span>
                             </div>
                         `;
-                    } else if (cor.flagProduct) {
-                        flagHtml = `
+                } else if (cor.flagProduct) {
+                    flagHtml = `
                             <span class="absolute top-2 left-1 bg-[${cor.flagProduct.flag_bg}] text-[${cor.flagProduct.flag_color_text_bg}] text-[10px] px-2 py-0.5 rounded-full">
                                 ${cor.flagProduct.flag_title}
                             </span>
                         `;
-                    }
+                }
 
-                    corElement.innerHTML = `
+                corElement.innerHTML = `
                         <div class="box-color bg-white ${isFirst ? 'border border-black' : ''} rounded-lg cursor-pointer transition-all duration-200 " 
                              data-color-code="${cor.color_code}">
                             <div class="relative">
@@ -928,7 +943,7 @@
                                      alt="${cor.color_name}" 
                                      class="w-full object-contain rounded-t-lg"
                                      loading="lazy"
-                                     onerror="this.src='/images/img-padrao-oly.png'" />
+                                     onerror="this.src='/images/img-padrao-ua.png'" />
                                 ${flagHtml}
                             </div>
                             <div class="text-center pb-2">
@@ -938,62 +953,62 @@
                         </div>
                     `;
 
-                    fragment.appendChild(corElement);
-                });
+                fragment.appendChild(corElement);
+            });
 
-                // Atualizar DOM uma única vez
-                coresContainer.innerHTML = '';
-                coresContainer.appendChild(fragment);
+            // Atualizar DOM uma única vez
+            coresContainer.innerHTML = '';
+            coresContainer.appendChild(fragment);
 
-                // Reativar event listeners para as novas cores
-                ativarEventListenersCoresOtimizado();
+            // Reativar event listeners para as novas cores
+            ativarEventListenersCoresOtimizado();
 
-                // Carregar imagens da primeira cor filtrada
+            // Carregar imagens da primeira cor filtrada
+            if (coresFiltradas.length > 0) {
+                carregarImagensProdutoOtimizado(coresFiltradas[0].color_code);
+            }
+        }
+
+        // Função de inicialização otimizada
+        async function inicializarPaginaProduto() {
+            // Renderizar cores inicialmente
+            renderizarCoresOtimizado();
+
+            // Pré-carregar informações das imagens em background
+            preloadImageInfo().then(() => {
+                // Recarregar com cache depois do pré-carregamento
+                const coresFiltradas = filtrarCoresPorSegmentacao();
                 if (coresFiltradas.length > 0) {
                     carregarImagensProdutoOtimizado(coresFiltradas[0].color_code);
                 }
-            }
-
-            // Função de inicialização otimizada
-            async function inicializarPaginaProduto() {
-                // Renderizar cores inicialmente
-                renderizarCoresOtimizado();
-
-                // Pré-carregar informações das imagens em background
-                preloadImageInfo().then(() => {
-                    // Recarregar com cache depois do pré-carregamento
-                    const coresFiltradas = filtrarCoresPorSegmentacao();
-                    if (coresFiltradas.length > 0) {
-                        carregarImagensProdutoOtimizado(coresFiltradas[0].color_code);
-                    }
-                });
-            }
-
-            // Listener para mudanças no localStorage das segmentações
-            window.addEventListener('storage', function(e) {
-                if (e.key === 'selectedSegmentacoes') {
-                    console.log('Segmentações alteradas no localStorage, reaplicando filtros de cores...');
-                    renderizarCoresOtimizado();
-                }
             });
+        }
 
-            // Listener customizado para mudanças na mesma aba
-            let originalSetItem = localStorage.setItem;
-            localStorage.setItem = function(key, value) {
-                originalSetItem.apply(this, arguments);
-                if (key === 'selectedSegmentacoes') {
-                    console.log('Segmentações alteradas na mesma aba, reaplicando filtros de cores...');
-                    renderizarCoresOtimizado();
-                }
-            };
-
-            // Inicializar página quando DOM estiver pronto
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', inicializarPaginaProduto);
-            } else {
-                inicializarPaginaProduto();
+        // Listener para mudanças no localStorage das segmentações
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'selectedSegmentacoes') {
+                console.log('Segmentações alteradas no localStorage, reaplicando filtros de cores...');
+                renderizarCoresOtimizado();
             }
-        </script>
+        });
+
+        // Listener customizado para mudanças na mesma aba
+        let originalSetItem = localStorage.setItem;
+        localStorage.setItem = function(key, value) {
+            originalSetItem.apply(this, arguments);
+            if (key === 'selectedSegmentacoes') {
+                console.log('Segmentações alteradas na mesma aba, reaplicando filtros de cores...');
+                renderizarCoresOtimizado();
+            }
+        };
+
+        // Inicializar página quando DOM estiver pronto
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', inicializarPaginaProduto);
+        } else {
+            inicializarPaginaProduto();
+        }
+    </script>
     @endpush
 
 </x-layout-user-produto>

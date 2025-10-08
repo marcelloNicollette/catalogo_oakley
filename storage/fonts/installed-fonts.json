@@ -1,11 +1,8 @@
 {
-    "neueplak": {
-        "normal": "neueplak_normal_09815c73be2b0d82727a83f6e50664d2"
-    },
-    "fkolympikus": {
-        "normal": "fkolympikus_normal_09815c73be2b0d82727a83f6e50664d2"
-    },
     "neue-plak": {
-        "normal": "neue_plak_normal_09815c73be2b0d82727a83f6e50664d2"
+        "normal": "\/Applications\/MAMP\/htdocs\/vulcabras\/underamour\/storage\/fonts\/\/neue_plak_normal_09815c73be2b0d82727a83f6e50664d2",
+        "600": "\/Applications\/MAMP\/htdocs\/vulcabras\/underamour\/storage\/fonts\/\/neue_plak_600_fe78394ae15c05175f9f6b5bffdea136",
+        "bold": "\/Applications\/MAMP\/htdocs\/vulcabras\/underamour\/storage\/fonts\/\/neue_plak_bold_91ddacf9d6452881670de94415c59c4e",
+        "900": "neue_plak_900_b07886cf158b188c921d3342df8426d5"
     }
 }

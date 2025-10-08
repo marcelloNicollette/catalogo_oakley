@@ -11,19 +11,76 @@
             margin: 0px;
         }
 
-        @font-face {
-            font-family: 'Neue-Plak';
-            src: url("{{ public_path('fonts/Neue-Plak-Regular.ttf') }}") format('truetype');
-        }
+        /* Em modo de prévia HTML (não-PDF), registrar fontes via navegador */
+        @if (!isset($isPdf) || $isPdf === false)
+            @font-face {
+                font-family: 'Neue-Plak';
+                font-style: normal;
+                font-weight: 400;
+                src: url('{{ asset('fonts/Neue-Plak-Regular.ttf') }}') format('truetype');
+            }
+
+            @font-face {
+                font-family: 'Neue-Plak';
+                font-style: normal;
+                font-weight: 600;
+                src: url('{{ asset('fonts/Neue-Plak-SemiBold.ttf') }}') format('truetype');
+            }
+
+            @font-face {
+                font-family: 'Neue-Plak';
+                font-style: normal;
+                font-weight: 700;
+                src: url('{{ asset('fonts/Neue-Plak-Bold.ttf') }}') format('truetype');
+            }
+
+            @font-face {
+                font-family: 'Neue-Plak';
+                font-style: normal;
+                font-weight: 900;
+                src: url('{{ asset('fonts/Neue-Plak-Black.ttf') }}') format('truetype');
+            }
+        @endif
+
+        /* Em modo PDF (Dompdf), registrar fontes via caminho absoluto local (file:///) */
+        @if (isset($isPdf) && $isPdf === true)
+            @font-face {
+                font-family: 'Neue-Plak';
+                font-style: normal;
+                font-weight: 400;
+                src: url('file://{{ public_path('fonts/Neue-Plak-Regular.ttf') }}') format('truetype');
+            }
+
+            @font-face {
+                font-family: 'Neue-Plak';
+                font-style: normal;
+                font-weight: 600;
+                src: url('file://{{ public_path('fonts/Neue-Plak-SemiBold.ttf') }}') format('truetype');
+            }
+
+            @font-face {
+                font-family: 'Neue-Plak';
+                font-style: normal;
+                font-weight: 700;
+                src: url('file://{{ public_path('fonts/Neue-Plak-Bold.ttf') }}') format('truetype');
+            }
+
+            @font-face {
+                font-family: 'Neue-Plak';
+                font-style: normal;
+                font-weight: 900;
+                src: url('file://{{ public_path('fonts/Neue-Plak-Black.ttf') }}') format('truetype');
+            }
+        @endif
 
 
         body {
-            font-family: 'Neue-Plak', sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0px;
         }
 
         .font-neueplak {
-            font-family: 'Neue-Plak', sans-serif;
+            font-family: 'Neue-Plak';
             font-size: 50px;
         }
 
@@ -42,18 +99,18 @@
     </style>
 </head>
 
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif;">
+<body style="margin: 0; padding: 0;">
     @unless ($remove_capa_retranca)
         <!-- CAPA -->
         <div class="capa" style="background: #E31B23; height: 100%;">
             <div style="padding: 5rem;">
 
                 <h1 class="font-neueplak"
-                    style="font-size: 350px; color: #fff; font-family: 'Neue-Plak', sans-serif; font-weight: normal; margin:0; padding:0; line-height: 250px;">
+                    style="font-size: 210px; color: #fff; font-family: 'Neue-Plak'; font-weight: 900; margin:0; padding:0; line-height: 150px;">
                     COLEÇÃO
                 </h1>
                 <h1
-                    style="font-size: 350px; color: #fff; font-family: 'Neue-Plak', sans-serif; font-weight: normal; margin:0; padding:0; line-height: 220px;">
+                    style="font-size: 200px; color: #fff; font-family: 'Neue-Plak'; font-weight: 900; margin:0; padding:0; line-height: 150px;">
                     {{ $collections->first()->collection->name }}
                 </h1>
 
@@ -67,7 +124,7 @@
         <div class="capa" style="background: #000; height: 100%;">
             <div style="padding: 5rem;">
                 <h1
-                    style="font-size: 350px; color: #fff; font-family: 'Neue-Plak', sans-serif; font-weight: normal;  margin:0; padding:0; line-height: 250px; text-transform: uppercase;">
+                    style="font-size: 210px; color: #fff; font-family: 'Neue-Plak'; font-weight: 900;  margin:0; padding:0; line-height: 150px; text-transform: uppercase;">
                     {{ $collections->first()->first()->product->category->name }}
                 </h1>
 
@@ -92,7 +149,7 @@
 
         @if ($remove_capa_retranca)
             <div style="position: absolute; top: 30px; left: 30px;">
-                <img src="{{ public_path('/images/logo.png') }}" alt="">
+                <img src="{{ public_path('/images/logo-vermelho.png') }}" alt="">
             </div>
         @endif
         <table cellspacing="2" width="100%" cellpadding="2">
@@ -210,8 +267,7 @@
                                 <span style="color: #000; opacity: 0.5;">{{ $collection->product->code }}</span>
                             @endif
                         </div>
-                        <h1
-                            style="font-family: 'fkolympikus', sans-serif; font-weight: normal; margin: 0 0 15px 0; line-height: 1.2;">
+                        <h1 style="font-family: 'Neue-Plak'; font-weight: 900; margin: 0 0 10px 0; line-height: 0.5;">
                             {{ $collection->product->name }}
                         </h1>
 
@@ -219,7 +275,7 @@
                             <tr>
                                 @if (!$remove_price)
                                     <td
-                                        style="font-size: 12px; margin-bottom: 2px; vertical-align: top; padding-bottom: 10px;">
+                                        style="font-size: 12px; margin-bottom: 2px; vertical-align: top; padding-bottom: 5px;">
                                         <div>
                                             <div
                                                 style="font-size: 12px; color: #000; opacity: 0.5;  margin-bottom: 2px;">
@@ -234,7 +290,7 @@
                                 @if ($collection->product->caracteristicasDestaque)
                                     @if ($collection->product->caracteristicasDestaque->first())
                                         @php $caracteristica = $collection->product->caracteristicasDestaque->first() @endphp
-                                        <td style="font-size: 12px;  margin-bottom: 2px; padding-bottom: 10px;">
+                                        <td style="font-size: 12px;  margin-bottom: 2px; padding-bottom: 5px;">
                                             <div
                                                 style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">
                                                 {{ $caracteristica->title }}
@@ -249,7 +305,7 @@
                                 @foreach ($collection->product->caracteristicas->chunk(2) as $caracteristicasChunk)
                                     <tr>
                                         @foreach ($caracteristicasChunk as $caract)
-                                            <td style="font-size: 12px; margin-bottom: 2px; padding-bottom: 10px;">
+                                            <td style="font-size: 12px; margin-bottom: 2px; padding-bottom: 5px;">
                                                 <div>
                                                     <div style="color: #000; opacity: 0.5; margin-bottom: 2px;">
                                                         {{ $caract->title }}
@@ -259,7 +315,7 @@
                                             </td>
                                         @endforeach
                                         @if ($caracteristicasChunk->count() == 1)
-                                            <td style="font-size: 12px; margin-bottom: 2px; padding-bottom: 10px;"></td>
+                                            <td style="font-size: 12px; margin-bottom: 2px; padding-bottom: 5px;"></td>
                                         @endif
                                     </tr>
                                 @endforeach
@@ -268,7 +324,7 @@
                             @if ($collection->product->numeracoes)
                                 @foreach ($collection->product->numeracoes as $numeracao)
                                     <tr>
-                                        <td style="font-size: 12px; margin-bottom: 2px; padding-bottom: 10px;">
+                                        <td style="font-size: 12px; margin-bottom: 2px; padding-bottom: 5px;">
                                             <div>
                                                 <div style="color: #000; opacity: 0.5; margin-bottom: 2px;">
                                                     Numeração</div>
@@ -285,7 +341,7 @@
                     </div>
 
                     <!-- Descrição -->
-                    <div style="padding: 0 10px 10px 10px;">
+                    <div style="padding: 0 10px 5px 10px;">
                         <div style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">Descrição</div>
                         <p style="font-size: 13px; line-height: 1.3; color: #000; margin: 0;">
                             {{ $collection->product->description }}

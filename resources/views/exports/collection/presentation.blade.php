@@ -16,19 +16,47 @@
             src: url("{{ public_path('fonts/Neue-Plak-Regular.ttf') }}") format('truetype');
         }
 
+        @if(isset($isPdf) && $isPdf)
+        /* PDF: registrar variantes da família 'Neue-Plak' com caminhos absolutos */
+        @font-face {
+            font-family: 'Neue-Plak';
+            font-style: normal;
+            font-weight: 400;
+            src: url("file://{{ public_path('fonts/Neue-Plak-Regular.ttf') }}") format('truetype');
+        }
+        @font-face {
+            font-family: 'Neue-Plak';
+            font-style: normal;
+            font-weight: 600;
+            src: url("file://{{ public_path('fonts/Neue-Plak-SemiBold.ttf') }}") format('truetype');
+        }
+        @font-face {
+            font-family: 'Neue-Plak';
+            font-style: normal;
+            font-weight: 700;
+            src: url("file://{{ public_path('fonts/Neue-Plak-Bold.ttf') }}") format('truetype');
+        }
+        @font-face {
+            font-family: 'Neue-Plak';
+            font-style: normal;
+            font-weight: 900;
+            src: url("file://{{ public_path('fonts/Neue-Plak-Black.ttf') }}") format('truetype');
+        }
+        @endif
+
         body {
-            font-family: 'neueplak', sans-serif;
+            font-family: 'Neue-Plak', sans-serif;
             margin: 0px;
         }
 
         .font-fko {
-            font-family: 'neueplak', sans-serif;
+            font-family: 'Neue-Plak', sans-serif;
             font-size: 50px;
         }
     </style>
 </head>
 
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif;">
+<body style="margin: 0; padding: 0;">
     @foreach ($collections as $collection)
         @php
             $image =
@@ -147,7 +175,7 @@
                             @endif
                         </div>
                         <h1
-                            style="font-family: 'neueplak', sans-serif; font-weight: normal; margin: 0 0 15px 0; line-height: 1.2;">
+                            style="font-family: 'Neue-Plak', sans-serif; font-weight: normal; margin: 0 0 15px 0; line-height: 1.2;">
                             {{ $collection->first()->product->name }}</h1>
 
                         <table width="100%">
