@@ -270,12 +270,12 @@ class frontendController extends Controller
 
         //$produtos = $query->get()->groupBy('product_id');
         $produtos = $query->get();
-        dd($produtos);
+
 
         $produtosFormatados = [];
         foreach ($produtos as $produtoGroup) {
             $produto = $produtoGroup;
-            //dd($produto->product->code);
+            dd($produto->product . $produto->product->code);
             $img = "/images/produtos/" . $produto->product->code . "_" . $produto->color_code . ".jpg";
 
             $produtosFormatados[] = [
