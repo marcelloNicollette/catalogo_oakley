@@ -275,7 +275,7 @@ class frontendController extends Controller
         $produtosFormatados = [];
         foreach ($produtos as $produtoGroup) {
             $produto = $produtoGroup;
-            if ($produto->product->code != null) {
+            if ($produto->product != null) {
 
                 $img = "/images/produtos/" . $produto->product->code . "_" . $produto->color_code . ".jpg";
 

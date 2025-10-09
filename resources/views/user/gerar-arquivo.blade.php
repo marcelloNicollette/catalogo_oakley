@@ -1,4 +1,4 @@
-<x-layout-user title="Olympikus - Segmentação">
+<x-layout-user title="Under Armour - GErar Arquivo">
     <style>
         @media (min-width: 1280px) {
             .grid-colecao-gerar {
