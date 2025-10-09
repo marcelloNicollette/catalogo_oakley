@@ -106,11 +106,11 @@
             <div style="padding: 5rem;">
 
                 <h1 class="font-neueplak"
-                    style="font-size: 210px; color: #fff; font-family: 'Neue-Plak'; font-weight: 900; margin:0; padding:0; line-height: 150px;">
+                    style="font-size: 130px; color: #fff; font-family: 'Neue-Plak'; font-weight: 900; margin:0; padding:0; line-height: 80px;">
                     COLEÇÃO
                 </h1>
                 <h1
-                    style="font-size: 200px; color: #fff; font-family: 'Neue-Plak'; font-weight: 900; margin:0; padding:0; line-height: 150px;">
+                    style="font-size: 130px; color: #fff; font-family: 'Neue-Plak'; font-weight: 900; margin:0; padding:0; line-height: 80px;">
                     {{ $collections->first()->collection->name }}
                 </h1>
 
@@ -120,23 +120,28 @@
             </div>
 
         </div>
-        <!-- CATEGORIAS -->
-        <div class="capa" style="background: #000; height: 100%;">
-            <div style="padding: 5rem;">
-                <h1
-                    style="font-size: 210px; color: #fff; font-family: 'Neue-Plak'; font-weight: 900;  margin:0; padding:0; line-height: 150px; text-transform: uppercase;">
-                    {{ $collections->first()->first()->product->category->name }}
-                </h1>
-
-                <div style="position: absolute; bottom: 60px; right: 80px;">
-                    <img src="{{ public_path('/images/logo-vermelho.png') }}" alt="">
-                </div>
-            </div>
-        </div>
-        <div class="page-break"></div>
     @endunless
 
+    @php $categoria = ""; @endphp
+
     @foreach ($collections as $collection)
+        @if ($categoria !== $collection->product->category->name)
+            <!-- CATEGORIAS -->
+            <div class="capa" style="background: #000; height: 100%;">
+                <div style="padding: 5rem;">
+                    <h1
+                        style="font-size: 110px; color: #fff; font-family: 'Neue-Plak'; font-weight: 900;  margin:0; padding:0; line-height: 80px; text-transform: uppercase;">
+                        {{ $collection->product->category->name }}
+                    </h1>
+
+                    <div style="position: absolute; bottom: 60px; right: 80px;">
+                        <img src="{{ public_path('/images/logo-vermelho.png') }}" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="page-break"></div>
+        @endif
+
         @php
             $image = $collection->product->code . '_' . str_replace('/', '_', $collection->color_code) . '.jpg';
             //dd(public_path('images/produtos/' . $image));
@@ -392,6 +397,7 @@
                 </td>
             </tr>
         </table>
+        @php $categoria = $collection->product->category->name; @endphp
     @endforeach
 </body>
 

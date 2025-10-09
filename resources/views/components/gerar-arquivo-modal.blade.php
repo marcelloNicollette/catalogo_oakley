@@ -195,7 +195,7 @@
             <div class="col-span-2">Código</div>
             <div class="col-span-3">Nome</div>
             <div class="col-span-2">Cor</div>
-            <!--<div class="col-span-2">Categoria</div>-->
+            <div class="col-span-2">Categoria</div>
             <div class="col-span-2">Preço</div>
         </div>
 
@@ -462,7 +462,7 @@
                 <div class="col-span-2 text-sm ">${produto.codigo}</div>
                 <div class="col-span-3 text-sm ">${produto.title}</div>
                 <div class="col-span-2 text-sm ">${produto.cor}</div>
-                <!--<div class="col-span-2 text-sm ">${produto.categoria}</div>-->
+                <div class="col-span-2 text-sm ">${produto.categoria}</div>
                 <div class="col-span-2 text-sm ">${produto.preco}</div>
             </div>
         `).join('');
