@@ -71,6 +71,13 @@
                 font-weight: 900;
                 src: url('file://{{ public_path('fonts/Neue-Plak-Black.ttf') }}') format('truetype');
             }
+
+            @font-face {
+                font-family: 'Neue-Plak-Extended';
+                font-style: normal;
+                font-weight: 900;
+                src: url('file://{{ public_path('fonts/Neue-Plak-Extended-ExtraBlack.ttf') }}') format('truetype');
+            }
         @endif
 
 
@@ -106,11 +113,11 @@
             <div style="padding: 5rem;">
 
                 <h1 class="font-neueplak"
-                    style="font-size: 130px; color: #fff; font-family: 'Neue-Plak'; font-weight: 900; margin:0; padding:0; line-height: 80px;">
+                    style="font-size: 130px; color: #fff; font-family: 'Neue-Plak-Extended'; font-weight: 900; margin:0; padding:0; line-height: 80px;">
                     COLEÇÃO
                 </h1>
                 <h1
-                    style="font-size: 130px; color: #fff; font-family: 'Neue-Plak'; font-weight: 900; margin:0; padding:0; line-height: 80px;">
+                    style="font-size: 130px; color: #fff; font-family: 'Neue-Plak-Extended'; font-weight: 900; margin:0; padding:0; line-height: 80px;">
                     {{ $collections->first()->collection->name }}
                 </h1>
 

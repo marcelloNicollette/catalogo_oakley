@@ -187,7 +187,7 @@
 
 
             <!-- Grid de Coleções -->
-            <div class="bg-[#E6E6E6] h-[80vh] xl:h-[90vh] p-2 rounded-lg  overflow-auto">
+            <div class="bg-[#000000] h-[80vh] xl:h-[90vh] p-2 rounded-lg  overflow-auto">
                 <div id="colecoes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3"
                     style="border-radius: 10px 0 0 0;">
                     <!-- Cards serão renderizados via JavaScript -->
