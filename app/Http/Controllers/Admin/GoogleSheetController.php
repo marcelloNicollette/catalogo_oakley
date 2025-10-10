@@ -117,7 +117,9 @@ class GoogleSheetController extends Controller
                     $groupedProducts[$sku]['colors'][] = [
                         'code' => $productData['COR_COD'],
                         'description' => $productData['COR_DESCRIÇÃO'] ?? $productData['COR_COD'],
-                        'flag' => $productData['COR_CLASSIFICAÇÃO']
+                        'flag' => $productData['COR_CLASSIFICAÇÃO'],
+                        // Tenta obter numeração da cor a partir de possíveis cabeçalhos
+                        'numeracao' => $this->extractColorNumeracao($productData)
                     ];
                 }
 
@@ -506,6 +508,14 @@ class GoogleSheetController extends Controller
         foreach ($uniqueColors as $cor) {
             $flag_id = $this->findOrCreateFlag($cor['flag']);
 
+            // Mapeia numeração por cor, se fornecida na planilha
+            $numeracaoId = null;
+            if (!empty($cor['numeracao'])) {
+                $numeracaoId = $this->findOrCreateNumeracaoId($cor['numeracao']);
+                // Passa o numeracao_id para a criação/atualização da cor
+                $cor['numeracao_id'] = $numeracaoId;
+            }
+
             $colorModel = $this->findOrCreateColor($product, $cor, $collection, $flag_id->id);
 
             // Sincroniza segmentações de cliente para esta cor
@@ -534,6 +544,7 @@ class GoogleSheetController extends Controller
                 'color_description' => $corData['description'],
                 'collection_id' => $collection->id ?? null,
                 'flag_product_id' => $flag ?? null,
+                'numeracao_id' => $corData['numeracao_id'] ?? null,
                 'active' => true
             ]
         );
@@ -699,21 +710,71 @@ class GoogleSheetController extends Controller
             $segmento = trim($segmento);
 
             if (!empty($segmento) && $segmento !== '-') {
-                // Busca ou cria a segmentação de cliente
-                $segmentacaoCliente = SegmentacaoCliente::firstOrCreate(
-                    ['nome' => $segmento],
+                // Usa o slug como chave única para evitar duplicidades
+                $slug = Str::slug($segmento);
+                $segmentacaoCliente = SegmentacaoCliente::withTrashed()->updateOrCreate(
+                    ['slug' => $slug],
                     [
+                        'nome' => $segmento,
                         'descricao' => 'Segmentação criada automaticamente via sincronização',
-                        'slug' => Str::slug($segmento),
-                        'active' => true
+                        'active' => true,
+                        'deleted_at' => null
                     ]
                 );
-
+                // Restaura explicitamente se estava deletado
+                if ($segmentacaoCliente->trashed()) {
+                    $segmentacaoCliente->restore();
+                }
                 $segmentacaoIds[] = $segmentacaoCliente->id;
             }
         }
 
         return $segmentacaoIds;
+    }
+
+    /**
+     * Extrai o valor de numeração por cor a partir de possíveis cabeçalhos da linha da planilha
+     */
+    private function extractColorNumeracao(array $row): ?string
+    {
+        // Lista de chaves possíveis que podem representar numeração por cor
+        $possibleKeys = [
+            'NUMERAÇÃO',
+            'TAMANHOS'
+        ];
+
+        foreach ($possibleKeys as $key) {
+            if (array_key_exists($key, $row)) {
+                $value = trim((string)($row[$key] ?? ''));
+                if ($value !== '' && $value !== '-') {
+                    return $value;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Busca ou cria uma numeração e retorna seu ID
+     */
+    private function findOrCreateNumeracaoId(?string $numeracaoString): ?int
+    {
+        if ($numeracaoString === null) {
+            return null;
+        }
+
+        $numero = trim($numeracaoString);
+        if ($numero === '' || $numero === '-') {
+            return null;
+        }
+
+        $numeracao = Numeracao::firstOrCreate(
+            ['numero' => $numero],
+            ['active' => true]
+        );
+
+        return $numeracao->id;
     }
 
     /**
