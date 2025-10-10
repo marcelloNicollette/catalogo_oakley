@@ -207,7 +207,7 @@
                                 d="M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387a1 1 0 01-1.414 1.414l-4.387-4.387zM8 14a6 6 0 100-12 6 6 0 000 12z"
                                 clip-rule="evenodd" />
                         </svg>
-                        <input type="text" placeholder="Buscar"
+                        <input type="text" placeholder="Buscar" id="search"
                             class="input-estilizado bg-transparent border-0 focus:outline-none focus:ring-0 p-1" />
                     </div>
 
@@ -531,10 +531,9 @@
 
 
 
-            const searchInput = document.querySelector(
-                ".input-estilizado.bg-transparent"
-            );
-            searchInput.setAttribute("id", "search");
+            const searchInput = document.getElementById("search") ||
+                document.querySelector(".input-estilizado.bg-transparent") ||
+                document.querySelector(".input-estilizado");
 
             function filtrarProdutos(termo, categoria = '') {
                 return produtosData.filter(
