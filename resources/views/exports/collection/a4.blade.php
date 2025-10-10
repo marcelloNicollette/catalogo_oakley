@@ -112,16 +112,17 @@
         <div class="capa" style="background: #2735D4; height: 100%;">
             <div style="padding: 5rem;">
 
-                <h1
-                    style="font-size: 350px; color: #fff; font-family: 'fkolympikus', sans-serif; font-weight: normal; margin:0; padding:0; line-height: 250px;">
+                <h1 class="font-neueplak"
+                    style="font-size: 130px; color: #fff; font-family: 'Neue-Plak-Extended'; font-weight: 900; margin:0; padding:0; line-height: 80px;">
                     COLEÇÃO
                 </h1>
                 <h1
-                    style="font-size: 350px; color: #fff; font-family: 'fkolympikus', sans-serif; font-weight: normal; margin:0; padding:0; line-height: 220px;">
-                    {{ $collections->first()->collection->name }}</h1>
+                    style="font-size: 130px; color: #fff; font-family: 'Neue-Plak-Extended'; font-weight: 900; margin:0; padding:0; line-height: 80px; text-transform: uppercase;">
+                    {{ $collections->first()->collection->name }}
+                </h1>
 
                 <div style="position: absolute; bottom: 60px; right: 80px;">
-                    <img src="{{ public_path('/images/logo-branco.png') }}" alt="">
+                    <img src="{{ public_path('/images/logo-preto.png') }}" alt="">
                 </div>
             </div>
 
@@ -139,13 +140,13 @@
         <!-- CATEGORIA -->
         <div class="capa" style="background: #000; height: 100%;">
             <div style="padding: 5rem;">
+
                 <h1
-                    style="font-size: 300px; color: #fff; font-family: 'fkolympikus', sans-serif; font-weight: normal;  margin:0; padding:0; line-height: 200px; text-transform: uppercase;">
+                    style="font-size: 110px; color: #fff; font-family: 'Neue-Plak-Extended'; font-weight: 900;  margin:0; padding:0; line-height: 80px; text-transform: uppercase;">
                     {{ $categoryName }}
                 </h1>
-
                 <div style="position: absolute; bottom: 60px; right: 80px;">
-                    <img src="{{ public_path('/images/logo-preto.png') }}" alt="">
+                    <img src="{{ public_path('/images/logo-vermelho.png') }}" alt="">
                 </div>
             </div>
         </div>
@@ -299,7 +300,7 @@
                                 @endif
                             </div>
                             <h1
-                                style="font-family: 'fkolympikus', sans-serif; font-weight: normal; margin: 0 0 15px 0; line-height: 1.2;">
+                                style="font-family: 'Neue-Plak-Extended'; font-weight: 900; margin: 0 0 10px 0; line-height: 0.5;">
                                 {{ $collection->product->name }}</h1>
 
                             <table width="100%">
@@ -373,7 +374,8 @@
 
                         <!-- Descrição -->
                         <div style="padding: 0 10px 10px 10px;">
-                            <div style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">Descrição</div>
+                            <div style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">Descrição
+                            </div>
                             <p style="font-size: 13px; line-height: 1.3; color: #000; margin: 0;">
                                 {{ $collection->product->description }}
                             </p>
