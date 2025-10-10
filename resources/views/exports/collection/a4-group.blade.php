@@ -109,7 +109,7 @@
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif;">
     @unless ($remove_capa_retranca)
         <!-- CAPA -->
-        <div class="capa" style="background: #2735D4; height: 100%;">
+        <div class="capa" style="background: #E31B23; height: 100%;">
             <div style="padding: 5rem;">
 
                 <h1 class="font-neueplak"
