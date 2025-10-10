@@ -529,8 +529,6 @@
                 });
             }
 
-
-
             const searchInput = document.getElementById("search") ||
                 document.querySelector(".input-estilizado.bg-transparent") ||
                 document.querySelector(".input-estilizado");

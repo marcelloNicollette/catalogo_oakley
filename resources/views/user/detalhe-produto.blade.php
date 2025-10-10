@@ -1,4 +1,4 @@
-<x-layout-user-produto title="Under Armour - Produto">
+<x-layout-user-produto title="Olympikus - Produto">
     <style>
         .badge-icon-wrapper .badge-tooltip {
             visibility: hidden;
@@ -62,6 +62,23 @@
                 font-size: 15px;
             }
         }
+
+        /* Shimmer para skeleton de carregamento */
+        .skeleton-shimmer {
+            background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.2s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
     </style>
     <main class="absolute top-20 lg:flex flex-1 produtos-page">
         @php
@@ -85,6 +102,38 @@
                         <!-- Imagens serão carregadas dinamicamente via JavaScript -->
                     </div>
 
+                    <!-- Loader de Imagens (Skeleton 2x2 com spinner por célula, desktop e mobile) -->
+                    <div id="imageLoader"
+                        class="bg-white rounded-lg shadow-sm border border-[#CBCBCB] overflow-hidden hidden">
+                        <!-- Mobile/Tablet: grade 2x2 -->
+                        <div class="lg:hidden grid grid-cols-2 gap-0 p-0 h-full">
+                            @for ($i = 0; $i < 4; $i++)
+                                <div class="border border-[#EFEFEF]">
+                                    <div class="relative w-full h-full skeleton-shimmer"></div>
+                                </div>
+                            @endfor
+                        </div>
+
+                        <!-- Desktop: grade 2x2 -->
+                        <div class="hidden lg:grid grid-cols-2 gap-0 p-0 h-full">
+                            @for ($i = 0; $i < 4; $i++)
+                                <div class="border border-[#EFEFEF]">
+                                    <div class="relative w-full h-full skeleton-shimmer"></div>
+                                </div>
+                            @endfor
+                        </div>
+                    </div>
+
+                    <!-- Estado vazio (sem imagens disponíveis) -->
+                    <div id="imageEmpty"
+                        class="bg-white rounded-lg shadow-sm border border-[#CBCBCB] flex items-center justify-center hidden">
+                        <div class="text-center p-4">
+                            <img src="/images/img-padrao-oly.png" alt="Sem imagens"
+                                class="w-16 h-16 mx-auto opacity-50 mb-2">
+                            <p class="text-sm text-gray-600">Sem imagens disponíveis para esta variação.</p>
+                        </div>
+                    </div>
+
                     <!-- Swiper para Tablet e Mobile -->
                     <div class="lg:hidden" id="mobileSwiper">
                         <div class="swiper thumbnailSwiper">
@@ -98,7 +147,7 @@
                 </div>
 
                 <!-- Seção de Detalhes - Direita -->
-                <div class="w-[500px] flex-shrink-0 space-y-6">
+                <div class="w-[500px] flex-shrink-0 space-y-6" id="rightPanel">
                     <!-- Cabeçalho do Produto -->
                     <div class="bg-white rounded-lg p-5 shadow-sm border border-[#CBCBCB]">
                         <div class="flex justify-between items-start">
@@ -148,8 +197,8 @@
                                                 <img src="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $color->color_code) }}.jpg"
                                                     alt="{{ $color->color_name }}"
                                                     class="w-full object-contain rounded-t-lg" loading="lazy"
-                                                    onerror="this.src='/images/img-padrao-ua.png'" />
-                                                @if ($color->flag_product_id && $color->flagProduct)
+                                                    onerror="this.src='/images/img-padrao-oly.png'" />
+                                                @if ($color->flag_product_id)
                                                     @if ($color->flagProduct->icon != null)
                                                         <div
                                                             class="badge-icon-wrapper absolute top-1 {{ $color->flagProduct->alinhamento }}-0">
@@ -215,6 +264,20 @@
                                         </div>
                                     @endforeach
                                 @endif
+
+
+                                @php
+                                    $firstColorNumeracao = optional($produto->colors->first()->numeracao)->numero;
+                                    $productNumeracoesText = $produto->numeracoes
+                                        ? $produto->numeracoes->pluck('numero')->implode(', ')
+                                        : '';
+                                    $initialNumeracao = $firstColorNumeracao ?: $productNumeracoesText;
+                                @endphp
+                                <div>
+                                    <p class="text-xs text-black opacity-50">Numeração</p>
+                                    <p class="text-sm" id="numeracao">{{ $initialNumeracao }}</p>
+                                </div>
+
                             </div>
                         </div>
 
@@ -328,7 +391,7 @@
                                     <img src="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
                                         alt="Vista {{ $vista }}" class="max-w-full max-h-full object-contain"
                                         data-modal-image="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
-                                        onerror="this.src='/images/img-padrao-ua.png'" />
+                                        onerror="this.src='/images/img-padrao-oly.png'" />
                                 </div>
                             @endif
                             @php $vista++; @endphp
@@ -415,6 +478,10 @@
             async function preloadImageInfo() {
                 console.log('Pré-carregando informações das imagens...');
 
+                // Mostrar loader enquanto pré-carrega
+                showLoading();
+                setContentVisibility(false);
+
                 const promises = [];
 
                 coresData.forEach(cor => {
@@ -458,6 +525,11 @@
                 const color = colorCode.replace(/\//g, '_');
                 const cachedImages = imageCache.get(color) || [];
 
+                // Mostrar loader antes de atualizar o conteúdo
+                showLoading();
+                hideEmpty();
+                setContentVisibility(false);
+
                 // Atualizar imagens do desktop grid imediatamente
                 const desktopGrid = document.getElementById('desktopGrid');
                 if (desktopGrid) {
@@ -470,13 +542,13 @@
                         imageDiv.onclick = function() {
                             openImageModal(this);
                         };
-                        console.log('Carregando imagem:', imgInfo.index);
+                        //console.log('Carregando imagem:', imgInfo.index);
                         const $css1 = imgInfo.index === 0 ? 'rounded-l-lg' : '';
                         imageDiv.innerHTML = `
                             <img src="${imgInfo.path}" 
                                  alt="Vista ${imgInfo.index + 1}" 
                                  class="w-full object-contain rounded-lg "
-                                 onerror="this.src='/images/img-padrao-ua.png'" />
+                                 onerror="this.src='/images/img-padrao-oly.png'" />
                         `;
 
                         desktopGrid.appendChild(imageDiv);
@@ -499,7 +571,7 @@
                                 <img src="${imgInfo.path}"
                                      alt="Vista ${imgInfo.index + 1}"
                                      class="max-w-[80%] max-h-[80%] object-contain"
-                                     onerror="this.src='/images/img-padrao-ua.png'" />
+                                     onerror="this.src='/images/img-padrao-oly.png'" />
                             </div>
                         `;
 
@@ -514,6 +586,18 @@
 
                 // Atualizar imagens do modal imediatamente
                 atualizarImagensModalOtimizado(colorCode);
+
+                // Alternar estados de loading/empty conforme resultado
+                if (cachedImages.length === 0) {
+                    showEmpty();
+                    setContentVisibility(false);
+                } else {
+                    // Espera as imagens renderizarem para esconder o loader
+                    waitForImagesToLoad().then(() => {
+                        hideLoadingAndEmpty();
+                        setContentVisibility(true);
+                    });
+                }
             }
 
             // Função otimizada para atualizar imagens do modal
@@ -534,6 +618,100 @@
                         modalImages[imgInfo.index].src = imgInfo.path;
                         modalImages[imgInfo.index].style.display = 'block';
                     }
+                });
+            }
+
+            // Helpers de UI para loader/empty
+            function showLoading() {
+                const loader = document.getElementById('imageLoader');
+                const right = document.getElementById('rightPanel');
+                const desktopGrid = document.getElementById('desktopGrid');
+                if (loader) {
+                    // sincroniza altura com painel direito, preenchendo restante do espaço
+                    const rightH = right ? right.offsetHeight : 0;
+                    const gridH = desktopGrid ? desktopGrid.offsetHeight : 0;
+                    const minH = Math.max(rightH, gridH, 400);
+                    loader.style.minHeight = minH + 'px';
+                    loader.classList.remove('hidden');
+                }
+            }
+
+            function hideLoadingAndEmpty() {
+                const loader = document.getElementById('imageLoader');
+                const empty = document.getElementById('imageEmpty');
+                if (loader) {
+                    loader.classList.add('hidden');
+                    loader.style.minHeight = '';
+                }
+                if (empty) {
+                    empty.classList.add('hidden');
+                    empty.style.minHeight = '';
+                }
+            }
+
+            function showEmpty() {
+                const empty = document.getElementById('imageEmpty');
+                const loader = document.getElementById('imageLoader');
+                const right = document.getElementById('rightPanel');
+                const desktopGrid = document.getElementById('desktopGrid');
+                if (loader) loader.classList.add('hidden');
+                if (empty) {
+                    const rightH = right ? right.offsetHeight : 0;
+                    const gridH = desktopGrid ? desktopGrid.offsetHeight : 0;
+                    const minH = Math.max(rightH, gridH, 400);
+                    empty.style.minHeight = minH + 'px';
+                    empty.classList.remove('hidden');
+                }
+            }
+
+            function hideEmpty() {
+                const empty = document.getElementById('imageEmpty');
+                if (empty) empty.classList.add('hidden');
+            }
+
+            function setContentVisibility(visible) {
+                const desktopGrid = document.getElementById('desktopGrid');
+                const mobileSwiper = document.getElementById('mobileSwiper');
+                if (desktopGrid) desktopGrid.style.display = visible ? '' : 'none';
+                if (mobileSwiper) mobileSwiper.style.display = visible ? '' : 'none';
+            }
+
+            // Aguarda carregamento real das imagens inseridas
+            function waitForImagesToLoad() {
+                const images = [];
+                const desktopGrid = document.getElementById('desktopGrid');
+                const swiperWrapper = document.querySelector('.swiper-wrapper');
+                if (desktopGrid) {
+                    images.push(...desktopGrid.querySelectorAll('img'));
+                }
+                if (swiperWrapper) {
+                    images.push(...swiperWrapper.querySelectorAll('img'));
+                }
+
+                if (images.length === 0) return Promise.resolve();
+
+                return new Promise((resolve) => {
+                    let loadedCount = 0;
+                    const total = images.length;
+
+                    images.forEach((img) => {
+                        const done = () => {
+                            img.removeEventListener('load', done);
+                            img.removeEventListener('error', done);
+                            loadedCount++;
+                            if (loadedCount >= total) {
+                                resolve();
+                            }
+                        };
+
+                        if (img.complete) {
+                            // Já carregada ou em cache
+                            done();
+                        } else {
+                            img.addEventListener('load', done);
+                            img.addEventListener('error', done);
+                        }
+                    });
                 });
             }
 
@@ -743,7 +921,7 @@
                     variant.addEventListener("click", () => {
                         // Adicionar indicador visual imediato
                         variant.style.opacity = '0.7';
-
+                        //console.log(variant);
                         // Usar requestAnimationFrame para suavizar a transição
                         requestAnimationFrame(() => {
                             // Remove seleção de todas as cores
@@ -762,6 +940,8 @@
 
                             // Carregar imagens da cor selecionada (agora instantâneo)
                             carregarImagensProdutoOtimizado(selectedColorCode);
+                            // Atualizar numeração conforme a cor selecionada
+                            updateNumeracaoByColorCode(selectedColorCode);
 
                             // Verificar status da wishlist (pode ser assíncrono sem afetar UX)
                             checkWishlistStatus();
@@ -835,6 +1015,8 @@
             });
 
             // Dados das cores do produto para filtro dinâmico
+            const productNumeracoesDefault =
+                "{{ $produto->numeracoes ? $produto->numeracoes->pluck('numero')->implode(', ') : '' }}";
             const coresData = [
                 @foreach ($produto->allColors as $color)
                     {
@@ -842,6 +1024,7 @@
                         color_code: "{{ $color->color_code }}",
                         color_name: "{{ $color->color_name }}",
                         color_description: "{{ $color->color_description }}",
+                        numeracao: "{{ optional($color->numeracao)->numero }}",
                         flag_product_id: {{ $color->flag_product_id ?? 'null' }},
                         flagProduct: @if ($color->flagProduct)
                             {
@@ -858,6 +1041,18 @@
                     },
                 @endforeach
             ];
+
+            function updateNumeracaoByColorCode(colorCode) {
+                try {
+                    const cor = coresData.find(c => c.color_code === colorCode);
+                    const numeracaoEl = document.getElementById('numeracao');
+                    if (numeracaoEl) {
+                        numeracaoEl.textContent = (cor && cor.numeracao) ? cor.numeracao : productNumeracoesDefault;
+                    }
+                } catch (e) {
+                    console.error('Erro atualizando numeração da cor:', e);
+                }
+            }
 
             // Função para filtrar cores baseado nas segmentações selecionadas
             function filtrarCoresPorSegmentacao() {
@@ -928,7 +1123,7 @@
                                      alt="${cor.color_name}" 
                                      class="w-full object-contain rounded-t-lg"
                                      loading="lazy"
-                                     onerror="this.src='/images/img-padrao-ua.png'" />
+                                     onerror="this.src='/images/img-padrao-oly.png'" />
                                 ${flagHtml}
                             </div>
                             <div class="text-center pb-2">
@@ -951,6 +1146,7 @@
                 // Carregar imagens da primeira cor filtrada
                 if (coresFiltradas.length > 0) {
                     carregarImagensProdutoOtimizado(coresFiltradas[0].color_code);
+                    updateNumeracaoByColorCode(coresFiltradas[0].color_code);
                 }
             }
 
@@ -965,6 +1161,7 @@
                     const coresFiltradas = filtrarCoresPorSegmentacao();
                     if (coresFiltradas.length > 0) {
                         carregarImagensProdutoOtimizado(coresFiltradas[0].color_code);
+                        updateNumeracaoByColorCode(coresFiltradas[0].color_code);
                     }
                 });
             }
