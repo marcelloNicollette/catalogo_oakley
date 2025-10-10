@@ -117,7 +117,7 @@
                     COLEÇÃO
                 </h1>
                 <h1
-                    style="font-size: 130px; color: #fff; font-family: 'Neue-Plak-Extended'; font-weight: 900; margin:0; padding:0; line-height: 80px;">
+                    style="font-size: 130px; color: #fff; font-family: 'Neue-Plak-Extended'; font-weight: 900; margin:0; padding:0; line-height: 80px; text-transform: uppercase;">
                     {{ $collections->first()->collection->name }}
                 </h1>
 
