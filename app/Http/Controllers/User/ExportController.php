@@ -12,100 +12,12 @@ use Illuminate\Http\Request;
 
 class ExportController extends Controller
 {
-    /**
-     * Prévia HTML do catálogo usando o mesmo Blade, sem gerar PDF.
-     * Permite depurar fontes e layout diretamente no navegador.
-     */
-    public function previewHtml(Request $request)
+
+    public function exportPdf(Request $request)
     {
         ini_set('memory_limit', '2048M'); // ou '3072M' se necessário
         ini_set('max_execution_time', '300'); // 5 minutos
         set_time_limit(300);
-
-        // Tentar obter dados a partir do request ou do último ExportUser
-        $exportUser = null;
-        if ($request->has('export_user_id')) {
-            $exportUser = ExportUser::with('user')->find($request->input('export_user_id'));
-            if ($exportUser && $exportUser->user_id !== $request->user()->id) {
-                abort(403, 'Acesso negado.');
-            }
-        }
-
-        $collectionId = $request->input('collection_id') ?? ($exportUser?->collection_id);
-        if (!$collectionId) {
-            // fallback: último export do usuário
-            $exportUser = ExportUser::where('user_id', $request->user()->id)
-                ->orderBy('created_at', 'desc')
-                ->first();
-            if ($exportUser) {
-                $collectionId = $exportUser->collection_id;
-            }
-        }
-
-        if (!$collectionId) {
-            abort(400, 'collection_id não informado e nenhum histórico encontrado para prévia.');
-        }
-
-        $produtosSelecionados = $request->input('produtos_selecionados', $exportUser?->produtos_selecionados ?? []);
-        $tipoProdutos = $request->input('produtos', $exportUser?->produtos ?? 'todos');
-
-        $query = Color::where('collection_id', $collectionId)
-            ->with(['product', 'product.caracteristicas', 'product.caracteristicasDestaque', 'product.category', 'product.numeracoes', 'product.links',  'flagProduct', 'collection']);
-
-        if ($tipoProdutos === 'selecao' && !empty($produtosSelecionados)) {
-            $first = is_array($produtosSelecionados) ? reset($produtosSelecionados) : null;
-            $isAssociativeSelection = is_array($first);
-
-            if ($isAssociativeSelection && isset($first['id'])) {
-                $query->where(function ($q) use ($produtosSelecionados) {
-                    foreach ($produtosSelecionados as $sel) {
-                        $productId = $sel['id'] ?? null;
-                        $colorName = $sel['cor'] ?? ($sel['color_name'] ?? null);
-                        $colorCode = $sel['color_code'] ?? null;
-
-                        $q->orWhere(function ($q2) use ($productId, $colorName, $colorCode) {
-                            if ($productId !== null) {
-                                $q2->where('product_id', $productId);
-                            }
-                            if ($colorCode) {
-                                $q2->where('color_code', $colorCode);
-                            } elseif ($colorName) {
-                                $q2->where('color_name', $colorName);
-                            }
-                        });
-                    }
-                });
-            } else {
-                $ids = array_map('intval', (array) $produtosSelecionados);
-                $query->whereIn('product_id', $ids);
-            }
-        }
-
-        $produtos = $query->get();
-        $opcoes = $request->input('opcoes', $exportUser?->opcoes ?? []);
-
-        $data = [
-            'collections' => $produtos,
-            'remove_price'       => in_array('remover_preco', $opcoes),
-            'remove_code'        => in_array('remover_codigo', $opcoes),
-            'remove_description' => in_array('remover_descricao', $opcoes),
-            'remove_tag'         => in_array('remover_tag', $opcoes),
-            'remove_capa_retranca' => in_array('remover_capa_retranca', $opcoes),
-            'image' => public_path('images/tenis-1.jpg'),
-            'name' => $request->user()->name,
-            'request' => $request,
-            'isPdf' => false,
-        ];
-
-        $view = ($request->input('formato') ?? $exportUser?->formato) === '16_9'
-            ? 'exports.collection.presentation'
-            : 'exports.collection.a4';
-
-        return view($view, $data);
-    }
-    public function exportPdf(Request $request)
-    {
-        ini_set('memory_limit', '512M');
         //dd($request->all());
         // Verificar se produtos específicos foram selecionados
         $produtosSelecionados = $request->input('produtos_selecionados', []);
@@ -150,7 +62,8 @@ class ExportController extends Controller
         $produtos = $query->get();
         //dd($produtos);
         $opcoes = $request->input('opcoes', []);
-        //dd($opcoes);
+        $grupo_opcoes = $request->input('grupo_opcoes', []);
+
         $data = [
             'collections' => $produtos,
             'remove_price'       => in_array('remover_preco', $opcoes),
@@ -164,8 +77,11 @@ class ExportController extends Controller
             'isPdf' => true,
         ];
         //dd($data);
-
-        $view = $request->formato === '16_9' ? 'exports.collection.presentation' : 'exports.collection.a4';
+        if ($grupo_opcoes === 'separado') {
+            $view = $request->formato === '16_9' ? 'exports.collection.presentation' : 'exports.collection.a4';
+        } else {
+            $view = $request->formato === '16_9' ? 'exports.collection.presentation-group' : 'exports.collection.a4-group';
+        }
 
         //return view($view, $data);
         $pdf = PDF::loadView($view, $data)

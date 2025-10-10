@@ -13,7 +13,7 @@
     </style>
 @endpush
 
-@section('page_title', 'Olympikus - Categorias')
+@section('page_title', 'Under Armour - Categorias')
 
 @section('content-wrapper')
     <div class="flex justify-between items-center mb-6">

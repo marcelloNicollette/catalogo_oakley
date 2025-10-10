@@ -189,7 +189,7 @@ class GoogleSheetController extends Controller
             'description' => $data['DESCRIÇÃO'] ?? '',
             'code' => $data['CÓDIGO'],
             'sku' => $data['CÓDIGO'], // Usando CÓDIGO como SKU
-            'price' =>  str_replace('.', ',', $data['PDV']) ?? 0, // Preço não está na planilha atual
+            'price' =>  (float) str_replace(',', '.', $data['PDV']) ?? 0, // Preço não está na planilha atual
             'slug' => Str::slug($data['NOME']) . '-' . $data['CÓDIGO'],
             'category_id' => $category->id ?? null,
             'subcategory_id' => $subcategory->id ?? null,
@@ -218,7 +218,7 @@ class GoogleSheetController extends Controller
         $this->syncCharacteristics($product, $data);
 
         // Sincroniza numerações
-        $this->syncNumeracoes($product, $data);
+        //$this->syncNumeracoes($product, $data);
 
         // Sincroniza links
         $this->syncLinks($product, $data);
@@ -613,14 +613,14 @@ class GoogleSheetController extends Controller
 
         // Combina dados de numeração e tamanhos
         $allSizes = array_merge(
-            explode(',', $numeracaoData),
-            explode(',', $tamanhosData)
+            preg_split('/,\s*/', $numeracaoData),
+            preg_split('/,\s*/', $tamanhosData)
         );
 
         foreach ($allSizes as $numero) {
             $numero = trim($numero);
             if (!empty($numero) && $numero !== '-') {
-                $numeracao = Numeracao::firstOrCreate(
+                $numeracao = Numeracao::updateOrCreate(
                     ['numero' => $numero],
                     ['active' => true]
                 );
@@ -769,7 +769,7 @@ class GoogleSheetController extends Controller
             return null;
         }
 
-        $numeracao = Numeracao::firstOrCreate(
+        $numeracao = Numeracao::updateOrCreate(
             ['numero' => $numero],
             ['active' => true]
         );

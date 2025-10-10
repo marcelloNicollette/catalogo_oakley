@@ -57,6 +57,22 @@
                     </div>
 
                     <div>
+                        <label class="block  text-xs font-normal text-black mb-2">Opções Produtos</label>
+                        <div class="flex flex-wrap gap-3">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="grupo_opcoes" class="form-radio" value="separado" checked>
+                                <span class="ml-2 text-sm">Separado por cor</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="grupo_opcoes" class="form-radio" value="agrupado">
+                                <span class="ml-2 text-sm">Agrupado por cor</span>
+                            </label>
+
+                        </div>
+                    </div>
+
+
+                    <div>
                         <label class="block  text-xs font-normal text-black mb-2">Opções</label>
                         <div class="flex flex-wrap gap-3">
                             <label class="inline-flex items-center">

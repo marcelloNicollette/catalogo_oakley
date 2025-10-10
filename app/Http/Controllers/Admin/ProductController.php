@@ -27,6 +27,27 @@ class ProductController extends Controller
         return view('admin.products.index', compact('products'));
     }
 
+    /**
+     * Lista produtos excluídos (soft deleted)
+     */
+    public function deleted()
+    {
+        $products = Product::onlyTrashed()->orderBy('deleted_at', 'desc')->paginate(100);
+        return view('admin.products.deleted', compact('products'));
+    }
+
+    /**
+     * Restaurar produto soft-deletado
+     */
+    public function restore($id)
+    {
+        $product = Product::withTrashed()->findOrFail($id);
+        $product->restore();
+
+        return redirect()->route('admin.products.deleted')
+            ->with('success', 'Produto restaurado com sucesso.');
+    }
+
     public function create()
     {
         $collections = Collection::where('active', true)->get();
@@ -57,6 +78,7 @@ class ProductController extends Controller
             'sku' => 'nullable|string|max:255',
             'technologies' => 'nullable|array',
             'category_id' => 'required|exists:categories,id',
+            'subcategory_id' => 'nullable|exists:subcategories,id',
             'flag_calendario' => 'nullable|boolean',
             'data_mkt' => 'nullable|date',
             'data_trade' => 'nullable|date',
@@ -65,7 +87,7 @@ class ProductController extends Controller
             'active' => 'boolean'
         ]);
 
-        $validated['slug'] = Str::slug($validated['name']);
+        $validated['slug'] = Str::slug($validated['name']) . '-' . $validated['code'];
 
         // Processar tecnologias
         if ($request->has('technologies')) {
@@ -82,6 +104,7 @@ class ProductController extends Controller
                 'codes' => $request->input('color_code', []),
                 'collections' => $request->input('color_collection_id', []),
                 'flags' => $request->input('color_flag_product_id', []),
+                'numeracao_ids' => $request->input('color_numeracao_id', []),
                 'segmentacoes_cliente' => $request->input('color_segmentacoes_cliente', []),
             ]);
         }
@@ -155,6 +178,7 @@ class ProductController extends Controller
             'sku' => 'nullable|string|max:255',
             'technologies' => 'nullable|array',
             'category_id' => 'required|exists:categories,id',
+            'subcategory_id' => 'nullable|exists:subcategories,id',
             'flag_calendario' => 'nullable|boolean',
             'data_mkt' => 'nullable|date',
             'data_trade' => 'nullable|date',
@@ -163,7 +187,7 @@ class ProductController extends Controller
             'active' => 'boolean'
         ]);
 
-        $validated['slug'] = Str::slug($validated['name']);
+        $validated['slug'] = Str::slug($validated['name']) . '-' . $validated['code'];
 
         if ($request->has('technologies')) {
             $validated['technologies'] = json_encode($request->technologies);
@@ -180,6 +204,7 @@ class ProductController extends Controller
                 'codes' => $request->input('color_code', []),
                 'collections' => $request->input('color_collection_id', []),
                 'flags' => $request->input('color_flag_product_id', []),
+                'numeracao_ids' => $request->input('color_numeracao_id', []),
                 'segmentacoes_cliente' => $request->input('color_segmentacoes_cliente', []),
             ]);
         }
@@ -283,5 +308,18 @@ class ProductController extends Controller
             // Se o flag_calendario está desativo ou não há datas, remove o registro do calendário
             Calendario::where('product_id', $product->id)->delete();
         }
+    }
+
+    /**
+     * Retorna as subcategorias de uma categoria específica
+     */
+    public function getSubcategories($categoryId)
+    {
+        $subcategories = \App\Models\Subcategory::where('category_id', $categoryId)
+            ->where('active', true)
+            ->orderBy('faixa')
+            ->get(['id', 'faixa']);
+
+        return response()->json($subcategories);
     }
 }

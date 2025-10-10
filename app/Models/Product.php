@@ -23,6 +23,7 @@ class Product extends Model
         'sku',
         'price',
         'category_id',
+        'subcategory_id',
         'technologies',
         'flag_calendario',
         'data_mkt',
@@ -50,6 +51,11 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class)->with('segmentacao');
+    }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(Subcategory::class);
     }
 
     public function colors()
@@ -109,6 +115,7 @@ class Product extends Model
                 'color_code' => $colorData['codes'][$index] ?? null,
                 'collection_id' => $colorData['collections'][$index] ?? null,
                 'flag_product_id' => $colorData['flags'][$index] ?? null,
+                'numeracao_id' => $colorData['numeracao_ids'][$index] ?? null,
                 'is_new' => false,
                 'active' => true,
             ]);
@@ -154,6 +161,7 @@ class Product extends Model
                 'color_code' => $colorData['codes'][$index] ?? null,
                 'collection_id' => $colorData['collections'][$index] ?? null,
                 'flag_product_id' => $colorData['flags'][$index] ?? null,
+                'numeracao_id' => $colorData['numeracao_ids'][$index] ?? null,
                 'is_new' => false,
                 'active' => true,
             ]);

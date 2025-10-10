@@ -1,6 +1,6 @@
 @extends('layouts.admin-layout')
 
-@section('page_title', 'Olympikus - Sincronização Produtos Google Sheets')
+@section('page_title', 'Under Armour - Sincronização Produtos Google Sheets')
 <style>
     h1 {
         color: #333;

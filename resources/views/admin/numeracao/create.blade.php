@@ -3,7 +3,7 @@
 @push('css')
 @endpush
 
-@section('page_title', 'Olympikus - Números')
+@section('page_title', 'Under Armour - Números')
 
 @section('content-wrapper')
     <div class="flex justify-between items-center mb-6">

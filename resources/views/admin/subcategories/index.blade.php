@@ -13,7 +13,7 @@
     </style>
 @endpush
 
-@section('page_title', 'Olympikus - Subcategorias (Faixas)')
+@section('page_title', 'Under Armour - Subcategorias (Faixas)')
 
 @section('content-wrapper')
     <div class="flex justify-between items-center mb-6">
@@ -39,13 +39,13 @@
                 {{ __('Nova Subcategoria') }}
             </a>
             <!--<button onclick="openSubcategoryModal('create')"
-                                            class="flex items-center bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out">
-                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                            </svg>
-                                            Modal Rápido
-                                        </button>-->
+                                                class="flex items-center bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out">
+                                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                </svg>
+                                                Modal Rápido
+                                            </button>-->
         </div>
     </div>
 
@@ -154,14 +154,14 @@
                                                 </svg>
                                             </a>
                                             <!--<button onclick="openSubcategoryModal('edit', {{ $subcategory->toJson() }})"
-                                                                class="text-purple-600 hover:text-purple-900 mr-3" title="Edição Rápida">
-                                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                                    viewBox="0 0 24 24">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                        d="M13 10V3L4 14h7v7l9-11h-7z">
-                                                                    </path>
-                                                                </svg>
-                                                            </button>-->
+                                                                    class="text-purple-600 hover:text-purple-900 mr-3" title="Edição Rápida">
+                                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                                        viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                            d="M13 10V3L4 14h7v7l9-11h-7z">
+                                                                        </path>
+                                                                    </svg>
+                                                                </button>-->
                                             <form action="{{ route('admin.subcategories.destroy', $subcategory) }}"
                                                 method="POST" class="inline"
                                                 onsubmit="return confirm('Tem certeza que deseja excluir esta subcategoria?')">

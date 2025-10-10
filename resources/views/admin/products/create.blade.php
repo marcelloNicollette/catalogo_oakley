@@ -127,7 +127,7 @@
                                 <template x-for="(campo, index) in campos" :key="index">
                                     <div class="bg-gray-100 p-4 border border-gray-200 rounded-lg mb-4">
                                         <!-- Grid para os campos principais -->
-                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-4">
                                             <!-- Coluna 1: Título -->
                                             <div>
                                                 <label class="block text-sm font-medium text-gray-700">Cor (Title)</label>
@@ -176,6 +176,19 @@
                                                         <option value="{{ $flag->id }}"
                                                             {{ old('flag_product_id') == $flag->id ? 'selected' : '' }}>
                                                             {{ $flag->flag_title }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <!-- Coluna 6: Numeração (por cor) -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Numeração</label>
+                                                <select :name="`color_numeracao_id[]`" x-model="campo.color_numeracao_id"
+                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                    <option value="">Selecione a Numeração</option>
+                                                    @foreach ($numeracoes as $numeracao)
+                                                        <option value="{{ $numeracao->id }}">
+                                                            {{ $numeracao->numero }}
                                                         </option>
                                                     @endforeach
                                                 </select>

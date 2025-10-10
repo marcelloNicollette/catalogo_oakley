@@ -322,8 +322,8 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     // Export routes
     Route::post('/user/export/pdf', [ExportController::class, 'exportPdf'])->name('user.export.pdf');
-    // HTML preview for debugging fonts/layout
-    Route::get('/user/export/preview', [ExportController::class, 'previewHtml'])->name('user.export.preview');
+
+
     Route::get('/user/exports', [ExportController::class, 'index'])->name('exports.index');
     Route::get('/user/exports/{exportUser}', [ExportController::class, 'show'])->name('exports.show');
     Route::get('/user/exports/{exportUser}/regenerate', [ExportController::class, 'regeneratePdf'])->name('exports.regenerate');

@@ -17,6 +17,7 @@ class Color extends Model
         'product_id',
         'collection_id',
         'flag_product_id',
+        'numeracao_id',
         'is_new',
         'active'
     ];
@@ -34,6 +35,11 @@ class Color extends Model
     public function flagProduct()
     {
         return $this->belongsTo(FlagProduct::class);
+    }
+
+    public function numeracao()
+    {
+        return $this->belongsTo(Numeracao::class, 'numeracao_id');
     }
 
     /**

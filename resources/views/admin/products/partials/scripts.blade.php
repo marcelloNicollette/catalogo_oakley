@@ -10,6 +10,7 @@ document.addEventListener('alpine:init', () => {
                     color_code: c.color_code,
                     color_collection_id: c.collection_id,
                     color_flag_product_id: c.flag_product_id,
+                    color_numeracao_id: c.numeracao_id,
                 };
             }));
             if (this.campos.length === 0) {
@@ -17,7 +18,7 @@ document.addEventListener('alpine:init', () => {
             }
         },
         adicionarCampo() {
-            this.campos.push({ color_name: '', color_description: '', color_code: '', color_collection_id: '', color_flag_product_id: '' });
+            this.campos.push({ color_name: '', color_description: '', color_code: '', color_collection_id: '', color_flag_product_id: '', color_numeracao_id: '' });
         },
         removerCampo(index) {
             this.campos.splice(index, 1);
