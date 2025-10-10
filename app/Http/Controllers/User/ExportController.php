@@ -18,7 +18,9 @@ class ExportController extends Controller
      */
     public function previewHtml(Request $request)
     {
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '2048M'); // ou '3072M' se necessário
+        ini_set('max_execution_time', '300'); // 5 minutos
+        set_time_limit(300);
 
         // Tentar obter dados a partir do request ou do último ExportUser
         $exportUser = null;
