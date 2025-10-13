@@ -245,8 +245,8 @@
                                         <tr>
                                             @foreach ($collectionsByCode as $colorCollection)
                                                 <td
-                                                    style="width: 16.66%; padding: 10px; text-align: center; vertical-align: top;">
-                                                    <div style="padding: 15px; position: relative;">
+                                                    style="width: auto; padding: 10px 0; text-align: center; vertical-align: top;">
+                                                    <div style="padding: 15px 0; position: relative;">
                                                         @if ($colorCollection->flagProduct)
                                                             <div
                                                                 style="position: absolute; top: 10px; left: 10px; background: {{ $colorCollection->flagProduct->flag_bg }}; color: {{ $colorCollection->flagProduct->flag_color_text_bg }}; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold;">
