@@ -255,7 +255,7 @@
                                                 </div>
                                                 <div
                                                     style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 5px;">
-                                                    {{ $collection->color_name }}
+                                                    {{ \Illuminate\Support\Str::limit($colorCollection->color_name, 15, '') }}
                                                 </div>
                                                 <div style="font-size: 12px; color: #666;">
                                                     {{ $collection->color_description }}

@@ -163,7 +163,7 @@
                                 <!-- Modal Content -->
                                 <div class="flex items-center justify-center min-h-screen px-4 py-6">
                                     <div
-                                        class="relative z-50 bg-white rounded-lg max-w-xl w-full mx-4 p-6 max-h-[80vh] overflow-hidden flex flex-col">
+                                        class="relative z-50 bg-white rounded-lg max-w-xl w-full mx-4 p-6 max-h-[60vh] overflow-hidden flex flex-col">
                                         <div class="flex justify-center items-center mb-6">
                                             <h2 class="text-2xl font-semibold text-gray-900">Selecionar Segmentos</h2>
                                         </div>
@@ -230,7 +230,17 @@
                                         </div>
 
                                         <!-- Footer com botões -->
+
                                         <div class="pt-4 mt-4">
+                                            <div class="flex justify-center gap-4">
+                                                <button @click="showModal = false"
+                                                    class="w-full bg-black text-white font-normal text-base py-3 px-4 rounded-full hover:bg-gray-800 transition-colors">
+                                                    Salvar
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-4">
                                             <div class="flex justify-center gap-4">
                                                 <button @click="showModal = false" type="button"
                                                     class="flex items-center border border-black rounded-full px-6 py-3 text-sm hover:bg-gray-200 transition">

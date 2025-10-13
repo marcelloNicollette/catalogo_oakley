@@ -277,9 +277,11 @@
                                                         </div>
                                                         <div
                                                             style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 5px;">
-                                                            {{ $colorCollection->color_name }}</div>
+                                                            {{ \Illuminate\Support\Str::limit($colorCollection->color_name, 15, '...') }}
+                                                        </div>
                                                         <div style="font-size: 12px; color: #666;">
-                                                            {{ $colorCollection->color_description }}</div>
+                                                            {{ \Illuminate\Support\Str::limit($colorCollection->color_description, 15, '...') }}
+                                                        </div>
                                                     </div>
                                                 </td>
                                             @endforeach
