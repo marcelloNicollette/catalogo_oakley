@@ -295,9 +295,10 @@
                         </div>
 
                         <div class="sort-dropdown" id="sortDropdown">
-                            <div class="sort-option" data-value="mais-nova">Mais nova</div>
-                            <div class="sort-option" data-value="mais-antiga">Mais antiga</div>
-                            <div class="sort-option" data-value="recentes">Recentes</div>
+                            <div class="sort-option" data-value="">Padrão</div>
+                            <div class="sort-option" data-value="mais-nova">Mais novos</div>
+                            <div class="sort-option" data-value="mais-antiga">Mais antigos</div>
+                            <!--<div class="sort-option" data-value="recentes">Recentes</div>-->
                             <div class="sort-option" data-value="ultima-atualizacao">Última atualização</div>
                             <div class="sort-option" data-value="maior-valor">Maior valor</div>
                             <div class="sort-option" data-value="menor-valor">Menor valor</div>
