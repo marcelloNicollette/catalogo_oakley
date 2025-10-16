@@ -80,7 +80,7 @@
                                 d="M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387a1 1 0 01-1.414 1.414l-4.387-4.387zM8 14a6 6 0 100-12 6 6 0 000 12z"
                                 clip-rule="evenodd" />
                         </svg>
-                        <input type="text" placeholder="Buscar"
+                        <input id="buscar" type="text" placeholder="Buscar"
                             class="input-estilizado bg-transparent border-0 focus:outline-none focus:ring-0 p-1" />
                     </div>
 
@@ -186,7 +186,7 @@
             // Elementos DOM
             const grid = document.getElementById('colecoes-grid');
             const template = document.getElementById('template-colecoes');
-            const searchInput = document.querySelector('input[placeholder="Buscar"]');
+            const searchInput = document.querySelector('input[id="buscar"]');
             const selectButton = document.getElementById('selectButton');
             const selectedText = document.getElementById('selectedText');
             const arrow = document.getElementById('arrow');
