@@ -126,11 +126,12 @@
 
                     <!-- Estado vazio (sem imagens disponíveis) -->
                     <div id="imageEmpty"
-                        class="bg-white rounded-lg shadow-sm border border-[#CBCBCB] flex items-center justify-center hidden">
-                        <div class="text-center p-4">
-                            <img src="/images/img-padrao-oly.png" alt="Sem imagens"
-                                class="w-16 h-16 mx-auto opacity-50 mb-2">
-                            <p class="text-sm text-gray-600">Sem imagens disponíveis para esta variação.</p>
+                        class="bg-white rounded-lg shadow-sm border border-[#CBCBCB] flex items-center justify-center hidden"
+                        style="margin-top: 0px;">
+                        <div class="transition-opacity">
+                            <img src="/images/img-padrao-ua.png" alt="Vista 1"
+                                class="w-full object-contain rounded-lg "
+                                onerror="this.src='/images/img-padrao-ua.png'">
                         </div>
                     </div>
 
