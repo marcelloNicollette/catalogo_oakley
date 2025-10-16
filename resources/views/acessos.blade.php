@@ -55,9 +55,9 @@
 </head>
 
 <body class="items-center lg:justify-center bg-black">
-    <!-- Layout Mobile/Tablet: Formulário na parte superior e imagem abaixo -->
-    <div class="lg:hidden flex flex-col min-h-screen p-2 ">
-        <!-- Seção do formulário -->
+    <!-- Layout Mobile/Tablet: Mensagem de aplicação não disponível -->
+    <div class="lg:hidden flex flex-col min-h-screen p-2">
+        <!-- Seção azul com mensagem -->
         <div class="bg-[#E31B23] flex flex-col justify-between items-center p-4 flex-1">
             <!-- Logo no topo -->
             <div class="flex justify-center w-full pt-4">
@@ -106,41 +106,43 @@
             </div>
 
             <!-- Conteúdo central -->
-            <div class="flex flex-col items-center justify-center flex-1 w-full">
+            <div class="flex flex-col items-center justify-center flex-1 w-full px-6">
+                <!-- Ícone (opcional - você pode remover se não quiser) -->
+                <!--<div class="mb-6">
+                    <svg class="w-20 h-20 text-white opacity-80" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v4"></path>
+                    </svg>
+                </div>-->
+
                 <!-- Título -->
-                <h2 class="text-lg text-white text-center mt-6">Bem-vindo ao catálogo <br>digital da Under Armour.</h2>
+                <h2 class=" text-white text-center mb-4">
+                    Disponível apenas para desktop. <br>Versões para mobile e tablet chegam em breve.
+                </h2>
 
-                <!-- Formulário -->
-                <form class="w-full max-w-xs" method="POST" action="{{ url('/admin/login') }}">
-                    @csrf
-                    <input name="email" type="email" placeholder="E-mail"
-                        class="w-full text-white py-5 mb-2 placeholder-white input-estilizado bg-transparent border-0 focus:ring-0 input-style" />
-                    @error('email')
-                        <p class="text-[#FC0] text-sm">{{ $message }}</p>
-                    @enderror
-                    <input name="password" type="password" placeholder="Senha"
-                        class="w-full text-white py-5 mb-2 placeholder-white input-estilizado bg-transparent border-0 focus:outline-none focus:ring-0 input-style" />
-                    @error('password')
-                        <p class="text-[#FC0] text-sm">{{ $message }}</p>
-                    @enderror
-                    <div class="text-sm text-white text-center my-3 opacity-70 cursor-pointer hover:opacity-100 transition"
-                        onclick="openPasswordRecoveryModal()">Esqueceu a senha?</div>
+                <!-- Mensagem -->
+                <p class="text-white text-center text-base opacity-90 mb-8 max-w-sm">
+                    Para acessar o catálogo digital da Under Armour, utilize um computador ou tablet com tela maior.
+                </p>
 
-                    <button type="submit"
-                        class="w-full border border-white text-white py-3 rounded-full hover:bg-white hover:text-[#E31B23] transition">
-                        Entrar
-                    </button>
-                </form>
+                <!-- Informação adicional (opcional) -->
+                <div class="bg-white/10 rounded-lg p-4 max-w-sm">
+                    <p class="text-white text-sm text-center opacity-80">
+                        Para uma melhor experiência, recomendamos o acesso através de dispositivos com tela de pelo
+                        menos 1024px de largura.
+                    </p>
+                </div>
             </div>
 
             <!-- Rodapé -->
             <div class="text-xs text-white text-center opacity-70 pb-4">
-                Precisa de um login? <a href="#" class="text-white underline cursor-pointer"
-                    onclick="openAccessRequestModal()">Solicite um acesso</a>
+                <p>© {{ date('Y') }} Under Armour</p>
             </div>
         </div>
 
-        <!-- Seção da imagem abaixo do formulário -->
+        <!-- Seção da imagem abaixo -->
         <div class="flex-1">
             <img src="./images/bg-geral.jpg" alt="Corredores" class="w-full h-full object-cover" />
         </div>
