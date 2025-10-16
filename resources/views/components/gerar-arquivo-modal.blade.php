@@ -79,7 +79,7 @@
                                 <input type="checkbox" name="opcoes[]" class="form-checkbox" value="remover_preco">
                                 <span class="ml-2 text-sm">Remover Preço</span>
                             </label>
-                            <label class="inline-flex items-center">
+                            <!--<label class="inline-flex items-center">
                                 <input type="checkbox" name="opcoes[]" class="form-checkbox" value="remover_codigo">
                                 <span class="ml-2 text-sm">Remover Código</span>
                             </label>
@@ -90,7 +90,7 @@
                             <label class="inline-flex items-center">
                                 <input type="checkbox" name="opcoes[]" class="form-checkbox" value="remover_tag">
                                 <span class="ml-2 text-sm">Remover Tag Exclusivo</span>
-                            </label>
+                            </label>-->
                             <label class="inline-flex items-center">
                                 <input type="checkbox" name="opcoes[]" class="form-checkbox"
                                     value="remover_capa_retranca">
