@@ -137,21 +137,22 @@
     @endphp
 
     @foreach ($groupedByCategory as $categoryName => $categoryCollections)
-        <!-- CATEGORIA -->
-        <div class="capa" style="background: #000; height: 100%;">
-            <div style="padding: 5rem;">
+        @unless ($remove_capa_retranca)
+            <!-- CATEGORIA -->
+            <div class="capa" style="background: #000; height: 100%;">
+                <div style="padding: 5rem;">
 
-                <h1
-                    style="font-size: 110px; color: #fff; font-family: 'Neue-Plak-Extended'; font-weight: 900;  margin:0; padding:0; line-height: 80px; text-transform: uppercase;">
-                    {{ $categoryName }}
-                </h1>
-                <div style="position: absolute; bottom: 60px; right: 80px;">
-                    <img src="{{ public_path('/images/logo-vermelho.png') }}" alt="">
+                    <h1
+                        style="font-size: 110px; color: #fff; font-family: 'Neue-Plak-Extended'; font-weight: 900;  margin:0; padding:0; line-height: 80px; text-transform: uppercase;">
+                        {{ $categoryName }}
+                    </h1>
+                    <div style="position: absolute; bottom: 60px; right: 80px;">
+                        <img src="{{ public_path('/images/logo-vermelho.png') }}" alt="">
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="page-break"></div>
-
+            <div class="page-break"></div>
+        @endunless
         @php
             // Dentro da categoria, agrupa por código de produto para não duplicar a tabela
             $productsByCode = $categoryCollections->groupBy(function ($c) {
