@@ -1,4 +1,4 @@
-<x-layout-user-produto title="Olympikus - Produto">
+<x-layout-user-produto title="Under Armour - Produto">
     <style>
         .badge-icon-wrapper .badge-tooltip {
             visibility: hidden;
