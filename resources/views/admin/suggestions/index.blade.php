@@ -68,6 +68,11 @@
                                 <div class="text-xs text-gray-500">{{ optional($suggestion->user)->email }}</div>
                                 <div class="text-xs text-gray-400">{{ $suggestion->created_at?->format('d/m/Y H:i') }}
                                 </div>
+                                <div alt="{{ $suggestion->url }}" class="text-xs text-gray-400">URL page:
+                                    <a class="text-blue-500 hover:underline" title="{{ $suggestion->url }}"
+                                        alt="{{ $suggestion->url }}" href="{{ $suggestion->url }}"
+                                        target="_blank">{{ str($suggestion->url)->limit(20) }}</a>
+                                </div>
                             </td>
                             <td class="px-6 py-4">{{ \Illuminate\Support\Str::limit($suggestion->suggestion_text, 120) }}
                             </td>
