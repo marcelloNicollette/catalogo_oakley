@@ -80,6 +80,17 @@
             }
         }
     </style>
+    <style>
+        .word {
+            white-space: normal;
+            /* permite quebra de linha */
+            word-break: keep-all;
+            /* impede quebra dentro das palavras */
+            overflow-wrap: break-word;
+            /* garante quebra segura entre blocos */
+            padding: 0 2px;
+        }
+    </style>
     <main class="absolute top-20 lg:flex flex-1 produtos-page">
         @php
             $currentUrl = request()->path();
@@ -178,8 +189,8 @@
                                 </svg>
                             </button>
                         </div>
-                        <div class=" mb-4">
-                            <h1 class="title font-black text-[30px] lg:text-[40px] font-fko leading-[50px]">
+                        <div class="my-4">
+                            <h1 class="title font-black text-[30px] lg:text-[40px] font-fko leading-[40px]">
                                 {{ $produto->name }}
                             </h1>
                         </div>
@@ -188,7 +199,7 @@
                         <div class="mb-6">
                             <p class="text-xs text-black opacity-50 pb-2">Cores</p>
                             <!-- Primeira linha - 4 cores -->
-                            <div class="grid grid-cols-3 lg:grid-cols-4 mb-4">
+                            <div class="grid grid-cols-3 lg:grid-cols-4 mb-4 gap-1">
                                 @foreach ($produto->colors as $color)
                                     <!-- Cor 1 - Selecionada -->
                                     <div class="relative">
@@ -197,7 +208,7 @@
                                             <div class="relative">
                                                 <img src="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $color->color_code) }}.jpg"
                                                     alt="{{ $color->color_name }}"
-                                                    class="w-full object-contain rounded-t-lg" loading="lazy"
+                                                    class="w-full object-contain rounded-lg" loading="lazy"
                                                     onerror="this.src='/images/img-padrao-oly.png'" />
                                                 @if ($color->flag_product_id)
                                                     @if ($color->flagProduct->icon != null)
@@ -218,9 +229,10 @@
                                                     @endif
                                                 @endif
                                             </div>
+
                                             <div class="text-center pb-2">
                                                 <p class="text-xs text-black">{{ $color->color_name }}</p>
-                                                <p class="text-xs text-black opacity-50">
+                                                <p class="text-xs text-black opacity-50 word">
                                                     {{ $color->color_description }}</p>
                                             </div>
                                         </div>
@@ -1079,7 +1091,7 @@
             // Função renderizar cores otimizada
             function renderizarCoresOtimizado() {
                 const coresFiltradas = filtrarCoresPorSegmentacao();
-                const coresContainer = document.querySelector('.grid.grid-cols-3.lg\\:grid-cols-4.mb-4');
+                const coresContainer = document.querySelector('.grid.grid-cols-3.lg\\:grid-cols-4.mb-4.gap-1');
 
                 if (!coresContainer) return;
 
@@ -1110,7 +1122,7 @@
                         `;
                     } else if (cor.flagProduct) {
                         flagHtml = `
-                            <span class="absolute top-2 left-1 bg-[${cor.flagProduct.flag_bg}] text-[${cor.flagProduct.flag_color_text_bg}] text-[10px] px-2 py-0.5 rounded-full">
+                            <span class="absolute top-1 left-1 bg-[${cor.flagProduct.flag_bg}] text-[${cor.flagProduct.flag_color_text_bg}] text-[10px] px-2 py-0.5 rounded-full">
                                 ${cor.flagProduct.flag_title}
                             </span>
                         `;
@@ -1122,14 +1134,14 @@
                             <div class="relative">
                                 <img src="/images/produtos/{{ $produto->code }}_${colorCodeFormatted}.jpg" 
                                      alt="${cor.color_name}" 
-                                     class="w-full object-contain rounded-t-lg"
+                                     class="w-full object-contain rounded-lg"
                                      loading="lazy"
                                      onerror="this.src='/images/img-padrao-oly.png'" />
                                 ${flagHtml}
                             </div>
                             <div class="text-center pb-2">
                                 <p class="text-xs text-black">${cor.color_name}</p>
-                                <p class="text-xs text-black opacity-50">${cor.color_description}</p>
+                                <p class="text-xs text-black opacity-50 word">${cor.color_description}</p>
                             </div>
                         </div>
                     `;
