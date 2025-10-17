@@ -79,8 +79,7 @@
                 background-position: 200% 0;
             }
         }
-    </style>
-    <style>
+
         .word {
             white-space: normal;
             /* permite quebra de linha */
