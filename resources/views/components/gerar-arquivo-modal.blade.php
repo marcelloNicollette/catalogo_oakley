@@ -148,7 +148,7 @@
                 </h2>
 
                 <p class="text-center text-gray-600">
-                    Seu arquivo será gerado assim que fechar essa janela.
+                    Aguarde, o download vai começar automaticamente assim que o arquivo estiver pronto.​
                 </p>
 
                 <div class="flex justify-center">
