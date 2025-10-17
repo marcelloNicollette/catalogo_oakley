@@ -33,14 +33,16 @@
                         <label class="block  text-xs font-normal text-black mb-2">Produtos</label>
                         <div class="flex flex-col gap-2">
                             <label class="inline-flex items-center">
-                                <input type="checkbox" name="produtos" class="form-radio" value="selecao">
-                                <span class="ml-2 text-base">Seleção</span>
-                                <span class="text-xs ml-2" id="editSelectionContainer" style="display: none;"><a
-                                        id="editSelection" href="#"
-                                        onclick="abrirModalSelecaoProdutos(); return false;"
-                                        class="text-black opacity-50 underline">Editar</a></span>
-                                <span class="text-xs text-black ml-2">*Gera o arquivo somente com os itens
-                                    selecionados.</span>
+
+                                <button type="button" name="produtos" id="btnSelecaoProdutos"
+                                    class="flex items-center space-x-2 px-3 py-[6px] bg-white text-black rounded-full hover:opacity-80 transition-colors border border-black">
+                                    <span class="text-base">Selecionado(s):</span>
+
+                                    <span id="btnContadorSelecionados"
+                                        class="text-xs text-black opacity-50 underline ml-2">(Editar)</span>
+                                </button>
+                                <input type="hidden" name="produtos" id="produtosSelecaoHidden" value="todos">
+
                             </label>
                             <!--<label class="inline-flex items-center">
                                 <input type="radio" name="produtos" class="form-radio" value="favoritos">
@@ -57,15 +59,17 @@
                     </div>
 
                     <div>
-                        <label class="block  text-xs font-normal text-black mb-2">Opções Produtos</label>
-                        <div class="flex flex-wrap gap-3">
-                            <label class="inline-flex items-center">
-                                <input type="radio" name="grupo_opcoes" class="form-radio" value="separado" checked>
-                                <span class="ml-2 text-sm">Separado por cor</span>
-                            </label>
+                        <label class="block  text-xs font-normal text-black mb-2">Cores dos produtos</label>
+                        <div class="">
                             <label class="inline-flex items-center">
                                 <input type="radio" name="grupo_opcoes" class="form-radio" value="agrupado">
-                                <span class="ml-2 text-sm">Agrupado por cor</span>
+                                <span class="ml-2 text-sm">Agrupadas</span>
+                            </label><br>
+
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="grupo_opcoes" class="form-radio" value="separado" checked>
+                                <span class="ml-2 text-sm">Separadas </span><span class="text-xs text-black ml-2">*Cada
+                                    cor de produto será exibida em página individual no PDF.</span>
                             </label>
 
                         </div>
@@ -327,27 +331,16 @@
 
     // Event listener para interceptar o botão sendHistory quando necessário
     document.addEventListener('DOMContentLoaded', function() {
-        // Controlar visibilidade do link 'Editar' baseado na seleção do radio button
-        const radioSelecao = document.querySelector('input[name="produtos"][value="selecao"]');
-        const editContainer = document.getElementById('editSelectionContainer');
-        const radiosProdutos = document.querySelectorAll('input[name="produtos"]');
+        const selecaoButton = document.getElementById('btnSelecaoProdutos');
+        const produtosHidden = document.getElementById('produtosSelecaoHidden');
 
-        // Função para mostrar/ocultar o link Editar
-        function toggleEditLink() {
-            if (radioSelecao && radioSelecao.checked) {
-                editContainer.style.display = 'inline';
-            } else {
-                editContainer.style.display = 'none';
-            }
+        // Clique no CTA: define modo seleção e abre modal (sem toggle)
+        if (selecaoButton) {
+            selecaoButton.addEventListener('click', function() {
+                if (produtosHidden) produtosHidden.value = 'selecao';
+                abrirModalSelecaoProdutos();
+            });
         }
-
-        // Adicionar event listeners a todos os radio buttons de produtos
-        radiosProdutos.forEach(radio => {
-            radio.addEventListener('change', toggleEditLink);
-        });
-
-        // Verificar estado inicial
-        toggleEditLink();
 
         const sendHistoryBtn = document.getElementById('sendHistory');
 
@@ -358,49 +351,40 @@
 
             // Adicionar novo event listener
             newSendHistoryBtn.addEventListener('click', function(event) {
-                const selecaoRadio = document.querySelector('input[name="produtos"][value="selecao"]');
+                const tipoProdutos = produtosHidden ? produtosHidden.value : 'todos';
                 const categoriasSelecionadas = document.querySelectorAll(
                     'input[name="categoria"]:checked');
 
-                if (selecaoRadio && selecaoRadio.checked) {
-                    // Verificar se produtos foram selecionados (novo formato id+cor)
+                if (tipoProdutos === 'selecao') {
                     const produtosSelecionadosInputs = document.querySelectorAll(
                         'input[name^="produtos_selecionados["]');
                     if (produtosSelecionadosInputs.length === 0) {
-                        // Verificar se uma categoria específica está selecionada (não "todas")
                         if (categoriasSelecionadas.length === 0 || categoriasSelecionadas[0].value ===
                             'todas') {
                             alert(
                                 'Por favor, selecione uma categoria específica para usar a seleção de produtos.'
                             );
-                            // Evitar envio e propagação quando alertar
                             event.preventDefault();
                             event.stopPropagation();
                             return false;
                         }
-
-                        // Prevenir o comportamento padrão e abrir o modal de seleção
                         event.preventDefault();
                         event.stopPropagation();
-
                         abrirModalSelecaoProdutos();
                         return false;
                     }
                 }
 
-                // Desabilitar o botão durante o processamento
                 newSendHistoryBtn.disabled = true;
                 newSendHistoryBtn.textContent = 'Gerando arquivo...';
                 newSendHistoryBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
-                // Mostrar tela de sucesso
                 const historyForm = document.getElementById('historyForm');
                 const historySuccess = document.getElementById('historySuccess');
 
                 historyForm.classList.add('hidden');
                 historySuccess.classList.remove('hidden');
 
-                // Submeter o formulário
                 const form = document.querySelector('#gerarArquivoModal form');
                 form.submit();
             });
@@ -473,7 +457,7 @@
                            value="${produto.id}" 
                            data-cor="${produto.cor}"
                            class="produto-checkbox" 
-                           ${produto.selected ? 'checked' : ''}>
+                           ${(Array.isArray(produtosSelecionados) && produtosSelecionados.some(p => p.id === produto.id && p.cor === produto.cor)) || produto.selected ? 'checked' : ''}>
                 </div>
                 <div class="col-span-2 text-sm ">${produto.codigo}</div>
                 <div class="col-span-3 text-sm ">${produto.title}</div>
@@ -590,8 +574,8 @@
         // Adicionar produtos selecionados ao formulário
         const form = document.querySelector('#gerarArquivoModal form');
 
-        // Remover inputs de produtos anteriores se existirem
-        const existingProductInputs = form.querySelectorAll('input[name="produtos_selecionados[]"]');
+        // Remover inputs de produtos anteriores se existirem (todos os que começam com "produtos_selecionados[")
+        const existingProductInputs = form.querySelectorAll('input[name^="produtos_selecionados["]');
         existingProductInputs.forEach(input => input.remove());
 
         // Adicionar os produtos selecionados (id e cor) como inputs hidden
@@ -609,20 +593,21 @@
             form.appendChild(inputCor);
         });
 
-        //console.log('Produtos selecionados:', produtosSelecionados);
+        console.log('Produtos selecionados:', produtosSelecionados);
 
         // Fechar modal de seleção e voltar ao modal anterior
         document.getElementById('selecaoProdutosModal').classList.add('hidden');
         document.getElementById('gerarArquivoModal').classList.remove('hidden');
 
-        // Mostrar alert com a quantidade correta
-        //alert(`${quantidadeSelecionados} produto(s) selecionado(s).`);
-
-        // Atualizar o texto do link "Editar" para mostrar quantos produtos foram selecionados
-        const editSelection = document.getElementById('editSelection');
-        if (editSelection) {
-            editSelection.textContent = `Editar (${quantidadeSelecionados} selecionados)`;
+        // Atualizar contador no botão "Selecionado(s):"
+        const contadorSpan = document.getElementById('btnContadorSelecionados');
+        if (contadorSpan) {
+            contadorSpan.textContent = quantidadeSelecionados + ' (Editar)';
         }
+
+        // Garantir modo seleção ativo no envio
+        const produtosHidden = document.getElementById('produtosSelecaoHidden');
+        if (produtosHidden) produtosHidden.value = 'selecao';
     });
 
     function fecharModalSelecaoProdutos() {
@@ -637,34 +622,28 @@
         reabilitarBotaoSendHistory();
 
         // Limpar formulário completamente
-        limparFormulario();
+        //limparFormulario();
 
         // Resetar arrays de produtos
-        produtosSelecionados = [];
-        produtosDisponiveis = [];
+        //produtosSelecionados = [];
+        //produtosDisponiveis = [];
     }
 
     function limparFormulario() {
-        // Limpar campo nome do arquivo
-        //document.getElementById('collectionHistoryName').value = '';
-
-        const editContainer = document.getElementById('editSelectionContainer');
-
         // Resetar categorias para "Todas"
         const radioTodas = document.querySelector('input[name="categoria"][value="todas"]');
         if (radioTodas) {
             radioTodas.checked = true;
-            editContainer.style.display = 'none';
         }
 
-        const radioSelecao = document.querySelector('input[name="produtos"][value="selecao"]');
-        if (radioSelecao) {
-            radioSelecao.checked = false;
+        // Resetar contador e tipo de produtos
+        const contadorSpan = document.getElementById('btnContadorSelecionados');
+        if (contadorSpan) {
+            contadorSpan.textContent = '0 (Editar)';
         }
-        // Resetar produtos para "Todos"
-        const radioTodosProdutos = document.querySelector('input[name="produtos"][value="todos"]');
-        if (radioTodosProdutos) {
-            radioTodosProdutos.checked = true;
+        const produtosHidden = document.getElementById('produtosSelecaoHidden');
+        if (produtosHidden) {
+            produtosHidden.value = 'todos';
         }
 
         // Desmarcar todas as opções de personalização
@@ -688,15 +667,9 @@
             titleText.textContent = '';
         }
 
-        // Resetar texto do link "Editar"
-        const editSelection = document.getElementById('editSelection');
-        if (editSelection) {
-            editSelection.textContent = 'Editar';
-        }
-
         // Remover inputs de produtos selecionados
         const form = document.querySelector('#gerarArquivoModal form');
-        const existingProductInputs = form.querySelectorAll('input[name="produtos_selecionados[]"]');
+        const existingProductInputs = form.querySelectorAll('input[name^="produtos_selecionados["]');
         existingProductInputs.forEach(input => input.remove());
     }
 </script>
