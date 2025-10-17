@@ -33,7 +33,7 @@
                         <label class="block  text-xs font-normal text-black mb-2">Produtos</label>
                         <div class="flex flex-col gap-2">
                             <label class="inline-flex items-center">
-                                <input type="radio" name="produtos" class="form-radio" value="selecao">
+                                <input type="checkbox" name="produtos" class="form-radio" value="selecao">
                                 <span class="ml-2 text-base">Seleção</span>
                                 <span class="text-xs ml-2" id="editSelectionContainer" style="display: none;"><a
                                         id="editSelection" href="#"
@@ -148,7 +148,7 @@
                 </h2>
 
                 <p class="text-center text-gray-600">
-                    Aguarde, o download vai começar automaticamente assim que o arquivo estiver pronto.​
+                    Aguarde, o download vai começar automaticamente assim<br> que o arquivo estiver pronto.​
                 </p>
 
                 <div class="flex justify-center">
@@ -184,7 +184,7 @@
         <div class="flex justify-between items-center mb-4">
             <div class="flex items-center gap-4">
                 <label class="flex items-center">
-                    <input type="radio" id="selecionarTodos" name="selecao_tipo" class="mr-2 text-base">
+                    <input type="checkbox" id="selecionarTodos" name="selecao_tipo" class="mr-2 text-base">
                     <span>Selecionar todos</span>
                 </label>
                 <span class="text-xs opacity-50">Selecionados: <span id="contadorSelecionados">0</span></span>
@@ -299,7 +299,7 @@
 
         // Armazenar collection ID atual
         collectionIdAtual = element.getAttribute('data-collection-id') || element.getAttribute('data-id');
-        console.log(collectionName);
+        //console.log(collectionName);
         // Preencher dados do modal
         if (collectionInput) {
             collectionInput.value = collectionName;
@@ -609,7 +609,7 @@
             form.appendChild(inputCor);
         });
 
-        console.log('Produtos selecionados:', produtosSelecionados);
+        //console.log('Produtos selecionados:', produtosSelecionados);
 
         // Fechar modal de seleção e voltar ao modal anterior
         document.getElementById('selecaoProdutosModal').classList.add('hidden');
@@ -657,6 +657,10 @@
             editContainer.style.display = 'none';
         }
 
+        const radioSelecao = document.querySelector('input[name="produtos"][value="selecao"]');
+        if (radioSelecao) {
+            radioSelecao.checked = false;
+        }
         // Resetar produtos para "Todos"
         const radioTodosProdutos = document.querySelector('input[name="produtos"][value="todos"]');
         if (radioTodosProdutos) {

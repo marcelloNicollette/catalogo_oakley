@@ -225,7 +225,7 @@
             // Dados das coleções vindos do backend
             const colecoes = @json($colecoes);
             let colecoesFiltered = [...colecoes];
-            console.log(colecoesFiltered);
+            //console.log(colecoesFiltered);
             // Dados das categorias do backend
             const categorias = @json($categorias ?? []);
             //console.log(categorias);

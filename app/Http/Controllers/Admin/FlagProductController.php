@@ -29,6 +29,7 @@ class FlagProductController extends Controller
             'flag_color_text_bg' => 'required|string',
             'icon' => 'nullable|image|mimes:svg,png,jpg,jpeg,gif|max:2048',
             'alinhamento' => 'nullable|string',
+            'orderfilterflag' => 'required|integer|min:0',
             'status' => 'boolean'
         ]);
 
@@ -62,6 +63,7 @@ class FlagProductController extends Controller
             'flag_color_text_bg' => 'required|string',
             'icon' => 'nullable|image|mimes:svg,png,jpg,jpeg,gif|max:2048',
             'alinhamento' => 'nullable|string',
+            'orderfilterflag' => 'required|integer|min:0',
             'status' => 'boolean'
         ]);
 

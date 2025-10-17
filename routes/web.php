@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\GoogleSheetController;
 use App\Http\Controllers\User\frontendController;
 use App\Http\Controllers\Admin\ProductImageController;
+use App\Http\Controllers\AccessRequestController;
 use App\Models\Collection;
 
 
@@ -43,6 +44,9 @@ Route::get('/acessos', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+// Public - Access Requests
+Route::post('/access-requests', [AccessRequestController::class, 'store'])->name('access-requests.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -241,6 +245,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/leads', [LeadController::class, 'index'])
         ->name('admin.leads');
 
+    // Admin - Access Requests
+    Route::get('/admin/access', [AccessRequestController::class, 'index'])
+        ->name('admin.access.index');
+    Route::post('/admin/access/{user_access}/approve', [AccessRequestController::class, 'approve'])
+        ->name('admin.access.approve');
 
     Route::resource('/admin/users', UserController::class)
         ->names([

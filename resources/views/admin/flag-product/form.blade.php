@@ -107,6 +107,21 @@
                     </div>
                 </div>
 
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="orderfilterflag" class="block text-sm font-medium text-gray-700">Ordem para
+                            filtro</label>
+                        <input type="number" name="orderfilterflag" id="orderfilterflag"
+                            value="{{ old('orderfilterflag', $flagProduct->orderfilterflag ?? 0) }}" min="0"
+                            step="1"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            required>
+                        @error('orderfilterflag')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                     <input type="checkbox" name="status" id="status" value="1"

@@ -232,24 +232,12 @@
 
                         <div class="filter-dropdown" style="width: 310px;" id="filterDropdown">
                             <div class="filter-section">
-                                <label class="filter-label">Numeração</label>
+                                <label class="filter-label">Numeração/Tamanhos​</label>
                                 <div class="filter-options" id="numeracaoOptions">
                                     @foreach ($numeracao as $num)
                                         <div class="filter-option" data-type="numeracao"
                                             data-value="{{ $num->id }}">
                                             {{ $num->numero }}</div>
-                                    @endforeach
-
-                                </div>
-                            </div>
-
-                            <div class="filter-section">
-                                <label class="filter-label">Tamanho</label>
-                                <div class="filter-options" id="tamanhoOptions">
-                                    @foreach ($tamanhos as $size)
-                                        <div class="filter-option" data-type="tamanho"
-                                            data-value="{{ $size->id }}">
-                                            {{ $size->size }}</div>
                                     @endforeach
 
                                 </div>

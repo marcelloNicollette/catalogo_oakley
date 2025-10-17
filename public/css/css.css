@@ -258,16 +258,6 @@
   font-family: 'Neue Plak Text', Arial, sans-serif;
 }
 
-/* CLASSES DE PESO */
-.ultra-light { font-weight: 200; }
-.thin { font-weight: 250; }
-.light { font-weight: 300; }
-.regular { font-weight: 400; }
-.semi-bold { font-weight: 600; }
-.bold { font-weight: 700; }
-.black { font-weight: 900; }
-.extra-black { font-weight: 950; }
-
 /* EXEMPLOS DE USO */
 .title {
   font-family: 'Neue Plak Extended', Arial, sans-serif;
@@ -290,6 +280,16 @@
   font-style: italic;
 }
 
+
+/* CLASSES DE PESO */
+.ultra-light { font-weight: 200; }
+.thin { font-weight: 250; }
+.light { font-weight: 300; }
+.regular { font-weight: 400; }
+.semi-bold { font-weight: 600; }
+.bold { font-weight: 700; }
+.black { font-weight: 900; }
+.extra-black { font-weight: 950; }
 
 
 html {

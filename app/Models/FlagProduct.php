@@ -19,11 +19,13 @@ class FlagProduct extends Model
         'flag_color_text_bg',
         'icon',
         'alinhamento',
+        'orderfilterflag',
         'status'
     ];
 
     protected $casts = [
-        'status' => 'boolean'
+        'status' => 'boolean',
+        'orderfilterflag' => 'integer'
     ];
 
     public function colors()
