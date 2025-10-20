@@ -36,10 +36,10 @@
 
                                 <button type="button" name="produtos" id="btnSelecaoProdutos"
                                     class="flex items-center space-x-2 px-3 py-[6px] bg-white text-black rounded-full hover:opacity-80 transition-colors border border-black">
-                                    <span class="text-base">Selecionado(s):</span>
+                                    <span class="text-base">Selecionados:</span>
 
                                     <span id="btnContadorSelecionados"
-                                        class="text-xs text-black opacity-50 underline ml-2">(Editar)</span>
+                                        class="text-[14px] text-black opacity-50 underline ml-2">(Editar)</span>
                                 </button>
                                 <input type="hidden" name="produtos" id="produtosSelecaoHidden" value="todos">
 
