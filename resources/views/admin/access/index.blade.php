@@ -42,12 +42,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">E-mail
                         </th>
-                        <!--<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Setor
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telefone
-                            </th>-->
+
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Criado em
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Situação
@@ -59,11 +54,20 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse ($requests as $request)
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $request->name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $request->name }}
+
+                                <p class="text-xs text-gray-500">
+                                    Empresa: {{ $request->company }}
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    Setor: {{ $request->setor }}
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    Telefone: {{ $request->phone }}
+                                </p>
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $request->email }}</td>
-                            <!--<td class="px-6 py-4 whitespace-nowrap">{{ $request->company }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $request->setor }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $request->phone }}</td>-->
+
                             <td class="px-6 py-4 whitespace-nowrap">{{ $request->created_at?->format('d/m/Y H:i') }}</td>
                             @php
                                 $approved = !is_null($request->approved_at);
