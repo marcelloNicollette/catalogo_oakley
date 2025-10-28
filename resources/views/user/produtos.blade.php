@@ -345,7 +345,7 @@
                                 <div class="filter-options classification-options" id="classificationOptions">
                                     @foreach ($flags as $flag)
                                         <div class="filter-option" data-type="classification"
-                                            data-value="{{ $flag->id }}" style="width: ">
+                                            data-value="{{ $flag->id }}">
                                             {{ $flag->flag_title }}</div>
                                     @endforeach
                                 </div>
@@ -1173,6 +1173,7 @@
 
                 if (totalSelected > 0) {
                     if (totalSelected == 1) {
+                        filterText.textContent = 'Filtrar:';
                         filterCount.textContent = totalSelected + ' seleção';
                     } else {
                         filterCount.textContent = totalSelected + ' seleções';

@@ -566,7 +566,7 @@ html {
             width: 230px;
             margin-top: 5px;
             overflow: auto;
-    max-height: 100vh;
+    max-height: 75vh;
         }
 
         .filter-dropdown.show {

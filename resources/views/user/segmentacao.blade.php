@@ -33,11 +33,11 @@
             }
         }
 
-        /* Estilos para altura 100% */
+        /* Desktop - altura total menos header/footer */
         .full-height-container {
-            height: 100vh;
-            min-height: 100vh;
-            padding-bottom: 75px;
+            height: calc(100vh - 80px);
+            /* Desconta header de 80px */
+            min-height: calc(100vh - 80px);
         }
 
         .grid-item {
@@ -78,7 +78,7 @@
         }
     </style>
 
-    <div id="produtos" class="grid grid-cols-1 lg:grid-cols-2 gap-2 full-height-container">
+    <div id="produtos" class="grid grid-cols-1 lg:grid-cols-2 gap-2 full-height-container p-[10px]">
         @foreach ($segmentacao as $segmento)
             <div class="relative group cursor-pointer rounded-lg grid-item">
                 @if ($segmento->collections->count() > 0)
