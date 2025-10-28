@@ -1,3 +1,22 @@
+<style>
+    /* Radio Button */
+    .radio-custom {
+        appearance: none;
+        -webkit-appearance: none;
+    }
+
+    .radio-custom:checked::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 10px;
+        height: 10px;
+        background-color: #1f2937;
+        border-radius: 50%;
+    }
+</style>
 <!-- Modal de Histórico -->
 <div id="gerarArquivoModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="bg-white rounded-lg max-w-xl w-full p-7">
@@ -62,12 +81,16 @@
                         <label class="block  text-xs font-normal text-black mb-2">Cores dos produtos</label>
                         <div class="">
                             <label class="inline-flex items-center">
-                                <input type="radio" name="grupo_opcoes" class="form-radio" value="agrupado">
+                                <input type="radio" name="grupo_opcoes"
+                                    class="form-radio radio-custom w-4 h-4 rounded-full border border-black bg-white checked:bg-white checked:border-black focus:ring-0 cursor-pointer relative"
+                                    value="agrupado">
                                 <span class="ml-2 text-sm">Agrupadas</span>
                             </label><br>
 
                             <label class="inline-flex items-center">
-                                <input type="radio" name="grupo_opcoes" class="form-radio" value="separado" checked>
+                                <input type="radio" name="grupo_opcoes"
+                                    class="form-radio radio-custom w-4 h-4 rounded-full border border-black bg-white checked:bg-white checked:border-black focus:ring-0 cursor-pointer relative"
+                                    value="separado" checked>
                                 <span class="ml-2 text-sm">Separadas </span><span class="text-xs text-black ml-2">*Cada
                                     cor de produto será exibida em página individual no PDF.</span>
                             </label>
@@ -80,7 +103,9 @@
                         <label class="block  text-xs font-normal text-black mb-2">Opções</label>
                         <div class="flex flex-wrap gap-3">
                             <label class="inline-flex items-center">
-                                <input type="checkbox" name="opcoes[]" class="form-checkbox" value="remover_preco">
+                                <input type="checkbox" name="opcoes[]"
+                                    class="form-checkbox w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative"
+                                    value="remover_preco">
                                 <span class="ml-2 text-sm">Remover Preço</span>
                             </label>
                             <!--<label class="inline-flex items-center">
@@ -96,7 +121,8 @@
                                 <span class="ml-2 text-sm">Remover Tag Exclusivo</span>
                             </label>-->
                             <label class="inline-flex items-center">
-                                <input type="checkbox" name="opcoes[]" class="form-checkbox"
+                                <input type="checkbox" name="opcoes[]"
+                                    class="form-checkbox w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative"
                                     value="remover_capa_retranca">
                                 <span class="ml-2 text-sm">Remover Capa e Retrancas</span>
                             </label>
@@ -107,15 +133,21 @@
                         <label class="block text-xs font-normal text-black mb-2">Formato</label>
                         <div class="flex flex-wrap gap-3">
                             <label class="inline-flex items-center">
-                                <input type="radio" name="formato" class="form-radio" value="a4" checked>
+                                <input type="radio" name="formato"
+                                    class="form-radio radio-custom w-4 h-4 rounded-full border border-black bg-white checked:bg-white checked:border-black focus:ring-0 cursor-pointer relative"
+                                    value="a4" checked>
                                 <span class="ml-2 text-sm">Impressão A4</span>
                             </label>
                             <label class="inline-flex items-center">
-                                <input disabled type="radio" name="formato" class="form-radio" value="16_9">
+                                <input disabled type="radio" name="formato"
+                                    class="form-radio radio-custom w-4 h-4 rounded-full border border-black bg-white checked:bg-white checked:border-black focus:ring-0 cursor-pointer relative"
+                                    value="16_9">
                                 <span class="ml-2 text-sm opacity-50">Apresentação 16:9</span>
                             </label>
                             <label class="inline-flex items-center">
-                                <input disabled type="radio" name="formato" class="form-radio" value="planilha">
+                                <input disabled type="radio" name="formato"
+                                    class="form-radio radio-custom w-4 h-4 rounded-full border border-black bg-white checked:bg-white checked:border-black focus:ring-0 cursor-pointer relative"
+                                    value="planilha">
                                 <span class="ml-2 text-sm opacity-50">Planilha</span>
                             </label>
                         </div>
@@ -188,7 +220,8 @@
         <div class="flex justify-between items-center mb-4">
             <div class="flex items-center gap-4">
                 <label class="flex items-center">
-                    <input type="checkbox" id="selecionarTodos" name="selecao_tipo" class="mr-2 text-base">
+                    <input type="checkbox" id="selecionarTodos" name="selecao_tipo"
+                        class="w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3">
                     <span>Selecionar todos</span>
                 </label>
                 <span class="text-xs opacity-50">Selecionados: <span id="contadorSelecionados">0</span></span>
@@ -451,12 +484,12 @@
 
         produtosList.innerHTML = produtos.map(produto => `
             <div class="py-1 px-2 grid grid-cols-12 gap-4 items-center hover:bg-gray-50 transition-colors produto-row" data-produto-nome="${produto.title.toLowerCase()}" data-produto-codigo="${produto.codigo.toLowerCase()}">
-                <div class="col-span-1">
+                <div class="col-span-1 text-center">
                     <input type="checkbox" 
                            id="produto_${produto.id}" 
                            value="${produto.id}" 
                            data-cor="${produto.cor}"
-                           class="produto-checkbox" 
+                           class="produto-checkbox w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative " 
                            ${(Array.isArray(produtosSelecionados) && produtosSelecionados.some(p => p.id === produto.id && p.cor === produto.cor)) || produto.selected ? 'checked' : ''}>
                 </div>
                 <div class="col-span-2 text-sm ">${produto.codigo}</div>

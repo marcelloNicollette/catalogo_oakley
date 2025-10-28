@@ -9,7 +9,7 @@
 
         @media (min-width: 2566px) {
             .height-ultra {
-                height: 88vh;
+                height: 87vh;
             }
 
             .colecao-card {
@@ -42,12 +42,12 @@
         <section class="flex-1 flex flex-col overflow-hidden">
 
             <!-- Filtros superiores -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 px-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-5 pb-3 px-4">
                 <!-- Esquerda: Coleção e Categoria -->
                 <div class="flex gap-2">
 
                     <div class="select-container">
-                        <div class="select-button" id="selectButton">
+                        <div class="select-button p-5" id="selectButton">
                             <span id="selectedText">Selecione uma coleção</span>
                             <div class="" id="arrow">
                                 <div class="pt-1" id="arrow">
@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="options" id="options">
+                        <div class="options min-w-[260px] p-5" id="options">
                             @foreach ($colecoes as $colecao)
                                 <div class="option text-[18px]" data-value="{{ $colecao->slug }}">
                                     {{ $colecao->codigo_colecao }} -
@@ -147,7 +147,7 @@
             </div>
 
             <!-- Grid de Coleções -->
-            <div class="bg-[#000000] h-[80vh] ml-4 p-2 rounded-lg height-ultra overflow-auto">
+            <div class="bg-[#000000] h-[79vh] ml-4 p-2 rounded-lg height-ultra overflow-auto">
                 <div id="colecoes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3"
                     style="border-radius: 10px 0 0 0;">
                     <!-- Cards serão renderizados via JavaScript -->

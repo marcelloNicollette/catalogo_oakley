@@ -144,15 +144,18 @@
 
         <!-- Seção da imagem abaixo -->
         <div class="flex-1">
-            <img src="./images/bg-geral.jpg" alt="Corredores" class="w-full h-full object-cover" />
+            <img src="{{ isset($imgLogin) && $imgLogin?->mobile_url ? $imgLogin->mobile_url : asset('images/bg-geral.jpg') }}"
+                alt="Corredores" class="w-full h-full object-cover" />
         </div>
     </div>
 
     <!-- Layout Desktop: Lado a lado -->
     <div class="hidden lg:flex flex-row gap-2 min-h-screen p-2 h-[100vh]">
+
         <!-- Lado esquerdo (3/4 no desktop) -->
         <div class="lg:w-[60%] 2xl:w-[70%] 3xl:w-[80%] w-full">
-            <img src="./images/bg-geral.jpg" alt="Corredores" class="w-full h-full object-cover rounded-xl" />
+            <img src="{{ isset($imgLogin) && $imgLogin?->desktop_url ? $imgLogin->desktop_url : asset('images/bg-geral.jpg') }}"
+                alt="Corredores" class="w-full h-full object-cover rounded-xl" />
         </div>
 
         <!-- Lado direito (formulário) -->

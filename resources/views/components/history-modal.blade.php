@@ -13,7 +13,7 @@
             <input type="text" placeholder="Buscar" id="searchHistoryInput"
                 class="input-estilizado bg-transparent border-0 focus:outline-none focus:ring-0 p-1" />
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto h-[40vh]">
             <table class="min-w-full bg-white" id="historyTable">
                 <thead>
                     <tr>
@@ -26,8 +26,14 @@
                     @foreach ($exportUsers as $exportUser)
                         <tr class="history-row">
                             <td class="py-[10px] px-4 text-sm">{{ $exportUser->collection_history_name }}</td>
-                            <td class="py-[10px] px-4 text-sm">{{ $exportUser->created_at }}</td>
-                            <td class="py-[10px] px-4 text-sm">Baixar</td>
+                            <td class="py-[10px] px-4 text-sm">{{ $exportUser->created_at->format('d/m/Y H:i') }}</td>
+                            <td class="py-[10px] px-4 text-sm">
+                                <a href="{{ route('exports.regenerate', $exportUser->id) }}"
+                                    class="text-[#808080] hover:text-blue-800 underline"
+                                    title="Baixar {{ $exportUser->filename }}">
+                                    Baixar
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -35,12 +41,12 @@
         </div>
 
         <!-- Footer com botões -->
-        <div class="border-t border-gray-200 pt-4 mt-4">
+        <div class="pt-4 mt-4">
             <div class="flex justify-center gap-4">
 
                 <button onclick="document.getElementById('historyModal').classList.add('hidden')" type="button"
                     id="voltarSelecao"
-                    class="flex items-center border border-black rounded-full px-6 py-3 text-sm bg-gray-100 hover:bg-gray-200 transition">
+                    class="flex items-center border border-black rounded-full px-6 py-3 text-sm hover:bg-gray-200 transition">
                     Voltar
                     <img src="/images/icon-voltar.png" alt="" class="ml-2 w-4 h-4" />
                 </button>

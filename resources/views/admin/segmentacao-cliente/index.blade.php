@@ -44,6 +44,42 @@
         </div>
     @endif
 
+    <!-- Filtros (3 colunas) -->
+    <div class="bg-white border border-gray-200 rounded-lg p-4 mb-4">
+        <div class="grid grid-cols-4 md:grid-cols-4 gap-4">
+            <div>
+                <label for="search" class="block text-sm font-medium text-gray-700">Busca</label>
+                <input type="text" id="search" placeholder="Nome, slug ou descrição"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            </div>
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                <select id="status"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    <option value="">Todos</option>
+                    <option value="ativo">Ativo</option>
+                    <option value="inativo">Inativo</option>
+                </select>
+            </div>
+            <div>
+                <label for="usuarios" class="block text-sm font-medium text-gray-700">Usuários Vinculados</label>
+                <select id="usuarios"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    <option value="">Todos</option>
+                    <option value="com">Com usuários</option>
+                    <option value="sem">Sem usuários</option>
+                </select>
+            </div>
+            <div class="mt-6">
+                <button type="button" id="clearFilters"
+                    class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-md shadow-sm">
+                    Limpar
+                </button>
+            </div>
+        </div>
+
+    </div>
+
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900">
             <div class="overflow-x-auto">
@@ -67,16 +103,24 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody id="segmentacoesTableBody" class="bg-white divide-y divide-gray-200">
                         @forelse ($segmentacoesCliente as $segmentacaoCliente)
-                            <tr class="user-card">
+                            <tr class="user-card"
+                                data-name="{{ \Illuminate\Support\Str::lower($segmentacaoCliente->nome) }}"
+                                data-slug="{{ \Illuminate\Support\Str::lower($segmentacaoCliente->slug) }}"
+                                data-descricao="{{ \Illuminate\Support\Str::lower($segmentacaoCliente->descricao ?? '') }}"
+                                data-status="{{ $segmentacaoCliente->active ? 'ativo' : 'inativo' }}"
+                                data-users-count="{{ $segmentacaoCliente->users->count() }}">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0 h-10 w-10">
                                             <div
                                                 class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                                                    </path>
                                                 </svg>
                                             </div>
                                         </div>
@@ -91,15 +135,21 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ $segmentacaoCliente->descricao ?? 'Sem descrição' }}
+                                    @if ($segmentacaoCliente->descricao)
+                                        {{ \Illuminate\Support\Str::limit($segmentacaoCliente->descricao ?? '', 20) }}
+                                    @else
+                                        Sem descrição
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($segmentacaoCliente->active)
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    @if ($segmentacaoCliente->active)
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                             Ativo
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                             Inativo
                                         </span>
                                     @endif
@@ -115,7 +165,8 @@
                                             class="text-indigo-600 hover:text-indigo-900">Ver</a>
                                         <a href="{{ route('admin.segmentacao-cliente.edit', $segmentacaoCliente) }}"
                                             class="text-blue-600 hover:text-blue-900">Editar</a>
-                                        <form action="{{ route('admin.segmentacao-cliente.destroy', $segmentacaoCliente) }}"
+                                        <form
+                                            action="{{ route('admin.segmentacao-cliente.destroy', $segmentacaoCliente) }}"
                                             method="POST" class="inline"
                                             onsubmit="return confirm('Tem certeza que deseja excluir esta segmentação?')">
                                             @csrf
@@ -138,12 +189,83 @@
                 </table>
             </div>
 
-            <!-- Paginação -->
-            @if($segmentacoesCliente->hasPages())
-                <div class="mt-6">
-                    {{ $segmentacoesCliente->links() }}
-                </div>
-            @endif
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        (function() {
+            const searchInput = document.getElementById('search');
+            const statusSelect = document.getElementById('status');
+            const usuariosSelect = document.getElementById('usuarios');
+            const clearBtn = document.getElementById('clearFilters');
+            const tbody = document.getElementById('segmentacoesTableBody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            const paginationContainer = document.getElementById('paginationContainer');
+
+            const applyFilters = () => {
+                const search = (searchInput.value || '').toLowerCase().trim();
+                const status = (statusSelect.value || '').trim();
+                const usuarios = (usuariosSelect.value || '').trim();
+
+                let visibleCount = 0;
+
+                rows.forEach(row => {
+                    const name = (row.getAttribute('data-name') || '').toLowerCase();
+                    const slug = (row.getAttribute('data-slug') || '').toLowerCase();
+                    const descricao = (row.getAttribute('data-descricao') || '').toLowerCase();
+                    const rowStatus = (row.getAttribute('data-status') || '').trim();
+                    const usersCount = parseInt(row.getAttribute('data-users-count') || '0', 10);
+
+                    let matches = true;
+
+                    // Busca por nome/slug/descrição
+                    if (search) {
+                        const haystack = name + ' ' + slug + ' ' + descricao;
+                        if (!haystack.includes(search)) {
+                            matches = false;
+                        }
+                    }
+
+                    // Filtro de status
+                    if (matches && status) {
+                        if (rowStatus !== status) {
+                            matches = false;
+                        }
+                    }
+
+                    // Filtro por usuários vinculados
+                    if (matches && usuarios) {
+                        if (usuarios === 'com' && usersCount === 0) {
+                            matches = false;
+                        } else if (usuarios === 'sem' && usersCount > 0) {
+                            matches = false;
+                        }
+                    }
+
+                    row.style.display = matches ? '' : 'none';
+                    if (matches) visibleCount++;
+                });
+
+                // Oculta paginação quando filtros ativos (qualquer valor diferente de vazio)
+                const anyFilterActive = !!(search || status || usuarios);
+                if (paginationContainer) {
+                    paginationContainer.style.display = anyFilterActive ? 'none' : '';
+                }
+            };
+
+            const clearFilters = () => {
+                searchInput.value = '';
+                statusSelect.value = '';
+                usuariosSelect.value = '';
+                applyFilters();
+            };
+
+            searchInput.addEventListener('input', applyFilters);
+            statusSelect.addEventListener('change', applyFilters);
+            usuariosSelect.addEventListener('change', applyFilters);
+            clearBtn.addEventListener('click', clearFilters);
+        })();
+    </script>
+@endpush

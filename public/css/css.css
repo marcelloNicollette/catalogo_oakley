@@ -314,33 +314,31 @@ html {
 
 .select-container {
             position: relative;
-            width: 225px;
             margin: 0 auto;
         }
 
         .select-button {
             width: 100%;
-            padding: 15px 20px;
+            padding: 16px 8px;
             background: #E7E7E7;
             border: 1px solid #E7E7E7;
             border-radius: 10px;
             font-size: 16px;
-            color: #333;
+            color: #000;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
             transition: border-color 0.2s ease;
+            gap: 10px;
+            line-height: 16px;
+            letter-spacing: -.4px;
         }
 
-        .select-button:hover {
+        .select-button:hover, .select-button.active {
             border-color: #000;
         }
-
-        .select-button.active {
-            border-color: #000;
-            border-radius: 10px;
-        }
+        
 
         .arrow {
             width: 0;
@@ -355,19 +353,36 @@ html {
             transform: rotate(180deg);
         }
 
+
+        #colecaoOptions.options {
+            position: absolute;
+    top: 4rem;
+    left: 5px;
+    right: 0;
+    background: white;
+    border: 1px solid #FFFFFF;
+    border-top: none;
+    border-radius: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    max-width: none;
+        }
+
         .options {
             position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #FFFFFF;
-            border-top: none;
-            border-radius: 10px;
-            max-height: 300px;
-            overflow-y: auto;
-            z-index: 1000;
-            display: none;
+    top: 4rem;
+    left: 5px;
+    right: 0;
+    background: white;
+    border: 1px solid #FFFFFF;
+    border-top: none;
+    border-radius: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    max-width: fit-content;
         }
 
         .options.show {
@@ -375,10 +390,11 @@ html {
         }
 
         .option {
-            padding: 6px 16px;
-            font-size: 14px;
-            color: #999;
+            padding: 0px 16px;
+            font-size: 18px;
+            color: #000;
             cursor: pointer;
+            
             transition: all 0.2s ease;
         }
 
@@ -398,16 +414,27 @@ html {
         }
 
         .produtos-page .option.selected {
-            background-color: #f8f9fa;
+            /*background-color: #f8f9fa;*/
             color: #000;
             font-weight: 500;
+            
         }
+
+        .produtos-page .category-option {
+            flex-direction: column;
+    align-items: baseline;
+            
+        }
+
+        
 
         .produtos-page .option-content {
             flex: 1;
-            margin: 0 8px;
+            margin: 0 20px;
         }
-
+        /*.produtos-page .option.selected .option-content {
+            margin: 0 3px;
+        }*/
         .produtos-page .check-icon {
             color: #28a745;
             font-weight: bold;
@@ -487,7 +514,7 @@ html {
         }
 
         .filter-button {
-            padding: 6.5px 20px;
+            padding: 10px 20px;
             background: white;
             border: 1px solid #FFF;
             border-radius: 10px;
@@ -618,7 +645,7 @@ html {
 
 
         .sort-button {
-            padding: 6.5px 20px;
+            padding: 10px 20px;
             background: white;
             border: 1px solid #FFF;
             border-radius: 10px;
@@ -629,7 +656,7 @@ html {
             justify-content: space-between;
             align-items: center;
             transition: all 0.2s ease;
-            
+            min-width: 230px;
         }
 
         .sort-button:hover {
@@ -720,6 +747,58 @@ html {
             color: white;
         }
 
+
+
+            #groupColors {
+                appearance: none;
+                -webkit-appearance: none;
+            }
+
+            #groupColors:checked::after {
+                content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M2.86801 7.85661C3.13689 7.85661 3.36505 7.71755 3.52795 7.44812L5.38972 4.32373L7.25149 1.19935C7.34925 1.02553 7.44708 0.834327 7.44708 0.643129C7.44708 0.252041 7.12113 0 6.78705 0C6.57527 0 6.37155 0.139055 6.21672 0.391096L2.83542 6.17927L1.23032 3.96308C1.03477 3.68497 0.855515 3.6154 0.63553 3.6154C0.277025 3.6154 0 3.91962 0 4.302C0 4.49319 0.0733306 4.6757 0.187404 4.84086L2.17545 7.44812C2.37915 7.73491 2.59914 7.85661 2.86801 7.85661Z" fill="black"/></svg>');
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                color: #1f2937;
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+            input[type="checkbox"] {
+                appearance: none;
+                -webkit-appearance: none;
+            }
+
+            input[type="checkbox"]:checked::after {
+                content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M2.86801 7.85661C3.13689 7.85661 3.36505 7.71755 3.52795 7.44812L5.38972 4.32373L7.25149 1.19935C7.34925 1.02553 7.44708 0.834327 7.44708 0.643129C7.44708 0.252041 7.12113 0 6.78705 0C6.57527 0 6.37155 0.139055 6.21672 0.391096L2.83542 6.17927L1.23032 3.96308C1.03477 3.68497 0.855515 3.6154 0.63553 3.6154C0.277025 3.6154 0 3.91962 0 4.302C0 4.49319 0.0733306 4.6757 0.187404 4.84086L2.17545 7.44812C2.37915 7.73491 2.59914 7.85661 2.86801 7.85661Z" fill="black"/></svg>');
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                color: #1f2937;
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+
+/* Radio Button */
+.radio-custom {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.radio-custom:checked::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background-color: #1f2937;
+  border-radius: 50%;
+}
 
   .badge {
     display: inline-block;

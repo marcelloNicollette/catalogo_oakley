@@ -1,4 +1,4 @@
-<x-layout-user title="Under Armour">
+<x-layout-user title="Under Armour - Segmentação">
     <style>
         .carousel-container {
             position: relative;
@@ -10,28 +10,28 @@
 
         @media (min-width: 1280px) {
             .carousel-container {
-                height: 89vh;
+                height: 85vh;
             }
         }
 
-
-        @media (min-width: 1380px) {
+        @media (min-width: 1366px) {
             .carousel-container {
-                height: 90vh;
+                height: 87vh;
             }
         }
 
         @media (min-width: 2566px) {
             .carousel-container {
-                height: 94vh;
+                height: 92vh;
             }
         }
 
         @media (min-width: 3000px) {
             .carousel-container {
-                height: 96vh;
+                height: 94vh;
             }
         }
+
 
         .carousel-wrapper {
             display: flex;
@@ -52,6 +52,18 @@
             justify-content: center;
         }
 
+
+        /* Link que cobre todo o slide */
+        .slide-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            cursor: pointer;
+        }
+
         .slide-overlay {
             position: absolute;
             top: 0;
@@ -69,6 +81,8 @@
             position: relative;
             max-width: 800px;
             padding: 0 20px;
+            pointer-events: none;
+            /* Permite que o clique passe através do conteúdo para o link */
         }
 
         .slide-title {
@@ -192,7 +206,6 @@
             transform: scale(1.1);
         }
 
-
         /* Slides Background Images - Geradas dinamicamente */
         @foreach ($banners as $index => $banner)
             .slide-{{ $index + 1 }} {
@@ -253,18 +266,22 @@
             }
         }
     </style>
-    <main class="lg:flex flex-1 gap-3">
+    <main class="lg:flex flex-1">
         <!-- Menu lateral -->
         <x-sidebar activeItem="inicio" />
 
         <!-- Conteúdo principal -->
-        <section class="flex-1 flex flex-col overflow-hidden">
+        <section class="flex-1 flex flex-col overflow-hidden pt-5">
 
             <div class="carousel-container">
                 <div class="carousel-wrapper" id="carouselWrapper">
                     @foreach ($banners as $index => $banner)
                         <div class="carousel-slide slide-{{ $index + 1 }}">
-
+                            @if ($banner->link)
+                                <a href="{{ $banner->link }}" target="_blank" rel="noopener noreferrer" class="slide-link"
+                                    aria-label="Link do banner {{ $index + 1 }}">
+                                </a>
+                            @endif
                         </div>
                     @endforeach
                 </div>
@@ -285,12 +302,10 @@
                     </svg>
                 </div>
 
-
             </div>
 
         </section>
     </main>
-
 
     @push('scripts')
         <script>

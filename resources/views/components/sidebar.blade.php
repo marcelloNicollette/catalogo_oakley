@@ -1,7 +1,7 @@
 @props(['activeItem' => null])
 
 <!-- Menu lateral -->
-<aside class="w-full lg:w-64 flex flex-col items-start py-6 space-y-3 pl-3">
+<aside class="w-full lg:w-64 flex flex-col items-start p-5 space-y-3">
     <a href="{{ route('user.slug', request()->route('slug')) }}"
         class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $activeItem === 'inicio' ? 'bg-[#E7E7E7]' : '' }}">
         <img src="/images/icones/inicio.svg" class="float-left pr-[0.5rem]" alt="Início" />

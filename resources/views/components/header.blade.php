@@ -2,7 +2,7 @@
 
 @if ($type === '')
     <header class="flex items-center justify-between gap-4 p-5">
-        <div class="flex items-center">
+        <div class="flex items-center space-x-2 py-2">
             <a href="{{ route('user.segmentacao') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="278" height="19" viewBox="0 0 278 19" fill="none">
                     <path
@@ -129,7 +129,7 @@
                                     }
                                 }
                             }
-                        }" class="relative pl-[10px] pr-[20px]">
+                        }" class="relative pl-[10px]">
                             <!-- Botão CTA -->
                             <button @click="showModal = true"
                                 class="flex items-center space-x-2 px-3 py-[6px] bg-white text-black  rounded-full hover:opacity-80 transition-colors border border-black">
@@ -261,9 +261,9 @@
 
             @if ($user)
                 @if (count($parts) != 4 && count($parts) != 5)
-                    <button class="text-gray-700 font-normal hover:text-gray-400">
+                    <a href="/user/conta" rel="noopener noreferrer" class="text-gray-700 font-normal pl-[20px]">
                         {{ $user->name ?? 'Usuário' }}
-                    </button>
+                    </a>
                     <a href="/user/conta" class="px-5" rel="noopener noreferrer">
                         <img src="/images/icones/user.svg" alt="User" />
                     </a>
@@ -276,11 +276,13 @@
                         </button>
                     </form>
                 @else
-                    <a href="javascript: history.go(-1);"
-                        class="flex items-center border border-black rounded-full px-3 py-2 text-md bg-gray-100 hover:bg-gray-200 transition text-[14px]">
-                        Voltar
-                        <img src="/images/icon-voltar.png" alt="" class="px-1" />
-                    </a>
+                    <div class="pl-4">
+                        <a href="javascript: history.go(-1);"
+                            class="flex items-center border border-black rounded-full px-3 py-2 text-md bg-gray-100 hover:bg-gray-200 transition text-[14px]">
+                            Voltar
+                            <img src="/images/icon-voltar.png" alt="" class="px-1" />
+                        </a>
+                    </div>
                 @endif
             @else
                 <a href="{{ route('login') }}" class="flex items-center space-x-2">

@@ -380,7 +380,7 @@
                             <div style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">Descrição
                             </div>
                             <p style="font-size: 13px; line-height: 1.3; color: #000; margin: 0;">
-                                {{ $collection->product->description }}
+                                {{ \Illuminate\Support\Str::limit($collection->product->description, 15, '...') }}
                             </p>
                         </div>
 

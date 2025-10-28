@@ -46,7 +46,7 @@
     <x-header :user="auth()->user()" />
 
     <!-- Conteúdo principal -->
-    <main class="w-[100vw] h-[100vh] overflow-hidden px-2 pb-2 pt-0">
+    <main class="w-[100vw] lg:h-[100vh] overflow-hidden pr-[10px]">
         {{ $slot }}
     </main>
 

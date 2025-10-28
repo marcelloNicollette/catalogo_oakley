@@ -31,15 +31,19 @@ use App\Http\Controllers\User\frontendController;
 use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\AccessRequestController;
 use App\Models\Collection;
+use App\Models\ImgLogin;
+use App\Http\Controllers\Admin\ImgLoginController;
+
 
 
 
 Route::get('/', function () {
-    return view('acessos');
+    return view('acessos', ['imgLogin' => ImgLogin::latest()->first()]);
 });
 Route::get('/acessos', function () {
-    return view('acessos');
+    return view('acessos', ['imgLogin' => ImgLogin::latest()->first()]);
 });
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -299,6 +303,17 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('admin.clear-batches');
     Route::get('/admin/batch-status', [AdminGoogleSheetController::class, 'getBatchStatus'])
         ->name('admin.batch-status');
+
+
+    Route::resource('/admin/img-login', ImgLoginController::class)
+        ->names([
+            'index' => 'admin.img-login.index',
+            'create' => 'admin.img-login.create',
+            'store' => 'admin.img-login.store',
+            'edit' => 'admin.img-login.edit',
+            'update' => 'admin.img-login.update',
+            'destroy' => 'admin.img-login.destroy'
+        ]);
 });
 
 Route::middleware(['auth', 'user'])->group(function () {

@@ -16,13 +16,13 @@
             </div>
 
             <button id="sendSuggestion"
-                class="w-full bg-black hover:bg-gray-800 text-white font-normal py-3 px-4 rounded-full transition-colors text-base">
+                class="w-full bg-black  text-white font-normal py-3 px-4 rounded-full transition-colors text-base">
                 Enviar sugestão
             </button>
 
             <div class="flex justify-center">
                 <button
-                    class="flex items-center border border-black rounded-full px-5 py-2 text-md bg-white hover:bg-gray-200 transition text-[14px]"
+                    class="flex items-center border border-black rounded-full px-5 py-2 text-md bg-white transition text-[14px]"
                     id="closeSuggestionModal">
                     Voltar
                     <img src="/images/icon-voltar.png" alt="" class="px-1" />
@@ -67,98 +67,100 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const suggestionModal = document.getElementById('suggestionModal');
-    const suggestionForm = document.getElementById('suggestionForm');
-    const suggestionSuccess = document.getElementById('suggestionSuccess');
-    const suggestionText = document.getElementById('suggestionText');
-    const sendSuggestionBtn = document.getElementById('sendSuggestion');
-    const closeSuggestionModal = document.getElementById('closeSuggestionModal');
-    const closeSuccessModal = document.getElementById('closeSuccessModal');
+    document.addEventListener('DOMContentLoaded', function() {
+        const suggestionModal = document.getElementById('suggestionModal');
+        const suggestionForm = document.getElementById('suggestionForm');
+        const suggestionSuccess = document.getElementById('suggestionSuccess');
+        const suggestionText = document.getElementById('suggestionText');
+        const sendSuggestionBtn = document.getElementById('sendSuggestion');
+        const closeSuggestionModal = document.getElementById('closeSuggestionModal');
+        const closeSuccessModal = document.getElementById('closeSuccessModal');
 
-    // Função para fechar o modal
-    function closeModal() {
-        suggestionModal.classList.add('hidden');
-        suggestionForm.classList.remove('hidden');
-        suggestionSuccess.classList.add('hidden');
-        suggestionText.value = '';
-        sendSuggestionBtn.disabled = false;
-        sendSuggestionBtn.textContent = 'Enviar sugestão';
-    }
-
-    // Event listeners para fechar modal
-    closeSuggestionModal.addEventListener('click', closeModal);
-    closeSuccessModal.addEventListener('click', closeModal);
-
-    // Fechar modal clicando fora dele
-    suggestionModal.addEventListener('click', function(e) {
-        if (e.target === suggestionModal) {
-            closeModal();
-        }
-    });
-
-    // Enviar sugestão
-    sendSuggestionBtn.addEventListener('click', function() {
-        const suggestionTextValue = suggestionText.value.trim();
-        
-        // Validação básica
-        if (suggestionTextValue.length < 10) {
-            alert('A descrição deve ter pelo menos 10 caracteres.');
-            return;
-        }
-
-        if (suggestionTextValue.length > 1000) {
-            alert('A descrição não pode ter mais de 1000 caracteres.');
-            return;
-        }
-
-        // Desabilitar botão e mostrar loading
-        sendSuggestionBtn.disabled = true;
-        sendSuggestionBtn.textContent = 'Enviando...';
-
-        // Preparar dados para envio
-          const formData = new FormData();
-          formData.append('suggestion_text', suggestionTextValue);
-          formData.append('current_url', window.location.href);
-          
-          // Verificar se a meta tag CSRF existe
-          const csrfToken = document.querySelector('meta[name="csrf-token"]');
-          if (csrfToken) {
-              formData.append('_token', csrfToken.getAttribute('content'));
-          } else {
-              alert('Erro de segurança: Token CSRF não encontrado. Recarregue a página e tente novamente.');
-              sendSuggestionBtn.disabled = false;
-              sendSuggestionBtn.textContent = 'Enviar sugestão';
-              return;
-          }
-
-        // Enviar via fetch
-        fetch('{{ route("suggestions.store") }}', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Mostrar tela de sucesso
-                suggestionForm.classList.add('hidden');
-                suggestionSuccess.classList.remove('hidden');
-            } else {
-                // Mostrar erro
-                alert(data.message || 'Erro ao enviar sugestão. Tente novamente.');
-                sendSuggestionBtn.disabled = false;
-                sendSuggestionBtn.textContent = 'Enviar sugestão';
-            }
-        })
-        .catch(error => {
-            console.error('Erro:', error);
-            alert('Erro ao enviar sugestão. Verifique sua conexão e tente novamente.');
+        // Função para fechar o modal
+        function closeModal() {
+            suggestionModal.classList.add('hidden');
+            suggestionForm.classList.remove('hidden');
+            suggestionSuccess.classList.add('hidden');
+            suggestionText.value = '';
             sendSuggestionBtn.disabled = false;
             sendSuggestionBtn.textContent = 'Enviar sugestão';
+        }
+
+        // Event listeners para fechar modal
+        closeSuggestionModal.addEventListener('click', closeModal);
+        closeSuccessModal.addEventListener('click', closeModal);
+
+        // Fechar modal clicando fora dele
+        suggestionModal.addEventListener('click', function(e) {
+            if (e.target === suggestionModal) {
+                closeModal();
+            }
+        });
+
+        // Enviar sugestão
+        sendSuggestionBtn.addEventListener('click', function() {
+            const suggestionTextValue = suggestionText.value.trim();
+
+            // Validação básica
+            if (suggestionTextValue.length < 10) {
+                alert('A descrição deve ter pelo menos 10 caracteres.');
+                return;
+            }
+
+            if (suggestionTextValue.length > 1000) {
+                alert('A descrição não pode ter mais de 1000 caracteres.');
+                return;
+            }
+
+            // Desabilitar botão e mostrar loading
+            sendSuggestionBtn.disabled = true;
+            sendSuggestionBtn.textContent = 'Enviando...';
+
+            // Preparar dados para envio
+            const formData = new FormData();
+            formData.append('suggestion_text', suggestionTextValue);
+            formData.append('current_url', window.location.href);
+
+            // Verificar se a meta tag CSRF existe
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            if (csrfToken) {
+                formData.append('_token', csrfToken.getAttribute('content'));
+            } else {
+                alert(
+                    'Erro de segurança: Token CSRF não encontrado. Recarregue a página e tente novamente.'
+                    );
+                sendSuggestionBtn.disabled = false;
+                sendSuggestionBtn.textContent = 'Enviar sugestão';
+                return;
+            }
+
+            // Enviar via fetch
+            fetch('{{ route('suggestions.store') }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Mostrar tela de sucesso
+                        suggestionForm.classList.add('hidden');
+                        suggestionSuccess.classList.remove('hidden');
+                    } else {
+                        // Mostrar erro
+                        alert(data.message || 'Erro ao enviar sugestão. Tente novamente.');
+                        sendSuggestionBtn.disabled = false;
+                        sendSuggestionBtn.textContent = 'Enviar sugestão';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao enviar sugestão. Verifique sua conexão e tente novamente.');
+                    sendSuggestionBtn.disabled = false;
+                    sendSuggestionBtn.textContent = 'Enviar sugestão';
+                });
         });
     });
-});
 </script>

@@ -12,6 +12,34 @@
             padding: 1px 16px;
             border-bottom: 0;
         }
+
+
+
+        @media (min-width: 1280px) {
+            .height-ultra {
+                height: 75vh;
+            }
+        }
+
+
+        @media (min-width: 1366px) {
+            .height-ultra {
+                height: 78vh;
+            }
+        }
+
+        @media (min-width: 2566px) {
+            .height-ultra {
+                height: 87vh;
+            }
+        }
+
+        @media (min-width: 3000px) {
+            .height-ultra {
+                height: 91vh;
+            }
+
+        }
     </style>
     <main class="lg:flex flex-1 produtos-page">
         <!-- Menu lateral -->
@@ -24,7 +52,7 @@
                 <!-- Esquerda: Coleção e Categoria -->
                 <div class="flex gap-2">
                     <div class="select-container">
-                        <div class="select-button" id="categoriaSelectButton">
+                        <div class="select-button p-5" id="categoriaSelectButton">
                             <span id="categoriaSelectedText">
                                 Categoria
                             </span>
@@ -38,7 +66,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="options pt-3" id="categoriaOptions">
+                        <div class="options min-w-[300px] p-5" id="categoriaOptions" style="
+    left: 0;">
 
                             @foreach ($tecnologia_categoria as $item)
                                 <div class="option text-[18px] font-normal" data-categoria-id="{{ $item->id }}"
@@ -83,7 +112,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-[#E6E6E6] rounded-xl overflow-auto lg:h-[75vh] xl:h-[75vh] 2xl:h-[78vh] 3xl:h-[80vh]">
+            <div class="bg-[#E6E6E6] rounded-xl overflow-auto height-ultra">
                 <div class="my-custom-bg p-12 max-w-[999px] mx-auto pb-0">
                     @foreach ($tecnologias as $item)
                         <div class="mb-10" data-categoria-id="{{ $item->id }}">
@@ -107,7 +136,8 @@
                                         </div>
                                     @endforeach
                                 @else
-                                    <p class="text-xs max-w-[460px] pr-6">Não temos item cadastrado nessa categoria.</p>
+                                    <p class="text-xs max-w-[460px] pr-6">Não temos item cadastrado nessa categoria.
+                                    </p>
                                 @endif
                             </div>
                         </div>

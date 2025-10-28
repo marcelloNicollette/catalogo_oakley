@@ -114,7 +114,7 @@
 
                     <!-- Loader de Imagens (Skeleton 2x2 com spinner por célula, desktop e mobile) -->
                     <div id="imageLoader"
-                        class="bg-white rounded-lg shadow-sm border border-[#CBCBCB] overflow-hidden hidden">
+                        class="bg-white rounded-lg shadow-sm border border-[#CBCBCB] overflow-hidden hidden h-screen">
                         <!-- Mobile/Tablet: grade 2x2 -->
                         <div class="lg:hidden grid grid-cols-2 gap-0 p-0 h-full">
                             @for ($i = 0; $i < 4; $i++)
@@ -136,7 +136,7 @@
 
                     <!-- Estado vazio (sem imagens disponíveis) -->
                     <div id="imageEmpty"
-                        class="bg-white rounded-lg shadow-sm border border-[#CBCBCB] flex items-center justify-center hidden"
+                        class="bg-white rounded-lg shadow-sm border border-[#CBCBCB] flex items-center justify-center hidden h-screen"
                         style="margin-top: 0px;">
                         <div class="transition-opacity">
                             <img src="/images/img-padrao-ua.png" alt="Vista 1"
@@ -207,13 +207,22 @@
                                             <div class="relative">
                                                 @php
                                                     $baseColorCode = str_replace('/', '_', $color->color_code);
-                                                    $basePath = public_path('/images/produtos/' . str_replace('/', '_', $produto->code) . '_' . $baseColorCode . '.jpg');
+                                                    $basePath = public_path(
+                                                        '/images/produtos/' .
+                                                            str_replace('/', '_', $produto->code) .
+                                                            '_' .
+                                                            $baseColorCode .
+                                                            '.jpg',
+                                                    );
                                                     $imgSrc = file_exists($basePath)
-                                                        ? '/images/produtos/' . str_replace('/', '_', $produto->code) . '_' . $baseColorCode . '.jpg'
+                                                        ? '/images/produtos/' .
+                                                            str_replace('/', '_', $produto->code) .
+                                                            '_' .
+                                                            $baseColorCode .
+                                                            '.jpg'
                                                         : '/images/img-padrao-oly.png';
                                                 @endphp
-                                                <img src="{{ $imgSrc }}"
-                                                    alt="{{ $color->color_name }}"
+                                                <img src="{{ $imgSrc }}" alt="{{ $color->color_name }}"
                                                     class="w-full object-contain rounded-lg" loading="lazy" />
                                                 @if ($color->flag_product_id)
                                                     @if ($color->flagProduct->icon != null)
@@ -407,9 +416,10 @@
                             @if (file_exists($imagePath))
                                 <div class="swiper-slide flex items-center justify-center">
                                     <img src="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
-                                        alt="Vista {{ $vista }}" class="max-w-full max-h-full object-contain"
+                                        alt="Vista {{ $vista }}"
+                                        class="max-w-full max-h-full object-contain transition-transform duration-300 cursor-zoom-in"
                                         data-modal-image="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
-                                        onerror="this.src='/images/img-padrao-oly.png'" />
+                                        onerror="this.src='/images/img-padrao-ua.png'" />
                                 </div>
                             @endif
                             @php $vista++; @endphp
@@ -460,32 +470,7 @@
             const suffixes = ['', '_A', '_B', '_C', '_D', '_E', '_F', '_G', '_H', '_I', '_J', '_K', '_L', '_M', '_N'];
             const productCode = '{{ str_replace('/', '_', $produto->code) }}';
 
-            // Mapa server-side de imagens existentes por cor e sufixo
-            @php
-                $suffixesAll = ['', '_A', '_B', '_C', '_D', '_E', '_F', '_G', '_H', '_I', '_J', '_K', '_L', '_M', '_N'];
-                $productCodeStr = str_replace('/', '_', $produto->code);
-                $existingImagesMap = [];
-                $baseImageExistsMap = [];
-                foreach ($produto->colors as $color) {
-                    $colorCodeStr = str_replace('/', '_', $color->color_code);
-                    $existsList = [];
-                    foreach ($suffixesAll as $idx => $suffix) {
-                        $path = public_path('/images/produtos/' . $productCodeStr . '_' . $colorCodeStr . $suffix . '.jpg');
-                        if (file_exists($path)) {
-                            $existsList[] = [
-                                'suffix' => $suffix,
-                                'index' => $idx,
-                                'path' => '/images/produtos/' . $productCodeStr . '_' . $colorCodeStr . $suffix . '.jpg',
-                            ];
-                        }
-                    }
-                    $existingImagesMap[$colorCodeStr] = $existsList;
-                    $basePath = public_path('/images/produtos/' . $productCodeStr . '_' . $colorCodeStr . '.jpg');
-                    $baseImageExistsMap[$colorCodeStr] = file_exists($basePath);
-                }
-            @endphp
-            const serverImageMap = @json($existingImagesMap);
-            const baseImageExists = @json($baseImageExistsMap);
+            // Variáveis globais
             let currentColorCode = '{{ str_replace('/', '_', $produto->colors->first()->color_code) ?? '' }}';
             const productId = {{ $produto->id }};
             let modalSwiper;
@@ -509,32 +494,62 @@
 
             // Função para verificar se imagem existe
             function checkImageExists(imagePath) {
-                return fetch(imagePath, { method: 'HEAD' })
-                    .then(res => res.ok)
-                    .catch(() => false);
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => resolve(true);
+                    img.onerror = () => resolve(false);
+                    img.src = imagePath;
+                });
             }
 
             // Pré-carrega informações sobre quais imagens existem para cada cor
             async function preloadImageInfo() {
-                console.log('Pré-carregando informações das imagens (server-side)...');
+                console.log('Pré-carregando informações das imagens...');
 
                 // Mostrar loader enquanto pré-carrega
                 showLoading();
                 setContentVisibility(false);
 
-                // Popular cache diretamente do mapa gerado no servidor
-                imageCache.clear();
-                try {
-                    const keys = Object.keys(serverImageMap || {});
-                    keys.forEach(color => {
-                        const images = (serverImageMap[color] || []).map(({ suffix, index, path }) => ({ suffix, index, path }));
-                        imageCache.set(color, images);
-                    });
-                } catch (e) {
-                    console.warn('Falha ao carregar mapa server-side de imagens:', e);
-                }
+                const promises = [];
+                const tempCache = new Map();
 
-                console.log('Pré-carregamento concluído (sem requisições de rede)');
+                coresData.forEach(cor => {
+                    const color = cor.color_code.replace(/\//g, '_');
+
+                    // Pré-criar lista ordenada pelos sufixos
+                    const colorImages = suffixes.map((suffix, index) => ({
+                        suffix,
+                        index,
+                        path: `/images/produtos/${productCode}_${color}${suffix}.jpg`,
+                        exists: false
+                    }));
+
+                    tempCache.set(color, colorImages);
+
+                    // Verificar existência sem alterar a ordem
+                    colorImages.forEach(imgInfo => {
+                        const p = checkImageExists(imgInfo.path).then(exists => {
+                            imgInfo.exists = exists;
+                        });
+                        promises.push(p);
+                    });
+                });
+
+                await Promise.all(promises);
+                console.log('Pré-carregamento concluído');
+
+                // Consolidar cache mantendo ordem definida por 'suffixes'
+                tempCache.forEach((images, color) => {
+                    const validImages = images
+                        .filter(img => img.exists)
+                        .sort((a, b) => a.index - b.index)
+                        .map(({
+                            exists,
+                            ...rest
+                        }) => rest);
+
+                    imageCache.set(color, validImages);
+                });
             }
 
             // Função otimizada para carregar imagens (usa cache)
@@ -652,14 +667,17 @@
                 const loader = document.getElementById('imageLoader');
                 const right = document.getElementById('rightPanel');
                 const desktopGrid = document.getElementById('desktopGrid');
+
+
                 if (loader) {
                     // sincroniza altura com painel direito, preenchendo restante do espaço
-                    const rightH = right ? right.offsetHeight : 0;
-                    const gridH = desktopGrid ? desktopGrid.offsetHeight : 0;
-                    const minH = Math.max(rightH, gridH, 400);
-                    loader.style.minHeight = minH + 'px';
-                    loader.classList.remove('hidden');
+                    //const rightH = right ? right.offsetHeight : 0;
+                    //const gridH = desktopGrid ? desktopGrid.offsetHeight : 0;
+                    //const minH = Math.max(rightH, gridH, 450);
+                    //loader.style.minHeight = minH + 'px';
+                    //loader.classList.remove('hidden');
                 }
+
             }
 
             function hideLoadingAndEmpty() {
@@ -772,6 +790,14 @@
                             spaceBetween: 30,
                         }
                     },
+                });
+                // Resetar zoom ao trocar de slide
+                modalSwiper.on('slideChange', () => {
+                    document.querySelectorAll('.modalSwiper .swiper-slide img').forEach(img => {
+                        img.style.transform = '';
+                        img.classList.remove('cursor-zoom-out');
+                        img.classList.add('cursor-zoom-in');
+                    });
                 });
             }
 
@@ -1141,27 +1167,23 @@
                         `;
                     }
 
-                    const existsBase = baseImageExists[colorCodeFormatted] === true;
-                    const imgSrc = existsBase
-                        ? `/images/produtos/{{ $produto->code }}_${colorCodeFormatted}.jpg`
-                        : `/images/img-padrao-oly.png`;
-
                     corElement.innerHTML = `
-                            <div class="box-color bg-white ${isFirst ? 'border border-black' : ''} rounded-lg cursor-pointer transition-all duration-200 " 
-                                 data-color-code="${cor.color_code}">
-                                <div class="relative">
-                                    <img src="${imgSrc}" 
-                                         alt="${cor.color_name}" 
-                                         class="w-full object-contain rounded-lg"
-                                         loading="lazy" />
-                                    ${flagHtml}
-                                </div>
-                                <div class="text-center pb-2">
-                                    <p class="text-xs text-black">${cor.color_name}</p>
-                                    <p class="text-xs text-black opacity-50 word">${cor.color_description}</p>
-                                </div>
+                        <div class="box-color bg-white ${isFirst ? 'border border-black' : ''} rounded-lg cursor-pointer transition-all duration-200 " 
+                             data-color-code="${cor.color_code}">
+                            <div class="relative">
+                                <img src="/images/produtos/{{ $produto->code }}_${colorCodeFormatted}.jpg" 
+                                     alt="${cor.color_name}" 
+                                     class="w-full object-contain rounded-lg"
+                                     loading="lazy"
+                                     onerror="this.src='/images/img-padrao-oly.png'" />
+                                ${flagHtml}
                             </div>
-                        `;
+                            <div class="text-center pb-2">
+                                <p class="text-xs text-black">${cor.color_name}</p>
+                                <p class="text-xs text-black opacity-50 word">${cor.color_description}</p>
+                            </div>
+                        </div>
+                    `;
 
                     fragment.appendChild(corElement);
                 });
@@ -1215,6 +1237,29 @@
             };
 
             // Inicializar página quando DOM estiver pronto
+            // Zoom por clique nas imagens do modal (transform inline)
+            document.addEventListener('DOMContentLoaded', function() {
+                const modalEl = document.querySelector('.modalSwiper');
+                if (!modalEl) return;
+                modalEl.addEventListener('click', function(e) {
+                    const slide = e.target.closest('.swiper-slide');
+                    if (!slide) return;
+                    const img = slide.querySelector('img');
+                    if (!img) return;
+
+                    const zoomed = img.classList.contains('cursor-zoom-out');
+                    if (zoomed) {
+                        img.style.transform = '';
+                        img.classList.remove('cursor-zoom-out');
+                        img.classList.add('cursor-zoom-in');
+                    } else {
+                        img.style.transform = 'scale(1.5)';
+                        img.classList.remove('cursor-zoom-in');
+                        img.classList.add('cursor-zoom-out');
+                    }
+                });
+            });
+
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', inicializarPaginaProduto);
             } else {

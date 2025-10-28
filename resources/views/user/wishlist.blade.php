@@ -107,7 +107,7 @@
                 <!-- Esquerda: Coleção e Categoria -->
                 <div class="flex gap-2">
                     <div class="select-container" style="width: 225px;">
-                        <div class="select-button" id="colecaoSelectButton">
+                        <div class="select-button p-5" id="colecaoSelectButton">
                             <span id="colecaoSelectedText">
                                 @if (!empty($currentSlug))
                                     @foreach ($colecoes as $colecao)
@@ -130,7 +130,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="options" id="colecaoOptions">
+                        <div class="options min-w-[300px] p-5" id="colecaoOptions">
                             <div class="option" data-slug="" data-value="">
                                 <span class="check-icon" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 640 640">
@@ -162,7 +162,7 @@
                     </div>
 
                     <div class="select-container" style="width: 205px;">
-                        <div class="select-button" id="categorySelectButton">
+                        <div class="select-button p-5" id="categorySelectButton">
                             <span id="categorySelectedText">Todas as categorias</span>
                             <div class="" id="categoryArrow">
                                 <div class="pt-1">
@@ -215,8 +215,9 @@
                     </div>
 
                     <label class="inline-flex items-center text-sm bg-white px-[20px] py-[9px] rounded-lg">
-                        <span class="mr-1">Agrupar cores</span>
-                        <input id="groupColors" type="checkbox" class="form-checkbox text-white rounded" />
+                        <span class="text-base mr-1">Agrupar cores</span>
+                        <input id="groupColors" type="checkbox"
+                            class="w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative">
                     </label>
 
                     <div class="filter-container">

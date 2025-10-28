@@ -15,7 +15,7 @@ class SegmentacaoClienteController extends Controller
      */
     public function index()
     {
-        $segmentacoesCliente = SegmentacaoCliente::with('users')->paginate(10);
+        $segmentacoesCliente = SegmentacaoCliente::with('users')->get();
         return view('admin.segmentacao-cliente.index', compact('segmentacoesCliente'));
     }
 

@@ -80,7 +80,7 @@
                 <div class="flex gap-2">
 
                     <div class="select-container">
-                        <div class="select-button" id="selectButton">
+                        <div class="select-button p-5" id="selectButton">
                             <span id="selectedText">Selecione uma coleção</span>
                             <div class="" id="arrow">
                                 <div class="pt-1" id="arrow">
@@ -92,21 +92,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="options" id="options">
+                        <div class="options min-w-[300px] p-5" id="options">
                             @foreach ($colecoes as $colecao)
                                 <div class="option text-[18px]" data-value="{{ $colecao->slug }}">
                                     {{ $colecao->codigo_colecao }} -
                                     <span style="font-size: 14px;">{{ ucwords(strtolower($colecao->name)) }}</span>
                                 </div>
                             @endforeach
-                            <div class="option" data-value="todas">Todas</div>
+                            <div class="option text-black" data-value="todas">Todas</div>
                         </div>
                     </div>
 
                     <button id="openHistoryModal"
                         class="flex items-center justify-center select-estilizado rounded-lg px-5 py-2 hover:bg-gray-100 transition-colors">
-                        <span class="pr-2">Histórico</span> <img src="{{ asset('/images/icones/historico.svg') }}"
-                            alt="Histórico" class="w-5 h-5">
+                        <span class="text-base pr-2">Histórico</span> <img
+                            src="{{ asset('/images/icones/historico.svg') }}" alt="Histórico" class="w-5 h-5">
                     </button>
                 </div>
 
@@ -427,8 +427,12 @@
 
                 if (isOpen) {
                     closeFilterDropdown();
+                    closeSortDropdown();
+                    closeSelectDropdown();
                 } else {
                     openFilterDropdown();
+                    closeSortDropdown();
+                    closeSelectDropdown();
                 }
             });
 
@@ -570,8 +574,12 @@
 
                 if (isOpen) {
                     closeSortDropdown();
+                    closeFilterDropdown();
+                    closeSelectDropdown();
                 } else {
                     openSortDropdown();
+                    closeFilterDropdown();
+                    closeSelectDropdown();
                 }
             });
 

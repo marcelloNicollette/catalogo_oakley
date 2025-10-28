@@ -4,7 +4,7 @@
             width: 270px;
         }
 
-        < .check-icon {
+        .check-icon {
             color: #000;
             font-weight: bold;
             font-size: 16px;
@@ -15,6 +15,34 @@
         .option {
             padding: 1px 16px;
             border-bottom: 0;
+        }
+
+
+
+        @media (min-width: 1280px) {
+            .height-ultra {
+                height: 75vh;
+            }
+        }
+
+
+        @media (min-width: 1366px) {
+            .height-ultra {
+                height: 78vh;
+            }
+        }
+
+        @media (min-width: 2566px) {
+            .height-ultra {
+                height: 87vh;
+            }
+        }
+
+        @media (min-width: 3000px) {
+            .height-ultra {
+                height: 91vh;
+            }
+
         }
     </style>
     <main class="lg:flex flex-1 produtos-page">
@@ -29,7 +57,7 @@
                 <div class="flex gap-2">
 
                     <div class="select-container">
-                        <div class="select-button" id="selectButton">
+                        <div class="select-button p-5" id="selectButton">
                             <span id="selectedText">Categoria</span>
                             <div class="" id="arrow">
                                 <div class="pt-1" id="arrow">
@@ -43,7 +71,7 @@
                         </div>
 
 
-                        <div class="options pt-3" id="options">
+                        <div class="options min-w-[300px] p-5" id="options">
 
                             @foreach ($categories as $item)
                                 <div class="option text-[18px] font-normal" data-categoria-id="{{ $item->id }}"
@@ -81,13 +109,13 @@
                                 d="M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387a1 1 0 01-1.414 1.414l-4.387-4.387zM8 14a6 6 0 100-12 6 6 0 000 12z"
                                 clip-rule="evenodd" />
                         </svg>
-                        <input type="text" placeholder="Buscar por nome/cor"
+                        <input type="text" placeholder="Buscar"
                             class="input-estilizado bg-transparent border-0 focus:outline-none focus:ring-0 p-1" />
                     </div>
                 </div>
             </div>
 
-            <div class="bg-[#E6E6E6] rounded-xl overflow-auto lg:h-[75vh] xl:h-[80vh] 2xl:h-[81vh] 3xl:h-[83vh]">
+            <div class="bg-[#E6E6E6] rounded-xl overflow-auto  height-ultra ">
                 <div class="my-custom-bg p-12 max-w-[999px] mx-auto pb-0">
                     @foreach ($conteudos as $item)
                         <div class="mb-10" data-categoria-id="{{ $item->id }}">
