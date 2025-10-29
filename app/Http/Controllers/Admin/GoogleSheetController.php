@@ -127,10 +127,12 @@ class GoogleSheetController extends Controller
             }
 
             // Processa cada produto único com todas suas cores
+            $orderIndex = 1;
             foreach ($groupedProducts as $sku => $productGroup) {
                 try {
-                    // Sincroniza o produto com todas as cores coletadas
-                    $this->syncProductWithColors($productGroup['data'], $productGroup['colors']);
+                    // Sincroniza o produto com todas as cores coletadas e define ordem sequencial
+                    $this->syncProductWithColors($productGroup['data'], $productGroup['colors'], $orderIndex);
+                    $orderIndex++;
                     $syncResults['success']++;
                 } catch (\Exception $e) {
                     $syncResults['errors']++;
@@ -165,13 +167,13 @@ class GoogleSheetController extends Controller
      */
     private function syncProduct($data)
     {
-        return $this->syncProductWithColors($data, []);
+        return $this->syncProductWithColors($data, [], null);
     }
 
     /**
      * Sincroniza um produto com suas cores agrupadas
      */
-    private function syncProductWithColors($data, $colors)
+    private function syncProductWithColors($data, $colors, $desiredOrder = null)
     {
 
         $segmentacao = $this->findOrCreateSegmentacao($data['PRODUTOS_SEGMENTO'] ?? '');
@@ -207,6 +209,28 @@ class GoogleSheetController extends Controller
             ['sku' => $data['CÓDIGO']],
             $productData
         );
+
+        // Define ordem do produto conforme a posição na planilha, resolvendo conflitos
+        if (!is_null($desiredOrder)) {
+            $newOrder = (int) $desiredOrder;
+
+            DB::transaction(function () use ($product, $newOrder) {
+                $hasConflict = Product::whereNull('deleted_at')
+                    ->where('id', '!=', $product->id)
+                    ->where('order', $newOrder)
+                    ->exists();
+
+                if ($hasConflict) {
+                    Product::whereNull('deleted_at')
+                        ->where('id', '!=', $product->id)
+                        ->where('order', '>=', $newOrder)
+                        ->increment('order');
+                }
+
+                $product->order = $newOrder;
+                $product->save();
+            });
+        }
 
         // Sincroniza cores agrupadas
         $this->syncColorsGrouped($product, $colors, $collection, $flag, $data);

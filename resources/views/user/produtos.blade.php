@@ -488,7 +488,8 @@
                                 badge_color: "{{ $produtoGroup->flagProduct->flag_color_text_bg ?? '' }}",
                                 badge_icon_align: "{{ $produtoGroup->flagProduct->alinhamento ?? '' }}",
                                 orderfilterflag: {{ $produtoGroup->flagProduct->orderfilterflag ?? 0 }},
-                                slug: "{{ $produto->slug ?? '' }}"
+                                slug: "{{ $produto->slug ?? '' }}",
+                                order: {{ $produto->order ?? 0 }}
                             },
                         @endif
                     @endforeach
@@ -1332,6 +1333,7 @@
                         sortedProdutos.sort((a, b) => b.title.localeCompare(a.title));
                         break;
                     default:
+                        sortedProdutos.sort((a, b) => Number(a.order ?? 0) - Number(b.order ?? 0));
                         break;
                 }
 

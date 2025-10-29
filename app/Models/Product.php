@@ -30,7 +30,8 @@ class Product extends Model
         'data_trade',
         'data_cliente',
         'data_dtc',
-        'active'
+        'active',
+        'order'
     ];
 
     protected $casts = [
@@ -39,7 +40,8 @@ class Product extends Model
         'data_cliente' => 'date',
         'data_dtc' => 'date',
         'flag_calendario' => 'boolean',
-        'active' => 'boolean'
+        'active' => 'boolean',
+        'order' => 'integer'
     ];
 
 

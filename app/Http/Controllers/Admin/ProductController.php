@@ -18,12 +18,17 @@ use App\Models\Calendario;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with(['collection', 'category'])->orderBy('id', 'desc')->paginate(100);
+
+        $products = Product::with(['collection', 'category'])
+            ->orderBy('order', 'asc')
+            ->orderBy('id', 'desc')
+            ->paginate(500);
         return view('admin.products.index', compact('products'));
     }
 
@@ -43,6 +48,14 @@ class ProductController extends Controller
     {
         $product = Product::withTrashed()->findOrFail($id);
         $product->restore();
+
+
+        // Se ao restaurar o produto ele não tiver ordem definida, atribuir o próximo índice
+        if ($product->order === null) {
+            $nextOrder = (int) Product::whereNull('deleted_at')->max('order');
+            $product->order = $nextOrder + 1;
+            $product->save();
+        }
 
         return redirect()->route('admin.products.deleted')
             ->with('success', 'Produto restaurado com sucesso.');
@@ -84,7 +97,8 @@ class ProductController extends Controller
             'data_trade' => 'nullable|date',
             'data_cliente' => 'nullable|date',
             'data_dtc' => 'nullable|date',
-            'active' => 'boolean'
+            'active' => 'boolean',
+            'order' => 'nullable|integer|min:1'
         ]);
 
         $validated['slug'] = Str::slug($validated['name']) . '-' . $validated['code'];
@@ -94,7 +108,27 @@ class ProductController extends Controller
             $validated['technologies'] = json_encode($request->technologies);
         }
 
-        $product = Product::create($validated);
+        // Criação com resolução de conflito de ordem (se fornecida)
+        if ($request->filled('order')) {
+            $newOrder = (int) $request->input('order');
+
+            DB::transaction(function () use (&$validated, $newOrder, &$product) {
+                $hasConflict = Product::whereNull('deleted_at')
+                    ->where('order', $newOrder)
+                    ->exists();
+
+                if ($hasConflict) {
+                    Product::whereNull('deleted_at')
+                        ->where('order', '>=', $newOrder)
+                        ->increment('order');
+                }
+
+                $validated['order'] = $newOrder;
+                $product = Product::create($validated);
+            });
+        } else {
+            $product = Product::create($validated);
+        }
 
         // Inserir cores (se houver)
         if ($request->has('color_name') && count($request->input('color_name')) > 0) {
@@ -184,7 +218,8 @@ class ProductController extends Controller
             'data_trade' => 'nullable|date',
             'data_cliente' => 'nullable|date',
             'data_dtc' => 'nullable|date',
-            'active' => 'boolean'
+            'active' => 'boolean',
+            'order' => 'nullable|integer|min:1'
         ]);
 
         $validated['slug'] = Str::slug($validated['name']) . '-' . $validated['code'];
@@ -193,8 +228,31 @@ class ProductController extends Controller
             $validated['technologies'] = json_encode($request->technologies);
         }
 
-        // Atualiza o produto
-        $product->update($validated);
+        // Atualiza o produto com ajuste de ordem e resolução de conflito
+        if ($request->filled('order')) {
+            $newOrder = (int) $request->input('order');
+
+            DB::transaction(function () use ($product, $newOrder, &$validated) {
+                $hasConflict = Product::whereNull('deleted_at')
+                    ->where('id', '!=', $product->id)
+                    ->where('order', $newOrder)
+                    ->exists();
+
+                if ($hasConflict) {
+                    // Empurra para baixo todos os produtos ativos com ordem >= nova ordem
+                    Product::whereNull('deleted_at')
+                        ->where('id', '!=', $product->id)
+                        ->where('order', '>=', $newOrder)
+                        ->increment('order');
+                }
+
+                $validated['order'] = $newOrder;
+                $product->update($validated);
+            });
+        } else {
+            unset($validated['order']);
+            $product->update($validated);
+        }
 
         // Atualiza cores
         if ($request->has('color_name') && count($request->input('color_name')) > 0) {

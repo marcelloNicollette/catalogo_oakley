@@ -72,6 +72,17 @@
                     </div>
 
                     <div class="">
+                        <label for="order" class="block text-sm font-medium text-gray-700">Ordem de Exibição</label>
+                        <input type="number" name="order" id="order" min="1"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            value="{{ old('order', $product->order) }}" placeholder="Deixe em branco para manter atual">
+                        @error('order')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Se vazio, mantém a ordem atual do produto.</p>
+                    </div>
+
+                    <div class="">
                         <label for="category_id" class="block text-sm font-medium text-gray-700">Categoria do
                             Produto</label>
                         <select name="category_id" id="category_id"
