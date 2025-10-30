@@ -3,33 +3,9 @@
         .carousel-container {
             position: relative;
             width: 100%;
-            height: 88vh;
+            height: calc(100vh - 113px);
             overflow: hidden;
             border-radius: 10px;
-        }
-
-        @media (min-width: 1280px) {
-            .carousel-container {
-                height: 85vh;
-            }
-        }
-
-        @media (min-width: 1366px) {
-            .carousel-container {
-                height: 87vh;
-            }
-        }
-
-        @media (min-width: 2566px) {
-            .carousel-container {
-                height: 92vh;
-            }
-        }
-
-        @media (min-width: 3000px) {
-            .carousel-container {
-                height: 94vh;
-            }
         }
 
 

@@ -59,30 +59,8 @@
             }
 
 
-            @media (min-width: 1280px) {
-
-                #produtos {
-                    min-height: 75vh;
-                }
-            }
-
-            @media (min-width: 1400px) {
-
-                #produtos {
-                    min-height: 79vh;
-                }
-            }
-
-            @media (min-width: 2566px) {
-                #produtos {
-                    min-height: 88vh;
-                }
-            }
-
-            @media (min-width: 3000px) {
-                #produtos {
-                    min-height: 91vh;
-                }
+            .height-ultra {
+                height: calc(100vh - 180px);
             }
         </style>
 
@@ -313,7 +291,7 @@
 
             <!-- Lista de Produtos -->
             <div id="produtos"
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 ml-4 p-2 bg-[#E6E6E6] h-[76vh] lg:h-[65vh] rounded-xl overflow-auto">
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 ml-4 p-2 bg-[#E6E6E6] rounded-xl overflow-auto height-ultra custom-scrollbar">
 
                 <!-- Template de Produto -->
                 <template id="template-produto">

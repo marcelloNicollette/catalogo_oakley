@@ -915,3 +915,37 @@ html {
     .col-span-6 {
         grid-column: span 6/span 6
     }
+
+    
+    /* Para navegadores Webkit (Chrome, Safari, Edge) */
+            .custom-scrollbar::-webkit-scrollbar {
+                width: 20px;
+                /* largura da scrollbar vertical */
+                height: 20px;
+                /* altura da scrollbar horizontal */
+            }
+
+            .custom-scrollbar::-webkit-scrollbar-track {
+                background: #E6E6E6;
+                /* cor do fundo */
+                border-radius: 10px;
+            }
+
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: #000;
+                /* cor da barra */
+                border-radius: 10px;
+            }
+
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: #000;
+                /* cor ao passar o mouse */
+            }
+
+            /* Para Firefox */
+            .custom-scrollbar {
+                scrollbar-width: thin;
+                /* auto, thin, none */
+                scrollbar-color: #A9A9A9 #E6E6E6;
+                /* thumb track */
+            }

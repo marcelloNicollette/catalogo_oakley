@@ -24,30 +24,8 @@
                 opacity: 1;
             }
 
-            @media (min-width: 1280px) {
-
-                #produtos {
-                    min-height: 75vh;
-                }
-            }
-
-            @media (min-width: 1280px) {
-
-                #produtos {
-                    min-height: 80vh;
-                }
-            }
-
-            @media (min-width: 2566px) {
-                #produtos {
-                    min-height: 88vh;
-                }
-            }
-
-            @media (min-width: 3000px) {
-                #produtos {
-                    min-height: 91vh;
-                }
+            .height-ultra {
+                height: calc(100vh - 165px);
             }
 
 
@@ -132,6 +110,14 @@
 
             .subcategory-option.selected .x-icon {
                 display: inline;
+            }
+
+            /* Para Firefox */
+            .custom-scrollbar {
+                scrollbar-width: thin;
+                /* auto, thin, none */
+                scrollbar-color: #A9A9A9 #000000;
+                /* thumb track */
             }
         </style>
         <!-- Conteúdo principal -->
@@ -392,7 +378,7 @@
 
             <!-- Lista de Produtos -->
             <div id="produtos"
-                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[10px] p-1 bg-[#1D1D1D] lg:p-[10px] min-h-[80vh] xl:min-h-[88vh] ultra:min-h-[88vh] mt-72 lg:mt-[4.8rem] overflow-auto h-[0vh]">
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[10px] p-1 bg-[#1D1D1D] lg:p-[10px] mt-72 lg:mt-[4.8rem] overflow-auto height-ultra custom-scrollbar">
 
                 @if (empty($produtos) || count($produtos) == 0)
                     <!-- Mensagem quando não há produtos -->

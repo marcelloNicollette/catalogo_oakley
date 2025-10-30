@@ -1,5 +1,9 @@
 <x-layout-user title="Under Armour - Coleções">
     <style>
+        .height-ultra {
+            height: calc(100vh - 175px);
+        }
+
         @media (min-width: 1280px) {
 
             .colecao-card {
@@ -8,9 +12,6 @@
         }
 
         @media (min-width: 2566px) {
-            .height-ultra {
-                height: 87vh;
-            }
 
             .colecao-card {
                 height: 28vh;
@@ -18,9 +19,6 @@
         }
 
         @media (min-width: 3000px) {
-            .height-ultra {
-                height: 91vh;
-            }
 
             .colecao-card {
                 height: 25vh;
@@ -32,6 +30,14 @@
         .select-button:active,
         .select-button.active {
             border-color: transparent;
+        }
+
+        /* Para Firefox */
+        .custom-scrollbar {
+            scrollbar-width: thin;
+            /* auto, thin, none */
+            scrollbar-color: #A9A9A9 #000000;
+            /* thumb track */
         }
     </style>
     <main class="lg:flex flex-1">
@@ -147,7 +153,7 @@
             </div>
 
             <!-- Grid de Coleções -->
-            <div class="bg-[#000000] h-[79vh] ml-4 p-2 rounded-lg height-ultra overflow-auto">
+            <div class="bg-[#000000] ml-4 p-2 rounded-lg height-ultra overflow-auto custom-scrollbar">
                 <div id="colecoes-grid"
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-[10px]"
                     style="border-radius: 10px 0 0 0;">

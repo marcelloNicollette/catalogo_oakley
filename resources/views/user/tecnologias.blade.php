@@ -13,32 +13,8 @@
             border-bottom: 0;
         }
 
-
-
-        @media (min-width: 1280px) {
-            .height-ultra {
-                height: 75vh;
-            }
-        }
-
-
-        @media (min-width: 1366px) {
-            .height-ultra {
-                height: 78vh;
-            }
-        }
-
-        @media (min-width: 2566px) {
-            .height-ultra {
-                height: 87vh;
-            }
-        }
-
-        @media (min-width: 3000px) {
-            .height-ultra {
-                height: 91vh;
-            }
-
+        .height-ultra {
+            height: calc(100vh - 180px);
         }
     </style>
     <main class="lg:flex flex-1 produtos-page">
@@ -112,7 +88,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-[#E6E6E6] rounded-xl overflow-auto height-ultra">
+            <div class="bg-[#E6E6E6] rounded-xl overflow-auto height-ultra custom-scrollbar">
                 <div class="my-custom-bg p-12 max-w-[999px] mx-auto pb-0">
                     @foreach ($tecnologias as $item)
                         <div class="mb-10" data-categoria-id="{{ $item->id }}">
