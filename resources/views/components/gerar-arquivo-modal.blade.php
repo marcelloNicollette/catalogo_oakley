@@ -1,3 +1,4 @@
+<!-- Modal de Histórico -->
 <style>
     /* Radio Button */
     .radio-custom {
@@ -17,7 +18,6 @@
         border-radius: 50%;
     }
 </style>
-<!-- Modal de Histórico -->
 <div id="gerarArquivoModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="bg-white rounded-lg max-w-xl w-full p-7">
         <form action="{{ route('user.export.pdf') }}" method="POST">
@@ -48,35 +48,37 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block  text-xs font-normal text-black mb-2">Produtos</label>
-                        <div class="flex flex-col gap-2">
-                            <label class="inline-flex items-center">
+                    <div class="flex gap-5">
+                        <div class="flex-1">
+                            <label class="block text-xs font-normal text-black mb-2">Segmentos</label>
+                            <div class="flex flex-col gap-2">
+                                <label class="inline-flex items-center w-full">
+                                    <button type="button" name="segmentos" id="btnSelecaoSegmentos"
+                                        class="w-full flex items-center justify-center space-x-2 px-3 py-[6px] bg-white text-black rounded-full hover:opacity-80 transition-colors border border-black">
+                                        <span id="spanSelecionarSegmentos" class="text-base">Selecionar segmentos</span>
+                                        <span id="btnContadorSegmentos"
+                                            class="text-[14px] text-black opacity-50 underline ml-2"></span>
+                                    </button>
+                                    <input type="hidden" name="segmentos" id="segmentosSelecaoHidden" value="todos">
+                                </label>
+                            </div>
+                        </div>
 
-                                <button type="button" name="produtos" id="btnSelecaoProdutos"
-                                    class="flex items-center space-x-2 px-3 py-[6px] bg-white text-black rounded-full hover:opacity-80 transition-colors border border-black">
-                                    <span class="text-base">Selecionados:</span>
-
-                                    <span id="btnContadorSelecionados"
-                                        class="text-[14px] text-black opacity-50 underline ml-2">(Editar)</span>
-                                </button>
-                                <input type="hidden" name="produtos" id="produtosSelecaoHidden" value="todos">
-
-                            </label>
-                            <!--<label class="inline-flex items-center">
-                                <input type="radio" name="produtos" class="form-radio" value="favoritos">
-                                <span class="ml-2 text-base">Favoritos</span>
-                                <span class="text-xs text-black ml-2">*Gera o arquivo somente com os itens
-                                    favoritados da
-                                    coleção</span>
-                            </label>
-                            <label class="inline-flex items-center">
-                                <input type="radio" name="produtos" class="form-radio" value="todos" checked>
-                                <span class="ml-2 text-base">Todos</span>
-                            </label>-->
+                        <div class="flex-1">
+                            <label class="block text-xs font-normal text-black mb-2">Produtos</label>
+                            <div class="flex flex-col gap-2">
+                                <label class="inline-flex items-center w-full">
+                                    <button type="button" name="produtos" id="btnSelecaoProdutos"
+                                        class="w-full flex items-center justify-center space-x-2 px-3 py-[6px] bg-white text-black rounded-full hover:opacity-80 transition-colors border border-black">
+                                        <span id="spanSelecionarProdutos" class="text-base">Selecionar produtos</span>
+                                        <span id="btnContadorSelecionados"
+                                            class="text-[14px] text-black opacity-50 underline ml-2"></span>
+                                    </button>
+                                    <input type="hidden" name="produtos" id="produtosSelecaoHidden" value="todos">
+                                </label>
+                            </div>
                         </div>
                     </div>
-
                     <div>
                         <label class="block  text-xs font-normal text-black mb-2">Cores dos produtos</label>
                         <div class="">
@@ -155,14 +157,14 @@
                 </div>
 
                 <button id="sendHistory"
-                    class="w-full bg-black text-white font-normal text-base py-3 px-4 rounded-full hover:bg-gray-800 transition-colors">
+                    class="w-full bg-black text-white font-normal text-base py-3 px-4 rounded-full transition-colors">
                     Gerar arquivo
                 </button>
 
                 <div class="flex justify-center">
 
                     <button type="button" id="closeHistoryModal"
-                        class="flex items-center border border-black rounded-full px-6 py-3 text-sm  hover:bg-gray-200 transition">
+                        class="flex items-center border border-black rounded-full px-6 py-3 text-sm transition">
                         Voltar
                         <img src="/images/icon-voltar.png" alt="" class="ml-2 w-4 h-4" />
                     </button>
@@ -207,6 +209,61 @@
     </div>
 </div>
 
+<!-- Modal de Seleção de Segmentos -->
+<div id="selecaoSegmentosModal"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-60 hidden">
+    <div class="bg-white rounded-lg max-w-xl w-full mx-4 p-6 max-h-[80vh] overflow-hidden flex flex-col">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-semibold text-gray-900">Selecionar Segmentos</h2>
+            <button id="closeSelecaoSegmentosModal" class="text-sm underline">Fechar</button>
+        </div>
+
+        <div class="flex justify-between items-center mb-4">
+            <div class="flex items-center gap-4">
+                <label class="flex items-center">
+                    <input type="checkbox" id="selecionarTodosSegmentos"
+                        class="w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3">
+                    <span>Selecionar todos</span>
+                </label>
+                <span class="text-xs opacity-50">Selecionados: <span
+                        id="contadorSegmentosSelecionados">0</span></span>
+                <span class="text-xs opacity-50">Total: <span id="totalSegmentos">0</span></span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="flex items-center border-b border-b-black px-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-black ml-1" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387a1 1 0 01-1.414 1.414l-4.387-4.387zM8 14a6 6 0 100-12 6 6 0 000 12z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <input id="buscarSegmento" type="text" placeholder="Buscar"
+                        class="input-estilizado bg-transparent border-0 focus:outline-none focus:ring-0 p-1" />
+                </div>
+            </div>
+        </div>
+
+        <div class="py-1 px-4 grid grid-cols-12 gap-4 text-xs">
+            <div class="col-span-12">Segmentação</div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto" id="segmentosList"></div>
+
+        <div class="flex justify-end items-center mt-4 gap-3">
+            <button id="cancelarSelecaoSegmentos"
+                class="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200">Cancelar</button>
+            <button id="salvarSelecaoSegmentos" class="px-4 py-2 bg-black text-white rounded ">Salvar
+                Seleção</button>
+        </div>
+    </div>
+    @php
+        $segmentosUsuario =
+            auth()->user() && auth()->user()->segmentacoesCliente
+                ? auth()->user()->segmentacoesCliente
+                : \App\Models\SegmentacaoCliente::where('active', true)->get();
+    @endphp
+</div>
+
 <!-- Modal de Seleção de Produtos -->
 <div id="selecaoProdutosModal"
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-60 hidden">
@@ -218,28 +275,33 @@
 
         <!-- Header com controles -->
         <div class="flex justify-between items-center mb-4">
-            <div class="flex items-center gap-4">
-                <label class="flex items-center">
-                    <input type="checkbox" id="selecionarTodos" name="selecao_tipo"
-                        class="w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3">
-                    <span>Selecionar todos</span>
-                </label>
-                <span class="text-xs opacity-50">Selecionados: <span id="contadorSelecionados">0</span></span>
-                <span class="text-xs opacity-50">Total: <span id="totalProdutos">0</span></span>
-            </div>
-            <div class="flex items-center gap-2">
+            <div class="flex flex-col items-center gap-4 text-base items-baseline">
+                <!-- Categorias dos produtos (checkboxes) -->
+                <div id="categoriasSelecionaveis" class="flex items-center gap-2 flex-wrap ml-4">
 
-                <div class="flex items-center border-b border-b-black px-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-black ml-1" viewBox="0 0 20 20"
-                        fill="currentColor">
-                        <path fill-rule="evenodd"
-                            d="M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387a1 1 0 01-1.414 1.414l-4.387-4.387zM8 14a6 6 0 100-12 6 6 0 000 12z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    <input id="buscarProduto" type="text" placeholder="Buscar"
-                        class="input-estilizado bg-transparent border-0 focus:outline-none focus:ring-0 p-1" />
+                    <label class="flex items-center">
+                        <input type="checkbox" id="selecionarTodos" name="selecao_tipo"
+                            class="w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3">
+                        <span>Todos</span>
+                    </label>
+                </div>
+
+                <div class="flex items-center gap-4 text-sm text-gray-600">
+                    <span class="text-xs opacity-50">Selecionados: <span id="contadorSelecionados">0</span></span>
+                    <span class="text-xs opacity-50">Total: <span id="totalProdutos">0</span></span>
                 </div>
             </div>
+            <div class="flex items-center border-b border-b-black px-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-black ml-1" viewBox="0 0 20 20"
+                    fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387a1 1 0 01-1.414 1.414l-4.387-4.387zM8 14a6 6 0 100-12 6 6 0 000 12z"
+                        clip-rule="evenodd" />
+                </svg>
+                <input id="buscarProduto" type="text" placeholder="Buscar"
+                    class="input-estilizado bg-transparent border-0 focus:outline-none focus:ring-0 p-1" />
+            </div>
+
         </div>
 
         <!-- Cabeçalho da tabela -->
@@ -261,13 +323,13 @@
         <div class="pt-4 mt-4">
             <div class="flex justify-center gap-4 mb-3">
                 <button type="button" id="salvarSelecao"
-                    class="bg-black text-white px-8 py-3 rounded-full hover:bg-gray-800 transition-colors w-full font-normal">
+                    class="bg-black text-white px-8 py-3 rounded-full transition-colors w-full font-normal">
                     Salvar
                 </button>
             </div>
             <div class="flex justify-center gap-4">
                 <button type="button" id="closeSelecaoProdutosModal"
-                    class="flex items-center border border-black rounded-full px-6 py-3 text-sm  hover:bg-gray-200 transition">
+                    class="flex items-center border border-black rounded-full px-6 py-3 text-sm transition">
                     Voltar
                     <img src="/images/icon-voltar.png" alt="" class="ml-2 w-4 h-4" />
                 </button>
@@ -314,6 +376,7 @@
 
     // Função para reabilitar o botão sendHistory
     function reabilitarBotaoSendHistory() {
+
         const sendHistoryBtn = document.getElementById('sendHistory');
         if (sendHistoryBtn) {
             sendHistoryBtn.disabled = false;
@@ -347,7 +410,7 @@
         if (collectionText) {
             collectionText.textContent = element.getAttribute('data-codigo') || collectionName;
         }
-        console.log(collectionText.textContent);
+
         // Renderizar categorias baseadas na segmentação
         if (segmentacaoId) {
             renderizarCategorias(segmentacaoId);
@@ -361,17 +424,42 @@
     let produtosSelecionados = [];
     let produtosDisponiveis = [];
     let collectionIdAtual = null;
+    // Variáveis para seleção de segmentos
+    let segmentosDisponiveis = @json($segmentosUsuario ?? []);
+    let segmentosSelecionados = [];
 
     // Event listener para interceptar o botão sendHistory quando necessário
     document.addEventListener('DOMContentLoaded', function() {
         const selecaoButton = document.getElementById('btnSelecaoProdutos');
         const produtosHidden = document.getElementById('produtosSelecaoHidden');
+        const selecaoSegmentosButton = document.getElementById('btnSelecaoSegmentos');
+        const segmentosHidden = document.getElementById('segmentosSelecaoHidden');
+        // Atualizar contador de segmentos no CTA ao carregar
+        const contadorSegSpan = document.getElementById('btnContadorSegmentos');
+        const segsInit = getSelectedSegmentacoesLocal();
+        if (contadorSegSpan) {
+            //contadorSegSpan.textContent = (segsInit && segsInit.length ? segsInit.length : 0) + ' (Editar)';
+        }
 
         // Clique no CTA: define modo seleção e abre modal (sem toggle)
         if (selecaoButton) {
             selecaoButton.addEventListener('click', function() {
                 if (produtosHidden) produtosHidden.value = 'selecao';
+                // Antes de abrir produtos, exigir seleção de segmentos
+                const segs = getSelectedSegmentacoesLocal();
+                if (!segs || segs.length === 0) {
+                    alert('Por favor, selecione pelo menos um segmento antes de selecionar produtos.');
+                    abrirModalSelecaoSegmentos();
+                    return;
+                }
                 abrirModalSelecaoProdutos();
+            });
+        }
+
+        if (selecaoSegmentosButton) {
+            selecaoSegmentosButton.addEventListener('click', function() {
+                if (segmentosHidden) segmentosHidden.value = 'selecao';
+                abrirModalSelecaoSegmentos();
             });
         }
 
@@ -384,6 +472,15 @@
 
             // Adicionar novo event listener
             newSendHistoryBtn.addEventListener('click', function(event) {
+                // Exigir segmento selecionado para gerar
+                const segs = getSelectedSegmentacoesLocal();
+                if (!segs || segs.length === 0) {
+                    alert('Selecione pelo menos um segmento para gerar os produtos.');
+                    event.preventDefault();
+                    event.stopPropagation();
+                    abrirModalSelecaoSegmentos();
+                    return false;
+                }
                 const tipoProdutos = produtosHidden ? produtosHidden.value : 'todos';
                 const categoriasSelecionadas = document.querySelectorAll(
                     'input[name="categoria"]:checked');
@@ -419,6 +516,18 @@
                 historySuccess.classList.remove('hidden');
 
                 const form = document.querySelector('#gerarArquivoModal form');
+                // Anexar selected_segmentacoes[] como inputs hidden antes de enviar
+                const existingSegInputs = form.querySelectorAll(
+                    'input[name="selected_segmentacoes[]"]');
+                existingSegInputs.forEach(i => i.remove());
+                segs.forEach(id => {
+                    const inputSeg = document.createElement('input');
+                    inputSeg.type = 'hidden';
+                    inputSeg.name = 'selected_segmentacoes[]';
+                    inputSeg.value = id;
+                    form.appendChild(inputSeg);
+                });
+
                 form.submit();
             });
         }
@@ -452,7 +561,11 @@
         // Se "todas" está selecionada, usar todas as categorias
         const categoriasParam = categorias.includes('todas') ? 'todas' : categorias.join(',');
 
-        fetch(`/user/api/produtos-por-categoria?categoria=${categoriasParam}&collection_id=${collectionIdAtual}`)
+        const segs = getSelectedSegmentacoesLocal();
+        const segParams = (segs && segs.length > 0) ? segs.map(id => `selected_segmentacoes[]=${id}`).join('&') : '';
+        const url = `/user/api/produtos-por-categoria?categoria=${categoriasParam}&collection_id=${collectionIdAtual}` +
+            (segParams ? `&${segParams}` : '');
+        fetch(url)
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
@@ -483,12 +596,13 @@
         totalProdutos.textContent = produtos.length;
 
         produtosList.innerHTML = produtos.map(produto => `
-            <div class="py-1 px-2 grid grid-cols-12 gap-4 items-center hover:bg-gray-50 transition-colors produto-row" data-produto-nome="${produto.title.toLowerCase()}" data-produto-codigo="${produto.codigo.toLowerCase()}">
+            <div class="py-1 px-2 grid grid-cols-12 gap-4 items-center hover:bg-gray-50 transition-colors produto-row" data-produto-nome="${produto.title.toLowerCase()}" data-produto-codigo="${produto.codigo.toLowerCase()}" data-produto-categoria="${(produto.categoria || '').toLowerCase()}">
                 <div class="col-span-1 text-center">
                     <input type="checkbox" 
                            id="produto_${produto.id}" 
                            value="${produto.id}" 
                            data-cor="${produto.cor}"
+                           data-categoria="${produto.categoria || ''}"
                            class="produto-checkbox w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative " 
                            ${(Array.isArray(produtosSelecionados) && produtosSelecionados.some(p => p.id === produto.id && p.cor === produto.cor)) || produto.selected ? 'checked' : ''}>
                 </div>
@@ -521,6 +635,9 @@
         });
 
         atualizarContador();
+
+        // Renderizar checkboxes de categorias para seleção em massa
+        renderizarCategoriasSelecionaveis(produtos);
     }
 
     // Função para atualizar contador de selecionados
@@ -537,7 +654,7 @@
     // Event listeners para os botões do modal
     document.getElementById('closeSelecaoProdutosModal').addEventListener('click', fecharModalSelecaoProdutos);
     //document.getElementById('voltarSelecao').addEventListener('click', fecharModalSelecaoProdutos);
-    document.getElementById('closeHistoryModal').addEventListener('click', fecharModalSelecaoProdutos);
+    document.getElementById('closeHistoryModal').addEventListener('click', handleCloseHistoryModal);
 
     // Event listener para o botão de fechar o modal de sucesso
     document.getElementById('closeSuccessModal').addEventListener('click', function() {
@@ -564,35 +681,6 @@
                 row.style.display = 'none';
             }
         });
-    });
-
-    document.getElementById('selecionarTodos').addEventListener('change', function() {
-        const checkboxes = document.querySelectorAll('.produto-checkbox');
-        const isChecked = this.checked;
-
-        checkboxes.forEach(checkbox => {
-            // Só alterar checkboxes visíveis
-            const row = checkbox.closest('.produto-row');
-            if (row.style.display !== 'none') {
-                checkbox.checked = isChecked;
-                const produtoId = parseInt(checkbox.value);
-                const produtoCor = checkbox.getAttribute('data-cor');
-
-                if (isChecked) {
-                    if (!produtosSelecionados.some(p => p.id === produtoId && p.cor === produtoCor)) {
-                        produtosSelecionados.push({
-                            id: produtoId,
-                            cor: produtoCor
-                        });
-                    }
-                } else {
-                    produtosSelecionados = produtosSelecionados.filter(p => !(p.id === produtoId && p
-                        .cor === produtoCor));
-                }
-            }
-        });
-
-        atualizarContador();
     });
 
     document.getElementById('salvarSelecao').addEventListener('click', function() {
@@ -626,7 +714,7 @@
             form.appendChild(inputCor);
         });
 
-        console.log('Produtos selecionados:', produtosSelecionados);
+        //console.log('Produtos selecionados:', produtosSelecionados);
 
         // Fechar modal de seleção e voltar ao modal anterior
         document.getElementById('selecaoProdutosModal').classList.add('hidden');
@@ -634,7 +722,9 @@
 
         // Atualizar contador no botão "Selecionado(s):"
         const contadorSpan = document.getElementById('btnContadorSelecionados');
-        if (contadorSpan) {
+        const contadorSpanText = document.getElementById('spanSelecionarProdutos');
+        if (contadorSpan && quantidadeSelecionados > 0) {
+            contadorSpanText.textContent = "Selecionados: ";
             contadorSpan.textContent = quantidadeSelecionados + ' (Editar)';
         }
 
@@ -642,6 +732,150 @@
         const produtosHidden = document.getElementById('produtosSelecaoHidden');
         if (produtosHidden) produtosHidden.value = 'selecao';
     });
+
+    // ===== Seleção de Segmentos =====
+    function abrirModalSelecaoSegmentos() {
+        // Fechar modal principal
+        document.getElementById('gerarArquivoModal').classList.add('hidden');
+        // Abrir modal de segmentos
+        document.getElementById('selecaoSegmentosModal').classList.remove('hidden');
+        renderizarSegmentos(segmentosDisponiveis);
+    }
+
+    function fecharModalSelecaoSegmentos() {
+        document.getElementById('selecaoSegmentosModal').classList.add('hidden');
+        // Voltar ao modal principal
+        document.getElementById('gerarArquivoModal').classList.remove('hidden');
+    }
+
+    function renderizarSegmentos(lista) {
+        const contTotal = document.getElementById('totalSegmentos');
+        contTotal.textContent = (lista && lista.length) ? lista.length : 0;
+        const contSel = document.getElementById('contadorSegmentosSelecionados');
+        const container = document.getElementById('segmentosList');
+
+        // Carregar seleção do localStorage
+        segmentosSelecionados = getSelectedSegmentacoesLocal();
+        contSel.textContent = segmentosSelecionados.length;
+
+        if (!lista || lista.length === 0) {
+            container.innerHTML = '<div class="text-center py-8 text-gray-500">Nenhum segmento disponível.</div>';
+            return;
+        }
+
+        container.innerHTML = lista.map(seg => `
+            <div class=\"py-[5px] px-4 text-sm\">
+                <label class=\"inline-flex items-center gap-1 cursor-pointer\">
+                    <input type=\"checkbox\" data-id=\"${seg.id}\" ${segmentosSelecionados.includes(seg.id) ? 'checked' : ''}
+                        class=\"segmento-checkbox w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3\">
+                    <span class=\"text-sm text-gray-900\">${seg.nome}</span>
+                </label>
+            </div>
+        `).join('');
+
+        document.querySelectorAll('.segmento-checkbox').forEach(cb => {
+            cb.addEventListener('change', function() {
+                const id = parseInt(this.getAttribute('data-id'));
+                if (this.checked) {
+                    if (!segmentosSelecionados.includes(id)) segmentosSelecionados.push(id);
+                } else {
+                    segmentosSelecionados = segmentosSelecionados.filter(s => s !== id);
+                }
+                document.getElementById('contadorSegmentosSelecionados').textContent =
+                    segmentosSelecionados.length;
+                atualizarSelecionarTodosSegmentos();
+            });
+        });
+
+        atualizarSelecionarTodosSegmentos();
+    }
+
+    function atualizarSelecionarTodosSegmentos() {
+        const total = document.querySelectorAll('.segmento-checkbox').length;
+        const chk = document.getElementById('selecionarTodosSegmentos');
+        chk.checked = (segmentosSelecionados.length === total && total > 0);
+    }
+
+    document.getElementById('selecionarTodosSegmentos').addEventListener('change', function() {
+        const check = this.checked;
+        const boxes = document.querySelectorAll('.segmento-checkbox');
+        segmentosSelecionados = [];
+        boxes.forEach(b => {
+            b.checked = check;
+            if (check) segmentosSelecionados.push(parseInt(b.getAttribute('data-id')));
+        });
+        document.getElementById('contadorSegmentosSelecionados').textContent = segmentosSelecionados.length;
+    });
+
+    document.getElementById('buscarSegmento').addEventListener('input', function() {
+        const termo = this.value.toLowerCase();
+        document.querySelectorAll('#segmentosList > div').forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(termo) ? '' : 'none';
+        });
+    });
+
+    document.getElementById('closeSelecaoSegmentosModal').addEventListener('click', cancelarSelecaoSegmentos);
+    document.getElementById('cancelarSelecaoSegmentos').addEventListener('click', cancelarSelecaoSegmentos);
+
+    document.getElementById('salvarSelecaoSegmentos').addEventListener('click', function() {
+        if (!segmentosSelecionados || segmentosSelecionados.length === 0) {
+            alert('Por favor, selecione pelo menos um segmento.');
+            return;
+        }
+        // Persistir no localStorage
+        localStorage.setItem('selectedSegmentacoes', JSON.stringify(segmentosSelecionados));
+
+        // Atualizar contador no botão
+        const contadorSegSpan = document.getElementById('btnContadorSegmentos');
+        const contadorSpanText = document.getElementById('spanSelecionarSegmentos');
+        if (contadorSegSpan && segmentosSelecionados.length > 0) {
+            contadorSpanText.textContent = "Selecionados: ";
+            contadorSegSpan.textContent = segmentosSelecionados.length + ' (Editar)';
+        }
+
+        fecharModalSelecaoSegmentos();
+    });
+
+    function cancelarSelecaoSegmentos() {
+        // Limpar seleção em memória
+        segmentosSelecionados = [];
+
+        // Desmarcar todas as checkboxes visíveis
+        document.querySelectorAll('.segmento-checkbox').forEach(cb => {
+            cb.checked = false;
+        });
+
+        // Atualizar contadores e selecionar todos
+        document.getElementById('contadorSegmentosSelecionados').textContent = 0;
+        const chkTodos = document.getElementById('selecionarTodosSegmentos');
+        if (chkTodos) chkTodos.checked = false;
+
+        // Limpar persistência
+        try {
+            localStorage.removeItem('selectedSegmentacoes');
+        } catch (e) {}
+
+        // Atualizar CTA no modal principal
+        const contadorSegSpan = document.getElementById('btnContadorSegmentos');
+        if (contadorSegSpan) {
+            contadorSegSpan.textContent = '0 (Editar)';
+        }
+
+        // Fechar modal de segmentos e voltar ao modal principal
+        fecharModalSelecaoSegmentos();
+    }
+
+    function getSelectedSegmentacoesLocal() {
+        try {
+            const raw = localStorage.getItem('selectedSegmentacoes');
+            if (!raw) return [];
+            const arr = JSON.parse(raw);
+            return Array.isArray(arr) ? arr : [];
+        } catch (e) {
+            return [];
+        }
+    }
 
     function fecharModalSelecaoProdutos() {
         //console.log('Fechar modal seleção produtos');
@@ -704,5 +938,170 @@
         const form = document.querySelector('#gerarArquivoModal form');
         const existingProductInputs = form.querySelectorAll('input[name^="produtos_selecionados["]');
         existingProductInputs.forEach(input => input.remove());
+    }
+
+    function handleCloseHistoryModal() {
+        // Zerar produtos selecionados
+        produtosSelecionados = [];
+        const contadorProdutosSpan = document.getElementById('btnContadorSelecionados');
+        //
+        if (contadorProdutosSpan) {
+            const contadorSpanText = document.getElementById('spanSelecionarProdutos');
+            contadorSpanText.textContent = "Selecionar produtos";
+            contadorProdutosSpan.textContent = '';
+        }
+        const produtosHidden = document.getElementById('produtosSelecaoHidden');
+        if (produtosHidden) {
+            produtosHidden.value = 'todos';
+        }
+        const form = document.querySelector('#gerarArquivoModal form');
+        const existingProductInputs = form.querySelectorAll('input[name^="produtos_selecionados["]');
+        existingProductInputs.forEach(input => input.remove());
+
+        // Zerar segmentos selecionados
+        segmentosSelecionados = [];
+        try {
+            localStorage.removeItem('selectedSegmentacoes');
+        } catch (e) {}
+        const contadorSegSpan = document.getElementById('btnContadorSegmentos');
+        const contadorSpanText = document.getElementById('spanSelecionarSegmentos');
+        if (contadorSegSpan) {
+            contadorSpanText.textContent = "Selecionar segmentos";
+            contadorSegSpan.textContent = '';
+        }
+        // Desmarcar checkboxes do modal de segmentos, se presentes
+        document.querySelectorAll('.segmento-checkbox').forEach(cb => {
+            cb.checked = false;
+        });
+        const chkTodosSegmentos = document.getElementById('selecionarTodosSegmentos');
+        if (chkTodosSegmentos) {
+            chkTodosSegmentos.checked = false;
+        }
+        const contSelSeg = document.getElementById('contadorSegmentosSelecionados');
+        if (contSelSeg) {
+            contSelSeg.textContent = 0;
+        }
+
+        // Fechar modais e reabilitar estado
+        fecharModalSelecaoProdutos();
+    }
+
+    // Renderiza checkboxes de categorias e vincula seleção em massa
+    function renderizarCategoriasSelecionaveis(produtos) {
+        const container = document.getElementById('categoriasSelecionaveis');
+        if (!container) return;
+
+        // Extrair categorias únicas dos produtos
+        const categoriasSet = new Set((produtos || []).map(p => (p.categoria || '').trim()).filter(Boolean));
+        const categorias = Array.from(categoriasSet).sort((a, b) => a.localeCompare(b));
+
+        if (categorias.length === 0) {
+            container.innerHTML = '';
+            return;
+        }
+
+        container.innerHTML = [
+            `
+                <label class="flex items-center">
+                    <input type="checkbox" id="selecionarTodos" name="selecao_tipo"
+                        class="w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3">
+                    <span>Todos</span>
+                </label>
+            `,
+            ...categorias.map(cat => `
+                <label class="inline-flex items-center">
+                    <input type="checkbox" class="categoria-select-checkbox w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-2" data-categoria="${cat}">
+                    <span class="text-base">${cat}</span>
+                </label>
+            `)
+        ].join('');
+
+        // Checkbox "Todos" para seleção em massa de categorias
+        const chkTodosCategorias = container.querySelector('#selecionarTodos');
+        const atualizarEstadoSelecionarTodos = () => {
+            const totalCat = container.querySelectorAll('.categoria-select-checkbox').length;
+            const selecionadas = container.querySelectorAll('.categoria-select-checkbox:checked').length;
+            if (chkTodosCategorias) {
+                chkTodosCategorias.checked = totalCat > 0 && selecionadas === totalCat;
+            }
+        };
+
+        if (chkTodosCategorias) {
+            chkTodosCategorias.addEventListener('change', function() {
+                const categoriaCheckboxes = container.querySelectorAll('.categoria-select-checkbox');
+                categoriaCheckboxes.forEach(cb => {
+                    const estadoAnterior = cb.checked;
+                    cb.checked = this.checked;
+                    if (cb.checked !== estadoAnterior) {
+                        cb.dispatchEvent(new Event('change'));
+                    }
+                });
+                atualizarEstadoSelecionarTodos();
+            });
+        }
+
+        // Vincular eventos: marcar/desmarcar todos os produtos daquela categoria (apenas visíveis)
+        container.querySelectorAll('.categoria-select-checkbox').forEach(cb => {
+            cb.addEventListener('change', function() {
+                const categoria = (this.getAttribute('data-categoria') || '').toLowerCase();
+                const produtoRows = document.querySelectorAll('.produto-row');
+                produtoRows.forEach(row => {
+                    const rowCategoria = row.getAttribute('data-produto-categoria') || '';
+                    if (row.style.display !== 'none' && rowCategoria === categoria) {
+                        const checkbox = row.querySelector('.produto-checkbox');
+                        if (!checkbox) return;
+                        const produtoId = parseInt(checkbox.value);
+                        const produtoCor = checkbox.getAttribute('data-cor');
+
+                        checkbox.checked = this.checked;
+                        if (this.checked) {
+                            if (!produtosSelecionados.some(p => p.id === produtoId && p.cor ===
+                                    produtoCor)) {
+                                produtosSelecionados.push({
+                                    id: produtoId,
+                                    cor: produtoCor
+                                });
+                            }
+                        } else {
+                            produtosSelecionados = produtosSelecionados.filter(p => !(p.id ===
+                                produtoId && p.cor === produtoCor));
+                        }
+                    }
+                });
+                atualizarEstadoSelecionarTodos();
+                atualizarContador();
+            });
+        });
+
+        document.getElementById('selecionarTodos').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.produto-checkbox');
+            const isChecked = this.checked;
+
+            checkboxes.forEach(checkbox => {
+                // Só alterar checkboxes visíveis
+                const row = checkbox.closest('.produto-row');
+                if (row.style.display !== 'none') {
+                    checkbox.checked = isChecked;
+                    const produtoId = parseInt(checkbox.value);
+                    const produtoCor = checkbox.getAttribute('data-cor');
+
+                    if (isChecked) {
+                        if (!produtosSelecionados.some(p => p.id === produtoId && p.cor ===
+                                produtoCor)) {
+                            produtosSelecionados.push({
+                                id: produtoId,
+                                cor: produtoCor
+                            });
+                        }
+                    } else {
+                        produtosSelecionados = produtosSelecionados.filter(p => !(p.id === produtoId &&
+                            p
+                            .cor === produtoCor));
+                    }
+                }
+            });
+
+            atualizarContador();
+        });
     }
 </script>

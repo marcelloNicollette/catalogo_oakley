@@ -254,6 +254,10 @@ class frontendController extends Controller
         $categoriaSlug = $request->get('categoria');
         $collectionId = $request->get('collection_id');
 
+        // Verificar se o usuário logado tem segmentações de cliente
+        $user = Auth::user();
+        $userSegmentacoesCliente = $user->segmentacoesCliente;
+
         if (!$collectionId) {
             return response()->json(['error' => 'Collection ID é obrigatório'], 400);
         }
@@ -268,29 +272,42 @@ class frontendController extends Controller
             });
         }
 
+        // Verificar se há segmentações selecionadas no request (vindas do modal)
+        $selectedSegmentacoes = $request->input('selected_segmentacoes');
+        //dd($selectedSegmentacoes);
+        if ($selectedSegmentacoes && is_array($selectedSegmentacoes) && count($selectedSegmentacoes) > 0) {
+            // Filtrar cores baseado nas segmentações selecionadas no modal
+            $query->whereHas('segmentacoesCliente', function ($query) use ($selectedSegmentacoes) {
+                $query->whereIn('segmentacao_cliente_id', $selectedSegmentacoes);
+            });
+        } elseif ($userSegmentacoesCliente->count() > 0) {
+            // Se não há seleção específica, usar todas as segmentações do usuário
+            $segmentacaoClienteIds = $userSegmentacoesCliente->pluck('id');
+            $query->whereHas('segmentacoesCliente', function ($query) use ($segmentacaoClienteIds) {
+                $query->whereIn('segmentacao_cliente_id', $segmentacaoClienteIds);
+            });
+        }
+
         //$produtos = $query->get()->groupBy('product_id');
         $produtos = $query->get();
-
+        //dd($produtos);
 
         $produtosFormatados = [];
         foreach ($produtos as $produtoGroup) {
             $produto = $produtoGroup;
-            if ($produto->product != null) {
+            $img = "/images/produtos/" . $produto->product->code . "_" . $produto->color_code . ".jpg";
 
-                $img = "/images/produtos/" . $produto->product->code . "_" . $produto->color_code . ".jpg";
-
-                $produtosFormatados[] = [
-                    'id' => $produto->product->id,
-                    'title' => $produto->product->name,
-                    'imagem' => $img,
-                    'codigo' => $produto->product->code,
-                    'cor' => $produto->color_name,
-                    'categoria' => $produto->product->category->name,
-                    'preco' => 'R$' . $produto->product->price,
-                    'slug' => $produto->product->slug,
-                    'selected' => false
-                ];
-            }
+            $produtosFormatados[] = [
+                'id' => $produto->product->id,
+                'title' => $produto->product->name,
+                'imagem' => $img,
+                'codigo' => $produto->product->code,
+                'cor' => $produto->color_name,
+                'categoria' => $produto->product->category->name,
+                'preco' => 'R$' . $produto->product->price,
+                'slug' => $produto->product->slug,
+                'selected' => false
+            ];
         }
 
         return response()->json($produtosFormatados);

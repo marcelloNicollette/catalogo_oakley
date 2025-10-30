@@ -173,7 +173,7 @@
                                             <div class="flex items-center gap-4">
                                                 <label class="flex items-center">
                                                     <input type="checkbox" id="selecionarTodosSegmentacoes"
-                                                        class="mr-2 text-base"
+                                                        class="w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3"
                                                         :checked="selectedSegmentacoes.length === segmentacoesDisponiveis
                                                             .length && segmentacoesDisponiveis.length > 0"
                                                         @change="toggleSelectAll($event.target.checked)">
@@ -218,7 +218,7 @@
                                                                     <input type="checkbox"
                                                                         :checked="selectedSegmentacoes.includes(segmentacao.id)"
                                                                         @change="toggleSegmentacao(segmentacao.id)"
-                                                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                                                        class="w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3">
                                                                     <span x-text="segmentacao.nome"
                                                                         class="text-sm text-gray-900"></span>
                                                                 </label>
