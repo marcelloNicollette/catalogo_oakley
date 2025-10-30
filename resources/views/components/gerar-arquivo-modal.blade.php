@@ -106,7 +106,7 @@
                         <div class="flex flex-wrap gap-3">
                             <label class="inline-flex items-center">
                                 <input type="checkbox" name="opcoes[]"
-                                    class="form-checkbox w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative"
+                                    class="form-checkbox w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative"
                                     value="remover_preco">
                                 <span class="ml-2 text-sm">Remover Preço</span>
                             </label>
@@ -124,7 +124,7 @@
                             </label>-->
                             <label class="inline-flex items-center">
                                 <input type="checkbox" name="opcoes[]"
-                                    class="form-checkbox w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative"
+                                    class="form-checkbox w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative"
                                     value="remover_capa_retranca">
                                 <span class="ml-2 text-sm">Remover Capa e Retrancas</span>
                             </label>
@@ -222,7 +222,7 @@
             <div class="flex items-center gap-4">
                 <label class="flex items-center">
                     <input type="checkbox" id="selecionarTodosSegmentos"
-                        class="w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3">
+                        class="w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3">
                     <span>Selecionar todos</span>
                 </label>
                 <span class="text-xs opacity-50">Selecionados: <span
@@ -281,7 +281,7 @@
 
                     <label class="flex items-center">
                         <input type="checkbox" id="selecionarTodos" name="selecao_tipo"
-                            class="w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3">
+                            class="w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3">
                         <span>Todos</span>
                     </label>
                 </div>
@@ -603,7 +603,7 @@
                            value="${produto.id}" 
                            data-cor="${produto.cor}"
                            data-categoria="${produto.categoria || ''}"
-                           class="produto-checkbox w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative " 
+                           class="produto-checkbox w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative " 
                            ${(Array.isArray(produtosSelecionados) && produtosSelecionados.some(p => p.id === produto.id && p.cor === produto.cor)) || produto.selected ? 'checked' : ''}>
                 </div>
                 <div class="col-span-2 text-sm ">${produto.codigo}</div>
@@ -767,7 +767,7 @@
             <div class=\"py-[5px] px-4 text-sm\">
                 <label class=\"inline-flex items-center gap-1 cursor-pointer\">
                     <input type=\"checkbox\" data-id=\"${seg.id}\" ${segmentosSelecionados.includes(seg.id) ? 'checked' : ''}
-                        class=\"segmento-checkbox w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3\">
+                        class=\"segmento-checkbox w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3\">
                     <span class=\"text-sm text-gray-900\">${seg.nome}</span>
                 </label>
             </div>
@@ -1004,13 +1004,13 @@
             `
                 <label class="flex items-center">
                     <input type="checkbox" id="selecionarTodos" name="selecao_tipo"
-                        class="w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3">
+                        class="w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3">
                     <span>Todos</span>
                 </label>
             `,
             ...categorias.map(cat => `
                 <label class="inline-flex items-center">
-                    <input type="checkbox" class="categoria-select-checkbox w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-2" data-categoria="${cat}">
+                    <input type="checkbox" class="categoria-select-checkbox w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-2" data-categoria="${cat}">
                     <span class="text-base">${cat}</span>
                 </label>
             `)

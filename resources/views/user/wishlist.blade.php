@@ -195,7 +195,7 @@
                     <label class="inline-flex items-center text-sm bg-white px-[20px] py-[9px] rounded-lg">
                         <span class="text-base mr-1">Agrupar cores</span>
                         <input id="groupColors" type="checkbox"
-                            class="w-[15px] h-[16px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative">
+                            class="w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative">
                     </label>
 
                     <div class="filter-container">
