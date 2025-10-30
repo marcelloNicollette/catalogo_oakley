@@ -725,12 +725,9 @@ html {
         }
 
         .sort-option {
-            padding: 6px 12px;
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 20px;
-            font-size: 13px;
-            color: #7A7A7A;
+            padding: 5px 12px;
+            font-size: 16px;
+            color: #000;
             cursor: pointer;
             transition: all 0.2s ease;
             user-select: none;
@@ -742,9 +739,7 @@ html {
         }
 
         .sort-option.selected {
-            background: #000000;
-            border-color: #000000;
-            color: white;
+            color: #7A7A7A;
         }
 
 
