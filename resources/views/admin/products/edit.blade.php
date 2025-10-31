@@ -418,22 +418,40 @@
 
                 {{-- Tecnologias --}}
                 <div class="mb-4">
-                    <div class="flex justify-between items-center mb-2">
-                        <label for="technologies" class="block text-sm font-medium text-gray-700">Tecnologias</label>
-                    </div>
-                    <select name="technologies[]" id="technologies" multiple
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                        @foreach ($technologies as $technology)
-                            <optgroup label="{{ $technology->name }}">
-                                @foreach ($technology->items as $item)
-                                    <option value="{{ $item->id }}"
-                                        {{ collect(json_decode($product->technologies, true))->contains($item->id) ? 'selected' : '' }}>
-                                        {{ $item->name }}
-                                    </option>
+                    <fieldset class="border-2 border-indigo-200 rounded-md bg-gray-100">
+                        <legend class="px-2 text-sm font-medium text-gray-700">Tecnologias</legend>
+                        <div class="px-3 py-2">
+                            @if (isset($technologies) && $technologies->count() > 0)
+                                @foreach ($technologies as $technology)
+                                    <div class="mb-3">
+                                        <h4 class="text-sm font-medium text-gray-700 mb-2">{{ $technology->name }}
+                                        </h4>
+                                        <div
+                                            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-3 border border-indigo-200 rounded-md bg-white max-h-32 overflow-y-auto">
+                                            @foreach ($technology->items as $item)
+                                                <label class="flex items-center text-xs">
+                                                    <input type="checkbox" name="technologies[]"
+                                                        value="{{ $item->id }}"
+                                                        {{ collect(json_decode($product->technologies, true))->contains($item->id) ? 'checked' : '' }}
+                                                        class="h-3 w-3 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-1">
+                                                    <span class="text-gray-700">{{ $item->name }}</span>
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                    </div>
                                 @endforeach
-                            </optgroup>
-                        @endforeach
-                    </select>
+                                <p class="mt-1 text-xs text-indigo-700">Selecione as tecnologias para este produto</p>
+                            @else
+                                <div class="p-3 border border-indigo-200 rounded-md bg-white text-center">
+                                    <p class="text-xs text-gray-500 mb-1">Nenhuma tecnologia disponível.</p>
+                                    <a href="{{ route('admin.technology-categories.index') }}"
+                                        class="text-blue-600 hover:text-blue-800 text-xs font-medium">
+                                        Gerenciar tecnologias
+                                    </a>
+                                </div>
+                            @endif
+                        </div>
+                    </fieldset>
                 </div>
 
                 <div class="mb-4">
