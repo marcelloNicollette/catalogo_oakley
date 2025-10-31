@@ -517,6 +517,15 @@
 
             let selectedSortValue = 'mais-nova';
 
+            (function initDefaultSortSelection() {
+                const optionToSelect = Array.from(sortOptions).find(opt => opt.getAttribute('data-value') ===
+                    selectedSortValue);
+                if (optionToSelect) {
+                    sortOptions.forEach(opt => opt.classList.remove('selected'));
+                    optionToSelect.classList.add('selected');
+                    sortText.textContent = optionToSelect.textContent;
+                }
+            })();
             // Toggle sort dropdown
             sortButton.addEventListener('click', function(e) {
                 e.stopPropagation();
