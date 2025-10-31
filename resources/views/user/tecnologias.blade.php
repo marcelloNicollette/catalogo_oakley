@@ -14,7 +14,7 @@
         }
 
         .height-ultra {
-            height: calc(100vh - 180px);
+            height: calc(100vh - 160px);
         }
     </style>
     <main class="lg:flex flex-1 produtos-page">

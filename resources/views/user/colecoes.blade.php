@@ -1,7 +1,7 @@
 <x-layout-user title="Under Armour - Coleções">
     <style>
         .height-ultra {
-            height: calc(100vh - 175px);
+            height: calc(100vh - 165px);
         }
 
         @media (min-width: 1280px) {

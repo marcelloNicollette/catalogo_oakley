@@ -1,7 +1,7 @@
 <x-layout-user title="Under Armour - GErar Arquivo">
     <style>
         .height-ultra {
-            height: calc(100vh - 180px);
+            height: calc(100vh - 160px);
         }
 
         @media (min-width: 1280px) {
