@@ -26,9 +26,10 @@
         <x-sidebar activeItem="conteudos" />
 
         <!-- Conteúdo principal -->
-        <section class="flex-1 flex flex-col p-4 md:pt-0 md:pr-0 md:pl-4 md:pb-0 overflow-hidden">
+        <section class="flex-1 flex flex-col md:pr-0 md:pb-0 overflow-hidden">
             <!-- Filtros superiores -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 pr-4">
+            <div
+                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 pr-4 bg-[#F1F1F1] z-50">
                 <!-- Esquerda: Coleção e Categoria -->
                 <div class="flex gap-2">
 
@@ -91,7 +92,7 @@
                 </div>
             </div>
 
-            <div class="bg-[#E6E6E6] rounded-xl overflow-auto height-ultra custom-scrollbar">
+            <div class="bg-[#E6E6E6] rounded-xl rounded-r-none overflow-auto height-ultra custom-scrollbar">
                 <div class="my-custom-bg p-12 max-w-[999px] mx-auto pb-0">
                     @foreach ($conteudos as $item)
                         <div class="mb-10" data-categoria-id="{{ $item->id }}">

@@ -48,7 +48,7 @@
         <section class="flex-1 flex flex-col overflow-hidden">
 
             <!-- Filtros superiores -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-5 pb-3 px-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-5 pb-3 pr-4">
                 <!-- Esquerda: Coleção e Categoria -->
                 <div class="flex gap-2">
 
@@ -153,7 +153,7 @@
             </div>
 
             <!-- Grid de Coleções -->
-            <div class="bg-[#000000] ml-4 p-2 rounded-lg height-ultra overflow-auto custom-scrollbar">
+            <div class="bg-[#000000] p-2 rounded-lg rounded-r-none height-ultra overflow-auto custom-scrollbar">
                 <div id="colecoes-grid"
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-[10px]"
                     style="border-radius: 10px 0 0 0;">

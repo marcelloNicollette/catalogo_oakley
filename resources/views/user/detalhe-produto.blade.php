@@ -851,6 +851,44 @@
             const iconOutline = document.getElementById("iconOutline");
             const iconFilled = document.getElementById("iconFilled");
 
+            // Estilos de fade adicionados dinamicamente para evitar editar o <head>
+            function ensureFadeStyles() {
+                const styleId = 'favoriteTextFadeStyles';
+                if (!document.getElementById(styleId)) {
+                    const style = document.createElement('style');
+                    style.id = styleId;
+                    style.textContent = `
+                        @keyframes favFadeIn { from { opacity: 0 } to { opacity: 1 } }
+                        @keyframes favFadeOut { from { opacity: 1 } to { opacity: 0 } }
+                        .fade-in { animation: favFadeIn 400ms ease-in forwards; }
+                        .fade-out { animation: favFadeOut 400ms ease-out forwards; }
+                    `;
+                    document.head.appendChild(style);
+                }
+            }
+
+            ensureFadeStyles();
+
+            // Helper para exibir mensagem com FadeIn e ocultar com FadeOut
+            function showFavoriteMessage(message) {
+                const favoriteText = document.getElementById('favoriteText');
+                if (!favoriteText) return;
+
+                favoriteText.textContent = message;
+                favoriteText.classList.remove('hidden', 'fade-out');
+                favoriteText.classList.add('fade-in');
+
+                // Após 5s, faz o FadeOut e oculta o elemento
+                setTimeout(() => {
+                    favoriteText.classList.remove('fade-in');
+                    favoriteText.classList.add('fade-out');
+                    setTimeout(() => {
+                        favoriteText.classList.add('hidden');
+                        favoriteText.classList.remove('fade-out');
+                    }, 400);
+                }, 5000);
+            }
+
             // Verificar estado inicial da wishlist
             checkWishlistStatus();
 
@@ -881,33 +919,14 @@
                         if (data.success) {
                             iconFilled.classList.remove("hidden");
                             iconOutline.classList.add("hidden");
-
-                            const favoriteText = document.getElementById('favoriteText');
-                            favoriteText.textContent = 'Adicionado aos Favoritos';
-                            favoriteText.classList.remove('hidden');
-
-                            setTimeout(() => {
-                                favoriteText.classList.add('hidden');
-                            }, 5000);
+                            showFavoriteMessage('Adicionado aos Favoritos');
                         } else {
-                            const favoriteText = document.getElementById('favoriteText');
-                            favoriteText.textContent = 'Erro ao adicionar aos favoritos';
-                            favoriteText.classList.remove('hidden');
-
-                            setTimeout(() => {
-                                favoriteText.classList.add('hidden');
-                            }, 5000);
+                            showFavoriteMessage('Erro ao adicionar aos favoritos');
                         }
                     })
                     .catch(error => {
                         console.error('Erro:', error);
-                        const favoriteText = document.getElementById('favoriteText');
-                        favoriteText.textContent = 'Erro ao adicionar aos favoritos';
-                        favoriteText.classList.remove('hidden');
-
-                        setTimeout(() => {
-                            favoriteText.classList.add('hidden');
-                        }, 5000);
+                        showFavoriteMessage('Erro ao adicionar aos favoritos');
                     });
             }
 
@@ -928,14 +947,7 @@
                         if (data.success) {
                             iconFilled.classList.add("hidden");
                             iconOutline.classList.remove("hidden");
-
-                            const favoriteText = document.getElementById('favoriteText');
-                            favoriteText.textContent = 'Removido dos Favoritos';
-                            favoriteText.classList.remove('hidden');
-
-                            setTimeout(() => {
-                                favoriteText.classList.add('hidden');
-                            }, 5000);
+                            showFavoriteMessage('Removido dos Favoritos');
                         }
                     })
                     .catch(error => {

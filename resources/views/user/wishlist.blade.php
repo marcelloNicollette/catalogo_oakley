@@ -81,7 +81,7 @@
             @endphp
             <!-- Filtros superiores -->
             <div
-                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 px-4  bg-[#F1F1F1] z-50">
+                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 pr-4  bg-[#F1F1F1] z-50">
                 <!-- Esquerda: Coleção e Categoria -->
                 <div class="flex gap-2">
                     <div class="select-container" style="width: 225px;">
@@ -291,7 +291,7 @@
 
             <!-- Lista de Produtos -->
             <div id="produtos"
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 ml-4 p-2 bg-[#E6E6E6] rounded-xl overflow-auto height-ultra custom-scrollbar">
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 p-2 bg-[#E6E6E6] rounded-xl rounded-r-none  overflow-auto height-ultra custom-scrollbar">
 
                 <!-- Template de Produto -->
                 <template id="template-produto">
