@@ -576,21 +576,36 @@
                 if (desktopGrid) {
                     desktopGrid.innerHTML = '';
 
-                    cachedImages.forEach(imgInfo => {
+                    cachedImages.forEach((imgInfo, index) => {
                         const imageDiv = document.createElement('div');
                         imageDiv.className = 'cursor-pointer transition-opacity';
                         imageDiv.setAttribute('data-image', imgInfo.path);
                         imageDiv.onclick = function() {
                             openImageModal(this);
                         };
-                        //console.log('Carregando imagem:', imgInfo.index);
-                        const $css1 = imgInfo.index === 0 ? 'rounded-l-lg' : '';
+
+                        // Lógica para determinar as classes de corner
+                        let cornerClass = 'rounded-none';
+                        const totalImages = cachedImages.length;
+                        const isFirstRow = index < 2; // Primeiras 2 imagens (índices 0 e 1)
+                        const isLastRow = index >= totalImages - 2; // Últimas 2 imagens
+
+                        if (isFirstRow) {
+                            // Primeira linha
+                            cornerClass = index === 0 ? 'rounded-tl-lg' : 'rounded-tr-lg';
+                        } else if (isLastRow) {
+                            // Última linha
+                            const isLeftColumn = index % 2 === 0; // Coluna esquerda (índices pares)
+                            cornerClass = isLeftColumn ? 'rounded-bl-lg' : 'rounded-br-lg';
+                        }
+                        // Caso contrário, mantém 'rounded-none' para imagens do meio
+
                         imageDiv.innerHTML = `
-                            <img src="${imgInfo.path}" 
-                                 alt="Vista ${imgInfo.index + 1}" 
-                                 class="w-full object-contain rounded-lg "
-                                 onerror="this.src='/images/img-padrao-oly.png'" />
-                        `;
+            <img src="${imgInfo.path}" 
+                 alt="Vista ${imgInfo.index + 1}" 
+                 class="w-full object-contain ${cornerClass}"
+                 onerror="this.src='/images/img-padrao-oly.png'" />
+        `;
 
                         desktopGrid.appendChild(imageDiv);
                     });
