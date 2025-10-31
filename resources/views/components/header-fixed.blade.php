@@ -90,7 +90,7 @@
             }
         </style>
         <div class="relative inline-block text-left">
-            @if (count($parts) != 4 && count($parts) != 5 && count($parts) != 5)
+            @if (count($parts) != 4 && count($parts) != 5 && count($parts) != 6)
                 @if ($currentSlug != 'segmentacao')
                     @foreach ($segmentacoes as $segmentacao)
                         @if ($currentSlug == $segmentacao->slug)

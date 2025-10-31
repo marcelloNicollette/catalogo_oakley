@@ -588,13 +588,20 @@
                         let cornerClass = 'rounded-none';
                         const totalImages = cachedImages.length;
                         const isFirstRow = index < 2; // Primeiras 2 imagens (índices 0 e 1)
-                        const isLastRow = index >= totalImages - 2; // Últimas 2 imagens
+                        const isLastImage = index === totalImages - 1; // Última imagem
+                        const isOddTotal = totalImages % 2 !== 0; // Total ímpar
 
-                        if (isFirstRow) {
+                        if (totalImages === 2) {
+                            // Caso especial: apenas 2 imagens
+                            cornerClass = index === 0 ? 'rounded-l-lg' : 'rounded-r-lg';
+                        } else if (isFirstRow) {
                             // Primeira linha
                             cornerClass = index === 0 ? 'rounded-tl-lg' : 'rounded-tr-lg';
-                        } else if (isLastRow) {
-                            // Última linha
+                        } else if (isOddTotal && isLastImage) {
+                            // Se total é ímpar e é a última imagem (sozinha na linha)
+                            cornerClass = 'rounded-bl-lg';
+                        } else if (!isOddTotal && index >= totalImages - 2) {
+                            // Última linha com 2 imagens (apenas quando total é PAR)
                             const isLeftColumn = index % 2 === 0; // Coluna esquerda (índices pares)
                             cornerClass = isLeftColumn ? 'rounded-bl-lg' : 'rounded-br-lg';
                         }
