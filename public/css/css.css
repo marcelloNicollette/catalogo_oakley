@@ -403,7 +403,7 @@ html {
         }
 
         .option:hover {
-            background-color: #f8f9fa;
+            /*background-color: #f8f9fa;*/
         }
 
         /* Estilos específicos para dropdowns da página de produtos */

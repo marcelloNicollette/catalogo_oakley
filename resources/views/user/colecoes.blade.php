@@ -68,11 +68,10 @@
                         <div class="options min-w-[260px] p-5" id="options">
                             @foreach ($colecoes as $colecao)
                                 <div class="option text-[18px]" data-value="{{ $colecao->slug }}">
-                                    {{ $colecao->codigo_colecao }} -
-                                    <span style="font-size: 14px;">{{ ucwords(strtolower($colecao->name)) }}</span>
+                                    {{ $colecao->codigo_colecao }}</span>
                                 </div>
                             @endforeach
-                            <div class="option" data-value="todas">Todas</div>
+                            <div class="text-sm option" data-value="todas">Todas</div>
                         </div>
                     </div>
                 </div>
@@ -153,7 +152,7 @@
             </div>
 
             <!-- Grid de Coleções -->
-            <div class="bg-[#000000] p-2 rounded-lg rounded-r-none height-ultra overflow-auto custom-scrollbar">
+            <div class="bg-[#000000] p-2 rounded-tl-lg height-ultra overflow-auto custom-scrollbar">
                 <div id="colecoes-grid"
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-[10px]"
                     style="border-radius: 10px 0 0 0;">

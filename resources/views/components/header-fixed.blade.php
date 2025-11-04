@@ -2,8 +2,9 @@
 
 <header class="fixed top-0 left-0 right-0 flex items-center justify-between gap-4 p-5 bg-[#F1F1F1] z-50">
     <div class="flex items-center space-x-2 py-1">
-        <a href="{{ route('user.slug', request()->route('slug')) }}"><svg xmlns="http://www.w3.org/2000/svg" width="278"
-                height="19" viewBox="0 0 278 19" fill="none">
+        <a
+            href="{{ request()->route('slug') == null ? route('user.segmentacao') : route('user.slug', request()->route('slug')) }}"><svg
+                xmlns="http://www.w3.org/2000/svg" width="278" height="19" viewBox="0 0 278 19" fill="none">
                 <path
                     d="M44.6821 16.6595C39.2373 16.6595 39.1414 12.5182 39.1414 10.9237V3.38383C39.1414 2.92825 39.1048 2.32232 40.0732 2.32232H42.8915C43.8051 2.32232 43.7503 2.96925 43.7503 3.38383V10.9237C43.7503 11.4567 43.8462 12.9009 45.824 12.9009H50.5471C52.4884 12.9009 52.6026 11.4567 52.6026 10.9237V3.38383C52.6026 2.96469 52.5432 2.32232 53.4614 2.32232H56.298C57.3257 2.32232 57.2298 2.96925 57.2298 3.38383V10.9237C57.2298 12.5182 57.1339 16.6595 51.6708 16.6595H44.6821Z"
                     fill="black" />

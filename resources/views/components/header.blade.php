@@ -133,7 +133,7 @@
                         }" class="relative pl-[10px]">
                             <!-- Botão CTA -->
                             <button @click="showModal = true"
-                                class="flex items-center space-x-2 px-3 py-[6px] bg-white text-black  rounded-full hover:opacity-80 transition-colors border border-black">
+                                class="flex items-center space-x-2 px-3 py-[6px]  text-black  rounded-full hover:opacity-80 transition-colors border border-black">
 
                                 <div class="flex flex-row items-start">
                                     <span class="text-sm ">Segmentos: </span>

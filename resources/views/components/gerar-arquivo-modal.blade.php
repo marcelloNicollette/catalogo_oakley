@@ -258,7 +258,7 @@
     </div>
     @php
         $segmentosUsuario =
-            auth()->user() && auth()->user()->segmentacoesCliente
+            auth()->user() && auth()->user()->segmentacoesCliente->count() > 0
                 ? auth()->user()->segmentacoesCliente
                 : \App\Models\SegmentacaoCliente::where('active', true)->get();
     @endphp

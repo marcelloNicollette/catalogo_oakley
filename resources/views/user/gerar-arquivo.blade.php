@@ -74,7 +74,7 @@
         <section class="flex-1 flex flex-col md:pr-0 md:pb-0 overflow-hidden">
             <!-- Filtros superiores -->
             <div
-                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 pr-4 bg-[#F1F1F1] z-50">
+                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 pr-4 bg-[#F1F1F1]">
                 <!-- Esquerda: Coleção e Categoria -->
                 <div class="flex gap-2">
 
@@ -186,7 +186,7 @@
 
 
             <!-- Grid de Coleções -->
-            <div class="bg-[#000000] p-2 rounded-lg rounded-r-none  overflow-auto height-ultra custom-scrollbar">
+            <div class="bg-[#000000] p-2 rrounded-tl-lg overflow-auto height-ultra custom-scrollbar">
                 <div id="colecoes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3"
                     style="border-radius: 10px 0 0 0;">
                     <!-- Cards serão renderizados via JavaScript -->

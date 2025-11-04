@@ -81,7 +81,7 @@
             }
 
             .subcategory-option:hover {
-                background-color: #f5f5f5;
+                /*background-color: #f5f5f5;*/
             }
 
             .subcategory-option.selected {
@@ -118,6 +118,16 @@
                 /* auto, thin, none */
                 scrollbar-color: #A9A9A9 #000000;
                 /* thumb track */
+            }
+
+
+            .options {
+                max-height: 500px;
+            }
+
+            .custom-scrollbar {
+                scrollbar-width: thin;
+                scrollbar-color: #A9A9A9 #FFF;
             }
         </style>
         <!-- Conteúdo principal -->
@@ -191,7 +201,7 @@
                                         <path
                                             d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
                                     </svg></span>
-                                <span class="option-content">Todas</span>
+                                <span class="text-sm option-content">Todas</span>
                                 <span class="x-icon" style="display: none;">×</span>
                             </div>
                         </div>
@@ -210,7 +220,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="options min-w-[250px] p-5" id="categoryOptions" style="
+                        <div class="options min-w-[250px] p-5 custom-scrollbar" id="categoryOptions"
+                            style="
     left: 185px; top:5rem;">
                             @foreach ($categories as $category)
                                 @php $hasSub = isset($category->subcategories) && count($category->subcategories) > 0; @endphp
@@ -245,7 +256,7 @@
                                                         <path
                                                             d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
                                                     </svg>
-                                                    <span>Todas</span>
+                                                    <span class="text-sm ">Todas</span>
                                                 </div>
                                                 <span class="x-icon">×</span>
                                             </div>
@@ -274,7 +285,7 @@
                                         <path
                                             d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
                                     </svg></span>
-                                <span class="option-content">Todas</span>
+                                <span class="text-sm option-content">Todas</span>
                                 <span class="x-icon" style="display: inline;">×</span>
                             </div>
                         </div>
@@ -294,7 +305,7 @@
                             class="input-estilizado bg-transparent border-0 focus:outline-none focus:ring-0 p-1" />
                     </div>
 
-                    <label class="inline-flex items-center text-sm bg-white px-[20px] py-[9px] rounded-lg">
+                    <label class="inline-flex items-center text-sm bg-white px-[20px] py-[10px] rounded-lg">
                         <span class="text-base mr-1">Agrupar cores</span>
                         <input id="groupColors" type="checkbox"
                             class="w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative">
@@ -314,7 +325,7 @@
                             </div>
                         </div>
 
-                        <div class="filter-dropdown" style="width: 310px;" id="filterDropdown">
+                        <div class="filter-dropdown custom-scrollbar" style="width: 310px;" id="filterDropdown">
                             <div class="filter-section">
                                 <label class="filter-label">Numeração/Tamanhos​</label>
                                 <div class="filter-options" id="numeracaoOptions">
