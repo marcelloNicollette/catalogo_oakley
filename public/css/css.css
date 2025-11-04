@@ -656,7 +656,6 @@ html {
             justify-content: space-between;
             align-items: center;
             transition: all 0.2s ease;
-            min-width: 230px;
         }
 
         .sort-button:hover {

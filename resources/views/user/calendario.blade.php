@@ -102,7 +102,7 @@
 
             <!-- Lista de Produtos -->
             <div id="produtos"
-                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-1 bg-[#E6E6E6] lg:p-[3.125rem] rounded-xl overflow-auto lg:h-[75vh] xl:h-[79vh] 2xl:h-[78vh] 3xl:h-[80vh]">
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-1 bg-[#E6E6E6] lg:p-[3.125rem] rrounded-tl-lg overflow-auto lg:h-[75vh] xl:h-[79vh] 2xl:h-[78vh] 3xl:h-[80vh]">
                 <!-- Template de Produto -->
                 <template id="template-produto">
 

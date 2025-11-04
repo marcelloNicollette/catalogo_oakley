@@ -25,7 +25,7 @@
             }
 
             .height-ultra {
-                height: calc(100vh - 165px);
+                height: calc(100vh - 156px);
             }
 
 

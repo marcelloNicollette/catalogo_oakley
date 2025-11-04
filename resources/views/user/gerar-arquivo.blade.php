@@ -103,7 +103,7 @@
                     </div>
 
                     <button id="openHistoryModal"
-                        class="flex items-center justify-center select-estilizado rounded-lg px-5 py-2 hover:bg-gray-100 transition-colors">
+                        class="flex items-center justify-center bg-[#e7e7e7] rounded-lg px-5 py-2 border-[#e7e7e7] border hover:border-black hover:border">
                         <span class="text-base pr-2">Histórico</span> <img
                             src="{{ asset('/images/icones/historico.svg') }}" alt="Histórico" class="w-5 h-5">
                     </button>
