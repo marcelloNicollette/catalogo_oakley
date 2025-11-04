@@ -432,6 +432,13 @@ html {
             flex: 1;
             margin: 0 20px;
         }
+
+
+
+        .produtos-page .option.selected .option-content{
+            margin: 0 20px 0 0;
+            
+        }
         /*.produtos-page .option.selected .option-content {
             margin: 0 3px;
         }*/

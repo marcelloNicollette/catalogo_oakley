@@ -48,7 +48,7 @@
                         </div>
 
 
-                        <div class="options min-w-[300px] p-5" id="options">
+                        <div class="options min-w-[345px] p-5" id="options">
 
                             @foreach ($categories as $item)
                                 <div class="option text-[18px] font-normal" data-categoria-id="{{ $item->id }}"
