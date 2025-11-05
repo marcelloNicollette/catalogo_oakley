@@ -740,8 +740,8 @@ html {
         }
 
         .sort-option:hover {
-            background: #e9ecef;
-            border-color: #dee2e6;
+            /*background: #e9ecef;
+            border-color: #dee2e6;*/
         }
 
         .sort-option.selected {

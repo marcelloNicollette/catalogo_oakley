@@ -1006,18 +1006,20 @@
                 colorVariants.forEach((variant) => {
                     variant.addEventListener("click", () => {
                         // Adicionar indicador visual imediato
-                        variant.style.opacity = '0.7';
+                        //variant.style.opacity = '0.7';
                         //console.log(variant);
                         // Usar requestAnimationFrame para suavizar a transição
                         requestAnimationFrame(() => {
                             // Remove seleção de todas as cores
                             colorVariants.forEach((v) => {
-                                v.classList.remove("border-black", "border");
+                                v.classList.remove("border-black", "border-white");
+                                v.classList.add("border-white");
                                 v.style.opacity = '1';
                             });
 
                             // Adiciona seleção na cor clicada
-                            variant.classList.add("border-black", "border");
+                            variant.classList.remove("border-black", "border-white")
+                            variant.classList.add("border-black");
                             variant.style.opacity = '1';
 
                             // Obtém o código da cor selecionada
@@ -1202,7 +1204,7 @@
                     }
 
                     corElement.innerHTML = `
-                        <div class="box-color bg-white ${isFirst ? 'border border-black' : ''} rounded-lg cursor-pointer transition-all duration-200 " 
+                        <div class="box-color bg-white ${isFirst ? 'border border-black' : 'border border-white'} rounded-lg cursor-pointer transition-all duration-200 " 
                              data-color-code="${cor.color_code}">
                             <div class="relative">
                                 <img src="/images/produtos/{{ $produto->code }}_${colorCodeFormatted}.jpg" 
