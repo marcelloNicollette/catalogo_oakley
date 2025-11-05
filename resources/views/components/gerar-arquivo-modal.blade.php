@@ -68,8 +68,8 @@
                             <label class="block text-xs font-normal text-black mb-2">Produtos</label>
                             <div class="flex flex-col gap-2">
                                 <label class="inline-flex items-center w-full">
-                                    <button type="button" name="produtos" id="btnSelecaoProdutos"
-                                        class="w-full flex items-center justify-center space-x-2 px-3 py-[6px] bg-white text-black rounded-full hover:opacity-80 transition-colors border border-black">
+                                    <button type="button" name="produtos" id="btnSelecaoProdutos" disabled
+                                        class="w-full flex items-center justify-center space-x-2 px-3 py-[6px] bg-white text-black rounded-full hover:opacity-80 transition-colors border border-black opacity-50 cursor-not-allowed">
                                         <span id="spanSelecionarProdutos" class="text-base">Selecionar produtos</span>
                                         <span id="btnContadorSelecionados"
                                             class="text-[14px] text-black opacity-50 underline ml-2"></span>
@@ -439,6 +439,14 @@
         const segsInit = getSelectedSegmentacoesLocal();
         if (contadorSegSpan) {
             //contadorSegSpan.textContent = (segsInit && segsInit.length ? segsInit.length : 0) + ' (Editar)';
+        }
+
+        // Desabilitar/habilitar CTA de produtos conforme seleção inicial de segmentos
+        if (selecaoButton) {
+            const hasSegsInit = (segsInit && segsInit.length > 0);
+            selecaoButton.disabled = !hasSegsInit;
+            selecaoButton.classList.toggle('opacity-50', !hasSegsInit);
+            selecaoButton.classList.toggle('cursor-not-allowed', !hasSegsInit);
         }
 
         // Clique no CTA: define modo seleção e abre modal (sem toggle)
@@ -834,6 +842,15 @@
             contadorSegSpan.textContent = segmentosSelecionados.length + ' (Editar)';
         }
 
+        // Habilitar CTA de produtos após salvar seleção de segmentos
+        const selecaoButton = document.getElementById('btnSelecaoProdutos');
+        if (selecaoButton) {
+            const hasSegs = segmentosSelecionados.length > 0;
+            selecaoButton.disabled = !hasSegs;
+            selecaoButton.classList.toggle('opacity-50', !hasSegs);
+            selecaoButton.classList.toggle('cursor-not-allowed', !hasSegs);
+        }
+
         fecharModalSelecaoSegmentos();
     });
 
@@ -860,6 +877,13 @@
         const contadorSegSpan = document.getElementById('btnContadorSegmentos');
         if (contadorSegSpan) {
             contadorSegSpan.textContent = '0 (Editar)';
+        }
+
+        // Desabilitar CTA de produtos ao cancelar seleção de segmentos
+        const selecaoButton = document.getElementById('btnSelecaoProdutos');
+        if (selecaoButton) {
+            selecaoButton.disabled = true;
+            selecaoButton.classList.add('opacity-50', 'cursor-not-allowed');
         }
 
         // Fechar modal de segmentos e voltar ao modal principal
@@ -984,6 +1008,13 @@
 
         // Fechar modais e reabilitar estado
         fecharModalSelecaoProdutos();
+
+        // Desabilitar CTA de produtos ao limpar histórico/seleções
+        const selecaoButton = document.getElementById('btnSelecaoProdutos');
+        if (selecaoButton) {
+            selecaoButton.disabled = true;
+            selecaoButton.classList.add('opacity-50', 'cursor-not-allowed');
+        }
     }
 
     // Renderiza checkboxes de categorias e vincula seleção em massa
