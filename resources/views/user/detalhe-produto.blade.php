@@ -1273,28 +1273,242 @@
             };
 
             // Inicializar página quando DOM estiver pronto
-            // Zoom por clique nas imagens do modal (transform inline)
+            // Variáveis para controle do PAN
+            let isPanning = false;
+            let hasMoved = false;
+            let startX = 0;
+            let startY = 0;
+            let translateX = 0;
+            let translateY = 0;
+            let currentImg = null;
+
+            // Mouse move global - executar PAN
+            function handleMouseMove(e) {
+                if (!isPanning || !currentImg) return;
+
+                console.log('mousemove - isPanning:', isPanning);
+
+                e.preventDefault();
+                hasMoved = true;
+
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+
+                console.log('Translate - X:', translateX, 'Y:', translateY);
+
+                currentImg.style.transform = `scale(2) translate(${translateX}px, ${translateY}px)`;
+            }
+
+            // Mouse up global - finalizar PAN
+            function handleMouseUp(e) {
+                console.log('mouseup - isPanning:', isPanning, 'hasMoved:', hasMoved);
+
+                if (isPanning && currentImg) {
+                    isPanning = false;
+                    currentImg.style.cursor = 'grab';
+
+                    // Reabilitar swiper
+                    if (typeof modalSwiper !== 'undefined' && modalSwiper) {
+                        modalSwiper.allowTouchMove = true;
+                    }
+
+                    // Reset flag após um pequeno delay
+                    setTimeout(() => {
+                        hasMoved = false;
+                    }, 100);
+                }
+            }
+
+            // Adicionar eventos globais uma única vez
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+
+            // Zoom por clique nas imagens do modal com PAN
             document.addEventListener('DOMContentLoaded', function() {
+                console.log('DOMContentLoaded');
                 const modalEl = document.querySelector('.modalSwiper');
-                if (!modalEl) return;
+                if (!modalEl) {
+                    console.log('Modal não encontrado');
+                    return;
+                }
+
+                // Clique para zoom
                 modalEl.addEventListener('click', function(e) {
+                    console.log('click event - hasMoved:', hasMoved, 'isPanning:', isPanning);
+
+                    // Se houve movimento (pan) ou está fazendo pan, não processar o clique
+                    if (hasMoved || isPanning) {
+                        hasMoved = false;
+                        return;
+                    }
+
                     const slide = e.target.closest('.swiper-slide');
                     if (!slide) return;
                     const img = slide.querySelector('img');
                     if (!img) return;
 
-                    const zoomed = img.classList.contains('cursor-zoom-out');
-                    if (zoomed) {
-                        img.style.transform = '';
-                        img.classList.remove('cursor-zoom-out');
-                        img.classList.add('cursor-zoom-in');
-                    } else {
-                        img.style.transform = 'scale(1.5)';
-                        img.classList.remove('cursor-zoom-in');
-                        img.classList.add('cursor-zoom-out');
+                    toggleZoom(img);
+                });
+
+                // Mousedown no modal para iniciar PAN (captura em fase de captura)
+                modalEl.addEventListener('mousedown', function(e) {
+                    console.log('mousedown no modal');
+
+                    const img = e.target;
+
+                    // Verifica se clicou em uma imagem com zoom ativo
+                    if (img.tagName !== 'IMG') {
+                        console.log('Não é uma imagem');
+                        return;
+                    }
+
+                    if (!img.classList.contains('cursor-zoom-out')) {
+                        console.log('Imagem sem zoom ativo');
+                        return;
+                    }
+
+                    console.log('Iniciando PAN');
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    isPanning = true;
+                    hasMoved = false;
+                    startX = e.clientX - translateX;
+                    startY = e.clientY - translateY;
+                    currentImg = img;
+                    img.style.cursor = 'grabbing';
+
+                    // Desabilitar swiper temporariamente
+                    if (typeof modalSwiper !== 'undefined' && modalSwiper) {
+                        modalSwiper.allowTouchMove = false;
+                        console.log('Swiper desabilitado');
+                    }
+
+                    console.log('PAN iniciado - startX:', startX, 'startY:', startY);
+                }, true); // true = usar fase de captura
+
+                // Touch events para dispositivos móveis
+                let touchStartX = 0;
+                let touchStartY = 0;
+
+                modalEl.addEventListener('touchstart', function(e) {
+                    const img = e.target;
+                    if (img.tagName !== 'IMG' || !img.classList.contains('cursor-zoom-out')) return;
+
+                    isPanning = true;
+                    hasMoved = false;
+                    const touch = e.touches[0];
+                    touchStartX = touch.clientX - translateX;
+                    touchStartY = touch.clientY - translateY;
+                    currentImg = img;
+
+                    // Desabilitar swiper
+                    if (typeof modalSwiper !== 'undefined' && modalSwiper) {
+                        modalSwiper.allowTouchMove = false;
+                    }
+                }, {
+                    passive: false
+                });
+
+                modalEl.addEventListener('touchmove', function(e) {
+                    if (!isPanning || !currentImg) return;
+
+                    e.preventDefault();
+                    hasMoved = true;
+                    const touch = e.touches[0];
+                    translateX = touch.clientX - touchStartX;
+                    translateY = touch.clientY - touchStartY;
+
+                    currentImg.style.transform = `scale(2) translate(${translateX}px, ${translateY}px)`;
+                }, {
+                    passive: false
+                });
+
+                modalEl.addEventListener('touchend', function() {
+                    if (isPanning && currentImg) {
+                        isPanning = false;
+
+                        // Reabilitar swiper
+                        if (typeof modalSwiper !== 'undefined' && modalSwiper) {
+                            modalSwiper.allowTouchMove = true;
+                        }
+
+                        // Se não houve movimento, processar como clique
+                        if (!hasMoved) {
+                            toggleZoom(currentImg);
+                        }
+
+                        setTimeout(() => {
+                            hasMoved = false;
+                        }, 100);
                     }
                 });
             });
+
+            // Função para alternar zoom
+            function toggleZoom(img) {
+                console.log('toggleZoom chamado');
+                const zoomed = img.classList.contains('cursor-zoom-out');
+
+                if (zoomed) {
+                    // Desativar zoom
+                    console.log('Desativando zoom');
+                    img.style.transform = '';
+                    img.classList.remove('cursor-zoom-out');
+                    img.classList.add('cursor-zoom-in');
+                    img.style.cursor = '';
+                    // Resetar valores de pan
+                    translateX = 0;
+                    translateY = 0;
+                    currentImg = null;
+
+                    // Reabilitar swiper
+                    if (typeof modalSwiper !== 'undefined' && modalSwiper) {
+                        modalSwiper.allowTouchMove = true;
+                    }
+                } else {
+                    // Ativar zoom
+                    console.log('Ativando zoom');
+                    translateX = 0;
+                    translateY = 0;
+                    img.style.transform = 'scale(2)';
+                    img.classList.remove('cursor-zoom-in');
+                    img.classList.add('cursor-zoom-out');
+                    img.style.cursor = 'grab';
+                    currentImg = img;
+
+                    // Desabilitar swiper quando com zoom
+                    if (typeof modalSwiper !== 'undefined' && modalSwiper) {
+                        modalSwiper.allowTouchMove = false;
+                        console.log('Swiper desabilitado após zoom');
+                    }
+                }
+            }
+
+            // Resetar zoom e pan ao trocar de slide
+            // IMPORTANTE: Este código deve ser executado APÓS a inicialização do modalSwiper
+            setTimeout(() => {
+                if (typeof modalSwiper !== 'undefined' && modalSwiper) {
+                    modalSwiper.on('slideChange', () => {
+                        console.log('slideChange');
+                        document.querySelectorAll('.modalSwiper .swiper-slide img').forEach(img => {
+                            img.style.transform = '';
+                            img.classList.remove('cursor-zoom-out');
+                            img.classList.add('cursor-zoom-in');
+                            img.style.cursor = '';
+                        });
+                        // Resetar valores de pan
+                        translateX = 0;
+                        translateY = 0;
+                        currentImg = null;
+                        isPanning = false;
+                        hasMoved = false;
+
+                        // Reabilitar swiper
+                        modalSwiper.allowTouchMove = true;
+                    });
+                }
+            }, 500);
 
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', inicializarPaginaProduto);
