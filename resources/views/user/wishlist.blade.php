@@ -291,7 +291,7 @@
 
             <!-- Lista de Produtos -->
             <div id="produtos"
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 p-2 bg-[#E6E6E6] rrounded-tl-lg overflow-auto height-ultra custom-scrollbar">
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 p-2 bg-[#E6E6E6] rounded-tl-lg overflow-auto height-ultra custom-scrollbar">
 
                 <!-- Template de Produto -->
                 <template id="template-produto">

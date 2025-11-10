@@ -89,7 +89,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-[#E6E6E6] rrounded-tl-lg overflow-auto height-ultra custom-scrollbar">
+            <div class="bg-[#E6E6E6] rounded-tl-lg overflow-auto height-ultra custom-scrollbar">
                 <div class="my-custom-bg p-12 max-w-[999px] mx-auto pb-0">
                     @foreach ($tecnologias as $item)
                         <div class="mb-10" data-categoria-id="{{ $item->id }}">

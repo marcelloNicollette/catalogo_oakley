@@ -1,4 +1,4 @@
-<x-layout-user title="Under Armour - GErar Arquivo">
+<x-layout-user title="Under Armour - Gerar Arquivo">
     <style>
         .height-ultra {
             height: calc(100vh - 160px);
@@ -186,7 +186,7 @@
 
 
             <!-- Grid de Coleções -->
-            <div class="bg-[#000000] p-2 rrounded-tl-lg overflow-auto height-ultra custom-scrollbar">
+            <div class="bg-[#000000] p-2 rounded-tl-lg overflow-auto height-ultra custom-scrollbar">
                 <div id="colecoes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3"
                     style="border-radius: 10px 0 0 0;">
                     <!-- Cards serão renderizados via JavaScript -->

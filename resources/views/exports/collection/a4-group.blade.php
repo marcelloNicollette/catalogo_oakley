@@ -182,14 +182,16 @@
                     <img src="{{ public_path('/images/logo-vermelho.png') }}" alt="">
                 </div>
             @endif
-            <table cellspacing="2" width="100%" cellpadding="2">
+            <table cellspacing="2" width="100%" cellpadding="2" border="0">
                 <tr>
                     <td width="70%">
                         <table cellspacing="0" width="100%" cellpadding="0">
                             <tr>
                                 <td width="75%">
                                     <img src="{{ $image }}" alt="{{ $collection->product->name }}"
-                                        style="width: 100%; object-fit: cover; border-radius: 8px 0 0 8px; border-top:1px solid #CCC; border-left:1px solid #CCC; border-bottom:1px solid #CCC;  ">
+                                        style="width: 100%; object-fit: cover; border-radius: 8px 0 0 8px;
+                                        border-top:1px solid #CCC; border-left:1px solid #CCC; border-bottom:1px solid
+                                        #CCC; border-right:0 solid #CCC; padding: 4px 0;">
                                 </td>
                                 <td width="24.8%">
                                     @php
@@ -201,10 +203,23 @@
                                         @php
                                             if ($suffix == '_A') {
                                                 $rounded = '0 8px 0 0';
+                                                $border_t = '1px solid #CCC';
+                                                $border_l = '1px solid #CCC';
+                                                $border_b = '0 solid #CCC';
+                                                $border_r = '1px solid #CCC';
+                                                $padding = 'padding-top: 4px;';
                                             } elseif ($suffix == '_B') {
                                                 $rounded = '0 0 0 0';
+                                                $border_t = '1px solid #CCC';
+                                                $border_l = '1px solid #CCC';
+                                                $border_b = '1px solid #CCC';
+                                                $border_r = '1px solid #CCC';
                                             } else {
                                                 $rounded = '0 0 8px 0';
+                                                $border_t = '0 solid #CCC';
+                                                $border_l = '1px solid #CCC';
+                                                $border_b = '1px solid #CCC';
+                                                $border_r = '1px solid #CCC';
                                             }
                                             $imagePath = public_path(
                                                 '/images/produtos/' .
@@ -231,7 +246,7 @@
 
                                         @endphp
                                         <img src="{{ $imageSrc }}" alt="Tênis"
-                                            style="width: 100%; object-fit: cover; border-radius: {{ $rounded }}; border:1px solid #CCC; border-spacing:0;">
+                                            style="width: 100%; object-fit: cover; border-radius: {{ $rounded }}; border-top:{{ $border_t }}; border-left:{{ $border_l }}; border-bottom:{{ $border_b }}; border-right:{{ $border_r }}; border-spacing:0; {{ $padding }}">
                                         @php $vista++; @endphp
                                     @endforeach
                                 </td>
@@ -244,13 +259,13 @@
                                     <table
                                         style="width: 100%; margin: 0 auto;  border-radius: 8px; border:1px solid #CCC; margin-top:5px;">
                                         <tr>
-                                            @foreach ($collectionsByCode as $colorCollection)
-                                                <td
-                                                    style="width: auto; padding: 10px 0; text-align: center; vertical-align: top;">
-                                                    <div style="padding: 15px 0; position: relative;">
+                                            <td style="">
+                                                @foreach ($collectionsByCode as $colorCollection)
+                                                    <div
+                                                        style="width: 130px; padding: 0; position: relative; float: left; ">
                                                         @if ($colorCollection->flagProduct)
                                                             <div
-                                                                style="position: absolute; top: 10px; left: 10px; background: {{ $colorCollection->flagProduct->flag_bg }}; color: {{ $colorCollection->flagProduct->flag_color_text_bg }}; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold;">
+                                                                style="position: absolute; top: 10px; background: {{ $colorCollection->flagProduct->flag_bg }}; color: {{ $colorCollection->flagProduct->flag_color_text_bg }}; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold;">
                                                                 {{ $colorCollection->flagProduct->flag_title }}
                                                             </div>
                                                         @endif
@@ -277,15 +292,16 @@
                                                                 class="width: 100px; height: auto; border-radius: 8px;" />
                                                         </div>
                                                         <div
-                                                            style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 5px;">
-                                                            {{ \Illuminate\Support\Str::limit($colorCollection->color_name, 15, '...') }}
+                                                            style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 5px; margin-left: 10px;">
+                                                            {{ \Illuminate\Support\Str::limit($colorCollection->color_name, 12, '...') }}
                                                         </div>
-                                                        <div style="font-size: 12px; color: #666;">
-                                                            {{ \Illuminate\Support\Str::limit($colorCollection->color_description, 15, '...') }}
+                                                        <div style="font-size: 12px; color: #666; margin-left: 10px;">
+                                                            {{ \Illuminate\Support\Str::limit($colorCollection->color_description, 10, '...') }}
                                                         </div>
                                                     </div>
-                                                </td>
-                                            @endforeach
+                                                @endforeach
+                                                <div style="clear: both;"></div>
+                                            </td>
                                         </tr>
                                     </table>
                                 </td>
