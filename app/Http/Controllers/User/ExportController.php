@@ -24,7 +24,7 @@ class ExportController extends Controller
         $tipoProdutos = $request->input('produtos', 'todos');
 
         $query = Color::where('collection_id', $request->collection_id)
-            ->with(['product', 'product.caracteristicas', 'product.caracteristicasDestaque', 'product.category', 'product.numeracoes', 'product.links',  'flagProduct', 'collection']);
+            ->with(['product', 'product.caracteristicas', 'product.caracteristicasDestaque', 'product.category', 'product.numeracoes', 'product.links',  'flagProduct', 'collection'])->orderBy('product_id', 'ASC');
 
         // Se produtos específicos foram selecionados, filtrar por eles
         if ($tipoProdutos === 'selecao' && !empty($produtosSelecionados)) {

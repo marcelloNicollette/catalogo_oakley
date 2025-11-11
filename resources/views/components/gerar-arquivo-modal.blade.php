@@ -215,7 +215,7 @@
     <div class="bg-white rounded-lg max-w-xl w-full mx-4 p-6 max-h-[80vh] overflow-hidden flex flex-col">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-semibold text-gray-900">Selecionar Segmentos</h2>
-            <button id="closeSelecaoSegmentosModal" class="text-sm underline">Fechar</button>
+
         </div>
 
         <div class="flex justify-between items-center mb-4">
@@ -249,11 +249,17 @@
 
         <div class="flex-1 overflow-y-auto" id="segmentosList"></div>
 
-        <div class="flex justify-end items-center mt-4 gap-3">
-            <button id="cancelarSelecaoSegmentos"
-                class="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200">Cancelar</button>
-            <button id="salvarSelecaoSegmentos" class="px-4 py-2 bg-black text-white rounded ">Salvar
+        <div class="flex flex-col justify-end items-center mt-4 gap-3">
+
+
+            <button id="salvarSelecaoSegmentos"
+                class="bg-black text-white px-8 py-3 rounded-full transition-colors w-full font-normal">Salvar
                 Seleção</button>
+
+            <button id="cancelarSelecaoSegmentos"
+                class="flex items-center border border-black rounded-full px-6 py-3 text-sm transition">Voltar
+                <img src="/images/icon-voltar.png" alt="" class="ml-2 w-4 h-4" /></button>
+
         </div>
     </div>
     @php
@@ -274,7 +280,7 @@
         </div>
 
         <!-- Header com controles -->
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex justify-between items-baseline mb-4">
             <div class="flex flex-col items-center gap-4 text-base items-baseline">
                 <!-- Categorias dos produtos (checkboxes) -->
                 <div id="categoriasSelecionaveis" class="flex items-center gap-2 flex-wrap ml-4">
@@ -284,6 +290,7 @@
                             class="w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3">
                         <span>Todos</span>
                     </label>
+
                 </div>
 
                 <div class="flex items-center gap-4 text-sm text-gray-600">
@@ -480,6 +487,7 @@
 
             // Adicionar novo event listener
             newSendHistoryBtn.addEventListener('click', function(event) {
+
                 // Exigir segmento selecionado para gerar
                 const segs = getSelectedSegmentacoesLocal();
                 if (!segs || segs.length === 0) {
@@ -493,24 +501,13 @@
                 const categoriasSelecionadas = document.querySelectorAll(
                     'input[name="categoria"]:checked');
 
-                if (tipoProdutos === 'selecao') {
-                    const produtosSelecionadosInputs = document.querySelectorAll(
-                        'input[name^="produtos_selecionados["]');
-                    if (produtosSelecionadosInputs.length === 0) {
-                        if (categoriasSelecionadas.length === 0 || categoriasSelecionadas[0].value ===
-                            'todas') {
-                            alert(
-                                'Por favor, selecione uma categoria específica para usar a seleção de produtos.'
-                            );
-                            event.preventDefault();
-                            event.stopPropagation();
-                            return false;
-                        }
-                        event.preventDefault();
-                        event.stopPropagation();
-                        abrirModalSelecaoProdutos();
-                        return false;
-                    }
+                if (produtosSelecionados.length === 0) {
+                    alert(
+                        'Por favor, selecione pelo menos um produto para gerar o PDF.'
+                    );
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return false;
                 }
 
                 newSendHistoryBtn.disabled = true;
@@ -604,7 +601,7 @@
         totalProdutos.textContent = produtos.length;
 
         produtosList.innerHTML = produtos.map(produto => `
-            <div class="py-1 px-2 grid grid-cols-12 gap-4 items-center hover:bg-gray-50 transition-colors produto-row" data-produto-nome="${produto.title.toLowerCase()}" data-produto-codigo="${produto.codigo.toLowerCase()}" data-produto-categoria="${(produto.categoria || '').toLowerCase()}">
+            <div class="py-1 px-2 grid grid-cols-12 gap-4 items-center hover:bg-gray-50 transition-colors produto-row" data-produto-nome="${produto.title.toLowerCase()}" data-produto-codigo="${produto.codigo.toLowerCase()}" data-produto-categoria="${(produto.categoria || '').toLowerCase()}" data-favoritos="${produto.favoritos}">
                 <div class="col-span-1 text-center">
                     <input type="checkbox" 
                            id="produto_${produto.id}" 
@@ -650,6 +647,7 @@
 
     // Função para atualizar contador de selecionados
     function atualizarContador() {
+
         const contadorSelecionados = document.getElementById('contadorSelecionados');
         contadorSelecionados.textContent = produtosSelecionados.length;
 
@@ -657,6 +655,7 @@
         const selecionarTodosRadio = document.getElementById('selecionarTodos');
         const totalCheckboxes = document.querySelectorAll('.produto-checkbox').length;
         selecionarTodosRadio.checked = produtosSelecionados.length === totalCheckboxes && totalCheckboxes > 0;
+
     }
 
     // Event listeners para os botões do modal
@@ -669,6 +668,7 @@
         document.getElementById('gerarArquivoModal').classList.add('hidden');
         // Reabilitar o botão sendHistory
         reabilitarBotaoSendHistory();
+        handleCloseHistoryModal();
         // Mostrar novamente o formulário e esconder o sucesso
         document.getElementById('historyForm').classList.remove('hidden');
         document.getElementById('historySuccess').classList.add('hidden');
@@ -734,6 +734,8 @@
         if (contadorSpan && quantidadeSelecionados > 0) {
             contadorSpanText.textContent = "Selecionados: ";
             contadorSpan.textContent = quantidadeSelecionados + ' (Editar)';
+        } else {
+            contadorSpanText.textContent = "Selecionar segmentos ";
         }
 
         // Garantir modo seleção ativo no envio
@@ -823,7 +825,7 @@
         });
     });
 
-    document.getElementById('closeSelecaoSegmentosModal').addEventListener('click', cancelarSelecaoSegmentos);
+    //document.getElementById('closeSelecaoSegmentosModal').addEventListener('click', cancelarSelecaoSegmentos);
     document.getElementById('cancelarSelecaoSegmentos').addEventListener('click', cancelarSelecaoSegmentos);
 
     document.getElementById('salvarSelecaoSegmentos').addEventListener('click', function() {
@@ -832,14 +834,16 @@
             return;
         }
         // Persistir no localStorage
-        localStorage.setItem('selectedSegmentacoes', JSON.stringify(segmentosSelecionados));
+        localStorage.setItem('selectedSegmentacoesModal', JSON.stringify(segmentosSelecionados));
 
         // Atualizar contador no botão
         const contadorSegSpan = document.getElementById('btnContadorSegmentos');
         const contadorSpanText = document.getElementById('spanSelecionarSegmentos');
         if (contadorSegSpan && segmentosSelecionados.length > 0) {
-            contadorSpanText.textContent = "Selecionados: ";
+            contadorSpanText.textContent = "Selecionados:";
             contadorSegSpan.textContent = segmentosSelecionados.length + ' (Editar)';
+        } else {
+            contadorSpanText.textContent = "Selecionar segmentos ";
         }
 
         // Habilitar CTA de produtos após salvar seleção de segmentos
@@ -870,13 +874,15 @@
 
         // Limpar persistência
         try {
-            localStorage.removeItem('selectedSegmentacoes');
+            localStorage.removeItem('selectedSegmentacoesModal');
         } catch (e) {}
 
         // Atualizar CTA no modal principal
         const contadorSegSpan = document.getElementById('btnContadorSegmentos');
+        const contadorSpanText = document.getElementById('spanSelecionarSegmentos');
         if (contadorSegSpan) {
-            contadorSegSpan.textContent = '0 (Editar)';
+            contadorSegSpan.textContent = '';
+            contadorSpanText.textContent = "Selecionar segmentos ";
         }
 
         // Desabilitar CTA de produtos ao cancelar seleção de segmentos
@@ -892,7 +898,7 @@
 
     function getSelectedSegmentacoesLocal() {
         try {
-            const raw = localStorage.getItem('selectedSegmentacoes');
+            const raw = localStorage.getItem('selectedSegmentacoesModal');
             if (!raw) return [];
             const arr = JSON.parse(raw);
             return Array.isArray(arr) ? arr : [];
@@ -902,6 +908,25 @@
     }
 
     function fecharModalSelecaoProdutos() {
+        //console.log('Fechar modal seleção produtos');
+        // Fechar modal de seleção de produtos
+        document.getElementById('selecaoProdutosModal').classList.add('hidden');
+
+        // Fechar modal principal (gerar arquivo)
+        document.getElementById('gerarArquivoModal').classList.remove('hidden');
+
+        // Reabilitar o botão sendHistory
+        reabilitarBotaoSendHistory();
+
+        // Limpar formulário completamente
+        //limparFormulario();
+
+        // Resetar arrays de produtos
+        //produtosSelecionados = [];
+        //produtosDisponiveis = [];
+    }
+
+    function fecharGeral() {
         //console.log('Fechar modal seleção produtos');
         // Fechar modal de seleção de produtos
         document.getElementById('selecaoProdutosModal').classList.add('hidden');
@@ -930,7 +955,7 @@
         // Resetar contador e tipo de produtos
         const contadorSpan = document.getElementById('btnContadorSelecionados');
         if (contadorSpan) {
-            contadorSpan.textContent = '0 (Editar)';
+            contadorSpan.textContent = '';
         }
         const produtosHidden = document.getElementById('produtosSelecaoHidden');
         if (produtosHidden) {
@@ -965,6 +990,7 @@
     }
 
     function handleCloseHistoryModal() {
+
         // Zerar produtos selecionados
         produtosSelecionados = [];
         const contadorProdutosSpan = document.getElementById('btnContadorSelecionados');
@@ -985,7 +1011,7 @@
         // Zerar segmentos selecionados
         segmentosSelecionados = [];
         try {
-            localStorage.removeItem('selectedSegmentacoes');
+            localStorage.removeItem('selectedSegmentacoesModal');
         } catch (e) {}
         const contadorSegSpan = document.getElementById('btnContadorSegmentos');
         const contadorSpanText = document.getElementById('spanSelecionarSegmentos');
@@ -1007,7 +1033,7 @@
         }
 
         // Fechar modais e reabilitar estado
-        fecharModalSelecaoProdutos();
+        fecharGeral();
 
         // Desabilitar CTA de produtos ao limpar histórico/seleções
         const selecaoButton = document.getElementById('btnSelecaoProdutos');
@@ -1035,7 +1061,7 @@
             `
                 <label class="flex items-center">
                     <input type="checkbox" id="selecionarTodos" name="selecao_tipo"
-                        class="w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-3">
+                        class="w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-2">
                     <span>Todos</span>
                 </label>
             `,
@@ -1044,32 +1070,15 @@
                     <input type="checkbox" class="categoria-select-checkbox w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-2" data-categoria="${cat}">
                     <span class="text-base">${cat}</span>
                 </label>
-            `)
+            `),
+            `
+                <label class="flex items-center">
+                    <input type="checkbox" id="selecionarFavoritos" name="selecionarFavoritos"
+                        class="w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative mr-2">
+                    <span>Favoritos</span>
+                </label>
+            `,
         ].join('');
-
-        // Checkbox "Todos" para seleção em massa de categorias
-        const chkTodosCategorias = container.querySelector('#selecionarTodos');
-        const atualizarEstadoSelecionarTodos = () => {
-            const totalCat = container.querySelectorAll('.categoria-select-checkbox').length;
-            const selecionadas = container.querySelectorAll('.categoria-select-checkbox:checked').length;
-            if (chkTodosCategorias) {
-                chkTodosCategorias.checked = totalCat > 0 && selecionadas === totalCat;
-            }
-        };
-
-        if (chkTodosCategorias) {
-            chkTodosCategorias.addEventListener('change', function() {
-                const categoriaCheckboxes = container.querySelectorAll('.categoria-select-checkbox');
-                categoriaCheckboxes.forEach(cb => {
-                    const estadoAnterior = cb.checked;
-                    cb.checked = this.checked;
-                    if (cb.checked !== estadoAnterior) {
-                        cb.dispatchEvent(new Event('change'));
-                    }
-                });
-                atualizarEstadoSelecionarTodos();
-            });
-        }
 
         // Vincular eventos: marcar/desmarcar todos os produtos daquela categoria (apenas visíveis)
         container.querySelectorAll('.categoria-select-checkbox').forEach(cb => {
@@ -1099,12 +1108,43 @@
                         }
                     }
                 });
-                atualizarEstadoSelecionarTodos();
+                //atualizarEstadoSelecionarTodos();
                 atualizarContador();
             });
         });
 
+        document.getElementById('selecionarFavoritos').addEventListener('change', function() {
+            const produtoRows = document.querySelectorAll('.produto-row');
+            produtoRows.forEach(row => {
+                const rowFavoritos = row.getAttribute('data-favoritos') || '';
+                if (row.style.display !== 'none' && rowFavoritos === 'true') {
+                    const checkbox = row.querySelector('.produto-checkbox');
+                    if (!checkbox) return;
+                    const produtoId = parseInt(checkbox.value);
+                    const produtoCor = checkbox.getAttribute('data-cor');
+
+                    checkbox.checked = this.checked;
+                    if (this.checked) {
+                        if (!produtosSelecionados.some(p => p.id === produtoId && p.cor ===
+                                produtoCor)) {
+                            produtosSelecionados.push({
+                                id: produtoId,
+                                cor: produtoCor
+                            });
+                        }
+                    } else {
+                        produtosSelecionados = produtosSelecionados.filter(p => !(p.id ===
+                            produtoId && p.cor === produtoCor));
+                    }
+                }
+            });
+            //atualizarEstadoSelecionarTodos();
+            atualizarContador();
+        });
+
+
         document.getElementById('selecionarTodos').addEventListener('change', function() {
+
             const checkboxes = document.querySelectorAll('.produto-checkbox');
             const isChecked = this.checked;
 
@@ -1125,7 +1165,8 @@
                             });
                         }
                     } else {
-                        produtosSelecionados = produtosSelecionados.filter(p => !(p.id === produtoId &&
+                        produtosSelecionados = produtosSelecionados.filter(p => !(p.id ===
+                            produtoId &&
                             p
                             .cor === produtoCor));
                     }

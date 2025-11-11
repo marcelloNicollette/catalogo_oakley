@@ -16,6 +16,7 @@ use App\Models\Segmentacao;
 use App\Models\Size;
 use App\Models\TechnologyCategory;
 use App\Models\User;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -295,7 +296,16 @@ class frontendController extends Controller
         $produtosFormatados = [];
         foreach ($produtos as $produtoGroup) {
             $produto = $produtoGroup;
-            $img = "/images/produtos/" . $produto->product->code . "_" . $produto->color_code . ".jpg";
+            $img = "/images/produtos/" . $produto->product->code . "_" . str_replace('/', '_', $produto->color_code) . ".jpg";
+
+            // Verificar se o produto está nos favoritos do usuário usando query direta na Wishlist
+            $isFavorito = false;
+            if ($user) {
+                $isFavorito = Wishlist::where('user_id', $user->id)
+                    ->where('product_id', $produto->product->id)
+                    ->where('color_code', str_replace('/', '_', $produto->color_code))
+                    ->exists();
+            }
 
             $produtosFormatados[] = [
                 'id' => $produto->product->id,
@@ -306,7 +316,8 @@ class frontendController extends Controller
                 'categoria' => $produto->product->category->name,
                 'preco' => 'R$' . $produto->product->price,
                 'slug' => $produto->product->slug,
-                'selected' => false
+                'selected' => false,
+                'favoritos' => $isFavorito
             ];
         }
 
