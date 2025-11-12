@@ -410,13 +410,14 @@ html {
         .produtos-page .option {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            
         }
 
         .produtos-page .option.selected {
             /*background-color: #f8f9fa;*/
             color: #000;
             font-weight: 500;
+            padding: 1px 6px;
             
         }
 
@@ -429,14 +430,14 @@ html {
         
 
         .produtos-page .option-content {
-            flex: 1;
+            
             margin: 0 20px;
         }
 
 
 
         .produtos-page .option.selected .option-content{
-            margin: 0 20px 0 0;
+            margin: 0 0 0 4px;
             
         }
         /*.produtos-page .option.selected .option-content {

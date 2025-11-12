@@ -122,7 +122,7 @@
                 </h1>
 
                 <div style="position: absolute; bottom: 60px; right: -240px;">
-                    <img width="50%" src="{{ public_path('/images/logo-preto.svg') }}" alt="">
+                    <img width="50%" src="{{ $base64Svg_preto }}" alt="">
                 </div>
             </div>
 
@@ -143,7 +143,7 @@
                         </h1>
 
                         <div style="position: absolute; bottom: 60px; right: -240px;">
-                            <img width="50%" src="{{ public_path('/images/logo-vermelho.svg') }}" alt="">
+                            <img width="50%" src="{{ $base64Svg_vermelho }}" alt="">
                         </div>
                     </div>
                 </div>

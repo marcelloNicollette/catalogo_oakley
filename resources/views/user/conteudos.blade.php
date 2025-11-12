@@ -51,8 +51,8 @@
                         <div class="options min-w-[345px] p-5" id="options">
 
                             @foreach ($categories as $item)
-                                <div class="option text-[18px] font-normal" data-categoria-id="{{ $item->id }}"
-                                    data-value="{{ $item->id }}">
+                                <div class="option gap-[10px] text-[18px] font-normal"
+                                    data-categoria-id="{{ $item->id }}" data-value="{{ $item->id }}">
                                     <span class="check-icon" style="display: none;"><svg
                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                             <path
@@ -64,7 +64,7 @@
                                     <span class="x-icon" style="display: none;">×</span>
                                 </div>
                             @endforeach
-                            <div class="option" data-categoria-id="" data-value="">
+                            <div class="option gap-[10px] " data-categoria-id="" data-value="">
                                 <span class="check-icon" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 640 640">
                                         <path
@@ -250,7 +250,10 @@
                         const value = option.getAttribute('data-value');
                         const text = option.querySelector('.option-content') ? option.querySelector(
                             '.option-content').textContent : option.textContent;
-                        selectButton.querySelector('span').textContent = text;
+
+                        selectButton.querySelector('span').innerHTML =
+                            "Categoria: <span style='font-size:18px; color:#7A7A7A;'>" +
+                            text + "</span>";
                         selectedCategoryId = value || text;
                         closeDropdown();
                         filtrarTecnologiasCategoria();

@@ -64,6 +64,14 @@ class ExportController extends Controller
         $opcoes = $request->input('opcoes', []);
         $grupo_opcoes = $request->input('grupo_opcoes', []);
 
+        $svgPath = public_path('/images/logo-preto.svg');
+        $svgContent = file_get_contents($svgPath);
+        $base64Svg_preto = 'data:image/svg+xml;base64,' . base64_encode($svgContent);
+
+        $svgPath_vermelho = public_path('/images/logo-vermelho.svg');
+        $svgContent_vermelho = file_get_contents($svgPath_vermelho);
+        $base64Svg_vermelho = 'data:image/svg+xml;base64,' . base64_encode($svgContent_vermelho);
+
         $data = [
             'collections' => $produtos,
             'remove_price'       => in_array('remover_preco', $opcoes),
@@ -75,6 +83,8 @@ class ExportController extends Controller
             'name' => $request->user()->name,
             'request' => $request,
             'isPdf' => true,
+            'base64Svg_preto' => $base64Svg_preto,
+            'base64Svg_vermelho' => $base64Svg_vermelho,
         ];
         //dd($data);
         if ($grupo_opcoes === 'separado') {

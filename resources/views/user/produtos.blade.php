@@ -1,4 +1,4 @@
-<x-layout-user title="Under Armour - Segmentação">
+<x-layout-user title="Under Armour - Produtos">
     <main class="lg:flex flex-1 produtos-page">
         <style>
             .badge-icon-wrapper .badge-tooltip {
@@ -112,22 +112,17 @@
                 display: inline;
             }
 
+
+            .options {
+                max-height: 500px;
+            }
+
             /* Para Firefox */
             .custom-scrollbar {
                 scrollbar-width: thin;
                 /* auto, thin, none */
                 scrollbar-color: #A9A9A9 #000000;
                 /* thumb track */
-            }
-
-
-            .options {
-                max-height: 500px;
-            }
-
-            .custom-scrollbar {
-                scrollbar-width: thin;
-                scrollbar-color: #A9A9A9 #FFF;
             }
         </style>
         <!-- Conteúdo principal -->
