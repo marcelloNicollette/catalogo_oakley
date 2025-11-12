@@ -314,12 +314,12 @@
                                 <h3 class="text-xs mb-3 text-black opacity-50">Tecnologias</h3>
                                 <div class="">
                                     @foreach ($produto->technologyItems as $item)
-                                        <div class="mb-[30px]">
+                                        <div class="mb-[30px] flex">
                                             <div class="w-[65px] h-[65px] float-left mr-[10px] bg-black rounded-lg ">
                                                 <img src="/{{ $item->icon }}" class="w-100 h-100 my-0 rounded-lg"
                                                     alt="{{ $item->name }}" />
                                             </div>
-                                            <div class="min-h-[65px]">
+                                            <div class="w-[380px] min-h-[65px]">
                                                 <p class="text-xs text-black opacity-50">{{ $item->name }}</p>
                                                 <p class="text-xs">
                                                     {{ $item->description }}
