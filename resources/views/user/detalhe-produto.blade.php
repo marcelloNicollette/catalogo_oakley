@@ -25,8 +25,10 @@
 
         #imageModal {
             .swiper img {
-                width: 70%;
+                width: 100%;
                 height: 100%;
+                cursor: crosshair;
+                /* Indicador de zoom */
             }
 
             .swiper-button-prev,
@@ -35,6 +37,8 @@
                 background: #FFF;
                 border: 1px solid #FFF;
                 opacity: 1 !important;
+                z-index: 20;
+                /* Garantir que fiquem acima do zoom */
             }
 
             .swiper-button-prev {
@@ -1289,249 +1293,240 @@
                 }
             };
 
-            // Inicializar página quando DOM estiver pronto
-            // Variáveis para controle do PAN
-            let isPanning = false;
-            let hasMoved = false;
-            let startX = 0;
-            let startY = 0;
-            let translateX = 0;
-            let translateY = 0;
-            let currentImg = null;
-
-            // Mouse move global - executar PAN
-            function handleMouseMove(e) {
-                if (!isPanning || !currentImg) return;
-
-                console.log('mousemove - isPanning:', isPanning);
-
-                e.preventDefault();
-                hasMoved = true;
-
-                translateX = e.clientX - startX;
-                translateY = e.clientY - startY;
-
-                console.log('Translate - X:', translateX, 'Y:', translateY);
-
-                currentImg.style.transform = `scale(2) translate(${translateX}px, ${translateY}px)`;
-            }
-
-            // Mouse up global - finalizar PAN
-            function handleMouseUp(e) {
-                console.log('mouseup - isPanning:', isPanning, 'hasMoved:', hasMoved);
-
-                if (isPanning && currentImg) {
-                    isPanning = false;
-                    currentImg.style.cursor = 'grab';
-
-                    // Reabilitar swiper
-                    if (typeof modalSwiper !== 'undefined' && modalSwiper) {
-                        modalSwiper.allowTouchMove = true;
-                    }
-
-                    // Reset flag após um pequeno delay
-                    setTimeout(() => {
-                        hasMoved = false;
-                    }, 100);
-                }
-            }
-
-            // Adicionar eventos globais uma única vez
-            document.addEventListener('mousemove', handleMouseMove);
-            document.addEventListener('mouseup', handleMouseUp);
-
-            // Zoom por clique nas imagens do modal com PAN
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log('DOMContentLoaded');
-                const modalEl = document.querySelector('.modalSwiper');
-                if (!modalEl) {
-                    console.log('Modal não encontrado');
-                    return;
-                }
-
-                // Clique para zoom
-                modalEl.addEventListener('click', function(e) {
-                    console.log('click event - hasMoved:', hasMoved, 'isPanning:', isPanning);
-
-                    // Se houve movimento (pan) ou está fazendo pan, não processar o clique
-                    if (hasMoved || isPanning) {
-                        hasMoved = false;
-                        return;
-                    }
-
-                    const slide = e.target.closest('.swiper-slide');
-                    if (!slide) return;
-                    const img = slide.querySelector('img');
-                    if (!img) return;
-
-                    toggleZoom(img);
-                });
-
-                // Mousedown no modal para iniciar PAN (captura em fase de captura)
-                modalEl.addEventListener('mousedown', function(e) {
-                    console.log('mousedown no modal');
-
-                    const img = e.target;
-
-                    // Verifica se clicou em uma imagem com zoom ativo
-                    if (img.tagName !== 'IMG') {
-                        console.log('Não é uma imagem');
-                        return;
-                    }
-
-                    if (!img.classList.contains('cursor-zoom-out')) {
-                        console.log('Imagem sem zoom ativo');
-                        return;
-                    }
-
-                    console.log('Iniciando PAN');
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    isPanning = true;
-                    hasMoved = false;
-                    startX = e.clientX - translateX;
-                    startY = e.clientY - translateY;
-                    currentImg = img;
-                    img.style.cursor = 'grabbing';
-
-                    // Desabilitar swiper temporariamente
-                    if (typeof modalSwiper !== 'undefined' && modalSwiper) {
-                        modalSwiper.allowTouchMove = false;
-                        console.log('Swiper desabilitado');
-                    }
-
-                    console.log('PAN iniciado - startX:', startX, 'startY:', startY);
-                }, true); // true = usar fase de captura
-
-                // Touch events para dispositivos móveis
-                let touchStartX = 0;
-                let touchStartY = 0;
-
-                modalEl.addEventListener('touchstart', function(e) {
-                    const img = e.target;
-                    if (img.tagName !== 'IMG' || !img.classList.contains('cursor-zoom-out')) return;
-
-                    isPanning = true;
-                    hasMoved = false;
-                    const touch = e.touches[0];
-                    touchStartX = touch.clientX - translateX;
-                    touchStartY = touch.clientY - translateY;
-                    currentImg = img;
-
-                    // Desabilitar swiper
-                    if (typeof modalSwiper !== 'undefined' && modalSwiper) {
-                        modalSwiper.allowTouchMove = false;
-                    }
-                }, {
-                    passive: false
-                });
-
-                modalEl.addEventListener('touchmove', function(e) {
-                    if (!isPanning || !currentImg) return;
-
-                    e.preventDefault();
-                    hasMoved = true;
-                    const touch = e.touches[0];
-                    translateX = touch.clientX - touchStartX;
-                    translateY = touch.clientY - touchStartY;
-
-                    currentImg.style.transform = `scale(2) translate(${translateX}px, ${translateY}px)`;
-                }, {
-                    passive: false
-                });
-
-                modalEl.addEventListener('touchend', function() {
-                    if (isPanning && currentImg) {
-                        isPanning = false;
-
-                        // Reabilitar swiper
-                        if (typeof modalSwiper !== 'undefined' && modalSwiper) {
-                            modalSwiper.allowTouchMove = true;
-                        }
-
-                        // Se não houve movimento, processar como clique
-                        if (!hasMoved) {
-                            toggleZoom(currentImg);
-                        }
-
-                        setTimeout(() => {
-                            hasMoved = false;
-                        }, 100);
-                    }
-                });
-            });
-
-            // Função para alternar zoom
-            function toggleZoom(img) {
-                console.log('toggleZoom chamado');
-                const zoomed = img.classList.contains('cursor-zoom-out');
-
-                if (zoomed) {
-                    // Desativar zoom
-                    console.log('Desativando zoom');
-                    img.style.transform = '';
-                    img.classList.remove('cursor-zoom-out');
-                    img.classList.add('cursor-zoom-in');
-                    img.style.cursor = '';
-                    // Resetar valores de pan
-                    translateX = 0;
-                    translateY = 0;
-                    currentImg = null;
-
-                    // Reabilitar swiper
-                    if (typeof modalSwiper !== 'undefined' && modalSwiper) {
-                        modalSwiper.allowTouchMove = true;
-                    }
-                } else {
-                    // Ativar zoom
-                    console.log('Ativando zoom');
-                    translateX = 0;
-                    translateY = 0;
-                    img.style.transform = 'scale(2)';
-                    img.classList.remove('cursor-zoom-in');
-                    img.classList.add('cursor-zoom-out');
-                    img.style.cursor = 'grab';
-                    currentImg = img;
-
-                    // Desabilitar swiper quando com zoom
-                    if (typeof modalSwiper !== 'undefined' && modalSwiper) {
-                        modalSwiper.allowTouchMove = false;
-                        console.log('Swiper desabilitado após zoom');
-                    }
-                }
-            }
-
-            // Resetar zoom e pan ao trocar de slide
-            // IMPORTANTE: Este código deve ser executado APÓS a inicialização do modalSwiper
-            setTimeout(() => {
-                if (typeof modalSwiper !== 'undefined' && modalSwiper) {
-                    modalSwiper.on('slideChange', () => {
-                        console.log('slideChange');
-                        document.querySelectorAll('.modalSwiper .swiper-slide img').forEach(img => {
-                            img.style.transform = '';
-                            img.classList.remove('cursor-zoom-out');
-                            img.classList.add('cursor-zoom-in');
-                            img.style.cursor = '';
-                        });
-                        // Resetar valores de pan
-                        translateX = 0;
-                        translateY = 0;
-                        currentImg = null;
-                        isPanning = false;
-                        hasMoved = false;
-
-                        // Reabilitar swiper
-                        modalSwiper.allowTouchMove = true;
-                    });
-                }
-            }, 500);
 
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', inicializarPaginaProduto);
             } else {
                 inicializarPaginaProduto();
             }
+
+
+
+            // ============================================
+            // SOLUÇÃO ALTERNATIVA: ZOOM NATIVO SEM EASYZOOM
+            // Adicione este código no lugar do EasyZoom
+            // ============================================
+
+            // Variáveis para controle do zoom
+            let isZoomed = false;
+            let currentZoomImage = null;
+
+            // Função para adicionar zoom nativo em todas as imagens do modal
+            function initializeNativeZoom() {
+                console.log('🔍 Inicializando zoom nativo...');
+
+                const modalImages = document.querySelectorAll('.modalSwiper .swiper-slide img');
+
+                modalImages.forEach((img, index) => {
+                    // Remover listeners anteriores
+                    img.removeEventListener('click', handleImageZoomClick);
+                    img.removeEventListener('mousemove', handleImageZoomMove);
+                    img.removeEventListener('mouseleave', handleImageZoomLeave);
+
+                    // Adicionar classe de zoom disponível
+                    img.style.cursor = 'zoom-in';
+
+                    // Adicionar event listener para click (ativar/desativar zoom)
+                    img.addEventListener('click', handleImageZoomClick);
+
+                    // Adicionar event listener para mousemove (quando zoom ativado)
+                    img.addEventListener('mousemove', handleImageZoomMove);
+
+                    // Adicionar event listener para mouseleave
+                    img.addEventListener('mouseleave', handleImageZoomLeave);
+                });
+
+                console.log(`✅ Zoom nativo adicionado em ${modalImages.length} imagens`);
+            }
+
+            // Handler para click na imagem (ativar/desativar zoom)
+            function handleImageZoomClick(e) {
+                const img = e.currentTarget;
+
+                if (!isZoomed) {
+                    // Ativar zoom
+                    activateZoom(img);
+                } else {
+                    // Desativar zoom
+                    deactivateZoom(img);
+                }
+            }
+
+            // Ativar zoom
+            function activateZoom(img) {
+                isZoomed = true;
+                currentZoomImage = img;
+
+                // Alterar cursor
+                img.style.cursor = 'zoom-out';
+
+                // Aplicar escala maior
+                img.style.transform = 'scale(2)';
+                img.style.transformOrigin = 'center center';
+                img.style.transition = 'transform 0.3s ease';
+
+                // Desabilitar swiper
+                if (modalSwiper) {
+                    modalSwiper.allowTouchMove = false;
+                    modalSwiper.allowSlideNext = false;
+                    modalSwiper.allowSlidePrev = false;
+                }
+
+                console.log('🔍 Zoom ativado (2x)');
+            }
+
+            // Desativar zoom
+            function deactivateZoom(img) {
+                isZoomed = false;
+                currentZoomImage = null;
+
+                // Restaurar cursor
+                img.style.cursor = 'zoom-in';
+
+                // Remover zoom
+                img.style.transform = 'scale(1)';
+                img.style.transformOrigin = 'center center';
+
+                // Reabilitar swiper
+                if (modalSwiper) {
+                    modalSwiper.allowTouchMove = true;
+                    modalSwiper.allowSlideNext = true;
+                    modalSwiper.allowSlidePrev = true;
+                }
+
+                console.log('🔍 Zoom desativado');
+            }
+
+            // Handler para movimento do mouse (pan quando zoom ativado)
+            function handleImageZoomMove(e) {
+                if (!isZoomed) return;
+
+                const img = e.currentTarget;
+                const rect = img.getBoundingClientRect();
+
+                // Calcular posição do mouse relativa à imagem (0 a 1)
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+
+                // Converter para porcentagem de transformOrigin
+                const originX = x * 100;
+                const originY = y * 100;
+
+                // Aplicar transform origin baseado na posição do mouse
+                img.style.transformOrigin = `${originX}% ${originY}%`;
+            }
+
+            // Handler para quando mouse sai da imagem
+            function handleImageZoomLeave(e) {
+                if (isZoomed) {
+                    const img = e.currentTarget;
+                    deactivateZoom(img);
+                }
+            }
+
+            // Modificar função de atualização do modal para incluir zoom nativo
+            function atualizarImagensModalComZoomNativo(colorCode) {
+                const color = colorCode.replace(/\//g, '_');
+                const cachedImages = imageCache.get(color) || [];
+
+                // Primeiro, esconder todas as imagens do modal
+                document.querySelectorAll('[data-modal-image]').forEach(img => {
+                    const slide = img.closest('.swiper-slide');
+                    if (slide) {
+                        slide.style.display = 'none';
+                    }
+                });
+
+                // Depois, mostrar e atualizar apenas as imagens que existem
+                cachedImages.forEach(imgInfo => {
+                    const modalImages = document.querySelectorAll('[data-modal-image]');
+                    if (modalImages[imgInfo.index]) {
+                        const img = modalImages[imgInfo.index];
+                        const slide = img.closest('.swiper-slide');
+
+                        img.setAttribute('data-modal-image', imgInfo.path);
+                        img.src = imgInfo.path;
+
+                        if (slide) {
+                            slide.style.display = 'block';
+                        }
+                    }
+                });
+
+                // Reinicializar zoom nativo após atualizar as imagens
+                setTimeout(() => {
+                    initializeNativeZoom();
+                    if (modalSwiper) {
+                        modalSwiper.update();
+                    }
+                }, 100);
+            }
+
+            // Modificar openImageModal
+            const originalOpenImageModal = window.openImageModal;
+            window.openImageModal = function(element) {
+                if (typeof originalOpenImageModal === 'function') {
+                    originalOpenImageModal.call(this, element);
+                }
+
+                // Inicializar zoom nativo após abrir o modal
+                setTimeout(() => {
+                    initializeNativeZoom();
+                }, 300);
+            };
+
+            // Modificar closeImageModal
+            const originalCloseImageModal = window.closeImageModal;
+            window.closeImageModal = function() {
+                // Reset zoom state
+                isZoomed = false;
+                currentZoomImage = null;
+
+                if (typeof originalCloseImageModal === 'function') {
+                    originalCloseImageModal.call(this);
+                }
+            };
+
+            // Listener para mudança de slide
+            function setupModalSwiperZoomListeners() {
+                if (typeof modalSwiper !== 'undefined' && modalSwiper) {
+                    modalSwiper.on('slideChange', () => {
+                        console.log('📱 Slide alterado - resetando zoom');
+
+                        // Reset zoom em todas as imagens
+                        document.querySelectorAll('.modalSwiper .swiper-slide img').forEach(img => {
+                            img.style.transform = 'scale(1)';
+                            img.style.cursor = 'zoom-in';
+                        });
+
+                        isZoomed = false;
+                        currentZoomImage = null;
+
+                        // Reabilitar swiper
+                        setTimeout(() => {
+                            if (modalSwiper) {
+                                modalSwiper.allowTouchMove = true;
+                                modalSwiper.allowSlideNext = true;
+                                modalSwiper.allowSlidePrev = true;
+                            }
+                        }, 100);
+                    });
+                }
+            }
+
+            // Substituir função original
+            window.atualizarImagensModalOtimizado = atualizarImagensModalComZoomNativo;
+
+            // Inicializar quando a página carregar
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    setTimeout(setupModalSwiperZoomListeners, 1000);
+                });
+            } else {
+                setTimeout(setupModalSwiperZoomListeners, 1000);
+            }
+
+            console.log('✅ Sistema de zoom nativo inicializado');
         </script>
     @endpush
 
