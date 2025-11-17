@@ -601,14 +601,18 @@
                             cornerClass = index === 0 ? 'rounded-l-lg' : 'rounded-r-lg';
                         } else if (isFirstRow) {
                             // Primeira linha
-                            cornerClass = index === 0 ? 'rounded-tl-lg' : 'rounded-tr-lg';
+                            cornerClass = index === 0 ? 'rounded-tl-lg border-b border-r' : 'rounded-tr-lg border-b';
                         } else if (isOddTotal && isLastImage) {
                             // Se total é ímpar e é a última imagem (sozinha na linha)
-                            cornerClass = 'rounded-bl-lg';
+                            cornerClass = 'rounded-bl-lg border-r';
                         } else if (!isOddTotal && index >= totalImages - 2) {
                             // Última linha com 2 imagens (apenas quando total é PAR)
                             const isLeftColumn = index % 2 === 0; // Coluna esquerda (índices pares)
-                            cornerClass = isLeftColumn ? 'rounded-bl-lg' : 'rounded-br-lg';
+                            cornerClass = isLeftColumn ? 'rounded-bl-lg border-r' : 'rounded-br-lg';
+                        } else {
+                            // Última linha com 2 imagens (apenas quando total é PAR)
+                            const isLeftColumn = index % 2 === 0; // Coluna esquerda (índices pares)
+                            cornerClass = isLeftColumn ? 'border-b border-r' : 'border-b';
                         }
                         // Caso contrário, mantém 'rounded-none' para imagens do meio
 

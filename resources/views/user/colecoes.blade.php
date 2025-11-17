@@ -53,25 +53,52 @@
                 <div class="flex gap-2">
 
                     <div class="select-container">
-                        <div class="select-button p-5" id="selectButton">
-                            <span id="selectedText">Selecione uma coleção</span>
-                            <div class="" id="arrow">
-                                <div class="pt-1" id="arrow">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
-                                        viewBox="0 0 12 8" fill="none">
-                                        <path d="M1 1L5.94975 5.94975L10.8995 1" stroke="black" stroke-width="1.5"
-                                            stroke-linecap="round" />
+                        <div class="select-button p-5" id="colecaoSelectButton">
+                            <span class="text-[16px] text-black">Selecione uma coleção</span>
+                            <span class="text-[18px] text-[#7A7A7A]" id="colecaoSelectedText">
+                                @if (!empty($currentSlug))
+                                    @foreach ($colecoes as $colecao)
+                                        @if ($currentSlug == $colecao->slug)
+                                            {{ $colecao->name }}
+                                        @endif
+                                    @endforeach
+                                @else
+                                @endif
+                            </span>
+                            <div class="" id="colecaoArrow">
+                                <div class="pt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="7"
+                                        viewBox="0 0 12 7" fill="none">
+                                        <path d="M0.75 0.75L5.69975 5.69975L10.6495 0.750001" stroke="black"
+                                            stroke-width="1.5" stroke-linecap="round" />
                                     </svg>
                                 </div>
                             </div>
                         </div>
-                        <div class="options min-w-[260px] p-5" id="options">
+                        <div class="options p-5" id="colecaoOptions">
                             @foreach ($colecoes as $colecao)
-                                <div class="option text-[18px]" data-value="{{ $colecao->slug }}">
-                                    {{ $colecao->codigo_colecao }}</span>
+                                <div class="option text-[18px]" data-slug="{{ $colecao->slug }}"
+                                    data-value="{{ $colecao->slug }}" style="">
+                                    <span class="check-icon" style="display: none;"><svg
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                                            <path
+                                                d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
+                                        </svg></span>
+                                    <span class="option-content" style="">
+                                        {{ $colecao->name }}
+                                    </span>
+                                    <span class="x-icon" style="display: none;">×</span>
                                 </div>
                             @endforeach
-                            <div class="text-sm option" data-value="todas">Todas</div>
+                            <div class="option" data-slug="" data-value="">
+                                <span class="check-icon" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 640 640">
+                                        <path
+                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
+                                    </svg></span>
+                                <span class="text-sm option-content">Todas</span>
+                                <span class="x-icon" style="display: none;">×</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -133,8 +160,8 @@
                             <span class="text-black mr-2">Ordenar por:</span>
                             <span id="sortText" class="text-[#7A7A7A]">Mais nova</span>
                             <div class="pl-2 pt-1" id="sortArrow">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"
-                                    fill="none">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
+                                    viewBox="0 0 12 8" fill="none">
                                     <path d="M1 1L5.94975 5.94975L10.8995 1" stroke="black" stroke-width="1.5"
                                         stroke-linecap="round" />
                                 </svg>
@@ -193,14 +220,21 @@
             const grid = document.getElementById('colecoes-grid');
             const template = document.getElementById('template-colecoes');
             const searchInput = document.querySelector('input[id="buscar"]');
-            const selectButton = document.getElementById('selectButton');
-            const selectedText = document.getElementById('selectedText');
-            const arrow = document.getElementById('arrow');
-            const options = document.getElementById('options');
-            const optionElements = document.querySelectorAll('.option');
+            // Dropdown de Coleção (igual ao de produtos)
+            const colecaoSelectButton = document.getElementById('colecaoSelectButton');
+            const colecaoSelectedText = document.getElementById('colecaoSelectedText');
+            const colecaoArrow = document.getElementById('colecaoArrow');
+            const colecaoOptions = document.getElementById('colecaoOptions');
 
-            // Variável para armazenar o valor selecionado
-            let selectedColecaoValue = '';
+            function openColecaoDropdown() {
+                colecaoOptions.classList.add('show');
+                colecaoArrow.classList.add('up');
+            }
+
+            function closeColecaoDropdown() {
+                colecaoOptions.classList.remove('show');
+                colecaoArrow.classList.remove('up');
+            }
 
             // Função para renderizar as coleções
             function renderColecoes(colecoesToRender = colecoesFiltered) {
@@ -259,7 +293,7 @@
                         const description = clone.querySelector('.description');
 
                         // Configurar box vazio
-                        card.style.backgroundColor = '#4A4A4A';
+                        card.style.backgroundColor = '#CFCFCF';
                         card.style.backgroundImage = 'none';
                         overlay.style.display = 'none';
 
@@ -284,10 +318,7 @@
                         colecao.name.toLowerCase().includes(searchTerm) ||
                         colecao.codigo_colecao.toLowerCase().includes(searchTerm) ||
                         (colecao.description && colecao.description.toLowerCase().includes(searchTerm));
-
-                    const matchSelect = !selectedColecaoValue || selectedColecaoValue === '' || selectedColecaoValue ===
-                        'todas' ||
-                        colecao.slug === selectedColecaoValue;
+                    const matchSelect = true;
 
                     // Filtro por ano baseado no created_at
                     const matchYear = selectedFilters.year.length === 0 ||
@@ -308,57 +339,66 @@
             }
 
             // Toggle dropdown
-            selectButton.addEventListener('click', function() {
-                const isOpen = options.classList.contains('show');
-
-                if (isOpen) {
-                    closeSelectDropdown();
+            colecaoSelectButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (colecaoOptions.classList.contains('show')) {
+                    closeColecaoDropdown();
                 } else {
-                    openSelectDropdown();
+                    openColecaoDropdown();
                 }
             });
 
-            // Select option
-            optionElements.forEach(option => {
-                option.addEventListener('click', function() {
-                    // Remove selected class from all options
-                    optionElements.forEach(opt => opt.classList.remove('selected'));
+            // Handle selection and navigation
+            colecaoOptions.addEventListener('click', function(e) {
+                // Handle X icon click to remove selection
+                if (e.target.classList.contains('x-icon')) {
+                    e.stopPropagation();
+                    const option = e.target.closest('.option');
+                    if (option) {
+                        colecaoSelectedText.textContent = '';
+                        closeColecaoDropdown();
+                    }
+                    return;
+                }
 
-                    // Add selected class to clicked option
-                    this.classList.add('selected');
+                let option = e.target;
+                if (!option.classList.contains('option')) {
+                    option = option.closest('.option');
+                }
 
-                    // Update selected text
-                    selectedText.textContent = this.textContent;
+                if (option && option.classList.contains('option')) {
+                    // Reset visual state
+                    colecaoOptions.querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('selected');
+                        const checkIcon = opt.querySelector('.check-icon');
+                        const xIcon = opt.querySelector('.x-icon');
+                        if (checkIcon) checkIcon.style.display = 'none';
+                        if (xIcon) xIcon.style.display = 'none';
+                    });
 
-                    // Update selected value for filtering
-                    selectedColecaoValue = this.getAttribute('data-value');
+                    // Apply selected state
+                    option.classList.add('selected');
+                    const xIcon = option.querySelector('.x-icon');
+                    if (xIcon) xIcon.style.display = 'inline';
 
-                    // Apply filter
-                    filtrarColecoes();
+                    const slug = option.getAttribute('data-slug');
+                    const text = option.querySelector('.option-content').textContent;
+                    //colecaoSelectedText.textContent = text;
+                    closeColecaoDropdown();
 
-                    // Close dropdown
-                    closeSelectDropdown();
-                });
+                    // Build URL: from /user/{slug}/colecoes -> /user/{slug}/colecoes/{slug}
+                    const currentUrl = window.location.href.replace(/\/$/, '');
+                    const newUrl = currentUrl + (slug ? '/' + slug : '');
+                    window.location.href = newUrl;
+                }
             });
 
             // Close dropdown when clicking outside
             document.addEventListener('click', function(event) {
-                if (!selectButton.contains(event.target) && !options.contains(event.target)) {
-                    closeSelectDropdown();
+                if (!colecaoSelectButton.contains(event.target) && !colecaoOptions.contains(event.target)) {
+                    closeColecaoDropdown();
                 }
             });
-
-            function openSelectDropdown() {
-                options.classList.add('show');
-                selectButton.classList.add('active');
-                arrow.classList.add('up');
-            }
-
-            function closeSelectDropdown() {
-                options.classList.remove('show');
-                selectButton.classList.remove('active');
-                arrow.classList.remove('up');
-            }
 
 
             const filterButton = document.getElementById('filterButton');
@@ -381,6 +421,8 @@
                 if (isOpen) {
                     closeFilterDropdown();
                 } else {
+                    closeSortDropdown();
+                    closeColecaoDropdown()
                     openFilterDropdown();
                 }
             });
@@ -516,6 +558,7 @@
 
             let selectedSortValue = 'mais-nova';
 
+
             (function initDefaultSortSelection() {
                 const optionToSelect = Array.from(sortOptions).find(opt => opt.getAttribute('data-value') ===
                     selectedSortValue);
@@ -525,6 +568,7 @@
                     sortText.textContent = optionToSelect.textContent;
                 }
             })();
+
             // Toggle sort dropdown
             sortButton.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -533,9 +577,12 @@
                 if (isOpen) {
                     closeSortDropdown();
                 } else {
+                    closeFilterDropdown();
+                    closeColecaoDropdown()
                     openSortDropdown();
                 }
             });
+
 
             // Handle sort selection
             sortOptions.forEach(option => {
@@ -618,7 +665,7 @@
             // Close dropdown with Escape key
             document.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape') {
-                    closeSelectDropdown();
+                    closeColecaoDropdown();
                     closeFilterDropdown();
                     closeSortDropdown();
                 }

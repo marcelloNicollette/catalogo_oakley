@@ -1125,8 +1125,16 @@
                 const sortDropdown = document.getElementById('sortDropdown');
                 const sortOptions = document.querySelectorAll('.sort-option');
 
-                let selectedSortValue = 'mais-nova';
-
+                let selectedSortValue = '';
+                (function initDefaultSortSelection() {
+                    const optionToSelect = Array.from(sortOptions).find(opt => opt.getAttribute('data-value') ===
+                        selectedSortValue);
+                    if (optionToSelect) {
+                        sortOptions.forEach(opt => opt.classList.remove('selected'));
+                        optionToSelect.classList.add('selected');
+                        sortText.textContent = optionToSelect.textContent;
+                    }
+                })();
                 // Toggle sort dropdown
                 sortButton.addEventListener('click', function(e) {
                     e.stopPropagation();

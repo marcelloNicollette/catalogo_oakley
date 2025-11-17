@@ -942,13 +942,14 @@
             colecaoOptions.addEventListener('click', function(e) {
                 if (e.target.classList.contains('x-icon')) {
                     e.stopPropagation();
+                    console.log('X-icon clicked');
                     const option = e.target.closest('.option');
                     if (option) {
-                        colecaoSelectedText.textContent = 'Selecione uma coleção';
+                        //colecaoSelectedText.textContent = 'Selecione uma coleção';
                         closeColecaoDropdown();
                         const slug = option.getAttribute('data-slug');
                         const currentUrl = window.location.href;
-                        const newUrl = currentUrl.replace(/\/[^/]+$/, "") + '/' + slug;
+                        const newUrl = currentUrl.replace(/\/[^/]+$/, "");
                         window.location.href = newUrl;
                     }
                     return;
