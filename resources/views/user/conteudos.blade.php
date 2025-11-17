@@ -180,8 +180,9 @@
 
                 function filtrarTecnologiasCategoria() {
                     tecnologias.forEach(tecnologia => {
-                        const matchCategoria = selectedCategoryId === 'Todas' || tecnologia.getAttribute(
-                            'data-categoria-id') === selectedCategoryId;
+                        const matchCategoria = selectedCategoryId === 'Todas' || selectedCategoryId === '' ||
+                            tecnologia.getAttribute(
+                                'data-categoria-id') === selectedCategoryId;
                         tecnologia.style.display = (matchCategoria) ? 'block' : 'none';
                     });
                 }
@@ -190,7 +191,7 @@
                     const termoBusca = inputBusca.value.toLowerCase();
 
                     const tecnologiasInput = document.querySelectorAll('.tecnologia');
-                    console.log(selectedCategoryId, termoBusca);
+
                     tecnologiasInput.forEach(tecnologia => {
                         console.log(tecnologia);
                         const nome = tecnologia.querySelector('p').textContent.toLowerCase();
@@ -218,6 +219,12 @@
                             selectButton.querySelector('span').textContent = 'Categoria';
                             selectedCategoryId = '';
                             closeDropdown();
+
+                            option.classList.remove('selected');
+                            option.classList.add('opacity-50');
+                            option.querySelector('.check-icon').style.display = 'none';
+                            option.querySelector('.x-icon').style.display = 'none';
+
                             filtrarTecnologiasCategoria();
                         }
                         return;
@@ -245,7 +252,7 @@
                         option.classList.add('selected');
                         option.classList.remove('opacity-50');
                         option.querySelector('.check-icon').style.display = 'inline';
-                        option.querySelector('.x-icon').style.display = 'inline';
+                        option.querySelector('.x-icon').style.display = 'inline-table';
 
                         const value = option.getAttribute('data-value');
                         const text = option.querySelector('.option-content') ? option.querySelector(

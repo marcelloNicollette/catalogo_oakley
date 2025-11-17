@@ -435,12 +435,11 @@ html {
 
 /* Quando a categoria principal está selecionada */
 .produtos-page .option.selected .option-content {
-    margin: 0 5px 0 15px;
+    margin: 0 5px 0 5px;
 }
 .produtos-page .option.category-option.selected .option-content {
     margin: 0 5px 0 7px;
 }
-
 
         .produtos-page .check-icon {
             color: #28a745;
@@ -572,7 +571,6 @@ html {
             z-index: 1000;
             display: none;
             padding: 16px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             width: 230px;
             margin-top: 5px;
             overflow: auto;
@@ -701,8 +699,7 @@ html {
             z-index: 1000;
             display: none;
             padding: 16px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            width: 230px;
+            width: 210px;
             margin-top: 5px;
         }
 

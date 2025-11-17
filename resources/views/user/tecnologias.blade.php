@@ -13,6 +13,7 @@
             border-bottom: 0;
         }
 
+
         .height-ultra {
             height: calc(100vh - 160px);
         }
@@ -218,13 +219,20 @@
             categoryOptions.addEventListener('click', function(e) {
                 // Handle X icon click to remove selection
                 if (e.target.classList.contains('x-icon')) {
+
                     e.stopPropagation();
                     const option = e.target.closest('.option');
+
                     if (option) {
                         // Remove selection and reset category filter
                         categorySelectedText.textContent = 'Categoria';
                         selectedCategory = '';
+
                         closeCategoryDropdown();
+                        option.classList.remove('selected');
+                        option.classList.add('opacity-50');
+                        option.querySelector('.check-icon').style.display = 'none';
+                        option.querySelector('.x-icon').style.display = 'none';
                         aplicarFiltros();
                     }
                     return;
@@ -250,7 +258,7 @@
                     option.classList.add('selected');
                     option.classList.remove('opacity-50');
                     option.querySelector('.check-icon').style.display = 'inline';
-                    option.querySelector('.x-icon').style.display = 'inline';
+                    option.querySelector('.x-icon').style.display = 'inline-table';
 
                     const value = option.getAttribute('data-categoria-id');
                     const text = option.querySelector('.option-content').textContent;
