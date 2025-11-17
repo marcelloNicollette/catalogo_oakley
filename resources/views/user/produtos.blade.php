@@ -109,7 +109,7 @@
             }
 
             .subcategory-option.selected .x-icon {
-                display: inline;
+                display: inline-table;
             }
 
 
@@ -187,7 +187,7 @@
                                         {{ $colecao->name }}
                                     </span>
                                     <span class="x-icon"
-                                        style="display: {{ $currentSlug == $colecao->slug ? 'inline' : 'none' }};">×</span>
+                                        style="display: {{ $currentSlug == $colecao->slug ? 'inline-table' : 'none' }};">×</span>
                                 </div>
                             @endforeach
                             <div class="option" data-slug="" data-value="">
@@ -231,13 +231,13 @@
                                                 </svg></span>
                                             <span class="option-content">{{ $category->name }}</span>
                                         </div>
-                                        <span class="arrow-icon">
+                                        <!--<span class="arrow-icon">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
                                                 viewBox="0 0 12 8" fill="none">
                                                 <path d="M1 1L5.94975 5.94975L10.8995 1" stroke="currentColor"
                                                     stroke-width="1.5" stroke-linecap="round" />
                                             </svg>
-                                        </span>
+                                        </span>-->
                                         <span class="x-icon" style="display: none;">×</span>
                                     </div>
 
@@ -280,8 +280,8 @@
                                         <path
                                             d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
                                     </svg></span>
-                                <span class="text-sm option-content">Todas</span>
-                                <span class="x-icon" style="display: inline;">×</span>
+                                <span class="text-base option-content">Todas</span>
+                                <span class="x-icon" style="display: inline-table;">×</span>
                             </div>
                         </div>
                     </div>
@@ -787,7 +787,7 @@
                 });
                 subcategoryOption.classList.add('selected');
                 subcategoryOption.querySelector('.check-icon').style.display = 'inline';
-                subcategoryOption.querySelector('.x-icon').style.display = 'inline';
+                subcategoryOption.querySelector('.x-icon').style.display = 'inline-table';
 
                 //closeCategoryDropdown();
                 aplicarFiltros();
@@ -861,7 +861,7 @@
                                 //this.querySelector('.option-content').style.margin = '0';
                                 this.querySelector('.check-icon').style.display = 'inline';
                                 const xIcon = this.querySelector('.x-icon');
-                                if (xIcon) xIcon.style.display = 'inline';
+                                if (xIcon) xIcon.style.display = 'inline-table';
 
                                 // Aplica o filtro
                                 aplicarFiltros();
@@ -970,7 +970,7 @@
                     option.classList.add('selected');
                     option.style.padding = '6px 15px 6px 1px';
                     option.querySelector('.check-icon').style.display = 'inline';
-                    option.querySelector('.x-icon').style.display = 'inline';
+                    option.querySelector('.x-icon').style.display = 'inline-table';
 
                     const slug = option.getAttribute('data-slug');
                     const currentUrl = window.location.href;
@@ -997,52 +997,87 @@
             });
 
             categoryOptions.addEventListener('click', function(e) {
+                // Tratar cliques em subcategorias primeiro
+                const subOption = e.target.closest('.subcategory-option');
+                if (subOption) {
+                    e.stopPropagation();
+                    // limpar seleção anterior de subcategorias
+                    categoryOptions.querySelectorAll('.subcategory-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                        const ci = opt.querySelector('.check-icon');
+                        const xi = opt.querySelector('.x-icon');
+                        if (ci) ci.style.display = 'none';
+                        if (xi) xi.style.display = 'none';
+                    });
 
-                if (e.target.closest('.subcategory-dropdown')) {
+                    subOption.classList.add('selected');
+                    const ci = subOption.querySelector('.check-icon');
+                    const xi = subOption.querySelector('.x-icon');
+                    if (ci) ci.style.display = 'inline';
+                    if (xi) xi.style.display = 'inline-table';
+
+                    selectedSubcategory = subOption.getAttribute('data-value') || '';
+                    closeCategoryDropdown();
+                    aplicarFiltros();
                     return;
                 }
 
+                // Handle X icon click para remover seleção (categoria ou subcategoria)
                 if (e.target.classList.contains('x-icon')) {
                     e.stopPropagation();
-                    const option = e.target.closest('.option');
-                    if (option) {
-                        categorySelectedText.innerHTML = "<span class='text-[16px] text-black'>Categoria</span>";
-                        selectedCategory = '';
-                        selectedSubcategory = '';
 
-                        // Fechar todas as categorias expandidas
-                        categoryOptions.querySelectorAll('.category-option').forEach(opt => {
-                            opt.classList.remove('expanded');
-                        });
+                    // Limpar seleção visual de categorias
+                    categoryOptions.querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('selected');
+                        const ci = opt.querySelector('.check-icon');
+                        const xi = opt.querySelector('.x-icon');
+                        if (ci) ci.style.display = 'none';
+                        if (xi) xi.style.display = 'none';
+                    });
 
-                        //closeCategoryDropdown();
-                        aplicarFiltros();
-                    }
+                    // Limpar seleção visual de subcategorias
+                    categoryOptions.querySelectorAll('.subcategory-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                        const ci = opt.querySelector('.check-icon');
+                        const xi = opt.querySelector('.x-icon');
+                        if (ci) ci.style.display = 'none';
+                        if (xi) xi.style.display = 'none';
+                    });
+
+                    // Resetar filtros de categoria e subcategoria
+                    categorySelectedText.innerHTML = "<span class='text-[16px] text-black'>Categoria</span>";
+                    selectedCategory = '';
+                    selectedSubcategory = '';
+
+                    closeCategoryDropdown();
+                    aplicarFiltros();
                     return;
                 }
 
                 let option = e.target;
-
                 if (!option.classList.contains('option')) {
                     option = option.closest('.option');
                 }
 
                 if (option && option.classList.contains('option')) {
-                    console.log('Clicou na categoria opção abaixo');
                     const hasSubcategories = option.classList.contains('has-subcategories');
 
-                    // Se não tem subcategorias ou já está carregado e não expandido, selecionar
-                    if (!hasSubcategories || (option.hasAttribute('data-no-subcategories'))) {
+                    // Seleção direta quando não há subcategorias
+                    if (!hasSubcategories || option.hasAttribute('data-no-subcategories')) {
                         categoryOptions.querySelectorAll('.option').forEach(opt => {
                             opt.classList.remove('selected');
                             opt.classList.remove('expanded');
-                            opt.querySelector('.check-icon').style.display = 'none';
-                            opt.querySelector('.x-icon').style.display = 'none';
+                            const ci = opt.querySelector('.check-icon');
+                            const xi = opt.querySelector('.x-icon');
+                            if (ci) ci.style.display = 'none';
+                            if (xi) xi.style.display = 'none';
                         });
 
                         option.classList.add('selected');
-                        option.querySelector('.check-icon').style.display = 'inline';
-                        option.querySelector('.x-icon').style.display = 'inline';
+                        const ci = option.querySelector('.check-icon');
+                        const xi = option.querySelector('.x-icon');
+                        if (ci) ci.style.display = 'inline';
+                        if (xi) xi.style.display = 'inline-table';
 
                         const value = option.getAttribute('data-value');
                         const text = option.querySelector('.option-content').textContent;
@@ -1052,7 +1087,6 @@
                         `;
                         selectedCategory = value;
                         selectedSubcategory = '';
-                        //closeCategoryDropdown();
                         aplicarFiltros();
                     }
                 }
