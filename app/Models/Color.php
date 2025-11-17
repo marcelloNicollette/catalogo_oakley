@@ -14,6 +14,7 @@ class Color extends Model
         'color_name',
         'color_description',
         'color_code',
+        'genero',
         'product_id',
         'collection_id',
         'flag_product_id',
@@ -48,6 +49,6 @@ class Color extends Model
     public function segmentacoesCliente()
     {
         return $this->belongsToMany(SegmentacaoCliente::class, 'color_segmentacao_cliente')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 }

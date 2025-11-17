@@ -32,7 +32,7 @@ class WishlistController extends Controller
         // Verificar se já existe na wishlist
         $exists = Wishlist::where('user_id', $user->id)
             ->where('product_id', $request->product_id)
-            ->where('color_code', $request->color_code)
+            ->where('color_code', str_replace('/', '_', $request->color_code))
             ->exists();
 
         if ($exists) {
@@ -45,7 +45,7 @@ class WishlistController extends Controller
         Wishlist::create([
             'user_id' => $user->id,
             'product_id' => $request->product_id,
-            'color_code' => $request->color_code
+            'color_code' => str_replace('/', '_', $request->color_code)
         ]);
 
         return response()->json([
@@ -68,7 +68,7 @@ class WishlistController extends Controller
 
         $deleted = Wishlist::where('user_id', $user->id)
             ->where('product_id', $request->product_id)
-            ->where('color_code', $request->color_code)
+            ->where('color_code', str_replace('/', '_', $request->color_code))
             ->delete();
 
         if ($deleted) {
@@ -98,7 +98,7 @@ class WishlistController extends Controller
 
         $exists = Wishlist::where('user_id', $user->id)
             ->where('product_id', $request->product_id)
-            ->where('color_code', $request->color_code)
+            ->where('color_code', str_replace('/', '_', $request->color_code))
             ->exists();
 
         return response()->json([
@@ -131,7 +131,7 @@ class WishlistController extends Controller
             $query->where('collection_id', $colecao->id);
         })->get();
 
-        $produtos = Wishlist::with([
+        $wishlistQuery = Wishlist::with([
             'product' => function ($query) {
                 $query->withTrashed();
             },
@@ -146,6 +146,12 @@ class WishlistController extends Controller
             }
         ])
             ->where('user_id', $user->id)
+            // Filtrar pela segmentação do slug via categoria do produto
+            ->whereHas('product.category.segmentacao', function ($q) use ($slug) {
+                $q->where('slug', $slug);
+            });
+
+        $produtos = $wishlistQuery
             ->orderBy('created_at', 'desc')
             ->get();
 

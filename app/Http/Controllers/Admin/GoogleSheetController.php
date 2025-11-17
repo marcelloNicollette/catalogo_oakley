@@ -566,6 +566,7 @@ class GoogleSheetController extends Controller
             [
                 'color_name' => $corData['code'],
                 'color_description' => $corData['description'],
+                'genero' => $corData['genero'] ?? 'Masculino',
                 'collection_id' => $collection->id ?? null,
                 'flag_product_id' => $flag ?? null,
                 'numeracao_id' => $corData['numeracao_id'] ?? null,

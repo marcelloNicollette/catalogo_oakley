@@ -186,8 +186,9 @@
 
 
             <!-- Grid de Coleções -->
-            <div class="bg-[#000000] p-2 rounded-tl-lg overflow-auto height-ultra custom-scrollbar">
-                <div id="colecoes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3"
+            <div class="bg-[#000000] p-[10px] rounded-tl-lg overflow-auto height-ultra custom-scrollbar">
+                <div id="colecoes-grid"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-[10px]"
                     style="border-radius: 10px 0 0 0;">
                     <!-- Cards serão renderizados via JavaScript -->
                 </div>
@@ -196,8 +197,8 @@
 
             <!-- Template para os cards de coleções -->
             <template id="template-colecoes">
-                <div class="colecao-card relative rounded overflow-hidden cursor-pointer" data-codigo=""
-                    data-name="" data-description="" data-slug="" data-segmentacao-id=""
+                <div class="colecao-card relative h-[32vh] xl:h-[25vh] rounded overflow-hidden cursor-pointer hover:border hover:border-[#999]"
+                    data-codigo="" data-name="" data-description="" data-slug="" data-segmentacao-id=""
                     onclick="openHistoryModalWithCollection(this.dataset.name, this)">
                     <div class="overlay absolute inset-0 bg-black bg-opacity-40 " style="display: none;"></div>
                     <div

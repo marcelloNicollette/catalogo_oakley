@@ -68,7 +68,7 @@
                         @foreach ($segmentacoes as $segmentacao)
                             @if ($currentSlug == $segmentacao->slug)
                                 <div
-                                    class="block w-full bg-black text-white border-none px-5 py-2 pr-5 rounded-full shadow leading-tight focus:outline-none focus:shadow-outline font-normal text-sm cursor-pointer hover:bg-gray-900 transition-colors duration-200 text-center">
+                                    class="block w-full bg-black text-white border-none px-5 py-[10px] rounded-full shadow leading-tight focus:outline-none focus:shadow-outline font-normal text-sm cursor-pointer hover:bg-gray-900 transition-colors duration-200 text-center">
                                     <a href="{{ route('user.segmentacao') }}" class="">
                                         {{ $segmentacao->segmento }}
 
@@ -133,7 +133,7 @@
                         }" class="relative pl-[10px]">
                             <!-- Botão CTA -->
                             <button @click="showModal = true"
-                                class="flex items-center space-x-2 px-3 py-[6px]  text-black  rounded-full hover:opacity-80 transition-colors border border-black">
+                                class="flex items-center space-x-2 px-3 py-[8px]  text-black  rounded-full hover:opacity-80 transition-colors border border-black">
 
                                 <div class="flex flex-row items-start">
                                     <span class="text-sm ">Segmentos: </span>

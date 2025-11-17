@@ -320,7 +320,8 @@
                             </div>
                         </div>
 
-                        <div class="filter-dropdown custom-scrollbar" style="width: 310px;" id="filterDropdown">
+                        <div class="filter-dropdown custom-scrollbar-wh" style="width: 228px;overflow-x:hidden;"
+                            id="filterDropdown">
                             <div class="filter-section">
                                 <label class="filter-label">Numeração/Tamanhos​</label>
                                 <div class="filter-options" id="numeracaoOptions">
@@ -398,7 +399,7 @@
                     <template id="template-produto">
                         <a href="" class="block h-full">
                             <div
-                                class="bg-white hover:shadow-md transition relative rounded-md border border-[#DEDEDE] h-full flex flex-col">
+                                class="bg-white hover:shadow-md transition relative rounded-md border border-[#DEDEDE] flex flex-col">
                                 <div class="badge-container pt-1 px-2" style="position:absolute; min-height: 35px;">
 
                                 </div>
@@ -413,8 +414,9 @@
                                     <div class="flex-1 flex flex-col justify-between">
                                         <div class="mt-auto">
                                             <p class="text-sm pb-2">
-                                                <span class="categoria text-black "></span> <span
-                                                    class="codigo text-black opacity-50"></span>
+                                                <span class="categoria text-black "></span>
+                                                <span class="genero text-black opacity-50 px-2"></span>
+                                                <span class="codigo text-black opacity-50"></span>
                                             </p>
                                             <div class="float-right mr-[25%]">
                                                 <p class="text-black opacity-50 text-xs title-caract-1"></p>
@@ -424,7 +426,7 @@
                                             <p class="cor text-black text-xs pb-2"></p>
 
 
-                                            <p class="text-black opacity-50 mt-1 text-xs title-caract-1">PDV</p>
+                                            <p class="text-black opacity-50 mt-1 text-xs ">PDV</p>
                                             <p class="text-base preco text-black"></p>
                                         </div>
                                     </div>
@@ -452,7 +454,7 @@
                                 $imgPath = '/images/produtos/' . $produto->code . '_' . str_replace('/', '_', $produtoGroup->color_code) . '.jpg';
                                 $imgFullPath = public_path($imgPath);
                                 $img = file_exists($imgFullPath) ? $imgPath : '/images/img-padrao-oly.png';
-                                $numeracaoIds = $produto->numeracoes ? $produto->numeracoes->pluck('id')->toArray() : [];
+                                $numeracaoIds = $produto->numeracao ? $produto->numeracao->pluck('id')->toArray() : [];
                                 $tamanhoIds = $produto->sizes ? $produto->sizes->pluck('id')->toArray() : [];
                                 $precoNumerico = $produto->price ?? 0;
                                 $classificacaoId = $produtoGroup->flagProduct ? $produtoGroup->flagProduct->id : null;
@@ -465,11 +467,12 @@
                                 'desc-caract-1': "{{ $produto->caracteristicasDestaque && $produto->caracteristicasDestaque->first() ? $produto->caracteristicasDestaque->first()->description : '' }}",
                                 cor: "{{ $produtoGroup->color_name ?? '' }}",
                                 codigo_cor: "{{ str_replace('/', '_', $produtoGroup->color_code ?? '') }}",
-                                numeracao: "34/44",
+                                numeracao: "{{ $produtoGroup->numeracao ? $produtoGroup->numeracao->numero : '' }}",
                                 categoria: "{{ $produto->category ? $produto->category->name : '' }}",
                                 subcategory_id: "{{ $produto->subcategory_id ?? '' }}",
                                 preco: "R$ {{ $precoNumerico }}",
                                 precoNumerico: "R$ {{ $precoNumerico }}",
+                                genero: "{{ $produtoGroup->genero ?? '' }}",
                                 numeracaoIds: @json($numeracaoIds),
                                 tamanhoIds: @json($tamanhoIds),
                                 classificacaoId: {{ $classificacaoId ?? 'null' }},
@@ -546,9 +549,10 @@
                     clone.querySelector("h2").textContent = produto.title;
                     clone.querySelector(".codigo").textContent = produto.codigo;
                     clone.querySelector(".cor").textContent = produto.cor;
+                    clone.querySelector(".genero").textContent = produto.genero;
                     clone.querySelector(".categoria").textContent = produto.categoria;
-                    clone.querySelector(".title-caract-1").textContent = produto['title-caract-1'];
-                    clone.querySelector(".desc-caract-1").textContent = produto['desc-caract-1'];
+                    clone.querySelector(".title-caract-1").textContent = 'Numeração';
+                    clone.querySelector(".desc-caract-1").textContent = produto['numeracao'];
                     clone.querySelector(".preco").textContent = produto.preco;
 
                     const badgeContainer = clone.querySelector(".badge-container");

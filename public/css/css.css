@@ -430,24 +430,24 @@ html {
         
 
         .produtos-page .option-content {
-            
-            margin: 0 20px;
-        }
+    margin: 0 5px 0 20px;
+}
+
+/* Quando a categoria principal está selecionada */
+.produtos-page .option.selected .option-content {
+    margin: 0 5px 0 15px;
+}
+.produtos-page .option.category-option.selected .option-content {
+    margin: 0 5px 0 7px;
+}
 
 
-
-        .produtos-page .option.selected .option-content{
-            margin: 0 0 0 4px;
-            
-        }
-        /*.produtos-page .option.selected .option-content {
-            margin: 0 3px;
-        }*/
         .produtos-page .check-icon {
             color: #28a745;
             font-weight: bold;
             font-size: 16px;
-            width: 16px;
+            width: 15px;
+            height: 13px;
             text-align: center;
         }
 
@@ -455,9 +455,11 @@ html {
             color: #7A7A7A;
             font-weight: bold;
             font-size: 18px;
-            width: 16px;
+            width: 6px;
+            height: 6px;
             text-align: center;
             cursor: pointer;
+            margin-left: 7px;
         }
 
         .produtos-page .x-icon:hover {
@@ -605,7 +607,7 @@ html {
 
         .filter-option {
             padding: 6px 12px;
-            background: #f8f9fa;
+            background: #EDEDED;
             border: 1px solid #e9ecef;
             border-radius: 20px;
             font-size: 13px;
@@ -616,7 +618,7 @@ html {
         }
 
         .filter-option:hover {
-            background: #e9ecef;
+            background: #EDEDED;
             border-color: #dee2e6;
         }
 
@@ -626,16 +628,15 @@ html {
             color: white;
         }
 
-        .classification-options {
+        /*.classification-options {
             flex-direction: column;
             gap: 4px;
-        }
+        }*/
 
         .classification-options .filter-option {
-            border-radius: 4px;
+            border-radius: 100px;
             text-align: left;
             justify-self: stretch;
-            width: 100%;
         }
 
         .classification-options .filter-option.selected {
@@ -951,3 +952,10 @@ html {
                 scrollbar-color: #A9A9A9 #E6E6E6;
                 /* thumb track */
             }
+
+             .custom-scrollbar-wh {
+                                scrollbar-width: thin;
+                                /* auto, thin, none */
+                                scrollbar-color: #A9A9A9 #FFFFFF;
+                                /* thumb track */
+                            }

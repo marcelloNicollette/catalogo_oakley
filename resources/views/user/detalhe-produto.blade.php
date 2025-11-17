@@ -203,7 +203,8 @@
                                     <!-- Cor 1 - Selecionada -->
                                     <div class="relative">
                                         <div class="box-color bg-white {{ $loop->first ? 'border border-black' : '' }} rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md"
-                                            data-color-code="{{ $color->color_code }}">
+                                            data-color-code="{{ $color->color_code }}"
+                                            data-genero="{{ $color->genero }}">
                                             <div class="relative">
                                                 @php
                                                     $baseColorCode = str_replace('/', '_', $color->color_code);
@@ -273,6 +274,10 @@
                                     <p class="text-base">R$ {{ $produto->price }}</p>
                                 </div>
 
+                                <div>
+                                    <p class="text-xs text-black opacity-50">Gênero</p>
+                                    <p class="text-base genero">{{ $produto->colors->first()->genero }}</p>
+                                </div>
                                 @if ($produto->caracteristicasDestaque)
                                     @foreach ($produto->caracteristicasDestaque as $caracteristica)
                                         <div>
@@ -504,7 +509,7 @@
 
             // Pré-carrega informações sobre quais imagens existem para cada cor
             async function preloadImageInfo() {
-                console.log('Pré-carregando informações das imagens...');
+                //console.log('Pré-carregando informações das imagens...');
 
                 // Mostrar loader enquanto pré-carrega
                 showLoading();
@@ -536,7 +541,7 @@
                 });
 
                 await Promise.all(promises);
-                console.log('Pré-carregamento concluído');
+                //console.log('Pré-carregamento concluído');
 
                 // Consolidar cache mantendo ordem definida por 'suffixes'
                 tempCache.forEach((images, color) => {
@@ -1026,6 +1031,12 @@
                             const selectedColorCode = variant.getAttribute('data-color-code');
                             currentColorCode = selectedColorCode;
 
+                            const selectedGenero = variant.getAttribute('data-genero');
+                            currentGenero = selectedGenero;
+                            console.log(currentGenero);
+                            // Atualizar gênero na interface
+                            document.querySelector('.genero').textContent = currentGenero;
+
                             // Carregar imagens da cor selecionada (agora instantâneo)
                             carregarImagensProdutoOtimizado(selectedColorCode);
                             // Atualizar numeração conforme a cor selecionada
@@ -1111,6 +1122,7 @@
                         id: {{ $color->id }},
                         color_code: "{{ $color->color_code }}",
                         color_name: "{{ $color->color_name }}",
+                        genero: "{{ $color->genero }}",
                         color_description: "{{ $color->color_description }}",
                         numeracao: "{{ optional($color->numeracao)->numero }}",
                         flag_product_id: {{ $color->flag_product_id ?? 'null' }},
@@ -1205,7 +1217,8 @@
 
                     corElement.innerHTML = `
                         <div class="box-color bg-white ${isFirst ? 'border border-black' : 'border border-white'} rounded-lg cursor-pointer transition-all duration-200 " 
-                             data-color-code="${cor.color_code}">
+                             data-color-code="${cor.color_code}"
+                             data-genero="${cor.genero}">
                             <div class="relative">
                                 <img src="/images/produtos/{{ $produto->code }}_${colorCodeFormatted}.jpg" 
                                      alt="${cor.color_name}" 

@@ -76,7 +76,6 @@
                         @enderror
                     </div>
 
-
                     <div class="">
                         <label for="order" class="block text-sm font-medium text-gray-700">Ordem de Exibição</label>
                         <input type="number" name="order" id="order" min="1"
@@ -126,9 +125,9 @@
                         <legend class="block text-sm font-medium text-gray-700">Cores disponíveis
                         </legend>
                         <div class="bg-gray-50 " x-data="{
-                            campos: [{ color_name: '', color_description: '', color_code: '', color_collection_id: '', color_flag_product_id: '', segmentacoes_cliente: [] }],
+                            campos: [{ color_name: '', color_description: '', color_code: '', color_genero: 'Masculino', color_collection_id: '', color_flag_product_id: '', color_numeracao_id: '', segmentacoes_cliente: [] }],
                             adicionarCampo() {
-                                this.campos.push({ color_name: '', color_description: '', color_code: '', color_collection_id: '', color_flag_product_id: '', segmentacoes_cliente: [] });
+                                this.campos.push({ color_name: '', color_description: '', color_code: '', color_genero: 'Masculino', color_collection_id: '', color_flag_product_id: '', color_numeracao_id: '', segmentacoes_cliente: [] });
                             },
                             removerCampo(index) {
                                 this.campos.splice(index, 1);
@@ -160,6 +159,16 @@
                                                 <input :name="`color_code[]`" x-model="campo.color_code"
                                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                                                     name="color_code[]"></input>
+                                            </div>
+                                            <!-- Coluna 3.1: Gênero -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Gênero</label>
+                                                <select :name="`color_genero[]`" x-model="campo.color_genero"
+                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                    <option value="Masculino">Masculino</option>
+                                                    <option value="Feminino">Feminino</option>
+                                                    <option value="Unissex">Unissex</option>
+                                                </select>
                                             </div>
                                             <!-- Coluna 4: Coleção -->
                                             <div>
