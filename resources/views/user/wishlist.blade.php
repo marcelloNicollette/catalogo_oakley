@@ -760,7 +760,7 @@
                     const termo = (searchInput?.value || '').trim().toLowerCase();
                     const categoria = selectedCategory;
                     const colecao = selectedCollection;
-                    const agrupado = groupCheckbox.checked;
+                    const agrupado = groupCheckbox ? groupCheckbox.checked : false;
                     let filtrados = filtrarProdutos(termo, categoria, colecao);
                     filtrados = applySorting(selectedSortValue, filtrados);
                     renderProdutos(filtrados, agrupado);
@@ -1223,8 +1223,12 @@
                 });
 
                 // Event listeners for filters
-                searchInput.addEventListener("input", aplicarFiltros);
-                groupCheckbox.addEventListener("change", aplicarFiltros);
+                if (searchInput) {
+                    searchInput.addEventListener("input", aplicarFiltros);
+                }
+                if (groupCheckbox) {
+                    groupCheckbox.addEventListener("change", aplicarFiltros);
+                }
             });
         </script>
     @endpush
