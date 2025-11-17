@@ -141,14 +141,6 @@
             .options {
                 max-height: 500px;
             }
-
-            /* Para Firefox */
-            .custom-scrollbar {
-                scrollbar-width: thin;
-                /* auto, thin, none */
-                scrollbar-color: #A9A9A9 #000000;
-                /* thumb track */
-            }
         </style>
 
         <!-- Menu lateral -->
