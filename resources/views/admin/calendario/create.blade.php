@@ -1,6 +1,6 @@
 @extends('layouts.admin-layout')
 
-@section('page_title', 'Olympikus - Novo Item do Calendário')
+@section('page_title', 'Under Armour - Novo Item do Calendário')
 
 @section('content-wrapper')
     <div class="flex justify-between items-center mb-6">

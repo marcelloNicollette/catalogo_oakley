@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Olympikus</title>
+    <title>Under Armour</title>
     <!-- Favicon -->
     <link rel="icon" href="/images/Favicon_Olympikus.png" type="image/png">
     <!-- Fonts -->
@@ -31,11 +31,11 @@
         <div
             class="lg:w-[40%] 2xl:w-[30%] 3xl:w-[20%] w-full bg-[#2735D4] flex flex-col items-center justify-start lg:justify-center p-6 lg:p-12 rounded-xl">
             <!-- Logo -->
-            <img src="/images/logo-branco.png" alt="Olympikus" class="mb-6">
+            <img src="/images/logo-branco.png" alt="Under Armour" class="mb-6">
 
             <!-- Título -->
             <h2 class="text-xl text-white text-center m-5">Bem-vindo ao Painel administrativo do catálogo digital da
-                Olympikus.</h2>
+                Under Armour.</h2>
 
             <!-- Formulário -->
             <form class="w-full max-w-xs" method="POST" action="{{ url('/admin/login') }}">

@@ -45,7 +45,7 @@
 <body>
     <div class="header center">
         <h1>Bem-vindo ao Sistema!</h1>
-        <img src="http://127.0.0.1:8000/images/logo-Olympikus.png" alt="Logo Olympikus" style="width: 100px;">
+        <img src="http://127.0.0.1:8000/images/logo-Olympikus.png" alt="Logo Under Armour" style="width: 100px;">
     </div>
 
     <div class="content">
@@ -57,8 +57,8 @@
 
         <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
             <p><strong>Email:</strong> {{ $email }}</p>
-            @if($password)
-            <p><strong>Senha:</strong> {{ $password }}</p>
+            @if ($password)
+                <p><strong>Senha:</strong> {{ $password }}</p>
             @endif
             <p><strong>Tipo de usuário:</strong> {{ ucfirst($type) }}</p>
         </div>

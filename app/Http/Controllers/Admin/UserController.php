@@ -20,22 +20,22 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $query = User::with('collection');
-        
+
         // Aplicar filtro de busca se fornecido
         if ($request->filled('search')) {
             $search = $request->get('search');
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('email', 'LIKE', "%{$search}%")
-                  ->orWhere('codigo_lider_comercial', 'LIKE', "%{$search}%")
-                  ->orWhere('company', 'LIKE', "%{$search}%")
-                  ->orWhere('setor', 'LIKE', "%{$search}%")
-                  ->orWhere('phone', 'LIKE', "%{$search}%")
-                  ->orWhere('type', 'LIKE', "%{$search}%");
+                    ->orWhere('email', 'LIKE', "%{$search}%")
+                    ->orWhere('codigo_lider_comercial', 'LIKE', "%{$search}%")
+                    ->orWhere('company', 'LIKE', "%{$search}%")
+                    ->orWhere('setor', 'LIKE', "%{$search}%")
+                    ->orWhere('phone', 'LIKE', "%{$search}%")
+                    ->orWhere('type', 'LIKE', "%{$search}%");
             });
         }
-        
-        $users = $query->paginate(15)->appends($request->query());
+
+        $users = $query->paginate(1000)->appends($request->query());
         return view('admin.users.index', compact('users'));
     }
 
@@ -86,7 +86,7 @@ class UserController extends Controller
         }
 
         // Send welcome email with access information
-        $this->sendEmailUser($user, $request->password);
+        //$this->sendEmailUser($user, $request->password);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'Usuário criado com sucesso!');
@@ -211,7 +211,7 @@ class UserController extends Controller
         $user->save();
 
         // Email the new password to the user
-        $this->sendEmailUser($user, $newPassword);
+        //$this->sendEmailUser($user, $newPassword);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'Nova senha gerada e enviada para o usuário!');

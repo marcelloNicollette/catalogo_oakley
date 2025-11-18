@@ -8,7 +8,7 @@
     </style>
 @endpush
 
-@section('page_title', 'Olympikus - Detalhes da Subcategoria')
+@section('page_title', 'Under Armour - Detalhes da Subcategoria')
 
 @section('content-wrapper')
     <div class="flex items-center space-x-2 mb-6">
@@ -44,7 +44,8 @@
                     <a href="{{ route('admin.subcategories.index') }}"
                         class="flex items-center bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 19l-7-7m0 0l7-7m-7 7h18">
                             </path>
                         </svg>
                         Voltar
@@ -80,11 +81,13 @@
                         <div>
                             <span class="text-sm font-medium text-gray-500">Status:</span>
                             @if ($subcategory->active)
-                                <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                <span
+                                    class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                     Ativo
                                 </span>
                             @else
-                                <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                <span
+                                    class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                     Inativo
                                 </span>
                             @endif
@@ -97,16 +100,19 @@
                     <div class="space-y-3">
                         <div>
                             <span class="text-sm font-medium text-gray-500">Criado em:</span>
-                            <span class="ml-2 text-sm text-gray-900">{{ $subcategory->created_at->format('d/m/Y H:i:s') }}</span>
+                            <span
+                                class="ml-2 text-sm text-gray-900">{{ $subcategory->created_at->format('d/m/Y H:i:s') }}</span>
                         </div>
                         <div>
                             <span class="text-sm font-medium text-gray-500">Atualizado em:</span>
-                            <span class="ml-2 text-sm text-gray-900">{{ $subcategory->updated_at->format('d/m/Y H:i:s') }}</span>
+                            <span
+                                class="ml-2 text-sm text-gray-900">{{ $subcategory->updated_at->format('d/m/Y H:i:s') }}</span>
                         </div>
                         @if ($subcategory->deleted_at)
                             <div>
                                 <span class="text-sm font-medium text-gray-500">Excluído em:</span>
-                                <span class="ml-2 text-sm text-red-600">{{ $subcategory->deleted_at->format('d/m/Y H:i:s') }}</span>
+                                <span
+                                    class="ml-2 text-sm text-red-600">{{ $subcategory->deleted_at->format('d/m/Y H:i:s') }}</span>
                             </div>
                         @endif
                     </div>

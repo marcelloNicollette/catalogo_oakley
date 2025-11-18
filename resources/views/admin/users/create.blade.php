@@ -13,7 +13,7 @@
     </style>
 @endpush
 
-@section('page_title', 'Olympikus - Usuários')
+@section('page_title', 'Under Armour - Usuários')
 
 @section('content-wrapper')
     <div class="flex items-center space-x-2 mb-6">
@@ -58,24 +58,26 @@
                     const newPassword = generateRandomPassword();
                     passwordField.value = newPassword;
                     confirmPasswordField.value = newPassword;
-                    
+
                     // Mostrar a senha temporariamente
                     const originalType = passwordField.type;
                     passwordField.type = 'text';
                     confirmPasswordField.type = 'text';
-                    
+
                     // Voltar para password após 3 segundos
                     setTimeout(() => {
                         passwordField.type = originalType;
                         confirmPasswordField.type = originalType;
                     }, 3000);
-                    
+
                     // Feedback visual
-                    generateBtn.innerHTML = '<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Gerada!';
+                    generateBtn.innerHTML =
+                        '<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Gerada!';
                     generateBtn.classList.add('bg-green-100', 'text-green-800');
-                    
+
                     setTimeout(() => {
-                        generateBtn.innerHTML = '<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"></path></svg>Gerar';
+                        generateBtn.innerHTML =
+                            '<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"></path></svg>Gerar';
                         generateBtn.classList.remove('bg-green-100', 'text-green-800');
                     }, 2000);
                 });

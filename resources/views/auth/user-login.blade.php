@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Olympikus</title>
+    <title>Under Armour</title>
 
     <!-- Favicon -->
     <link rel="icon" href="/images/Favicon_Olympikus.png" type="image/png">

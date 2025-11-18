@@ -1,6 +1,6 @@
 @extends('layouts.admin-layout')
 
-@section('page_title', 'Olympikus - Solicitações de Acesso')
+@section('page_title', 'Under Armour - Solicitações de Acesso')
 
 @section('content-wrapper')
     <div class="flex justify-between items-center mb-6">

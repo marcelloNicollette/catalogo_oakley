@@ -390,7 +390,7 @@
 
     <!-- Footer -->
     <footer class="bg-white border-t border-gray-200 text-gray-600 text-center p-4 mt-auto">
-        <p class="text-sm">&copy; {{ date('Y') }} Olympikus - Todos os direitos reservados</p>
+        <p class="text-sm">&copy; {{ date('Y') }} Under Armour - Todos os direitos reservados</p>
     </footer>
 
     @stack('scripts')

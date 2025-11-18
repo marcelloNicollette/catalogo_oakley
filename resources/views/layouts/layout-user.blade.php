@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{ $title ?? 'Olympikus' }}</title>
+    <title>{{ $title ?? 'Under Armour' }}</title>
     <!-- Favicon -->
     <link rel="icon" href="/images/Favicon_Olympikus.png" type="image/png">
 

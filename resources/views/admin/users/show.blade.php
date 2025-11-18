@@ -12,7 +12,7 @@
     </style>
 @endpush
 
-@section('page_title', 'Olympikus - Detalhes do Usuário')
+@section('page_title', 'Under Armour - Detalhes do Usuário')
 
 @section('content-wrapper')
     <div class="flex items-center space-x-2 mb-6">
@@ -82,12 +82,14 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Coleção</label>
-                            @if($user->collection)
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            @if ($user->collection)
+                                <span
+                                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                     {{ $user->collection->name }}
                                 </span>
                             @else
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                <span
+                                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
                                     Nenhuma coleção atribuída
                                 </span>
                             @endif
