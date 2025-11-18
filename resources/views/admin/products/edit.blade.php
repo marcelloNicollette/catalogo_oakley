@@ -495,7 +495,7 @@
                                             <button type="button" @click="adicionarCampo()"
                                                 class="px-3 py-1 h-8 mr-2 bg-green-500 text-white rounded hover:bg-green-600">+</button>
 
-                                            <template x-if="campos.length > 1">
+                                            <template x-if="campos.length >= 0">
                                                 <button type="button" @click="removerCampo(index)"
                                                     class="px-3 py-1 h-8 bg-red-500 text-white rounded hover:bg-red-600">−</button>
                                             </template>
@@ -720,6 +720,13 @@
                 },
                 removerCampo(index) {
                     this.campos.splice(index, 1);
+                    // Se não houver mais campos, adiciona um vazio
+                    if (this.campos.length === 0) {
+                        this.campos.push({
+                            link_title: '',
+                            link_url: ''
+                        });
+                    }
                 }
             }));
 

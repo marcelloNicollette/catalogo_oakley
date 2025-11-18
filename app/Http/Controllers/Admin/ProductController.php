@@ -284,6 +284,8 @@ class ProductController extends Controller
                 'link_title' => $request->input('link_title'),
                 'link_url' => $request->input('link_url', ''),
             ]);
+        } else {
+            $product->links()->delete();
         }
         //dd($request->input('size_ids'));
         // Atualiza tamanhos

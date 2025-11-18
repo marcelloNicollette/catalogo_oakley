@@ -72,7 +72,11 @@
                             <td class="px-6 py-4 whitespace-nowrap">{{ $request->created_at?->format('d/m/Y H:i') }}</td>
                             @php
                                 $approved = !is_null($request->approved_at);
-                                $exists = in_array($request->email, $existingUserEmails ?? []);
+
+                                $exists = in_array(
+                                    strtolower($request->email),
+                                    array_map('strtolower', $existingUserEmails ?? []),
+                                );
                             @endphp
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if ($approved)
