@@ -32,6 +32,18 @@
 </head>
 
 <body class="bg-[#F1F1F1] flex flex-col min-h-screen">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-30C286HJT7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-30C286HJT7');
+    </script>
     <!-- Header -->
     <x-header-fixed :user="auth()->user()" :type="'produto'" />
 
