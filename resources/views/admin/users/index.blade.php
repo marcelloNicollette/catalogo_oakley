@@ -76,7 +76,7 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Nome</th>
+                                Dados</th>
 
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Tipo</th>
@@ -102,7 +102,12 @@
                                             </div>
                                         </div>
                                         <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
+                                            <div class="text-sm font-medium text-gray-900">
+                                                {{ $user->name }}<br>
+                                                <span class="text-[12px] text-gray-500">
+                                                    {{ $user->email }}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </td>
@@ -164,15 +169,20 @@
                                                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
                                                         </path>
                                                     </svg>
-                                                Excluir
-                                            </button>
+                                                    Excluir
+                                                </button>
                                             </form>
-                                            <form action="{{ route('admin.users.reset-password', $user) }}" method="POST" class="inline-block"
+                                            <form action="{{ route('admin.users.reset-password', $user) }}"
+                                                method="POST" class="inline-block"
                                                 onsubmit="return confirm('Gerar nova senha para este usuário? A senha será enviada por e-mail.')">
                                                 @csrf
-                                                <button type="submit" class="flex items-center text-yellow-600 hover:text-yellow-800 transition duration-150 ease-in-out">
-                                                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m0 14v1m7-7h1M4 12H3m15.364-6.364l.707.707M5.636 18.364l-.707.707M18.364 18.364l.707-.707M5.636 5.636l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                                                <button type="submit"
+                                                    class="flex items-center text-yellow-600 hover:text-yellow-800 transition duration-150 ease-in-out">
+                                                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M12 4v1m0 14v1m7-7h1M4 12H3m15.364-6.364l.707.707M5.636 18.364l-.707.707M18.364 18.364l.707-.707M5.636 5.636l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
                                                     </svg>
                                                     Gerar nova senha
                                                 </button>

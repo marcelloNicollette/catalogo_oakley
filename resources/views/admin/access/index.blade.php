@@ -57,7 +57,8 @@
                             <td class="px-6 py-4 whitespace-nowrap">{{ $request->name }}
 
                                 <p class="text-xs text-gray-500">
-                                    Empresa: {{ $request->company }}
+                                    Empresa:
+                                    {{ \Illuminate\Support\Str::limit($request->company, 20, '...') }}
                                 </p>
                                 <p class="text-xs text-gray-500">
                                     Setor: {{ $request->setor }}
