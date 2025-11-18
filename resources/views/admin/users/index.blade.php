@@ -57,7 +57,7 @@
                         style="width: 33%;">
                 </div>
                 <div class="flex space-x-2">
-
+                    Total de registros: {{ $users->total() }}
                 </div>
             </form>
             @if (request('search'))
