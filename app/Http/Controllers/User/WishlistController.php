@@ -69,6 +69,7 @@ class WishlistController extends Controller
         $deleted = Wishlist::where('user_id', $user->id)
             ->where('product_id', $request->product_id)
             ->where('color_code', str_replace('/', '_', $request->color_code))
+            ->orWhere('color_code', $request->color_code)
             ->delete();
 
         if ($deleted) {
