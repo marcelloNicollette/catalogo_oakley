@@ -303,7 +303,10 @@ class frontendController extends Controller
             if ($user) {
                 $isFavorito = Wishlist::where('user_id', $user->id)
                     ->where('product_id', $produto->product->id)
-                    ->where('color_code', str_replace('/', '_', $produto->color_code))
+                    ->where(function ($query) use ($produto) {
+                        $query->where('color_code', str_replace('/', '_', $produto->color_code))
+                            ->orWhere('color_code', $produto->color_code);
+                    })
                     ->exists();
             }
 
