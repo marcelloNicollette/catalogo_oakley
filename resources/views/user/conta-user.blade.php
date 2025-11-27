@@ -80,6 +80,25 @@
             </div>
 
 
+            <div>
+                <label for="password" class="block text-[16px] font-normal text-black mb-2">Nova senha</label>
+                <div class="border-b border-gray-300 pb-2">
+                    <input type="password" name="password" id="password"
+                        class="w-full resize-none border-none outline-none text-gray-700 placeholder-gray-400"
+                        placeholder="Digite a nova senha (opcional)" />
+                </div>
+            </div>
+
+            <div>
+                <label for="password_confirmation" class="block text-[16px] font-normal text-black mb-2">Confirmar
+                    senha</label>
+                <div class="border-b border-gray-300 pb-2">
+                    <input type="password" name="password_confirmation" id="password_confirmation"
+                        class="w-full resize-none border-none outline-none text-gray-700 placeholder-gray-400"
+                        placeholder="Confirme a nova senha" />
+                </div>
+            </div>
+
             <button id="sendSuggestion"
                 class="w-full bg-black hover:bg-gray-800 text-white font-normal py-3 px-4 rounded-full transition-colors text-base">
                 Editar dados
