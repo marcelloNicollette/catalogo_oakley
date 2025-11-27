@@ -140,7 +140,7 @@
 
                     <!-- Estado vazio (sem imagens disponíveis) -->
                     <div id="imageEmpty"
-                        class="bg-white rounded-lg shadow-sm border border-[#CBCBCB] flex items-center justify-center hidden h-screen"
+                        class="bg-white rounded-lg shadow-sm border border-[#CBCBCB] flex items-center justify-center hidden"
                         style="margin-top: 0px;">
                         <div class="transition-opacity">
                             <img src="/images/img-padrao-ua.png" alt="Vista 1"

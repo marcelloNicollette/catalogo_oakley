@@ -124,6 +124,87 @@
                 scrollbar-color: #A9A9A9 #000000;
                 /* thumb track */
             }
+
+            /* Adicione este CSS ao seu arquivo ou dentro da tag <style> existente */
+
+            /* Container do card com altura mínima fixa */
+            .bg-white.hover\:shadow-md {
+                min-height: 450px;
+                /* Ajuste este valor conforme necessário */
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* Título com altura fixa e ellipsis para overflow */
+            .title {
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                /* Limita a 3 linhas */
+                -webkit-box-orient: vertical;
+                text-overflow: ellipsis;
+                min-height: 54px;
+                /* 3 linhas × ~18px por linha */
+                max-height: 54px;
+                line-height: 18px;
+            }
+
+            /* Alternativa: Se preferir que todos tenham exatamente a mesma altura */
+            .title.fixed-height {
+                height: 54px;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-height: 18px;
+            }
+
+            /* Garante que o conteúdo inferior fique alinhado */
+            .p-4.flex-1.flex.flex-col {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+
+
+            /* Grid com 4 colunas fixas e altura uniforme */
+            #produtos {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                /* Sempre 4 colunas iguais */
+                gap: 10px;
+                grid-auto-rows: 1fr;
+                /* Todas as linhas com mesma altura */
+            }
+
+            /* Garante que o link ocupe toda a célula do grid */
+            #produtos>a {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+
+            /* Card ocupa todo o espaço disponível */
+            #produtos>a>div {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+
+            /* Responsivo: 2 colunas em tablets */
+            @media (max-width: 1024px) {
+                #produtos {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            /* Responsivo: 1 coluna em mobile */
+            @media (max-width: 640px) {
+                #produtos {
+                    grid-template-columns: repeat(1, 1fr);
+                }
+            }
         </style>
         <!-- Conteúdo principal -->
         <section class="flex-1 flex flex-col overflow-hidden">

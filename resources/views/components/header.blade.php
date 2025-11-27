@@ -2,7 +2,7 @@
 
 @if ($type === '')
     <header class="flex items-center justify-between gap-4 p-5">
-        <div class="flex items-center space-x-2 py-2">
+        <div class="flex items-center space-x-2 py-[11px]">
             <a
                 href="{{ request()->route('slug') == null ? route('user.segmentacao') : route('user.slug', request()->route('slug')) }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="278" height="19" viewBox="0 0 278 19" fill="none">

@@ -247,7 +247,7 @@
         <x-sidebar activeItem="inicio" />
 
         <!-- Conteúdo principal -->
-        <section class="flex-1 flex flex-col overflow-hidden pt-5">
+        <section class="flex-1 flex flex-col overflow-hidden pt-5 pr-[10px]">
 
             <div class="carousel-container">
                 <div class="carousel-wrapper" id="carouselWrapper">

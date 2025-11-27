@@ -182,18 +182,18 @@
                     <img src="{{ public_path('/images/logo-vermelho.png') }}" alt="">
                 </div>
             @endif
-            <table cellspacing="2" width="100%" cellpadding="2" border="0">
+            <table cellspacing="0" width="842" cellpadding="0" border="0">
                 <tr>
-                    <td width="70%">
+                    <td>
                         <table cellspacing="0" width="100%" cellpadding="0">
                             <tr>
-                                <td width="75%">
-                                    <img src="{{ $image }}" alt="{{ $collection->product->name }}"
-                                        style="width: 100%; object-fit: cover; border-radius: 8px 0 0 8px;
+                                <td width="75%"><img src="{{ $image }}"
+                                        alt="{{ $collection->product->name }}"
+                                        style="width: 100%; border-radius: 8px 0 0 8px;
                                         border-top:1px solid #CCC; border-left:1px solid #CCC; border-bottom:1px solid
-                                        #CCC; border-right:0 solid #CCC; padding: 4px 0;">
+                                        #CCC; border-right:0 solid; padding: 0;">
                                 </td>
-                                <td width="24.8%">
+                                <td width="24.925%">
                                     @php
                                         $suffixes = ['_A', '_B', '_C'];
                                         $vista = 1;
@@ -207,7 +207,7 @@
                                                 $border_l = '1px solid #CCC';
                                                 $border_b = '0 solid #CCC';
                                                 $border_r = '1px solid #CCC';
-                                                $padding = 'padding-top: 4px;';
+                                                $padding = 'padding-top: 0;';
                                             } elseif ($suffix == '_B') {
                                                 $rounded = '0 0 0 0';
                                                 $border_t = '1px solid #CCC';
@@ -262,14 +262,14 @@
                                             <td style="">
                                                 @foreach ($collectionsByCode as $colorCollection)
                                                     <div
-                                                        style="width: 130px; padding: 0; position: relative; float: left; ">
+                                                        style="width: 120px; padding: 0; position: relative; float: left; text-align: center;">
                                                         @if ($colorCollection->flagProduct)
                                                             <div
-                                                                style="position: absolute; top: 10px; background: {{ $colorCollection->flagProduct->flag_bg }}; color: {{ $colorCollection->flagProduct->flag_color_text_bg }}; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold;">
+                                                                style="position: absolute; top: 15px; left: 5px; background: {{ $colorCollection->flagProduct->flag_bg }}; color: {{ $colorCollection->flagProduct->flag_color_text_bg }}; padding: 5px; border-radius: 100px; font-size: 7px;">
                                                                 {{ $colorCollection->flagProduct->flag_title }}
                                                             </div>
                                                         @endif
-                                                        <div style="margin-top: 30px; margin-bottom: 15px;">
+                                                        <div style="margin-top: 10px; margin-bottom: 10px;">
                                                             @php
                                                                 $imagePath =
                                                                     'images/produtos/' .
@@ -287,15 +287,15 @@
                                                                     ? public_path($imagePath)
                                                                     : public_path('images/img-padrao-oly.png');
                                                             @endphp
-                                                            <img width="100px" src="{{ $imageSrc }}"
+                                                            <img src="{{ $imageSrc }}"
                                                                 alt="{{ $colorCollection->color_name }}"
-                                                                class="width: 100px; height: auto; border-radius: 8px;" />
+                                                                style="width: 110px; height: 110px; border-radius: 13px;" />
                                                         </div>
                                                         <div
-                                                            style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 5px; margin-left: 10px;">
+                                                            style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 5px;text-align: center;">
                                                             {{ \Illuminate\Support\Str::limit($colorCollection->color_name, 12, '...') }}
                                                         </div>
-                                                        <div style="font-size: 12px; color: #666; margin-left: 10px;">
+                                                        <div style="font-size: 12px; color: #666; text-align: center;">
                                                             {{ \Illuminate\Support\Str::limit($colorCollection->color_description, 10, '...') }}
                                                         </div>
                                                     </div>
@@ -309,7 +309,7 @@
                             <!-- fim cores do tenis -->
                         </table>
                     </td>
-                    <td width="30%" style="border-radius: 8px; border:1px solid #CCC; vertical-align: top;">
+                    <td width="30%" style="border-radius: 10px; border:1px solid #CBCBCB; vertical-align: top;">
                         <!-- Cabeçalho do produto -->
                         <div style="padding:10px;">
                             <div style="font-size: 17px; color: #000; margin-bottom: 5px;">
