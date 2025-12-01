@@ -1,7 +1,7 @@
 <x-layout-user title="Under Armour - Gerar Arquivo">
     <style>
         .height-ultra {
-            height: calc(100vh - 160px);
+            height: calc(100vh - 168px);
         }
 
         @media (min-width: 1280px) {
@@ -202,7 +202,7 @@
                     onclick="openHistoryModalWithCollection(this.dataset.name, this)">
                     <div class="overlay absolute inset-0 bg-black bg-opacity-40 " style="display: none;"></div>
                     <div
-                        class="absolute inset-0 flex flex-col justify-center items-center text-white p-6 gap-10 mt-10 hover:opacity-70">
+                        class="absolute inset-0 flex flex-col justify-center items-center text-white p-6 gap-10 mt-10">
                         <h2 class="mb-2 codigo font-segmento neue-plak-extended"></h2>
                         <p class="text-lg opacity-90 description uppercase"></p>
                     </div>

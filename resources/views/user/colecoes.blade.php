@@ -1,8 +1,30 @@
 <x-layout-user title="Under Armour - Coleções">
     <style>
         .height-ultra {
-            height: calc(100vh - 165px);
+            height: calc(100vh - 168px);
         }
+
+        @media (max-width: 768px) {
+
+            .colecao-card {
+                height: 30vh;
+            }
+        }
+
+        @media (min-width: 768px) {
+
+            .colecao-card {
+                height: 30vh;
+            }
+        }
+
+        @media (min-width: 1080px) {
+
+            .colecao-card {
+                height: 20vh;
+            }
+        }
+
 
         @media (min-width: 1280px) {
 
@@ -19,6 +41,7 @@
         }
 
         @media (min-width: 3000px) {
+
 
             .colecao-card {
                 height: 25vh;
@@ -190,7 +213,7 @@
 
             <!-- Template para os cards de coleções -->
             <template id="template-colecoes">
-                <div class="colecao-card relative h-[32vh] xl:h-[25vh] rounded overflow-hidden cursor-pointer hover:border hover:border-[#999]"
+                <div class="colecao-card relative rounded overflow-hidden cursor-pointer hover:border hover:border-[#999]"
                     data-codigo="" data-name="" data-description="" data-slug="">
                     <div class="overlay absolute inset-0 bg-black bg-opacity-40 " style="display: none;"></div>
                     <div

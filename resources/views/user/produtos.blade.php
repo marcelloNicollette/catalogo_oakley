@@ -25,7 +25,7 @@
             }
 
             .height-ultra {
-                height: calc(100vh - 156px);
+                height: calc(100vh - 158px);
             }
 
 
@@ -298,7 +298,7 @@
                         </div>
                         <div class="options min-w-[250px] p-5 custom-scrollbar" id="categoryOptions"
                             style="
-    left: 185px; top:5rem;">
+    left: 246px; top:5rem;">
                             @foreach ($categories as $category)
                                 @php $hasSub = isset($category->subcategories) && count($category->subcategories) > 0; @endphp
                                 <div class="option category-option {{ $hasSub ? 'has-subcategories' : '' }}"
@@ -401,15 +401,44 @@
                             </div>
                         </div>
 
+                        @php
+                            $availableNumeracaoIds = [];
+                            $availableSizeIds = [];
+                            if (!empty($produtos)) {
+                                foreach ($produtos as $produtoGroup) {
+                                    if ($produtoGroup && $produtoGroup->product) {
+                                        $produto = $produtoGroup->product;
+                                        if ($produto->numeracoes) {
+                                            foreach ($produto->numeracoes->pluck('id')->toArray() as $nid) {
+                                                $availableNumeracaoIds[$nid] = true;
+                                            }
+                                        }
+                                        if ($produtoGroup->numeracao) {
+                                            $availableNumeracaoIds[$produtoGroup->numeracao->id] = true;
+                                        }
+                                        if ($produto->sizes) {
+                                            foreach ($produto->sizes->pluck('id')->toArray() as $sid) {
+                                                $availableSizeIds[$sid] = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            $availableNumeracaoIds = array_keys($availableNumeracaoIds);
+                            $availableSizeIds = array_keys($availableSizeIds);
+                        @endphp
                         <div class="filter-dropdown custom-scrollbar-wh" style="width: 228px;overflow-x:hidden;"
                             id="filterDropdown">
                             <div class="filter-section">
                                 <label class="filter-label">Numeração/Tamanhos​</label>
                                 <div class="filter-options" id="numeracaoOptions">
-                                    @foreach ($numeracao as $num)
+                                    @foreach ($numeracao->whereIn('id', $availableNumeracaoIds) as $num)
                                         <div class="filter-option" data-type="numeracao"
-                                            data-value="{{ $num->id }}">
-                                            {{ $num->numero }}</div>
+                                            data-value="{{ $num->id }}">{{ $num->numero }}</div>
+                                    @endforeach
+                                    @foreach ($tamanhos->whereIn('id', $availableSizeIds) as $size)
+                                        <div class="filter-option" data-type="tamanho"
+                                            data-value="{{ $size->id }}">{{ $size->size }}</div>
                                     @endforeach
                                 </div>
                             </div>
@@ -535,7 +564,14 @@
                                 $imgPath = '/images/produtos/' . $produto->code . '_' . str_replace('/', '_', $produtoGroup->color_code) . '.jpg';
                                 $imgFullPath = public_path($imgPath);
                                 $img = file_exists($imgFullPath) ? $imgPath : '/images/img-padrao-oly.png';
-                                $numeracaoIds = $produto->numeracao ? $produto->numeracao->pluck('id')->toArray() : [];
+                                $numeracaoIdsProduct = $produto->numeracoes ? $produto->numeracoes->pluck('id')->toArray() : [];
+                                $numeracaoIdsProduct = $produto->numeracoes ? $produto->numeracoes->pluck('id')->toArray() : [];
+                                $numeracaoIdColor = $produtoGroup->numeracao ? $produtoGroup->numeracao->id : null;
+                                $numeracaoIds = $numeracaoIdsProduct;
+                                if ($numeracaoIdColor) {
+                                    $numeracaoIds[] = $numeracaoIdColor;
+                                }
+                                $numeracaoIds = array_values(array_unique($numeracaoIds));
                                 $tamanhoIds = $produto->sizes ? $produto->sizes->pluck('id')->toArray() : [];
                                 $precoNumerico = $produto->price ?? 0;
                                 $classificacaoId = $produtoGroup->flagProduct ? $produtoGroup->flagProduct->id : null;
@@ -1016,6 +1052,8 @@
                     closeColecaoDropdown();
                 } else {
                     closeCategoryDropdown();
+                    closeFilterDropdown();
+                    closeSortDropdown();
                     openColecaoDropdown();
                 }
             });
@@ -1074,6 +1112,8 @@
                     closeCategoryDropdown();
                 } else {
                     closeColecaoDropdown();
+                    closeFilterDropdown();
+                    closeSortDropdown();
                     openCategoryDropdown();
                 }
             });
@@ -1196,8 +1236,10 @@
                 if (isOpen) {
                     closeFilterDropdown();
                 } else {
-                    openFilterDropdown();
+                    closeCategoryDropdown();
+                    closeColecaoDropdown();
                     closeSortDropdown();
+                    openFilterDropdown();
                 }
             });
 
@@ -1346,6 +1388,8 @@
                 if (isOpen) {
                     closeSortDropdown();
                 } else {
+                    closeCategoryDropdown();
+                    closeColecaoDropdown();
                     closeFilterDropdown();
                     openSortDropdown();
                 }

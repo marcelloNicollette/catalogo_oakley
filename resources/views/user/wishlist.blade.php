@@ -141,6 +141,239 @@
             .options {
                 max-height: 500px;
             }
+
+
+            /* Para telas menores que 1080px */
+            @media (max-width: 1080px) {
+
+                /* Área de filtros superiores */
+                .flex.flex-col.md\:flex-row.justify-between {
+                    flex-direction: column !important;
+                    gap: 1rem !important;
+                }
+
+                /* Container dos selects de coleção e categoria - PRIMEIRA LINHA */
+                .flex.gap-2:has(.select-container) {
+                    flex-direction: row !important;
+                    width: 100% !important;
+                    gap: 0.5rem !important;
+                    order: 1 !important;
+                }
+
+                /* Selects de coleção e categoria - dividem espaço igualmente */
+                .select-container {
+                    flex: 1 !important;
+                    width: 25% !important;
+                    min-width: 0 !important;
+                }
+
+                .select-button {
+                    width: 100% !important;
+                    padding: 0.75rem 0.5rem !important;
+                    font-size: 13px !important;
+                    justify-content: space-between !important;
+                }
+
+                /* Container dos controles da direita - SEGUNDA LINHA (só busca) */
+                .flex.gap-2.items-end.justify-end {
+                    flex-wrap: wrap !important;
+                    width: 100% !important;
+                    justify-content: flex-start !important;
+                    order: 2 !important;
+                    gap: 0.5rem !important;
+                }
+
+                /* Campo de busca - segunda linha, 100% largura */
+                .flex.items-center.border-b.border-b-black {
+                    width: 100% !important;
+                    min-width: 100% !important;
+                    order: 1 !important;
+                }
+
+                /* Botões de filtro e ordenar - MESMA LINHA DOS SELECTS */
+                .filter-container,
+                .sort-container {
+                    flex: 1 !important;
+                    width: 25% !important;
+                    min-width: 0 !important;
+                    order: 2 !important;
+                }
+
+                /* Mover filtro e ordenar para o container dos selects */
+                .flex.gap-2:has(.select-container) {
+                    display: flex !important;
+                    flex-wrap: wrap !important;
+                }
+
+                .filter-button,
+                .sort-button {
+                    width: 100% !important;
+                    padding: 0.75rem 0.5rem !important;
+                    font-size: 12px !important;
+                    white-space: nowrap !important;
+                }
+
+                .filter-button span:not(#filterCount),
+                .sort-button span:not(#sortText) {
+                    font-size: 12px !important;
+                }
+
+                .filter-button .mr-2 {
+                    margin-right: 0.25rem !important;
+                }
+
+                /* Ajustar contador de filtros */
+                #filterCount {
+                    font-size: 11px !important;
+                    margin-left: 3px !important;
+                }
+
+                /* Dropdowns */
+                .options,
+                .filter-dropdown,
+                .sort-dropdown {
+                    max-width: 100vw !important;
+                    left: 0 !important;
+                    right: 0 !important;
+                }
+
+                /* Reorganizar layout: 4 itens na primeira linha */
+                .flex.flex-col.md\:flex-row.justify-between>div:first-child {
+                    display: flex !important;
+                    flex-wrap: nowrap !important;
+                    gap: 0.5rem !important;
+                    width: 100% !important;
+                }
+
+                .flex.flex-col.md\:flex-row.justify-between>div:first-child>* {
+                    flex: 1 !important;
+                    min-width: 0 !important;
+                }
+            }
+
+            /* Para telas menores que 768px */
+            @media (max-width: 768px) {
+
+                /* Header */
+                header {
+                    flex-direction: column !important;
+                    gap: 1rem !important;
+                }
+
+                /* Área de filtros */
+                .flex.flex-col.md\:flex-row.justify-between.items-start {
+                    padding: 1rem !important;
+                }
+
+                /* Botões em linha única se necessário */
+                .filter-container,
+                .sort-container {
+                    width: 100% !important;
+                }
+
+                /* Select buttons com texto menor */
+                .select-button span {
+                    font-size: 13px !important;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                /* Grid de produtos */
+                .grid.grid-cols-1 {
+                    grid-template-columns: repeat(2, 1fr) !important;
+                    gap: 0.5rem !important;
+                    padding: 0.5rem !important;
+                }
+            }
+
+            /* Para telas menores que 640px */
+            @media (max-width: 640px) {
+
+                /* Menu lateral */
+                aside {
+                    width: 100% !important;
+                    padding: 0.5rem !important;
+                }
+
+                aside a {
+                    padding: 0.5rem !important;
+                    font-size: 12px !important;
+                    height: auto !important;
+                }
+
+                /* Grid de produtos em coluna única */
+                .grid.grid-cols-1 {
+                    grid-template-columns: 1fr !important;
+                }
+
+                /* Ajustar espaçamento dos filtros */
+                .filter-button,
+                .sort-button {
+                    padding: 0.5rem !important;
+                    gap: 0.25rem !important;
+                }
+
+                /* Texto do botão de ordenar */
+                .sort-button .mr-2 {
+                    display: none !important;
+                }
+
+                #sortText::before {
+                    content: "Ordenar: ";
+                }
+            }
+
+            /* Ajustes gerais para melhor usabilidade */
+            @media (max-width: 1080px) {
+
+                /* Garantir que textos não quebrem de forma inadequada */
+                .select-button,
+                .filter-button,
+                .sort-button {
+                    display: flex !important;
+                    align-items: center !important;
+                    gap: 0.5rem !important;
+                }
+
+                /* Ícones de seta */
+                .pt-1 {
+                    padding-top: 0 !important;
+                    display: flex !important;
+                    align-items: center !important;
+                }
+
+                /* Melhorar contraste e legibilidade */
+                .select-button span,
+                .filter-button span,
+                .sort-button span {
+                    line-height: 1.2 !important;
+                }
+
+                /* Ajustar altura dos controles */
+                .select-container,
+                .filter-container,
+                .sort-container {
+                    min-height: 42px !important;
+                }
+            }
+
+            /* Para tablets em modo paisagem */
+            @media (min-width: 768px) and (max-width: 1080px) {
+                .flex.gap-2:has(.select-container) {
+                    flex-direction: row !important;
+                }
+
+                .select-container {
+                    width: 50% !important;
+                }
+
+                .filter-container,
+                .sort-container {
+                    width: auto !important;
+                    min-width: 140px !important;
+                }
+            }
         </style>
 
         <!-- Menu lateral -->
@@ -431,24 +664,33 @@
                                 </button>
                             </div>
                             <img src="/images/tenis-1.jpg" alt="Tênis" class="w-full object-contain rounded-md" />
-                            <div class="p-4">
-                                <h2 class="title font-black font-fko text-[28px] leading-[24px] pb-2 uppercase"></h2>
-                                <p class="text-sm pb-2">
-                                    <span class="categoria text-black "></span> <span
-                                        class="codigo text-black opacity-50"></span>
-                                </p>
-                                <div class="float-right mr-[25%]">
-                                    <p class="text-black opacity-50 text-xs title-caract-1"></p>
-                                    <p class="numeracao text-black text-xs desc-caract-1"></p>
+                            <div class="p-4 flex-1 flex flex-col">
+                                <h2 class="title uppercase font-black font-fko text-[22px] leading-[18px] pb-2">
+                                </h2>
+
+                                <!-- Wrapper para empurrar preço para baixo -->
+                                <div class="flex-1 flex flex-col justify-between">
+                                    <div class="mt-auto">
+                                        <p class="text-sm pb-2">
+                                            <span class="categoria text-black "></span>
+                                            <span class="genero text-black opacity-50 px-2"></span>
+                                            <span class="codigo text-black opacity-50"></span>
+                                        </p>
+                                        <div class="float-right mr-[25%]">
+                                            <p class="text-black opacity-50 text-xs title-caract-1"></p>
+                                            <p class="numeracao text-black text-xs desc-caract-1"></p>
+                                        </div>
+                                        <p class="text-black opacity-50 text-xs">Cor</p>
+                                        <p class="cor text-black text-xs pb-2"></p>
+
+
+                                        <p class="text-black opacity-50 mt-1 text-xs ">PDV</p>
+                                        <p class="text-base preco text-black"></p>
+
+                                        <p class="text-black opacity-50 mt-1 text-xs ">Segmentação</p>
+                                        <p class="text-base collection text-black"></p>
+                                    </div>
                                 </div>
-                                <p class="text-black opacity-50 text-xs">Cor</p>
-                                <p class="cor text-black text-xs pb-2"></p>
-
-                                <p class="text-black opacity-50 mt-1 text-xs title-caract-1">Coleção</p>
-                                <p class="text-base collection text-black"></p>
-
-                                <p class="text-black opacity-50 mt-1 text-xs title-caract-1">PDV</p>
-                                <p class="text-base preco text-black"></p>
                             </div>
                         </div>
                     </a>

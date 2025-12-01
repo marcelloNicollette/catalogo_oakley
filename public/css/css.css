@@ -360,7 +360,7 @@ html {
     left: 5px;
     right: 0;
     background: white;
-    border: 1px solid #FFFFFF;
+    border: 1px solid #DDD;
     border-top: none;
     border-radius: 10px;
     max-height: 300px;
@@ -375,7 +375,7 @@ html {
     left: 5px;
     right: 0;
     background: white;
-    border: 1px solid #FFFFFF;
+    border: 1px solid #DDD;
     border-top: none;
     border-radius: 10px;
     max-height: 300px;
@@ -417,7 +417,7 @@ html {
             /*background-color: #f8f9fa;*/
             color: #000;
             font-weight: 500;
-            padding: 1px 6px;
+            padding: 1px 16px;
             
         }
 
@@ -438,7 +438,7 @@ html {
     margin: 0 5px 0 5px;
 }
 .produtos-page .option.category-option.selected .option-content {
-    margin: 0 5px 0 7px;
+    margin: 0 5px 0 -3px;
 }
 
         .produtos-page .check-icon {
@@ -565,8 +565,7 @@ html {
             left: 0;
             right: 0;
             background: white;
-            border: 1px solid #FFF;
-            border-top: none;
+            border: 1px solid #DDD;
             border-radius: 10px;
             z-index: 1000;
             display: none;
@@ -693,8 +692,7 @@ html {
             left: 0;
             right: 0;
             background: white;
-            border: 1px solid #FFF;
-            border-top: none;
+            border: 1px solid #DDD;
             border-radius: 10px;
             z-index: 1000;
             display: none;
