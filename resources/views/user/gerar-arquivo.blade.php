@@ -54,8 +54,6 @@
 
         .option {
             padding: 8px 16px;
-            font-size: 14px;
-            color: #999;
             cursor: pointer;
             border-bottom: 0;
             transition: all 0.2s ease;
@@ -80,7 +78,8 @@
 
                     <div class="select-container">
                         <div class="select-button p-5" id="selectButton">
-                            <span id="selectedText">Selecione uma coleção</span>
+                            <span class="text-[16px] text-black" id="colecaoSelectedTitle">Coleção</span>
+                            <span class="text-[18px] text-[#7A7A7A]" id="selectedText"></span>
                             <div class="" id="arrow">
                                 <div class="pt-1" id="arrow">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
@@ -91,11 +90,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="options min-w-[300px] p-5" id="options">
+                        <div class="options min-w-[200px] p-5" id="options">
                             @foreach ($colecoes as $colecao)
                                 <div class="option text-[18px]" data-value="{{ $colecao->slug }}">
-                                    {{ $colecao->codigo_colecao }} -
-                                    <span style="font-size: 14px;">{{ ucwords(strtolower($colecao->name)) }}</span>
+                                    {{ $colecao->name }}</span>
                                 </div>
                             @endforeach
                             <div class="option text-black" data-value="todas">Todas</div>
@@ -375,6 +373,7 @@
                     this.classList.add('selected');
 
                     // Update selected text
+                    document.getElementById('colecaoSelectedTitle').textContent = "Coleção: ";
                     selectedText.textContent = this.textContent;
 
                     // Update selected value for filtering
