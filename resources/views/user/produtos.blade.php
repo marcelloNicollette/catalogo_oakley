@@ -115,7 +115,15 @@
 
             .options {
                 max-height: 500px;
+                border: 1px solid #DDD;
             }
+
+
+            .title {
+                min-height: 54px;
+                max-height: 54px;
+            }
+
 
             /* Para Firefox */
             .custom-scrollbar {
@@ -148,62 +156,455 @@
                 line-height: 18px;
             }
 
-            /* Alternativa: Se preferir que todos tenham exatamente a mesma altura */
-            .title.fixed-height {
-                height: 54px;
-                display: -webkit-box;
-                -webkit-line-clamp: 3;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                line-height: 18px;
+            /* Adicione estas regras ao seu css.css */
+
+            /* Container esquerdo (Coleção + Categoria) - flexível */
+            .filters-left-section {
+                display: flex;
+                gap: 0.5rem;
+                flex: 1;
+                min-width: 0;
             }
 
-            /* Garante que o conteúdo inferior fique alinhado */
-            .p-4.flex-1.flex.flex-col {
+            /* Container direito (Busca + Filtros + Ordenar) - largura fixa */
+            .filters-right-section {
+                display: flex;
+                gap: 0.5rem;
+                align-items: flex-end;
+                flex-shrink: 0;
+            }
+
+            /* Select de coleção - largura mínima fixa */
+            .select-container {
+                flex-shrink: 0;
+                min-width: fit-content;
+            }
+
+            /* Wrapper do category - ocupa espaço restante */
+            .category-select-wrapper {
+                flex: 1;
+                min-width: 150px;
+                /* Largura mínima antes de quebrar */
+            }
+
+            /* O botão de categoria ocupa 100% do wrapper */
+            #categorySelectButton {
+                width: 100% !important;
+                max-width: fit-content !important;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            /* Texto truncado com ellipsis */
+            #categorySelectedText {
+                flex: 1;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                min-width: 0;
+            }
+
+            /* Arrow mantém seu tamanho fixo */
+            #categoryArrow {
+                flex-shrink: 0;
+                margin-left: 8px;
+                padding-left: 0.5rem;
+                padding-top: 0.25rem;
+            }
+
+            /* Responsivo para telas menores */
+            @media (max-width: 1400px) {
+                .filters-right-section {
+                    width: auto;
+                    flex-wrap: wrap;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .filters-left-section {
+                    flex-direction: column;
+                    width: 100%;
+                }
+
+                .category-select-wrapper {
+                    width: 100%;
+                }
+
+                .filters-right-section {
+                    width: 100%;
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+            }
+
+
+            /* Botão de filtro mobile - visível apenas em mobile */
+            .mobile-filter-trigger {
+                display: none;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #000;
+                color: #fff;
+                border: none;
+                border-radius: 50px;
+                padding: 16px 24px;
+                font-size: 16px;
+                font-weight: 500;
+                cursor: pointer;
+                z-index: 999;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                align-items: center;
+                gap: 8px;
+            }
+
+            @media (max-width: 1200px) {
+                .fixed {
+                    display: none;
+                }
+
+                .mobile-filter-trigger {
+                    display: flex;
+                }
+
+                /* Esconde os filtros desktop em mobile */
+                .filters-desktop {
+                    display: none !important;
+                }
+            }
+
+            /* Overlay do menu mobile */
+            .mobile-filter-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .mobile-filter-overlay.active {
+                display: block;
+                opacity: 1;
+            }
+
+            /* Menu lateral mobile */
+            .mobile-filter-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 85%;
+                max-width: 400px;
+                height: 100vh;
+                background: #fff;
+                z-index: 1001;
+                transition: right 0.3s ease;
+                overflow-y: auto;
                 display: flex;
                 flex-direction: column;
+            }
+
+            .mobile-filter-menu.active {
+                right: 0;
+            }
+
+            /* Header do menu mobile */
+            .mobile-filter-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px;
+                border-bottom: 1px solid #e0e0e0;
+                background: #f8f8f8;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+
+            .mobile-filter-header h2 {
+                font-size: 20px;
+                font-weight: 500;
+                color: #000;
+            }
+
+            .mobile-filter-close {
+                background: none;
+                border: none;
+                font-size: 28px;
+                color: #666;
+                cursor: pointer;
+                padding: 0;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Conteúdo do menu mobile */
+            .mobile-filter-content {
+                flex: 1;
+                padding: 20px;
+                overflow-y: auto;
+            }
+
+            /* Seção de filtro mobile */
+            .mobile-filter-section {
+                margin-bottom: 24px;
+                padding-bottom: 24px;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .mobile-filter-section:last-child {
+                border-bottom: none;
+            }
+
+            .mobile-filter-section-title {
+                font-size: 16px;
+                font-weight: 500;
+                color: #000;
+                margin-bottom: 12px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .mobile-filter-section-title .clear-btn {
+                font-size: 14px;
+                color: #666;
+                background: none;
+                border: none;
+                cursor: pointer;
+                text-decoration: underline;
+            }
+
+            /* Select mobile personalizado */
+            .mobile-select {
+                width: 100%;
+                padding: 14px;
+                background: #f5f5f5;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                font-size: 16px;
+                color: #000;
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .mobile-select-text {
+                flex: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .mobile-select-arrow {
+                margin-left: 8px;
+                transition: transform 0.3s;
+            }
+
+            .mobile-select.active .mobile-select-arrow {
+                transform: rotate(180deg);
+            }
+
+            /* Opções do select mobile */
+            .mobile-select-options {
+                display: none;
+                margin-top: 8px;
+                background: #f5f5f5;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .mobile-select-options.active {
+                display: block;
+            }
+
+            .mobile-select-option {
+                padding: 14px;
+                border-bottom: 1px solid #e0e0e0;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
                 justify-content: space-between;
             }
 
-
-            /* Grid com 4 colunas fixas e altura uniforme */
-            #produtos {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-                /* Sempre 4 colunas iguais */
-                gap: 10px;
-                grid-auto-rows: 1fr;
-                /* Todas as linhas com mesma altura */
+            .mobile-select-option:last-child {
+                border-bottom: none;
             }
 
-            /* Garante que o link ocupe toda a célula do grid */
-            #produtos>a {
+            .mobile-select-option.selected {
+                background: #fff;
+                font-weight: 500;
+            }
+
+            /* Chips de filtro mobile */
+            .mobile-filter-chips {
                 display: flex;
-                flex-direction: column;
-                height: 100%;
+                flex-wrap: wrap;
+                gap: 8px;
             }
 
-            /* Card ocupa todo o espaço disponível */
-            #produtos>a>div {
+            .mobile-filter-chip {
+                padding: 8px 16px;
+                background: #f5f5f5;
+                border: 1px solid #ddd;
+                border-radius: 20px;
+                font-size: 14px;
+                color: #333;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .mobile-filter-chip.selected {
+                background: #000;
+                color: #fff;
+                border-color: #000;
+            }
+
+            /* Input de busca mobile */
+            .mobile-search-input {
+                width: 100%;
+                padding: 14px;
+                background: #f5f5f5;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                font-size: 16px;
+                color: #000;
+            }
+
+            .mobile-search-input:focus {
+                outline: none;
+                border-color: #000;
+            }
+
+            /* Footer do menu mobile */
+            .mobile-filter-footer {
+                padding: 16px 20px;
+                border-top: 1px solid #e0e0e0;
+                background: #f8f8f8;
+                display: flex;
+                gap: 12px;
+                position: sticky;
+                bottom: 0;
+            }
+
+            .mobile-filter-footer button {
                 flex: 1;
+                padding: 14px;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .mobile-filter-clear {
+                background: #fff;
+                color: #000;
+                border: 1px solid #ddd;
+            }
+
+            .mobile-filter-apply {
+                background: #000;
+                color: #fff;
+            }
+
+            /* Badge de contagem */
+            .filter-badge {
+                background: #000;
+                color: #fff;
+                border-radius: 50%;
+                width: 24px;
+                height: 24px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                margin-left: 8px;
+            }
+
+            /* Subcategorias no mobile */
+            .mobile-subcategory-list {
+                display: none;
+                margin-top: 8px;
+                padding-left: 16px;
+            }
+
+            .mobile-subcategory-list.active {
+                display: block;
+            }
+
+            .mobile-subcategory-item {
+                padding: 10px 0;
+                color: #666;
+                cursor: pointer;
+                font-size: 15px;
+            }
+
+            .mobile-subcategory-item.selected {
+                color: #000;
+                font-weight: 500;
+            }
+
+            /* Checkbox personalizado */
+            .mobile-checkbox-wrapper {
                 display: flex;
-                flex-direction: column;
-                height: 100%;
+                align-items: center;
+                padding: 12px 0;
             }
 
-            /* Responsivo: 2 colunas em tablets */
-            @media (max-width: 1024px) {
-                #produtos {
-                    grid-template-columns: repeat(2, 1fr);
-                }
+            .mobile-checkbox {
+                width: 20px;
+                height: 20px;
+                border: 2px solid #7A7A7A;
+                border-radius: 4px;
+                margin-right: 12px;
+                cursor: pointer;
+                appearance: none;
+                position: relative;
             }
 
-            /* Responsivo: 1 coluna em mobile */
-            @media (max-width: 640px) {
-                #produtos {
-                    grid-template-columns: repeat(1, 1fr);
-                }
+            .mobile-checkbox:checked::after {
+                content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 8 8" fill="none"><path d="M2.86801 7.85661C3.13689 7.85661 3.36505 7.71755 3.52795 7.44812L5.38972 4.32373L7.25149 1.19935C7.34925 1.02553 7.44708 0.834327 7.44708 0.643129C7.44708 0.252041 7.12113 0 6.78705 0C6.57527 0 6.37155 0.139055 6.21672 0.391096L2.83542 6.17927L1.23032 3.96308C1.03477 3.68497 0.855515 3.6154 0.63553 3.6154C0.277025 3.6154 0 3.91962 0 4.302C0 4.49319 0.0733306 4.6757 0.187404 4.84086L2.17545 7.44812C2.37915 7.73491 2.59914 7.85661 2.86801 7.85661Z" fill="black"/></svg>');
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .mobile-checkbox-label {
+                font-size: 16px;
+                color: #000;
+                cursor: pointer;
+            }
+
+            /* Range de preço */
+            .mobile-price-range {
+                display: flex;
+                gap: 12px;
+                align-items: center;
+            }
+
+            .mobile-price-input {
+                flex: 1;
+                padding: 12px;
+                background: #f5f5f5;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                font-size: 16px;
+            }
+
+            .mobile-price-separator {
+                color: #666;
             }
         </style>
         <!-- Conteúdo principal -->
@@ -225,8 +626,9 @@
             @endphp
             <div
                 class="fixed top-[70px] left-0 right-0 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-4 pb-3 px-[10px] bg-[#F1F1F1] z-10">
-                <!-- Esquerda: Coleção e Categoria -->
-                <div class="flex gap-2">
+                <!-- Esquerda: Coleção e Categoria (FLEXÍVEL) -->
+                <div class="filters-left-section">
+                    <!-- Coleção (largura fixa baseada no conteúdo) -->
                     <div class="select-container">
                         <div class="select-button p-5" id="colecaoSelectButton">
                             <span class="text-[16px] text-black">Coleção:</span>
@@ -283,10 +685,11 @@
                         </div>
                     </div>
 
-                    <div class="">
+                    <!-- Categoria (OCUPA O ESPAÇO RESTANTE) -->
+                    <div class="category-select-wrapper">
                         <div class="select-button p-5" id="categorySelectButton">
                             <span id="categorySelectedText">Categoria</span>
-                            <div class="" id="categoryArrow">
+                            <div id="categoryArrow">
                                 <div class="pt-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="7"
                                         viewBox="0 0 12 7" fill="none">
@@ -296,15 +699,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="options min-w-[250px] p-5 custom-scrollbar" id="categoryOptions"
-                            style="
-    left: 246px; top:5rem;">
+                        <div class="options min-w-[210px] p-5 custom-scrollbar" id="categoryOptions"
+                            style="{{ strlen($currentSlug) > 21 ? 'left: 302px; ' : 'left: 245px; ' }} top:5rem;">
                             @foreach ($categories as $category)
-                                @php $hasSub = isset($category->subcategories) && count($category->subcategories) > 0; @endphp
-                                <div class="option category-option {{ $hasSub ? 'has-subcategories' : '' }}"
-                                    data-value="{{ $category->name }}" data-id="{{ $category->id }}">
+                                <div class="option category-option " data-value="{{ $category->name }}"
+                                    data-id="{{ $category->id }}">
                                     <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-2">
+                                        <div class="flex items-center">
                                             <span class="check-icon" style="display: none;"><svg
                                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                                     <path
@@ -312,57 +713,25 @@
                                                 </svg></span>
                                             <span class="option-content">{{ $category->name }}</span>
                                         </div>
-                                        <!--<span class="arrow-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
-                                                viewBox="0 0 12 8" fill="none">
-                                                <path d="M1 1L5.94975 5.94975L10.8995 1" stroke="currentColor"
-                                                    stroke-width="1.5" stroke-linecap="round" />
-                                            </svg>
-                                        </span>-->
+
                                         <span class="x-icon" style="display: none;">×</span>
                                     </div>
 
-                                    @if ($hasSub)
-                                        <div class="subcategory-dropdown" data-category-id="{{ $category->id }}">
-                                            <div class="subcategory-option" data-value=""
-                                                data-category-id="{{ $category->id }}">
-                                                <div style="display: flex; align-items: center;">
-                                                    <svg class="check-icon" xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 640 640">
-                                                        <path
-                                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
-                                                    </svg>
-                                                    <span class="text-sm ">Todas</span>
-                                                </div>
-                                                <span class="x-icon">×</span>
-                                            </div>
-                                            @foreach ($category->subcategories as $sub)
-                                                <div class="subcategory-option" data-value="{{ $sub->id }}"
-                                                    data-category-id="{{ $category->id }}">
-                                                    <div style="display: flex; align-items: center;">
-                                                        <svg class="check-icon" xmlns="http://www.w3.org/2000/svg"
-                                                            viewBox="0 0 640 640">
-                                                            <path
-                                                                d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
-                                                        </svg>
-                                                        <span>{{ $sub->faixa }}</span>
-                                                    </div>
-                                                    <span class="x-icon">×</span>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @else
-                                    @endif
+
                                 </div>
                             @endforeach
-                            <div class="option selected" data-value="">
-                                <span class="check-icon" style="display: inline;"><svg
-                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                        <path
-                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
-                                    </svg></span>
-                                <span class="text-base option-content">Todas</span>
-                                <span class="x-icon" style="display: inline-table;">×</span>
+                            <div class="option category-option selected" data-value="" data-id="">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <span class="check-icon" style="display: block;"><svg
+                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                                                <path
+                                                    d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
+                                            </svg></span>
+                                        <span class="option-content">Todas</span>
+                                    </div>
+                                    <span class="x-icon" style="display: inline-table;">×</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -546,9 +915,181 @@
                     </template>
                 @endif
             </div>
-
-
         </section>
+
+
+
+        <!-- Botão flutuante para abrir filtros (mobile) -->
+        <button class="mobile-filter-trigger" id="mobileFilterTrigger">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 4h16M6 10h8M9 16h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            Filtros
+            <span class="filter-badge" id="mobileBadge" style="display: none;">0</span>
+        </button>
+
+        <!-- Overlay -->
+        <div class="mobile-filter-overlay" id="mobileFilterOverlay"></div>
+
+        <!-- Menu lateral mobile -->
+        <div class="mobile-filter-menu" id="mobileFilterMenu">
+            <!-- Header -->
+            <div class="mobile-filter-header">
+                <h2>Filtros</h2>
+                <button class="mobile-filter-close" id="mobileFilterClose">&times;</button>
+            </div>
+
+            <!-- Conteúdo -->
+            <div class="mobile-filter-content">
+                <!-- Busca -->
+                <div class="mobile-filter-section">
+                    <div class="mobile-filter-section-title">Buscar</div>
+                    <input type="text" class="mobile-search-input" id="mobileSearch"
+                        placeholder="Buscar produto...">
+                </div>
+
+                <!-- Coleção -->
+                <div class="mobile-filter-section">
+                    <div class="mobile-filter-section-title">
+                        Coleção
+                        <button class="clear-btn" onclick="clearCollection()">Limpar</button>
+                    </div>
+                    <div class="mobile-select" onclick="toggleMobileSelect('collection')">
+                        <span class="mobile-select-text" id="mobileCollectionText">Selecione uma coleção</span>
+                        <span class="mobile-select-arrow">
+                            <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1L5.94975 5.94975L10.8995 1" stroke="black" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="mobile-select-options" id="mobileCollectionOptions">
+
+                        @foreach ($colecoes as $colecao)
+                            @if ($currentSlug == $colecao->slug)
+                                <div class="mobile-select-option" onclick="selectCollection('{{ $colecao->name }}')">
+                                    <span>{{ $colecao->name }}</span>
+                                    <span style="display: none;">✓</span>
+                                </div>
+                            @endif
+                        @endforeach
+
+                    </div>
+                </div>
+
+                <!-- Categoria -->
+                <div class="mobile-filter-section">
+                    <div class="mobile-filter-section-title">
+                        Categoria
+                        <button class="clear-btn" onclick="clearCategory()">Limpar</button>
+                    </div>
+                    <div class="mobile-select" onclick="toggleMobileSelect('category')">
+                        <span class="mobile-select-text" id="mobileCategoryText">Todas as categorias</span>
+                        <span class="mobile-select-arrow">
+                            <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1L5.94975 5.94975L10.8995 1" stroke="black" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="mobile-select-options" id="mobileCategoryOptions">
+                        <div class="mobile-select-option" onclick="selectCategory('Todos', null)">
+                            <span>Todos</span>
+                            <span style="display: none;">✓</span>
+                        </div>
+                        @foreach ($categories as $category)
+                            <div class="mobile-select-option"
+                                onclick="selectCategory('{{ $category->name }}', '{{ $category->slug }}')">
+                                <span>{{ $category->name }}</span>
+                                <span style="display: none;">✓</span>
+                            </div>
+                        @endforeach
+                        <div class="mobile-select-option" onclick="selectCategory('Corrida', 'running')">
+                            <span>Corrida</span>
+                            <span>→</span>
+                        </div>
+                        <div class="mobile-subcategory-list" id="subcategory-running">
+                            <div class="mobile-subcategory-item" onclick="selectSubcategory('Corrida - Asfalto')">
+                                Asfalto</div>
+                            <div class="mobile-subcategory-item" onclick="selectSubcategory('Corrida - Trail')">Trail
+                            </div>
+                        </div>
+                        <div class="mobile-select-option" onclick="selectCategory('Caminhada', null)">
+                            <span>Caminhada</span>
+                            <span style="display: none;">✓</span>
+                        </div>
+                        <div class="mobile-select-option" onclick="selectCategory('Casual', null)">
+                            <span>Casual</span>
+                            <span style="display: none;">✓</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Numeração/Tamanhos -->
+                <div class="mobile-filter-section">
+                    <div class="mobile-filter-section-title">
+                        Numeração/Tamanhos
+                        <button class="clear-btn" onclick="clearSizes()">Limpar</button>
+                    </div>
+                    <div class="mobile-filter-chips" id="mobileSizeChips">
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '35')">35</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '36')">36</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '37')">37</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '38')">38</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '39')">39</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '40')">40</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '41')">41</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '42')">42</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '43')">43</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '44')">44</div>
+                    </div>
+                </div>
+
+                <!-- Classificação -->
+                <div class="mobile-filter-section">
+                    <div class="mobile-filter-section-title">
+                        Classificação
+                        <button class="clear-btn" onclick="clearClassification()">Limpar</button>
+                    </div>
+                    <div class="mobile-filter-chips" id="mobileClassificationChips">
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'class', 'lancamento')">Lançamento
+                        </div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'class', 'destaque')">Destaque</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'class', 'promocao')">Promoção</div>
+                    </div>
+                </div>
+
+                <!-- Valor -->
+                <div class="mobile-filter-section">
+                    <div class="mobile-filter-section-title">
+                        Valor
+                        <button class="clear-btn" onclick="clearPrice()">Limpar</button>
+                    </div>
+                    <div class="mobile-price-range">
+                        <input type="text" class="mobile-price-input" id="mobilePriceMin" placeholder="0,00">
+                        <span class="mobile-price-separator">até</span>
+                        <input type="text" class="mobile-price-input" id="mobilePriceMax" placeholder="999,99">
+                    </div>
+                </div>
+
+                <!-- Agrupar cores -->
+                <div class="mobile-filter-section" style="border-bottom: none;">
+                    <div class="mobile-checkbox-wrapper">
+                        <input type="checkbox" class="mobile-checkbox" id="mobileGroupColors">
+                        <label for="mobileGroupColors" class="mobile-checkbox-label">Agrupar cores</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="mobile-filter-footer">
+                <button class="mobile-filter-clear" onclick="clearAllFilters()">Limpar tudo</button>
+                <button class="mobile-filter-apply" onclick="applyFilters()">Aplicar</button>
+            </div>
+        </div>
 
 
     </main>
@@ -1518,6 +2059,508 @@
             updateCategoryDropdownStructure();
 
             aplicarFiltros();
+
+
+
+
+
+
+
+            // ==================== MOBILE FILTERS ====================
+            (function() {
+                // Variáveis globais mobile
+                let mobileSelectedCategory = '';
+                let mobileSelectedSubcategory = '';
+                let mobileSelectedCollection = '{{ $currentSlug }}';
+
+                // Abrir/fechar menu mobile
+                const trigger = document.getElementById('mobileFilterTrigger');
+                const overlay = document.getElementById('mobileFilterOverlay');
+                const menu = document.getElementById('mobileFilterMenu');
+                const closeBtn = document.getElementById('mobileFilterClose');
+
+                function openMobileFilters() {
+                    overlay.classList.add('active');
+                    menu.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    syncDesktopToMobile();
+                }
+
+                function closeMobileFilters() {
+                    overlay.classList.remove('active');
+                    menu.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+
+                if (trigger) trigger.addEventListener('click', openMobileFilters);
+                if (overlay) overlay.addEventListener('click', closeMobileFilters);
+                if (closeBtn) closeBtn.addEventListener('click', closeMobileFilters);
+
+                // Sincronizar desktop para mobile ao abrir
+                window.syncDesktopToMobile = function() {
+                    // Busca
+                    const desktopSearch = document.getElementById('search');
+                    const mobileSearch = document.getElementById('mobileSearch');
+                    if (desktopSearch && mobileSearch) {
+                        mobileSearch.value = desktopSearch.value;
+                    }
+
+                    // Agrupar cores
+                    const desktopGroupColors = document.getElementById('groupColors');
+                    const mobileGroupColors = document.getElementById('mobileGroupColors');
+                    if (desktopGroupColors && mobileGroupColors) {
+                        mobileGroupColors.checked = desktopGroupColors.checked;
+                    }
+
+                    // Filtros de numeração/tamanho
+                    document.querySelectorAll(
+                        '.filter-option.selected[data-type="numeracao"], .filter-option.selected[data-type="tamanho"]'
+                    ).forEach(opt => {
+                        const type = opt.dataset.type;
+                        const value = opt.dataset.value;
+                        const mobileChip = document.querySelector(
+                            `.mobile-filter-chip[data-type="${type}"][data-value="${value}"]`);
+                        if (mobileChip) mobileChip.classList.add('selected');
+                    });
+
+                    // Filtros de classificação
+                    document.querySelectorAll('.filter-option.selected[data-type="classification"]').forEach(opt => {
+                        const value = opt.dataset.value;
+                        const mobileChip = document.querySelector(
+                            `.mobile-filter-chip[data-type="classification"][data-value="${value}"]`);
+                        if (mobileChip) mobileChip.classList.add('selected');
+                    });
+
+                    // Preço
+                    const priceMin = document.getElementById('priceMin');
+                    const priceMax = document.getElementById('priceMax');
+                    const mobilePriceMin = document.getElementById('mobilePriceMin');
+                    const mobilePriceMax = document.getElementById('mobilePriceMax');
+                    if (priceMin && mobilePriceMin) mobilePriceMin.value = priceMin.value;
+                    if (priceMax && mobilePriceMax) mobilePriceMax.value = priceMax.value;
+
+                    // Ordenação
+                    const sortText = document.getElementById('sortText');
+                    const mobileSortText = document.getElementById('mobileSortText');
+                    if (sortText && mobileSortText) {
+                        mobileSortText.textContent = sortText.textContent || 'Padrão';
+                    }
+
+                    updateMobileBadge();
+                };
+
+                // Toggle select mobile
+                window.toggleMobileSelect = function(type) {
+                    const options = document.getElementById(
+                        `mobile${type.charAt(0).toUpperCase() + type.slice(1)}Options`);
+                    const select = options.previousElementSibling;
+
+                    if (options && select) {
+                        options.classList.toggle('active');
+                        select.classList.toggle('active');
+                    }
+                };
+
+                // Selecionar coleção mobile
+                window.selectMobileCollection = function(name, slug) {
+                    document.getElementById('mobileCollectionText').textContent = name;
+                    mobileSelectedCollection = slug;
+
+                    const options = document.querySelectorAll('#mobileCollectionOptions .mobile-select-option');
+                    options.forEach(opt => {
+                        opt.classList.remove('selected');
+                        opt.querySelector('span:last-child').style.display = 'none';
+                    });
+
+                    event.target.closest('.mobile-select-option').classList.add('selected');
+                    event.target.closest('.mobile-select-option').querySelector('span:last-child').style.display =
+                        'block';
+
+                    toggleMobileSelect('collection');
+                    updateMobileBadge();
+                };
+
+                // Selecionar categoria mobile
+                window.selectMobileCategory = function(name, categoryId, hasSubcategories) {
+                    if (hasSubcategories) {
+                        const subcategories = document.getElementById(`mobile-subcategory-${categoryId}`);
+                        if (subcategories) {
+                            subcategories.classList.toggle('active');
+
+                            // Atualizar arrow
+                            const option = event.target.closest('.mobile-select-option');
+                            const arrow = option.querySelector('span:last-child');
+                            if (subcategories.classList.contains('active')) {
+                                arrow.textContent = '↓';
+                                arrow.style.display = 'block';
+                            } else {
+                                arrow.textContent = '→';
+                                arrow.style.display = 'block';
+                            }
+                        }
+                    } else {
+                        document.getElementById('mobileCategoryText').textContent = name;
+                        mobileSelectedCategory = name;
+                        mobileSelectedSubcategory = '';
+
+                        // Limpar todas as subcategorias
+                        document.querySelectorAll('.mobile-subcategory-list').forEach(list => {
+                            list.classList.remove('active');
+                        });
+
+                        const options = document.querySelectorAll('#mobileCategoryOptions > .mobile-select-option');
+                        options.forEach(opt => {
+                            opt.classList.remove('selected');
+                            const lastSpan = opt.querySelector('span:last-child');
+                            if (lastSpan && lastSpan.textContent === '✓') {
+                                lastSpan.style.display = 'none';
+                            }
+                        });
+
+                        event.target.closest('.mobile-select-option').classList.add('selected');
+                        const checkmark = event.target.closest('.mobile-select-option').querySelector(
+                            'span:last-child');
+                        if (checkmark && checkmark.textContent === '✓') {
+                            checkmark.style.display = 'block';
+                        }
+
+                        toggleMobileSelect('category');
+                        updateMobileBadge();
+                    }
+                };
+
+                // Selecionar subcategoria mobile
+                window.selectMobileSubcategory = function(categoryName, categoryId, subcategoryId, subcategoryName) {
+                    if (subcategoryId) {
+                        document.getElementById('mobileCategoryText').textContent =
+                            `${categoryName} (${subcategoryName})`;
+                    } else {
+                        document.getElementById('mobileCategoryText').textContent = categoryName;
+                    }
+
+                    mobileSelectedCategory = categoryName;
+                    mobileSelectedSubcategory = subcategoryId;
+
+                    const subcategoryList = document.getElementById(`mobile-subcategory-${categoryId}`);
+                    const items = subcategoryList.querySelectorAll('.mobile-subcategory-item');
+                    items.forEach(item => item.classList.remove('selected'));
+                    event.target.classList.add('selected');
+
+                    toggleMobileSelect('category');
+                    updateMobileBadge();
+                };
+
+                // Selecionar ordenação mobile
+                window.selectMobileSort = function(name, value) {
+                    document.getElementById('mobileSortText').textContent = name;
+
+                    const options = document.querySelectorAll('#mobileSortOptions .mobile-select-option');
+                    options.forEach(opt => {
+                        opt.classList.remove('selected');
+                        opt.querySelector('span:last-child').style.display = 'none';
+                    });
+
+                    event.target.closest('.mobile-select-option').classList.add('selected');
+                    event.target.closest('.mobile-select-option').querySelector('span:last-child').style.display =
+                        'block';
+
+                    toggleMobileSelect('sort');
+                    updateMobileBadge();
+                };
+
+                // Toggle chips mobile
+                window.toggleMobileChip = function(element, type, value) {
+                    element.classList.toggle('selected');
+                    updateMobileBadge();
+                };
+
+                // Atualizar badge de contagem mobile
+                function updateMobileBadge() {
+                    let count = 0;
+
+                    const selectedChips = document.querySelectorAll('.mobile-filter-chip.selected');
+                    count += selectedChips.length;
+
+                    const collectionText = document.getElementById('mobileCollectionText').textContent;
+                    if (collectionText && collectionText !== 'Selecione uma coleção' && collectionText !== 'Todas') count++;
+
+                    const categoryText = document.getElementById('mobileCategoryText').textContent;
+                    if (categoryText && categoryText !== 'Todas as categorias') count++;
+
+                    if (document.getElementById('mobilePriceMin').value) count++;
+                    if (document.getElementById('mobilePriceMax').value) count++;
+                    if (document.getElementById('mobileGroupColors').checked) count++;
+
+                    const badge = document.getElementById('mobileBadge');
+                    if (count > 0) {
+                        badge.textContent = count;
+                        badge.style.display = 'inline-flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+
+                // Limpar coleção mobile
+                window.clearMobileCollection = function() {
+                    document.getElementById('mobileCollectionText').textContent = 'Selecione uma coleção';
+                    mobileSelectedCollection = '';
+                    const options = document.querySelectorAll('#mobileCollectionOptions .mobile-select-option');
+                    options.forEach(opt => {
+                        opt.classList.remove('selected');
+                        opt.querySelector('span:last-child').style.display = 'none';
+                    });
+                    updateMobileBadge();
+                };
+
+                // Limpar categoria mobile
+                window.clearMobileCategory = function() {
+                    document.getElementById('mobileCategoryText').textContent = 'Todas as categorias';
+                    mobileSelectedCategory = '';
+                    mobileSelectedSubcategory = '';
+
+                    document.querySelectorAll('.mobile-subcategory-list').forEach(list => {
+                        list.classList.remove('active');
+                    });
+
+                    const options = document.querySelectorAll('#mobileCategoryOptions > .mobile-select-option');
+                    options.forEach(opt => {
+                        opt.classList.remove('selected');
+                        const lastSpan = opt.querySelector('span:last-child');
+                        if (lastSpan) lastSpan.style.display = 'none';
+                    });
+
+                    // Selecionar "Todas"
+                    const todasOption = document.querySelector(
+                        '#mobileCategoryOptions .mobile-select-option[data-category-id=""]');
+                    if (todasOption) {
+                        todasOption.classList.add('selected');
+                        todasOption.querySelector('span:last-child').style.display = 'block';
+                    }
+
+                    updateMobileBadge();
+                };
+
+                // Limpar tamanhos mobile
+                window.clearMobileSizes = function() {
+                    const chips = document.querySelectorAll('#mobileSizeChips .mobile-filter-chip');
+                    chips.forEach(chip => chip.classList.remove('selected'));
+                    updateMobileBadge();
+                };
+
+                // Limpar classificação mobile
+                window.clearMobileClassification = function() {
+                    const chips = document.querySelectorAll('#mobileClassificationChips .mobile-filter-chip');
+                    chips.forEach(chip => chip.classList.remove('selected'));
+                    updateMobileBadge();
+                };
+
+                // Limpar preço mobile
+                window.clearMobilePrice = function() {
+                    document.getElementById('mobilePriceMin').value = '';
+                    document.getElementById('mobilePriceMax').value = '';
+                    updateMobileBadge();
+                };
+
+                // Limpar todos os filtros mobile
+                window.clearAllMobileFilters = function() {
+                    clearMobileCollection();
+                    clearMobileCategory();
+                    clearMobileSizes();
+                    clearMobileClassification();
+                    clearMobilePrice();
+                    document.getElementById('mobileGroupColors').checked = false;
+                    document.getElementById('mobileSearch').value = '';
+
+                    // Resetar ordenação
+                    const sortOptions = document.querySelectorAll('#mobileSortOptions .mobile-select-option');
+                    sortOptions.forEach(opt => {
+                        opt.classList.remove('selected');
+                        opt.querySelector('span:last-child').style.display = 'none';
+                    });
+                    const defaultSort = document.querySelector(
+                        '#mobileSortOptions .mobile-select-option[data-value=""]');
+                    if (defaultSort) {
+                        defaultSort.classList.add('selected');
+                        defaultSort.querySelector('span:last-child').style.display = 'block';
+                    }
+                    document.getElementById('mobileSortText').textContent = 'Padrão';
+
+                    updateMobileBadge();
+                };
+
+                // Aplicar filtros mobile
+                window.applyMobileFilters = function() {
+                    // Sincronizar com desktop
+
+                    // Busca
+                    const mobileSearch = document.getElementById('mobileSearch');
+                    const desktopSearch = document.getElementById('search');
+                    if (mobileSearch && desktopSearch) {
+                        desktopSearch.value = mobileSearch.value;
+                    }
+
+                    // Coleção (redirecionar se mudou)
+                    if (mobileSelectedCollection !== '{{ $currentSlug }}') {
+                        const currentUrl = window.location.href;
+                        const newUrl = currentUrl.replace(/\/[^/]+$/, "") + (mobileSelectedCollection ? '/' +
+                            mobileSelectedCollection : '');
+                        window.location.href = newUrl;
+                        return;
+                    }
+
+                    // Categoria
+                    if (mobileSelectedCategory && mobileSelectedCategory !== 'Todas') {
+                        selectedCategory = mobileSelectedCategory;
+                        selectedSubcategory = mobileSelectedSubcategory;
+
+                        const categoryText = mobileSelectedSubcategory ?
+                            `${mobileSelectedCategory} (${document.querySelector(`.mobile-subcategory-item.selected[data-subcategory-id="${mobileSelectedSubcategory}"]`)?.textContent || ''})` :
+                            mobileSelectedCategory;
+
+                        document.getElementById('categorySelectedText').innerHTML = `
+                <span class='text-[16px] text-black'>Categoria: </span> 
+                <span class='text-[18px] text-[#7A7A7A]'>${categoryText}</span>
+            `;
+                    } else {
+                        selectedCategory = '';
+                        selectedSubcategory = '';
+                        document.getElementById('categorySelectedText').innerHTML =
+                            "<span class='text-[16px] text-black'>Categoria</span>";
+                    }
+
+                    // Agrupar cores
+                    const mobileGroupColors = document.getElementById('mobileGroupColors');
+                    const desktopGroupColors = document.getElementById('groupColors');
+                    if (mobileGroupColors && desktopGroupColors) {
+                        desktopGroupColors.checked = mobileGroupColors.checked;
+                    }
+
+                    // Limpar filtros desktop
+                    document.querySelectorAll('.filter-option.selected').forEach(opt => {
+                        opt.classList.remove('selected');
+                        const removeBtn = opt.querySelector('.tag-remove');
+                        if (removeBtn) removeBtn.remove();
+                    });
+                    selectedFilters = {
+                        numeracao: [],
+                        tamanho: [],
+                        classification: [],
+                        priceMin: null,
+                        priceMax: null
+                    };
+
+                    // Aplicar filtros de numeração/tamanho
+                    document.querySelectorAll('#mobileSizeChips .mobile-filter-chip.selected').forEach(chip => {
+                        const type = chip.dataset.type;
+                        const value = chip.dataset.value;
+
+                        if (!selectedFilters[type].includes(value)) {
+                            selectedFilters[type].push(value);
+                        }
+
+                        const desktopOption = document.querySelector(
+                            `.filter-option[data-type="${type}"][data-value="${value}"]`);
+                        if (desktopOption) {
+                            desktopOption.classList.add('selected');
+
+                            const removeBtn = document.createElement('span');
+                            removeBtn.className = 'tag-remove';
+                            removeBtn.innerHTML = '&times;';
+                            removeBtn.addEventListener('click', function(e) {
+                                e.stopPropagation();
+                                removeFilter(type, value);
+                            });
+                            desktopOption.appendChild(removeBtn);
+                        }
+                    });
+
+                    // Aplicar filtros de classificação
+                    document.querySelectorAll('#mobileClassificationChips .mobile-filter-chip.selected').forEach(
+                        chip => {
+                            const value = chip.dataset.value;
+
+                            if (!selectedFilters.classification.includes(value)) {
+                                selectedFilters.classification.push(value);
+                            }
+
+                            const desktopOption = document.querySelector(
+                                `.filter-option[data-type="classification"][data-value="${value}"]`);
+                            if (desktopOption) {
+                                desktopOption.classList.add('selected');
+
+                                const removeBtn = document.createElement('span');
+                                removeBtn.className = 'tag-remove';
+                                removeBtn.innerHTML = '&times;';
+                                removeBtn.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    removeFilter('classification', value);
+                                });
+                                desktopOption.appendChild(removeBtn);
+                            }
+                        });
+
+                    // Preço
+                    const mobilePriceMin = document.getElementById('mobilePriceMin');
+                    const mobilePriceMax = document.getElementById('mobilePriceMax');
+                    const desktopPriceMin = document.getElementById('priceMin');
+                    const desktopPriceMax = document.getElementById('priceMax');
+
+                    if (mobilePriceMin && desktopPriceMin) {
+                        desktopPriceMin.value = mobilePriceMin.value;
+                        selectedFilters.priceMin = mobilePriceMin.value;
+                    }
+                    if (mobilePriceMax && desktopPriceMax) {
+                        desktopPriceMax.value = mobilePriceMax.value;
+                        selectedFilters.priceMax = mobilePriceMax.value;
+                    }
+
+                    // Ordenação
+                    const selectedSortOption = document.querySelector(
+                        '#mobileSortOptions .mobile-select-option.selected');
+                    if (selectedSortOption) {
+                        const sortValue = selectedSortOption.dataset.value;
+                        selectedSortValue = sortValue;
+
+                        document.querySelectorAll('.sort-option').forEach(opt => opt.classList.remove('selected'));
+                        const desktopSortOption = document.querySelector(`.sort-option[data-value="${sortValue}"]`);
+                        if (desktopSortOption) {
+                            desktopSortOption.classList.add('selected');
+                            document.getElementById('sortText').textContent = desktopSortOption.textContent;
+                        }
+                    }
+
+                    // Atualizar contagem desktop
+                    updateFilterCount();
+
+                    // Aplicar filtros
+                    aplicarFiltros();
+
+                    // Fechar menu
+                    closeMobileFilters();
+                };
+
+                // Eventos de atualização do badge
+                if (document.getElementById('mobilePriceMin')) {
+                    document.getElementById('mobilePriceMin').addEventListener('input', updateMobileBadge);
+                }
+                if (document.getElementById('mobilePriceMax')) {
+                    document.getElementById('mobilePriceMax').addEventListener('input', updateMobileBadge);
+                }
+                if (document.getElementById('mobileGroupColors')) {
+                    document.getElementById('mobileGroupColors').addEventListener('change', updateMobileBadge);
+                }
+
+                // Sincronizar busca com debounce
+                let searchTimeout;
+                if (document.getElementById('mobileSearch')) {
+                    document.getElementById('mobileSearch').addEventListener('input', function() {
+                        clearTimeout(searchTimeout);
+                        searchTimeout = setTimeout(() => {
+                            updateMobileBadge();
+                        }, 300);
+                    });
+                }
+            })();
         </script>
     @endpush
 
