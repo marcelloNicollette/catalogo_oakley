@@ -93,6 +93,56 @@
             /* garante quebra segura entre blocos */
             padding: 0 2px;
         }
+
+
+        /* Container do grid ocupa todo espaço disponível */
+        .image-grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0;
+            width: 100%;
+        }
+
+        /* Cada célula mantém proporção quadrada */
+        .image-cell {
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .image-cell:hover {
+            opacity: 0.8;
+        }
+
+        /* Imagem preenche a célula mantendo proporção */
+        .image-cell img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Container principal ocupa largura total */
+        .main-container {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* Lado esquerdo flexível */
+        .left-section {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Lado direito fixo */
+        .right-section {
+            width: 500px;
+            flex-shrink: 0;
+        }
     </style>
     <main class="absolute top-20 lg:flex flex-1 produtos-page">
         @php
@@ -107,13 +157,14 @@
             }
         @endphp
         <div class="max-w-full px-2 pb-3">
-            <div class="flex gap-2">
+            <div class="main-container">
                 <!-- Seção de Imagens - Esquerda -->
-                <div class="flex-1 space-y-4">
+                <div class="left-section">
                     <!-- Grid de Imagens para Desktop (2 colunas x 4 linhas) -->
-                    <div class="hidden lg:grid grid-cols-2 bg-white rounded-lg shadow-sm border border-[#CBCBCB]"
-                        id="desktopGrid">
-                        <!-- Imagens serão carregadas dinamicamente via JavaScript -->
+                    <div class="hidden lg:block bg-white rounded-lg border border-[#CBCBCB] overflow-hidden h-full">
+                        <div class="image-grid-container h-full" id="desktopGrid">
+                            <!-- Imagens serão carregadas dinamicamente via JavaScript -->
+                        </div>
                     </div>
 
                     <!-- Loader de Imagens (Skeleton 2x2 com spinner por célula, desktop e mobile) -->
@@ -162,7 +213,7 @@
                 </div>
 
                 <!-- Seção de Detalhes - Direita -->
-                <div class="w-[500px] flex-shrink-0 space-y-6" id="rightPanel">
+                <div class="right-section space-y-6" id="rightPanel">
                     <!-- Cabeçalho do Produto -->
                     <div class="bg-white rounded-lg p-5 shadow-sm border border-[#CBCBCB]">
                         <div class="flex justify-between items-start">
@@ -225,7 +276,7 @@
                                                             '_' .
                                                             $baseColorCode .
                                                             '.jpg'
-                                                        : '/images/img-padrao-oly.png';
+                                                        : '/images/img-padrao-ua.png';
                                                 @endphp
                                                 <img src="{{ $imgSrc }}" alt="{{ $color->color_name }}"
                                                     class="w-full object-contain rounded-lg" loading="lazy" />
@@ -587,7 +638,7 @@
 
                     cachedImages.forEach((imgInfo, index) => {
                         const imageDiv = document.createElement('div');
-                        imageDiv.className = 'cursor-pointer transition-opacity';
+                        imageDiv.className = 'image-cell ';
                         imageDiv.setAttribute('data-image', imgInfo.path);
                         imageDiv.onclick = function() {
                             openImageModal(this);
@@ -620,11 +671,12 @@
                         }
                         // Caso contrário, mantém 'rounded-none' para imagens do meio
 
+                        imageDiv.className = `image-cell ${cornerClass}`;
                         imageDiv.innerHTML = `
             <img src="${imgInfo.path}" 
                  alt="Vista ${imgInfo.index + 1}" 
-                 class="w-full object-contain ${cornerClass}"
-                 onerror="this.src='/images/img-padrao-oly.png'" />
+                 class=""
+                 onerror="this.src='/images/img-padrao-ua.png'" />
         `;
 
                         desktopGrid.appendChild(imageDiv);
@@ -647,7 +699,7 @@
                                 <img src="${imgInfo.path}"
                                      alt="Vista ${imgInfo.index + 1}"
                                      class="max-w-[80%] max-h-[80%] object-contain"
-                                     onerror="this.src='/images/img-padrao-oly.png'" />
+                                     onerror="this.src='/images/img-padrao-ua.png'" />
                             </div>
                         `;
 
@@ -1232,7 +1284,7 @@
                                      alt="${cor.color_name}" 
                                      class="w-full object-contain rounded-lg"
                                      loading="lazy"
-                                     onerror="this.src='/images/img-padrao-oly.png'" />
+                                     onerror="this.src='/images/img-padrao-ua.png'" />
                                 ${flagHtml}
                             </div>
                             <div class="text-center pb-2">
