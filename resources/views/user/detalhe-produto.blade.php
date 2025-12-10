@@ -361,7 +361,7 @@
                                     $initialNumeracao = $firstColorNumeracao ?: $productNumeracoesText;
                                 @endphp
                                 <div>
-                                    <p class="text-xs text-black opacity-50">Numeração</p>
+                                    <p class="text-xs text-black opacity-50">Tamanho</p>
                                     <p class="text-sm" id="numeracao">{{ $initialNumeracao }}</p>
                                 </div>
 
