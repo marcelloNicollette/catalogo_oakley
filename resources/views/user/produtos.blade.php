@@ -150,9 +150,9 @@
                 /* Limita a 3 linhas */
                 -webkit-box-orient: vertical;
                 text-overflow: ellipsis;
-                min-height: 54px;
+                min-height: 60px;
                 /* 3 linhas × ~18px por linha */
-                max-height: 54px;
+                max-height: 60px;
                 line-height: 18px;
             }
 
@@ -208,9 +208,6 @@
             /* Arrow mantém seu tamanho fixo */
             #categoryArrow {
                 flex-shrink: 0;
-                margin-left: 8px;
-                padding-left: 0.5rem;
-                padding-top: 0.25rem;
             }
 
             /* Responsivo para telas menores */
@@ -752,15 +749,15 @@
                     </div>
 
                     <label class="inline-flex items-center text-sm bg-white px-[20px] py-[10px] rounded-lg">
-                        <span class="text-base mr-1">Agrupar cores</span>
+                        <span class="text-[1rem] mr-1 leading-[0px]">Agrupar cores</span>
                         <input id="groupColors" type="checkbox"
                             class="w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative">
                     </label>
 
                     <div class="filter-container">
                         <div class="filter-button" id="filterButton">
-                            <span id="filterText">Filtrar</span>
-                            <span id="filterCount" class="filter-count"
+                            <span id="filterText" class="text-[1rem] leading-[0px]">Filtrar</span>
+                            <span id="filterCount" class="filter-count leading-[0px]"
                                 style="display: none; margin-left:10px; color: #7A7A7A;">0</span>
                             <div class="pl-2 pt-1" id="arrow2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
@@ -838,8 +835,8 @@
 
                     <div class="sort-container">
                         <div class="sort-button" id="sortButton">
-                            <span class="text-black mr-2">Ordenar por:</span>
-                            <span id="sortText" class="text-[#7A7A7A]"></span>
+                            <span class="text-[1rem] text-black mr-2 leading-[0px]">Ordenar por:</span>
+                            <span id="sortText" class="text-[#7A7A7A] leading-[0px]"></span>
                             <div class="pl-2 pt-1" id="sortArrow">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
                                     viewBox="0 0 12 8" fill="none">
@@ -1105,7 +1102,7 @@
                                 $produto = $produtoGroup->product;
                                 $imgPath = '/images/produtos/' . $produto->code . '_' . str_replace('/', '_', $produtoGroup->color_code) . '.jpg';
                                 $imgFullPath = public_path($imgPath);
-                                $img = file_exists($imgFullPath) ? $imgPath : '/images/img-padrao-oly.png';
+                                $img = file_exists($imgFullPath) ? $imgPath : '/images/img-padrao-ua.png';
                                 $numeracaoIdsProduct = $produto->numeracoes ? $produto->numeracoes->pluck('id')->toArray() : [];
                                 $numeracaoIdsProduct = $produto->numeracoes ? $produto->numeracoes->pluck('id')->toArray() : [];
                                 $numeracaoIdColor = $produtoGroup->numeracao ? $produtoGroup->numeracao->id : null;
@@ -1417,12 +1414,12 @@
 
                 if (subcategoryId) {
                     categorySelectedText.innerHTML = `
-                        <span class='text-[16px] text-black'>Categoria </span> 
+                        <span class='text-[16px] text-black'>Categoria: </span> 
                         <span class='text-[18px] text-[#7A7A7A]'>${categoryName} (${subcategoryName})</span>
                     `;
                 } else {
                     categorySelectedText.innerHTML = `
-                        <span class='text-[16px] text-black'>Categoria </span> 
+                        <span class='text-[16px] text-black'>Categoria: </span> 
                         <span class='text-[18px] text-[#7A7A7A]'>${categoryName}</span>
                     `;
                 }
@@ -1437,16 +1434,6 @@
                 //categoryOption.querySelector('.check-icon').style.display = 'inline';
                 //categoryOption.querySelector('.x-icon').style.display = 'inline';
 
-                const subcategoryContainer = subcategoryOption.closest('.subcategory-dropdown');
-
-                document.querySelectorAll('.subcategory-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                    opt.querySelector('.check-icon').style.display = 'none';
-                    opt.querySelector('.x-icon').style.display = 'none';
-                });
-                subcategoryOption.classList.add('selected');
-                subcategoryOption.querySelector('.check-icon').style.display = 'inline';
-                subcategoryOption.querySelector('.x-icon').style.display = 'inline-table';
 
                 //closeCategoryDropdown();
                 aplicarFiltros();
@@ -1476,94 +1463,45 @@
                                 return;
                             }
 
-                            const subcategoryContainer = this.querySelector('.subcategory-dropdown');
-                            const hasSubcategories = this.classList.contains('has-subcategories');
+                            const categoryName = this.getAttribute('data-value');
+                            const categoryId = this.getAttribute('data-id');
 
-                            // Se NÃO tem subcategorias, filtra diretamente pela categoria
-                            if (!hasSubcategories || (subcategoryContainer && subcategoryContainer.children
-                                    .length === 0)) {
-                                const categoryName = this.getAttribute('data-value');
-                                const categoryId = this.getAttribute('data-id');
+                            // Define a categoria selecionada
+                            selectedCategory = categoryName;
+                            selectedSubcategory = ''; // Limpa subcategoria
 
-                                // Define a categoria selecionada
-                                selectedCategory = categoryName;
-                                selectedSubcategory = ''; // Limpa subcategoria
-
-                                // Atualiza o texto do botão
-                                categorySelectedText.innerHTML = `
-                        <span class='text-[16px] text-black'>Categoria </span> 
+                            // Atualiza o texto do botão
+                            categorySelectedText.innerHTML = `
+                        <span class='text-[16px] text-black'>Categoria: </span> 
                         <span class='text-[18px] text-[#7A7A7A]'>${categoryName}</span>
                     `;
 
-                                categoryOptions.querySelectorAll('.subcategory-option').forEach(
-                                    opt => {
-                                        opt.classList.remove('selected');
-                                        opt.querySelector('.check-icon').style.display = 'none';
-                                        opt.querySelector('.x-icon').style.display = 'none';
-                                    });
-
-                                // Atualiza visual de seleção
-                                categoryOptions.querySelectorAll('.category-option').forEach(opt => {
-                                    opt.classList.remove('selected');
-                                    opt.querySelector('.check-icon').style.display = 'none';
-                                    const xIcon = opt.querySelector('.x-icon');
-                                    if (xIcon) xIcon.style.display = 'none';
-                                });
-
-                                categoryOptions.querySelectorAll('.option').forEach(opt => {
-                                    opt.classList.remove('selected');
-                                    opt.querySelector('.check-icon').style.display = 'none';
-                                    opt.querySelector('.x-icon').style.display = 'none';
-                                });
-
-                                this.classList.add('selected');
-                                //this.querySelector('.option-content').style.margin = '0';
-                                this.querySelector('.check-icon').style.display = 'inline';
-                                const xIcon = this.querySelector('.x-icon');
-                                if (xIcon) xIcon.style.display = 'inline-table';
-
-                                // Aplica o filtro
-                                aplicarFiltros();
-
-                                // Opcional: fechar o dropdown após selecionar
-                                // closeCategoryDropdown();
-
-                                return;
-                            }
-
-                            const isExpanded = this.classList.contains('expanded');
-
-                            // Não fecha outros dropdowns, apenas expande o clicado
-                            if (!isExpanded) {
-
-                                this.classList.add('expanded');
-                                // Garante que o dropdown abre abaixo do item principal
-                                const subcategoryContainer = this.querySelector('.subcategory-dropdown');
-                                if (subcategoryContainer) {
-                                    subcategoryContainer.style.display = 'block';
-                                }
-                                if (!subcategoryContainer.hasAttribute('data-loaded') && subcategoryContainer
-                                    .children.length === 0) {
-                                    loadSubcategoriesInline(categoryId, subcategoryContainer, categoryOption);
-                                }
-                            } else {
-
-                                this.classList.remove('expanded');
-                                const subcategoryContainer = this.querySelector('.subcategory-dropdown');
-                                if (subcategoryContainer) {
-                                    subcategoryContainer.style.display = 'none';
-                                }
-                            }
-
-                        });
-
-                        // Bind de seleção para subcategorias já renderizadas
-                        subcategoryContainer.querySelectorAll('.subcategory-option').forEach(subOption => {
-                            subOption.addEventListener('click', function(e) {
-                                e.stopPropagation();
-                                handleSubcategorySelection(this);
+                            // Atualiza visual de seleção
+                            categoryOptions.querySelectorAll('.category-option').forEach(opt => {
+                                opt.classList.remove('selected');
+                                opt.querySelector('.check-icon').style.display = 'none';
+                                const xIcon = opt.querySelector('.x-icon');
+                                if (xIcon) xIcon.style.display = 'none';
                             });
+
+                            categoryOptions.querySelectorAll('.option').forEach(opt => {
+                                opt.classList.remove('selected');
+                                opt.querySelector('.check-icon').style.display = 'none';
+                                opt.querySelector('.x-icon').style.display = 'none';
+                            });
+
+                            this.classList.add('selected');
+                            //this.querySelector('.option-content').style.margin = '0';
+                            this.querySelector('.check-icon').style.display = 'inline';
+                            const xIcon = this.querySelector('.x-icon');
+                            if (xIcon) xIcon.style.display = 'inline-table';
+
+                            // Aplica o filtro
+                            aplicarFiltros();
+
+
                         });
+
                     }
                 });
             }
@@ -1603,7 +1541,7 @@
             colecaoOptions.addEventListener('click', function(e) {
                 if (e.target.classList.contains('x-icon')) {
                     e.stopPropagation();
-                    console.log('X-icon clicked');
+
                     const option = e.target.closest('.option');
                     if (option) {
                         //colecaoSelectedText.textContent = 'Selecione uma coleção';
@@ -1647,7 +1585,7 @@
             });
 
             categorySelectButton.addEventListener('click', function(e) {
-                console.log('Clicou na categoria');
+
                 e.stopPropagation();
 
                 if (categoryOptions.classList.contains('show')) {
@@ -1660,101 +1598,7 @@
                 }
             });
 
-            categoryOptions.addEventListener('click', function(e) {
-                // Tratar cliques em subcategorias primeiro
-                const subOption = e.target.closest('.subcategory-option');
-                if (subOption) {
-                    e.stopPropagation();
-                    // limpar seleção anterior de subcategorias
-                    categoryOptions.querySelectorAll('.subcategory-option').forEach(opt => {
-                        opt.classList.remove('selected');
-                        const ci = opt.querySelector('.check-icon');
-                        const xi = opt.querySelector('.x-icon');
-                        if (ci) ci.style.display = 'none';
-                        if (xi) xi.style.display = 'none';
-                    });
 
-                    subOption.classList.add('selected');
-                    const ci = subOption.querySelector('.check-icon');
-                    const xi = subOption.querySelector('.x-icon');
-                    if (ci) ci.style.display = 'inline';
-                    if (xi) xi.style.display = 'inline-table';
-
-                    selectedSubcategory = subOption.getAttribute('data-value') || '';
-                    closeCategoryDropdown();
-                    aplicarFiltros();
-                    return;
-                }
-
-                // Handle X icon click para remover seleção (categoria ou subcategoria)
-                if (e.target.classList.contains('x-icon')) {
-                    e.stopPropagation();
-
-                    // Limpar seleção visual de categorias
-                    categoryOptions.querySelectorAll('.option').forEach(opt => {
-                        opt.classList.remove('selected');
-                        const ci = opt.querySelector('.check-icon');
-                        const xi = opt.querySelector('.x-icon');
-                        if (ci) ci.style.display = 'none';
-                        if (xi) xi.style.display = 'none';
-                    });
-
-                    // Limpar seleção visual de subcategorias
-                    categoryOptions.querySelectorAll('.subcategory-option').forEach(opt => {
-                        opt.classList.remove('selected');
-                        const ci = opt.querySelector('.check-icon');
-                        const xi = opt.querySelector('.x-icon');
-                        if (ci) ci.style.display = 'none';
-                        if (xi) xi.style.display = 'none';
-                    });
-
-                    // Resetar filtros de categoria e subcategoria
-                    categorySelectedText.innerHTML = "<span class='text-[16px] text-black'>Categoria</span>";
-                    selectedCategory = '';
-                    selectedSubcategory = '';
-
-                    closeCategoryDropdown();
-                    aplicarFiltros();
-                    return;
-                }
-
-                let option = e.target;
-                if (!option.classList.contains('option')) {
-                    option = option.closest('.option');
-                }
-
-                if (option && option.classList.contains('option')) {
-                    const hasSubcategories = option.classList.contains('has-subcategories');
-
-                    // Seleção direta quando não há subcategorias
-                    if (!hasSubcategories || option.hasAttribute('data-no-subcategories')) {
-                        categoryOptions.querySelectorAll('.option').forEach(opt => {
-                            opt.classList.remove('selected');
-                            opt.classList.remove('expanded');
-                            const ci = opt.querySelector('.check-icon');
-                            const xi = opt.querySelector('.x-icon');
-                            if (ci) ci.style.display = 'none';
-                            if (xi) xi.style.display = 'none';
-                        });
-
-                        option.classList.add('selected');
-                        const ci = option.querySelector('.check-icon');
-                        const xi = option.querySelector('.x-icon');
-                        if (ci) ci.style.display = 'inline';
-                        if (xi) xi.style.display = 'inline-table';
-
-                        const value = option.getAttribute('data-value');
-                        const text = option.querySelector('.option-content').textContent;
-                        categorySelectedText.innerHTML = `
-                            <span class='text-[16px] text-black'>Categoria </span> 
-                            <span class='text-[18px] text-[#7A7A7A]'>${text}</span>
-                        `;
-                        selectedCategory = value;
-                        selectedSubcategory = '';
-                        aplicarFiltros();
-                    }
-                }
-            });
 
             const filterButton = document.getElementById('filterButton');
             const filterText = document.getElementById('filterText');

@@ -143,236 +143,477 @@
             }
 
 
-            /* Para telas menores que 1080px */
-            @media (max-width: 1080px) {
+            /* Adicione estas regras ao seu css.css */
 
-                /* Área de filtros superiores */
-                .flex.flex-col.md\:flex-row.justify-between {
-                    flex-direction: column !important;
-                    gap: 1rem !important;
-                }
+            /* Container esquerdo (Coleção + Categoria) - flexível */
+            .filters-left-section {
+                display: flex;
+                gap: 0.5rem;
+                flex: 1;
+                min-width: 0;
+            }
 
-                /* Container dos selects de coleção e categoria - PRIMEIRA LINHA */
-                .flex.gap-2:has(.select-container) {
-                    flex-direction: row !important;
-                    width: 100% !important;
-                    gap: 0.5rem !important;
-                    order: 1 !important;
-                }
+            /* Container direito (Busca + Filtros + Ordenar) - largura fixa */
+            .filters-right-section {
+                display: flex;
+                gap: 0.5rem;
+                align-items: flex-end;
+                flex-shrink: 0;
+            }
 
-                /* Selects de coleção e categoria - dividem espaço igualmente */
-                .select-container {
-                    flex: 1 !important;
-                    width: 25% !important;
-                    min-width: 0 !important;
-                }
+            /* Select de coleção - largura mínima fixa */
+            .select-container {
+                flex-shrink: 0;
+                min-width: fit-content;
+            }
 
-                .select-button {
-                    width: 100% !important;
-                    padding: 0.75rem 0.5rem !important;
-                    font-size: 13px !important;
-                    justify-content: space-between !important;
-                }
+            /* Wrapper do category - ocupa espaço restante */
+            .category-select-wrapper {
+                flex: 1;
+                min-width: 50px;
+                /* Largura mínima antes de quebrar */
+            }
 
-                /* Container dos controles da direita - SEGUNDA LINHA (só busca) */
-                .flex.gap-2.items-end.justify-end {
-                    flex-wrap: wrap !important;
-                    width: 100% !important;
-                    justify-content: flex-start !important;
-                    order: 2 !important;
-                    gap: 0.5rem !important;
-                }
+            /* O botão de categoria ocupa 100% do wrapper */
+            #categorySelectButton {
+                width: 100% !important;
+                max-width: fit-content !important;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
 
-                /* Campo de busca - segunda linha, 100% largura */
-                .flex.items-center.border-b.border-b-black {
-                    width: 100% !important;
-                    min-width: 100% !important;
-                    order: 1 !important;
-                }
+            /* Texto truncado com ellipsis */
+            #categorySelectedText {
+                flex: 1;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                min-width: 0;
+            }
 
-                /* Botões de filtro e ordenar - MESMA LINHA DOS SELECTS */
-                .filter-container,
-                .sort-container {
-                    flex: 1 !important;
-                    width: 25% !important;
-                    min-width: 0 !important;
-                    order: 2 !important;
-                }
+            /* Arrow mantém seu tamanho fixo */
+            #categoryArrow {
+                flex-shrink: 0;
+            }
 
-                /* Mover filtro e ordenar para o container dos selects */
-                .flex.gap-2:has(.select-container) {
-                    display: flex !important;
-                    flex-wrap: wrap !important;
-                }
-
-                .filter-button,
-                .sort-button {
-                    width: 100% !important;
-                    padding: 0.75rem 0.5rem !important;
-                    font-size: 12px !important;
-                    white-space: nowrap !important;
-                }
-
-                .filter-button span:not(#filterCount),
-                .sort-button span:not(#sortText) {
-                    font-size: 12px !important;
-                }
-
-                .filter-button .mr-2 {
-                    margin-right: 0.25rem !important;
-                }
-
-                /* Ajustar contador de filtros */
-                #filterCount {
-                    font-size: 11px !important;
-                    margin-left: 3px !important;
-                }
-
-                /* Dropdowns */
-                .options,
-                .filter-dropdown,
-                .sort-dropdown {
-                    max-width: 100vw !important;
-                    left: 0 !important;
-                    right: 0 !important;
-                }
-
-                /* Reorganizar layout: 4 itens na primeira linha */
-                .flex.flex-col.md\:flex-row.justify-between>div:first-child {
-                    display: flex !important;
-                    flex-wrap: nowrap !important;
-                    gap: 0.5rem !important;
-                    width: 100% !important;
-                }
-
-                .flex.flex-col.md\:flex-row.justify-between>div:first-child>* {
-                    flex: 1 !important;
-                    min-width: 0 !important;
+            /* Responsivo para telas menores */
+            @media (max-width: 1400px) {
+                .filters-right-section {
+                    width: auto;
+                    flex-wrap: wrap;
                 }
             }
 
-            /* Para telas menores que 768px */
             @media (max-width: 768px) {
-
-                /* Header */
-                header {
-                    flex-direction: column !important;
-                    gap: 1rem !important;
+                .filters-left-section {
+                    flex-direction: column;
+                    width: 100%;
                 }
 
-                /* Área de filtros */
-                .flex.flex-col.md\:flex-row.justify-between.items-start {
-                    padding: 1rem !important;
+                .category-select-wrapper {
+                    width: 100%;
                 }
 
-                /* Botões em linha única se necessário */
-                .filter-container,
-                .sort-container {
-                    width: 100% !important;
-                }
-
-                /* Select buttons com texto menor */
-                .select-button span {
-                    font-size: 13px !important;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                }
-
-                /* Grid de produtos */
-                .grid.grid-cols-1 {
-                    grid-template-columns: repeat(2, 1fr) !important;
-                    gap: 0.5rem !important;
-                    padding: 0.5rem !important;
+                .filters-right-section {
+                    width: 100%;
+                    flex-direction: column;
+                    align-items: stretch;
                 }
             }
 
-            /* Para telas menores que 640px */
-            @media (max-width: 640px) {
 
-                /* Menu lateral */
-                aside {
-                    width: 100% !important;
-                    padding: 0.5rem !important;
+            /* Botão de filtro mobile - visível apenas em mobile */
+            .mobile-filter-trigger {
+                display: none;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #000;
+                color: #fff;
+                border: none;
+                border-radius: 50px;
+                padding: 16px 24px;
+                font-size: 16px;
+                font-weight: 500;
+                cursor: pointer;
+                z-index: 999;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                align-items: center;
+                gap: 8px;
+            }
+
+            @media (max-width: 1200px) {
+                .fixed {
+                    display: none;
                 }
 
-                aside a {
-                    padding: 0.5rem !important;
-                    font-size: 12px !important;
-                    height: auto !important;
+                .mobile-filter-trigger {
+                    display: flex;
                 }
 
-                /* Grid de produtos em coluna única */
-                .grid.grid-cols-1 {
-                    grid-template-columns: 1fr !important;
-                }
-
-                /* Ajustar espaçamento dos filtros */
-                .filter-button,
-                .sort-button {
-                    padding: 0.5rem !important;
-                    gap: 0.25rem !important;
-                }
-
-                /* Texto do botão de ordenar */
-                .sort-button .mr-2 {
+                /* Esconde os filtros desktop em mobile */
+                .filters-desktop {
                     display: none !important;
                 }
-
-                #sortText::before {
-                    content: "Ordenar: ";
-                }
             }
 
-            /* Ajustes gerais para melhor usabilidade */
-            @media (max-width: 1080px) {
-
-                /* Garantir que textos não quebrem de forma inadequada */
-                .select-button,
-                .filter-button,
-                .sort-button {
-                    display: flex !important;
-                    align-items: center !important;
-                    gap: 0.5rem !important;
-                }
-
-                /* Ícones de seta */
-                .pt-1 {
-                    padding-top: 0 !important;
-                    display: flex !important;
-                    align-items: center !important;
-                }
-
-                /* Melhorar contraste e legibilidade */
-                .select-button span,
-                .filter-button span,
-                .sort-button span {
-                    line-height: 1.2 !important;
-                }
-
-                /* Ajustar altura dos controles */
-                .select-container,
-                .filter-container,
-                .sort-container {
-                    min-height: 42px !important;
-                }
+            /* Overlay do menu mobile */
+            .mobile-filter-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+                opacity: 0;
+                transition: opacity 0.3s ease;
             }
 
-            /* Para tablets em modo paisagem */
-            @media (min-width: 768px) and (max-width: 1080px) {
-                .flex.gap-2:has(.select-container) {
-                    flex-direction: row !important;
-                }
+            .mobile-filter-overlay.active {
+                display: block;
+                opacity: 1;
+            }
 
-                .select-container {
-                    width: 50% !important;
-                }
+            /* Menu lateral mobile */
+            .mobile-filter-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 85%;
+                max-width: 400px;
+                height: 100vh;
+                background: #fff;
+                z-index: 1001;
+                transition: right 0.3s ease;
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+            }
 
-                .filter-container,
-                .sort-container {
-                    width: auto !important;
-                    min-width: 140px !important;
-                }
+            .mobile-filter-menu.active {
+                right: 0;
+            }
+
+            /* Header do menu mobile */
+            .mobile-filter-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px;
+                border-bottom: 1px solid #e0e0e0;
+                background: #f8f8f8;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+
+            .mobile-filter-header h2 {
+                font-size: 20px;
+                font-weight: 500;
+                color: #000;
+            }
+
+            .mobile-filter-close {
+                background: none;
+                border: none;
+                font-size: 28px;
+                color: #666;
+                cursor: pointer;
+                padding: 0;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Conteúdo do menu mobile */
+            .mobile-filter-content {
+                flex: 1;
+                padding: 20px;
+                overflow-y: auto;
+            }
+
+            /* Seção de filtro mobile */
+            .mobile-filter-section {
+                margin-bottom: 24px;
+                padding-bottom: 24px;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .mobile-filter-section:last-child {
+                border-bottom: none;
+            }
+
+            .mobile-filter-section-title {
+                font-size: 16px;
+                font-weight: 500;
+                color: #000;
+                margin-bottom: 12px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .mobile-filter-section-title .clear-btn {
+                font-size: 14px;
+                color: #666;
+                background: none;
+                border: none;
+                cursor: pointer;
+                text-decoration: underline;
+            }
+
+            /* Select mobile personalizado */
+            .mobile-select {
+                width: 100%;
+                padding: 14px;
+                background: #f5f5f5;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                font-size: 16px;
+                color: #000;
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .mobile-select-text {
+                flex: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .mobile-select-arrow {
+                margin-left: 8px;
+                transition: transform 0.3s;
+            }
+
+            .mobile-select.active .mobile-select-arrow {
+                transform: rotate(180deg);
+            }
+
+            /* Opções do select mobile */
+            .mobile-select-options {
+                display: none;
+                margin-top: 8px;
+                background: #f5f5f5;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .mobile-select-options.active {
+                display: block;
+            }
+
+            .mobile-select-option {
+                padding: 14px;
+                border-bottom: 1px solid #e0e0e0;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .mobile-select-option:last-child {
+                border-bottom: none;
+            }
+
+            .mobile-select-option.selected {
+                background: #fff;
+                font-weight: 500;
+            }
+
+            /* Chips de filtro mobile */
+            .mobile-filter-chips {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .mobile-filter-chip {
+                padding: 8px 16px;
+                background: #f5f5f5;
+                border: 1px solid #ddd;
+                border-radius: 20px;
+                font-size: 14px;
+                color: #333;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .mobile-filter-chip.selected {
+                background: #000;
+                color: #fff;
+                border-color: #000;
+            }
+
+            /* Input de busca mobile */
+            .mobile-search-input {
+                width: 100%;
+                padding: 14px;
+                background: #f5f5f5;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                font-size: 16px;
+                color: #000;
+            }
+
+            .mobile-search-input:focus {
+                outline: none;
+                border-color: #000;
+            }
+
+            /* Footer do menu mobile */
+            .mobile-filter-footer {
+                padding: 16px 20px;
+                border-top: 1px solid #e0e0e0;
+                background: #f8f8f8;
+                display: flex;
+                gap: 12px;
+                position: sticky;
+                bottom: 0;
+            }
+
+            .mobile-filter-footer button {
+                flex: 1;
+                padding: 14px;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .mobile-filter-clear {
+                background: #fff;
+                color: #000;
+                border: 1px solid #ddd;
+            }
+
+            .mobile-filter-apply {
+                background: #000;
+                color: #fff;
+            }
+
+            /* Badge de contagem */
+            .filter-badge {
+                background: #000;
+                color: #fff;
+                border-radius: 50%;
+                width: 24px;
+                height: 24px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                margin-left: 8px;
+            }
+
+            /* Subcategorias no mobile */
+            .mobile-subcategory-list {
+                display: none;
+                margin-top: 8px;
+                padding-left: 16px;
+            }
+
+            .mobile-subcategory-list.active {
+                display: block;
+            }
+
+            .mobile-subcategory-item {
+                padding: 10px 0;
+                color: #666;
+                cursor: pointer;
+                font-size: 15px;
+            }
+
+            .mobile-subcategory-item.selected {
+                color: #000;
+                font-weight: 500;
+            }
+
+            /* Checkbox personalizado */
+            .mobile-checkbox-wrapper {
+                display: flex;
+                align-items: center;
+                padding: 12px 0;
+            }
+
+            .mobile-checkbox {
+                width: 20px;
+                height: 20px;
+                border: 2px solid #7A7A7A;
+                border-radius: 4px;
+                margin-right: 12px;
+                cursor: pointer;
+                appearance: none;
+                position: relative;
+            }
+
+            .mobile-checkbox:checked::after {
+                content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 8 8" fill="none"><path d="M2.86801 7.85661C3.13689 7.85661 3.36505 7.71755 3.52795 7.44812L5.38972 4.32373L7.25149 1.19935C7.34925 1.02553 7.44708 0.834327 7.44708 0.643129C7.44708 0.252041 7.12113 0 6.78705 0C6.57527 0 6.37155 0.139055 6.21672 0.391096L2.83542 6.17927L1.23032 3.96308C1.03477 3.68497 0.855515 3.6154 0.63553 3.6154C0.277025 3.6154 0 3.91962 0 4.302C0 4.49319 0.0733306 4.6757 0.187404 4.84086L2.17545 7.44812C2.37915 7.73491 2.59914 7.85661 2.86801 7.85661Z" fill="black"/></svg>');
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .mobile-checkbox-label {
+                font-size: 16px;
+                color: #000;
+                cursor: pointer;
+            }
+
+            /* Range de preço */
+            .mobile-price-range {
+                display: flex;
+                gap: 12px;
+                align-items: center;
+            }
+
+            .mobile-price-input {
+                flex: 1;
+                padding: 12px;
+                background: #f5f5f5;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                font-size: 16px;
+            }
+
+            .mobile-price-separator {
+                color: #666;
+            }
+
+
+            #colecaoOptions.options {
+                top: 5rem;
+                left: 0px;
+            }
+
+            .options {
+                top: 5rem;
+                left: 227px;
+            }
+
+
+            .produtos-page .option-content {
+                margin: 0 5px 0 28px;
+            }
+
+            .produtos-page .option.selected .option-content {
+                margin: 0 5px 0 12px;
+            }
+
+
+            .produtos-page .option.category-option.selected .option-content {
+                margin: 0 5px 0 5px;
             }
         </style>
 
@@ -392,9 +633,11 @@
 
             @endphp
             <!-- Filtros superiores -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 pr-4">
-                <!-- Esquerda: Coleção e Categoria -->
-                <div class="flex gap-2">
+            <div
+                class="fixed top-[70px] left-[255px] right-0 flex flex-col md:flex-row justify-between items-end md:items-end gap-4 pt-4 pb-3 pr-[10px] bg-[#F1F1F1] z-10">
+                <!-- Esquerda: Coleção e Categoria (FLEXÍVEL) -->
+                <div class="filters-left-section">
+                    <!-- Coleção (largura fixa baseada no conteúdo) -->
                     <div class="select-container">
                         <div class="select-button p-5" id="colecaoSelectButton">
                             <span class="text-[16px] text-black">Coleção:</span>
@@ -451,7 +694,8 @@
                         </div>
                     </div>
 
-                    <div class="relative">
+                    <!-- Categoria (OCUPA O ESPAÇO RESTANTE) -->
+                    <div class="category-select-wrapper">
                         <div class="select-button p-5" id="categorySelectButton">
                             <span id="categorySelectedText">Categoria</span>
                             <div class="" id="categoryArrow">
@@ -555,7 +799,7 @@
 
                     <div class="filter-container">
                         <div class="filter-button" id="filterButton">
-                            <span id="filterText">Filtrar</span>
+                            <span id="filterText" class="text-[1rem] leading-[0px]">Filtrar</span>
                             <span id="filterCount" class="filter-count"
                                 style="display: none; margin-left:10px; color: #7A7A7A;">0</span>
                             <div class="pl-2 pt-1" id="arrow2">
@@ -607,8 +851,8 @@
 
                     <div class="sort-container">
                         <div class="sort-button" id="sortButton">
-                            <span class="text-black mr-2">Ordenar por:</span>
-                            <span id="sortText" class="text-[#7A7A7A]"></span>
+                            <span class="text-black mr-2 text-[1rem] leading-[0px]">Ordenar por:</span>
+                            <span id="sortText" class="text-[#7A7A7A] leading-[0px]"></span>
                             <div class="pl-2 pt-1" id="sortArrow">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
                                     viewBox="0 0 12 8" fill="none">
@@ -634,7 +878,7 @@
 
             <!-- Lista de Produtos -->
             <div id="produtos"
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 p-2 bg-[#E6E6E6] rounded-tl-lg overflow-auto height-ultra custom-scrollbar">
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 p-2 bg-[#E6E6E6] rounded-tl-lg overflow-auto custom-scrollbar height-ultra lg:mt-[4.8rem]">
 
                 <!-- Template de Produto -->
                 <template id="template-produto">
@@ -699,6 +943,180 @@
 
 
         </section>
+
+
+
+        <!-- Botão flutuante para abrir filtros (mobile) -->
+        <button class="mobile-filter-trigger" id="mobileFilterTrigger">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 4h16M6 10h8M9 16h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            Filtros
+            <span class="filter-badge" id="mobileBadge" style="display: none;">0</span>
+        </button>
+
+        <!-- Overlay -->
+        <div class="mobile-filter-overlay" id="mobileFilterOverlay"></div>
+
+        <!-- Menu lateral mobile -->
+        <div class="mobile-filter-menu" id="mobileFilterMenu">
+            <!-- Header -->
+            <div class="mobile-filter-header">
+                <h2>Filtros</h2>
+                <button class="mobile-filter-close" id="mobileFilterClose">&times;</button>
+            </div>
+
+            <!-- Conteúdo -->
+            <div class="mobile-filter-content">
+                <!-- Busca -->
+                <div class="mobile-filter-section">
+                    <div class="mobile-filter-section-title">Buscar</div>
+                    <input type="text" class="mobile-search-input" id="mobileSearch"
+                        placeholder="Buscar produto...">
+                </div>
+
+                <!-- Coleção -->
+                <div class="mobile-filter-section">
+                    <div class="mobile-filter-section-title">
+                        Coleção
+                        <button class="clear-btn" onclick="clearCollection()">Limpar</button>
+                    </div>
+                    <div class="mobile-select" onclick="toggleMobileSelect('collection')">
+                        <span class="mobile-select-text" id="mobileCollectionText">Selecione uma coleção</span>
+                        <span class="mobile-select-arrow">
+                            <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1L5.94975 5.94975L10.8995 1" stroke="black" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="mobile-select-options" id="mobileCollectionOptions">
+
+                        @foreach ($colecoes as $colecao)
+                            @if ($currentSlug == $colecao->slug)
+                                <div class="mobile-select-option" onclick="selectCollection('{{ $colecao->name }}')">
+                                    <span>{{ $colecao->name }}</span>
+                                    <span style="display: none;">✓</span>
+                                </div>
+                            @endif
+                        @endforeach
+
+                    </div>
+                </div>
+
+                <!-- Categoria -->
+                <div class="mobile-filter-section">
+                    <div class="mobile-filter-section-title">
+                        Categoria
+                        <button class="clear-btn" onclick="clearCategory()">Limpar</button>
+                    </div>
+                    <div class="mobile-select" onclick="toggleMobileSelect('category')">
+                        <span class="mobile-select-text" id="mobileCategoryText">Todas as categorias</span>
+                        <span class="mobile-select-arrow">
+                            <svg width="12" height="8" viewBox="0 0 12 8" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1L5.94975 5.94975L10.8995 1" stroke="black" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="mobile-select-options" id="mobileCategoryOptions">
+                        <div class="mobile-select-option" onclick="selectCategory('Todos', null)">
+                            <span>Todos</span>
+                            <span style="display: none;">✓</span>
+                        </div>
+                        @foreach ($categories as $category)
+                            <div class="mobile-select-option"
+                                onclick="selectCategory('{{ $category->name }}', '{{ $category->slug }}')">
+                                <span>{{ $category->name }}</span>
+                                <span style="display: none;">✓</span>
+                            </div>
+                        @endforeach
+                        <div class="mobile-select-option" onclick="selectCategory('Corrida', 'running')">
+                            <span>Corrida</span>
+                            <span>→</span>
+                        </div>
+                        <div class="mobile-subcategory-list" id="subcategory-running">
+                            <div class="mobile-subcategory-item" onclick="selectSubcategory('Corrida - Asfalto')">
+                                Asfalto</div>
+                            <div class="mobile-subcategory-item" onclick="selectSubcategory('Corrida - Trail')">Trail
+                            </div>
+                        </div>
+                        <div class="mobile-select-option" onclick="selectCategory('Caminhada', null)">
+                            <span>Caminhada</span>
+                            <span style="display: none;">✓</span>
+                        </div>
+                        <div class="mobile-select-option" onclick="selectCategory('Casual', null)">
+                            <span>Casual</span>
+                            <span style="display: none;">✓</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Numeração/Tamanhos -->
+                <div class="mobile-filter-section">
+                    <div class="mobile-filter-section-title">
+                        Numeração/Tamanhos
+                        <button class="clear-btn" onclick="clearSizes()">Limpar</button>
+                    </div>
+                    <div class="mobile-filter-chips" id="mobileSizeChips">
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '35')">35</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '36')">36</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '37')">37</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '38')">38</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '39')">39</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '40')">40</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '41')">41</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '42')">42</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '43')">43</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'size', '44')">44</div>
+                    </div>
+                </div>
+
+                <!-- Classificação -->
+                <div class="mobile-filter-section">
+                    <div class="mobile-filter-section-title">
+                        Classificação
+                        <button class="clear-btn" onclick="clearClassification()">Limpar</button>
+                    </div>
+                    <div class="mobile-filter-chips" id="mobileClassificationChips">
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'class', 'lancamento')">Lançamento
+                        </div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'class', 'destaque')">Destaque</div>
+                        <div class="mobile-filter-chip" onclick="toggleChip(this, 'class', 'promocao')">Promoção</div>
+                    </div>
+                </div>
+
+                <!-- Valor -->
+                <div class="mobile-filter-section">
+                    <div class="mobile-filter-section-title">
+                        Valor
+                        <button class="clear-btn" onclick="clearPrice()">Limpar</button>
+                    </div>
+                    <div class="mobile-price-range">
+                        <input type="text" class="mobile-price-input" id="mobilePriceMin" placeholder="0,00">
+                        <span class="mobile-price-separator">até</span>
+                        <input type="text" class="mobile-price-input" id="mobilePriceMax" placeholder="999,99">
+                    </div>
+                </div>
+
+                <!-- Agrupar cores -->
+                <div class="mobile-filter-section" style="border-bottom: none;">
+                    <div class="mobile-checkbox-wrapper">
+                        <input type="checkbox" class="mobile-checkbox" id="mobileGroupColors">
+                        <label for="mobileGroupColors" class="mobile-checkbox-label">Agrupar cores</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="mobile-filter-footer">
+                <button class="mobile-filter-clear" onclick="clearAllFilters()">Limpar tudo</button>
+                <button class="mobile-filter-apply" onclick="applyFilters()">Aplicar</button>
+            </div>
+        </div>
 
 
     </main>

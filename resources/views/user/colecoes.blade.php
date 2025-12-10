@@ -1,7 +1,7 @@
 <x-layout-user title="Under Armour - Coleções">
     <style>
         .height-ultra {
-            height: calc(100vh - 168px);
+            height: calc(100vh - 167px);
         }
 
         @media (max-width: 768px) {
@@ -71,7 +71,7 @@
         <section class="flex-1 flex flex-col overflow-hidden">
 
             <!-- Filtros superiores -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 pr-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-4 pb-3 pr-4">
                 <!-- Esquerda: Coleção e Categoria -->
                 <div class="flex gap-2">
 
@@ -141,7 +141,7 @@
 
                     <div class="filter-container">
                         <div class="filter-button" id="filterButton">
-                            <span id="filterText">Filtrar</span>
+                            <span id="filterText" class="text-[1rem] leading-[0px]">Filtrar</span>
                             <span id="filterCount" class="filter-count"
                                 style="display: none; margin-left:10px; color: #7A7A7A;">0</span>
                             <div class="pl-2 pt-1" id="arrow2">
@@ -180,8 +180,8 @@
 
                     <div class="sort-container">
                         <div class="sort-button" id="sortButton">
-                            <span class="text-black mr-2">Ordenar por:</span>
-                            <span id="sortText" class="text-[#7A7A7A]">Mais nova</span>
+                            <span class="text-[1rem] text-black mr-2 leading-[0px]">Ordenar por:</span>
+                            <span id="sortText" class="text-[#7A7A7A] leading-[0px]">Mais nova</span>
                             <div class="pl-2 pt-1" id="sortArrow">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
                                     viewBox="0 0 12 8" fill="none">
