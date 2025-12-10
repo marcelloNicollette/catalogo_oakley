@@ -8,6 +8,13 @@ use App\Models\Color;
 use App\Models\ExportUser;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Excel as ExcelWriter;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use Maatwebsite\Excel\Concerns\WithDrawings;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 use Illuminate\Http\Request;
 
 class ExportController extends Controller
@@ -93,10 +100,131 @@ class ExportController extends Controller
             $view = $request->formato === '16_9' ? 'exports.collection.presentation-group' : 'exports.collection.a4-group';
         }
 
-        //return view($view, $data);
+        if ($request->formato === 'planilha') {
+            $headings = ['Imagem', 'Coleção', 'Categoria'];
+            if (!in_array('remover_codigo', $opcoes)) {
+                $headings[] = 'Código';
+            }
+            $headings[] = 'Produto';
+            $headings[] = 'Cor código';
+            $headings[] = 'Cor';
+            $headings[] = 'Gênero';
+            if (!in_array('remover_preco', $opcoes)) {
+                $headings[] = 'Preço';
+            }
+            if (!in_array('remover_descricao', $opcoes)) {
+                $headings[] = 'Descrição';
+            }
+
+            $rows = [];
+            $imagePaths = [];
+            foreach ($produtos as $color) {
+                $row = [];
+                // placeholder for image column (handled by drawings)
+                $row[] = '';
+                $row[] = $color->collection->codigo_colecao ?? ($color->collection->name ?? '');
+                $row[] = optional($color->product->category)->name ?? '';
+                if (!in_array('remover_codigo', $opcoes)) {
+                    $row[] = $color->product->code ?? '';
+                }
+                $row[] = $color->product->name ?? '';
+                $row[] = $color->color_code ?? '';
+                $row[] = $color->color_name ?? '';
+                $row[] = $color->genero ?? '';
+                if (!in_array('remover_preco', $opcoes)) {
+                    $row[] = $color->product->price ?? '';
+                }
+                if (!in_array('remover_descricao', $opcoes)) {
+                    $row[] = $color->product->description ?? '';
+                }
+                $rows[] = $row;
+
+                $imgRel = 'images/produtos/' . ($color->product->code ?? '') . '_' . str_replace('/', '_', ($color->color_code ?? '')) . '.jpg';
+                $imgPath = public_path($imgRel);
+                if (!file_exists($imgPath)) {
+                    $imgPath = public_path('images/img-padrao-ua.png');
+                }
+                $imagePaths[] = $imgPath;
+            }
+
+            $export = new class($rows, $headings, $imagePaths) implements \Maatwebsite\Excel\Concerns\FromArray, \Maatwebsite\Excel\Concerns\WithHeadings, WithDrawings, WithColumnWidths, WithEvents {
+                private $rows;
+                private $headings;
+                private $imagePaths;
+                public function __construct(array $rows, array $headings, array $imagePaths)
+                {
+                    $this->rows = $rows;
+                    $this->headings = $headings;
+                    $this->imagePaths = $imagePaths;
+                }
+                public function array(): array
+                {
+                    return $this->rows;
+                }
+                public function headings(): array
+                {
+                    return $this->headings;
+                }
+                public function drawings(): array
+                {
+                    $drawings = [];
+                    $rowIndex = 2; // start after headings
+                    foreach ($this->imagePaths as $path) {
+                        if ($path && file_exists($path)) {
+                            $drawing = new Drawing();
+                            $drawing->setName('Imagem Produto');
+                            $drawing->setDescription('Imagem do produto');
+                            $drawing->setPath($path);
+                            $drawing->setHeight(60);
+                            $drawing->setCoordinates('A' . $rowIndex);
+                            $drawings[] = $drawing;
+                        }
+                        $rowIndex++;
+                    }
+                    return $drawings;
+                }
+                public function columnWidths(): array
+                {
+                    return [
+                        'A' => 18,
+                    ];
+                }
+                public function registerEvents(): array
+                {
+                    return [
+                        AfterSheet::class => function (AfterSheet $event) {
+                            $rowCount = count($this->rows) + 1; // include heading
+                            for ($r = 2; $r <= $rowCount; $r++) {
+                                $event->sheet->getRowDimension($r)->setRowHeight(46);
+                            }
+                        }
+                    ];
+                }
+            };
+
+            $filename = $request->collectionHistoryName . '.xls';
+
+            ExportUser::create([
+                'user_id' => $request->user()->id,
+                'collection_id' => $request->collection_id,
+                'collection_history_name' => $request->collectionHistoryName,
+                'formato' => $request->formato ?? 'a4',
+                'produtos' => $tipoProdutos,
+                'produtos_selecionados' => $produtosSelecionados,
+                'opcoes' => $opcoes,
+                'remove_price' => in_array('remover_preco', $opcoes),
+                'remove_code' => in_array('remover_codigo', $opcoes),
+                'remove_description' => in_array('remover_descricao', $opcoes),
+                'remove_tag' => in_array('remover_tag', $opcoes),
+                'remove_capa_retranca' => in_array('remover_capa_retranca', $opcoes),
+                'filename' => $filename,
+            ]);
+
+            return Excel::download($export, $filename, ExcelWriter::XLS);
+        }
+
         $pdf = PDF::loadView($view, $data)
             ->setPaper('A4', 'landscape');
-
         $pdf->setOption(['dpi' => 120]);
 
         if ($request->formato === '16_9') {

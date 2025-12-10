@@ -532,7 +532,7 @@ html {
             justify-content: space-between;
             align-items: center;
             transition: all 0.2s ease;
-            
+            height: 36px;
         }
 
         .filter-button:hover {
@@ -660,6 +660,7 @@ html {
             justify-content: space-between;
             align-items: center;
             transition: all 0.2s ease;
+            height: 36px;
         }
 
         .sort-button:hover {

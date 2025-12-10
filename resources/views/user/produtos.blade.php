@@ -748,7 +748,7 @@
                             class="input-estilizado bg-transparent border-0 focus:outline-none focus:ring-0 p-1" />
                     </div>
 
-                    <label class="inline-flex items-center text-sm bg-white px-[20px] py-[10px] rounded-lg">
+                    <label class="inline-flex items-center text-sm bg-white px-[20px] py-[10px] rounded-lg h-[36px]">
                         <span class="text-[1rem] mr-1 leading-[0px]">Agrupar cores</span>
                         <input id="groupColors" type="checkbox"
                             class="w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative">
