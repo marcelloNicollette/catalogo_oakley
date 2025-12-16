@@ -696,7 +696,7 @@ html {
             z-index: 1000;
             display: none;
             padding: 16px;
-            width: 210px;
+            /*width: 210px;*/
             margin-top: 5px;
         }
 
