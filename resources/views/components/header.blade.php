@@ -1,5 +1,12 @@
 @props(['user' => null, 'type' => ''])
 
+<style>
+    .space-x-2> :not([hidden])~ :not([hidden]) {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+</style>
+
 @if ($type === '')
     <header class="flex items-center justify-between gap-4 p-5">
         <div class="flex items-center space-x-2 py-[11px]">

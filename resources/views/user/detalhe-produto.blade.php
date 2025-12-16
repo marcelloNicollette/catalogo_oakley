@@ -112,9 +112,6 @@
             transition: opacity 0.2s;
         }
 
-        .image-cell:hover {
-            opacity: 0.8;
-        }
 
         /* Imagem preenche a célula mantendo proporção */
         .image-cell img {
