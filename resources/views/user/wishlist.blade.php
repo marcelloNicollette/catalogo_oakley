@@ -604,7 +604,7 @@
 
 
             .produtos-page .option-content {
-                margin: 0 5px 0 28px;
+                margin: 0 5px 0 20px;
             }
 
             .produtos-page .option.selected .option-content {
@@ -640,8 +640,8 @@
                     <!-- Coleção (largura fixa baseada no conteúdo) -->
                     <div class="select-container">
                         <div class="select-button p-5" id="colecaoSelectButton">
-                            <span class="text-[16px] text-black">Coleção:</span>
-                            <span class="text-[18px] text-[#7A7A7A]" id="colecaoSelectedText">
+
+                            <span class="text-[16px]" id="colecaoSelectedText">
                                 @if (!empty($currentSlug))
                                     @foreach ($colecoes as $colecao)
                                         @if ($currentSlug == $colecao->slug)
@@ -650,6 +650,16 @@
                                     @endforeach
                                 @else
                                     Selecione uma coleção
+                                @endif
+                            </span>
+                            <span class="text-[18px] text-[#7A7A7A]" id="colecaoSelectedText">
+                                @if (!empty($currentSlug))
+                                    @foreach ($colecoes as $colecao)
+                                        @if ($currentSlug == $colecao->slug)
+                                            {{ $colecao->name }}
+                                        @endif
+                                    @endforeach
+                                @else
                                 @endif
                             </span>
                             <div class="" id="colecaoArrow">
@@ -662,7 +672,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="options p-5" id="colecaoOptions">
+                        <div class="options p-5 min-w-[200px]" id="colecaoOptions">
                             @foreach ($colecoes as $colecao)
                                 <div class="option text-[18px]" data-slug="{{ $colecao->slug }}"
                                     data-value="{{ $colecao->slug }}"
@@ -688,7 +698,7 @@
                                         <path
                                             d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
                                     </svg></span>
-                                <span class="option-content">Todas</span>
+                                <span class="text-sm option-content">Todas</span>
                                 <span class="x-icon" style="display: none;">×</span>
                             </div>
                         </div>
@@ -1485,6 +1495,7 @@
                             // Remove selection and reset collection filter
                             colecaoSelectedText.textContent = 'Selecione uma coleção';
                             selectedCollection = '';
+                            option.querySelector('.option-content').style.margin = "0 20px";
                             closeColecaoDropdown();
                             aplicarFiltros();
                         }
@@ -1496,6 +1507,7 @@
                     // Find the option element if clicked on child elements
                     if (!option.classList.contains('option')) {
                         option = option.closest('.option');
+                        option.querySelector('.option-content').style.margin = "0 20px";
                     }
 
                     if (option && option.classList.contains('option')) {
@@ -1504,6 +1516,7 @@
                             opt.classList.remove('selected');
                             opt.querySelector('.check-icon').style.display = 'none';
                             opt.querySelector('.x-icon').style.display = 'none';
+                            opt.querySelector('.option-content').style.margin = "0 20px";
                         });
 
                         // Add selected state to clicked option
@@ -1513,7 +1526,8 @@
 
                         const value = option.getAttribute('data-value');
                         const text = option.querySelector('.option-content').textContent;
-                        colecaoSelectedText.textContent = text;
+                        option.querySelector('.option-content').style.margin = "0 20px 0 5px";
+                        colecaoSelectedText.textContent = "Coleção:" + text;
                         selectedCollection = value;
                         closeColecaoDropdown();
 
