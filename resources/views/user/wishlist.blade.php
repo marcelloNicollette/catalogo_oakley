@@ -1496,6 +1496,8 @@
                             colecaoSelectedText.textContent = 'Selecione uma coleção';
                             selectedCollection = '';
                             option.querySelector('.option-content').style.margin = "0 20px";
+                            option.querySelector('.check-icon').style.display = 'none';
+                            option.querySelector('.x-icon').style.display = 'none';
                             closeColecaoDropdown();
                             aplicarFiltros();
                         }
