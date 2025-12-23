@@ -1,6 +1,91 @@
 <x-layout-user title="Under Armour - Produtos">
     <main class="lg:flex flex-1 produtos-page">
         <style>
+            /* Container do card com altura mínima fixa */
+            .bg-white.hover\:shadow-md {
+                min-height: 450px;
+                /* Ajuste este valor conforme necessário */
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* Título com altura fixa e ellipsis para overflow */
+            .title {
+                display: -webkit-box;
+
+                /* Limita a 3 linhas */
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+                /* 3 linhas × ~18px por linha */
+
+                line-height: 20px;
+            }
+
+            /* Alternativa: Se preferir que todos tenham exatamente a mesma altura */
+            .title.fixed-height {
+                height: 54px;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-height: 18px;
+            }
+
+            /* Garante que o conteúdo inferior fique alinhado */
+            .p-4.flex-1.flex.flex-col {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+
+            /* Container de imagem com altura fixa */
+            .bg-white img {
+                /* Ajuste conforme necessário */
+                object-fit: contain;
+            }
+
+            /* Grid com 4 colunas fixas e altura uniforme */
+            #produtos {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                /* Sempre 4 colunas iguais */
+                gap: 10px;
+                grid-auto-rows: 1fr;
+                /* Todas as linhas com mesma altura */
+            }
+
+            /* Garante que o link ocupe toda a célula do grid */
+            #produtos>a {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+
+            /* Card ocupa todo o espaço disponível */
+            #produtos>a>div {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+
+            /* Responsivo: 2 colunas em tablets */
+            @media (max-width: 1024px) {
+                #produtos {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            /* Responsivo: 1 coluna em mobile */
+            @media (max-width: 640px) {
+                #produtos {
+                    grid-template-columns: repeat(1, 1fr);
+                }
+            }
+
             .badge-icon-wrapper .badge-tooltip {
                 visibility: hidden;
                 opacity: 0;
@@ -119,11 +204,6 @@
             }
 
 
-            .title {
-                min-height: 54px;
-                max-height: 54px;
-            }
-
 
             /* Para Firefox */
             .custom-scrollbar {
@@ -133,28 +213,6 @@
                 /* thumb track */
             }
 
-            /* Adicione este CSS ao seu arquivo ou dentro da tag <style> existente */
-
-            /* Container do card com altura mínima fixa */
-            .bg-white.hover\:shadow-md {
-                min-height: 450px;
-                /* Ajuste este valor conforme necessário */
-                display: flex;
-                flex-direction: column;
-            }
-
-            /* Título com altura fixa e ellipsis para overflow */
-            .title {
-                display: -webkit-box;
-                -webkit-line-clamp: 3;
-                /* Limita a 3 linhas */
-                -webkit-box-orient: vertical;
-                text-overflow: ellipsis;
-                min-height: 60px;
-                /* 3 linhas × ~18px por linha */
-                max-height: 60px;
-                line-height: 18px;
-            }
 
             /* Adicione estas regras ao seu css.css */
 
@@ -603,6 +661,23 @@
             .mobile-price-separator {
                 color: #666;
             }
+
+
+            /* Adjusting the scrollbar track's style */
+            ::-webkit-scrollbar-track {
+                background-color: #f5f5f5;
+            }
+
+            /* Customizing the appearance of the scrollbar thumb */
+            ::-webkit-scrollbar-thumb {
+                background-color: #888;
+                border-radius: 10px;
+            }
+
+            /* Altering the scrollbar thumb's look when hovered */
+            ::-webkit-scrollbar-thumb:hover {
+                background-color: #333;
+            }
         </style>
         <!-- Conteúdo principal -->
         <section class="flex-1 flex flex-col overflow-hidden">
@@ -684,7 +759,7 @@
                     </div>
 
                     <!-- Categoria (OCUPA O ESPAÇO RESTANTE) -->
-                    <div class="category-select-wrapper">
+                    <div class="relative category-select-wrapper">
                         <div class="select-button p-5" id="categorySelectButton">
                             <span id="categorySelectedText">Categoria</span>
                             <div id="categoryArrow">
@@ -697,8 +772,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="options min-w-[210px] p-5 custom-scrollbar" id="categoryOptions"
-                            style="{{ strlen($currentSlug) > 21 ? 'left: 302px; ' : 'left: 245px; ' }} top:5rem;">
+                        <div class="options min-w-[210px] p-5 custom-scrollbar" id="categoryOptions">
                             @foreach ($categories as $category)
                                 <div class="option category-option " data-value="{{ $category->name }}"
                                     data-id="{{ $category->id }}">
@@ -794,8 +868,7 @@
                             $availableNumeracaoIds = array_keys($availableNumeracaoIds);
                             $availableSizeIds = array_keys($availableSizeIds);
                         @endphp
-                        <div class="filter-dropdown custom-scrollbar-wh" style="width: 228px;overflow-x:hidden;"
-                            id="filterDropdown">
+                        <div class="filter-dropdown custom-scrollbar-wh" id="filterDropdown">
                             <div class="filter-section">
                                 <label class="filter-label">Numeração/Tamanhos​</label>
                                 <div class="filter-options" id="numeracaoOptions">

@@ -474,7 +474,7 @@ html {
 
         .options::-webkit-scrollbar-thumb {
             background: #c1c1c1;
-            border-radius: 3px;
+            border-radius: 10px;
         }
 
         .options::-webkit-scrollbar-thumb:hover {
@@ -561,14 +561,12 @@ html {
             position: absolute;
             top: 100%;
             left: 0;
-            right: 0;
             background: white;
             border: 1px solid #DDD;
             border-radius: 10px;
             z-index: 1000;
             display: none;
             padding: 16px;
-            width: 230px;
             margin-top: 5px;
             overflow: auto;
     max-height: 75vh;
@@ -601,12 +599,12 @@ html {
         }
 
         .filter-option {
-            padding: 6px 12px;
+            padding: 6px 10px;
             background: #EDEDED;
             border: 1px solid #e9ecef;
             border-radius: 20px;
-            font-size: 13px;
-            color: #495057;
+            font-size: 16px;
+            color: #000;
             cursor: pointer;
             transition: all 0.2s ease;
             user-select: none;
@@ -727,7 +725,7 @@ html {
         }
 
         .sort-option {
-            padding: 5px 12px;
+            padding: 1px 12px;
             font-size: 16px;
             color: #000;
             cursor: pointer;

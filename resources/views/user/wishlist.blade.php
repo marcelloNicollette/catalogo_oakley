@@ -51,7 +51,7 @@
 
 
             .height-ultra {
-                height: calc(100vh - 156px);
+                height: calc(100vh - 170px);
             }
 
             /* Estilos para dropdown aninhado de subcategorias */
@@ -592,15 +592,7 @@
             }
 
 
-            #colecaoOptions.options {
-                top: 5rem;
-                left: 0px;
-            }
 
-            .options {
-                top: 5rem;
-                left: 227px;
-            }
 
 
             .produtos-page .option-content {
@@ -622,7 +614,7 @@
 
 
         <!-- Conteúdo principal -->
-        <section class="flex-1 flex flex-col md:pr-0 md:pb-0 overflow-hidden">
+        <section class="flex-1 flex flex-col overflow-hidden">
             @php
 
                 $currentUrl = request()->path();
@@ -633,8 +625,7 @@
 
             @endphp
             <!-- Filtros superiores -->
-            <div
-                class="fixed top-[70px] left-[255px] right-0 flex flex-col md:flex-row justify-between items-end md:items-end gap-4 pt-4 pb-3 pr-[10px] bg-[#F1F1F1] z-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-4 pb-3 pr-4">
                 <!-- Esquerda: Coleção e Categoria (FLEXÍVEL) -->
                 <div class="filters-left-section">
                     <!-- Coleção (largura fixa baseada no conteúdo) -->
@@ -705,7 +696,7 @@
                     </div>
 
                     <!-- Categoria (OCUPA O ESPAÇO RESTANTE) -->
-                    <div class="category-select-wrapper">
+                    <div class="relative category-select-wrapper">
                         <div class="select-button p-5" id="categorySelectButton">
                             <span id="categorySelectedText">Categoria</span>
                             <div class="" id="categoryArrow">
@@ -888,7 +879,7 @@
 
             <!-- Lista de Produtos -->
             <div id="produtos"
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 p-2 bg-[#E6E6E6] rounded-tl-lg overflow-auto custom-scrollbar height-ultra lg:mt-[4.8rem]">
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 p-2 bg-[#E6E6E6] rounded-tl-lg overflow-auto custom-scrollbar height-ultra">
 
                 <!-- Template de Produto -->
                 <template id="template-produto">

@@ -144,7 +144,7 @@
 
                                 <div class="flex flex-row items-start">
                                     <span class="text-sm ">Segmentos: </span>
-                                    <div class="text-sm max-w-[200px] truncate px-2 py-0">
+                                    <div class="text-sm max-w-[200px] truncate px-[10px] py-0">
                                         <span class="text-[#7A7A7A]"
                                             x-text="selectedSegmentacoes.length === 0 ? 'Todos' : selectedSegmentacoes.length === 1 ? '1 seleção' : selectedSegmentacoes.length + ' seleções'"></span>
                                     </div>
