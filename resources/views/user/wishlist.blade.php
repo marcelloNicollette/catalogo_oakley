@@ -812,8 +812,7 @@
                             </div>
                         </div>
 
-                        <div class="filter-dropdown custom-scrollbar-wh" style="width: 228px;overflow-x:hidden;"
-                            id="filterDropdown">
+                        <div class="filter-dropdown custom-scrollbar-wh" id="filterDropdown">
                             <div class="filter-section">
                                 <label class="filter-label">Numeração/Tamanhos​</label>
                                 <div class="filter-options" id="numeracaoOptions">
