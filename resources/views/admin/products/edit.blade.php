@@ -209,6 +209,23 @@
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Segmentações de
                                                 Cliente</label>
                                             @if (isset($segmentacoesCliente) && $segmentacoesCliente->count() > 0)
+                                                <div class="flex items-center mb-2">
+                                                    <input type="checkbox" :id="'select_all_segmentacoes_cliente_' + index"
+                                                        @change="
+                                                            if ($event.target.checked) {
+                                                                campo.segmentacoes_cliente = {{ $segmentacoesCliente->pluck('id') }};
+                                                            } else {
+                                                                campo.segmentacoes_cliente = [];
+                                                            }
+                                                        "
+                                                        :checked="campo.segmentacoes_cliente && campo.segmentacoes_cliente
+                                                            .length === {{ $segmentacoesCliente->count() }}"
+                                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                                    <label :for="'select_all_segmentacoes_cliente_' + index"
+                                                        class="ml-2 block text-sm text-gray-900">
+                                                        Selecionar todos
+                                                    </label>
+                                                </div>
                                                 <div
                                                     class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-3 border border-gray-200 rounded-md bg-gray-50 max-h-32 overflow-y-auto">
                                                     @foreach ($segmentacoesCliente as $segmentacaoCliente)
