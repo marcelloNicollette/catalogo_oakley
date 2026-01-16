@@ -241,7 +241,8 @@
                             </button>
                         </div>
                         <div class="my-4">
-                            <h1 class="title extra-black text-[30px] lg:text-[35px] font-fko leading-[30px] uppercase">
+                            <h1
+                                class="notranslate title extra-black text-[30px] lg:text-[35px] font-fko leading-[30px] uppercase">
                                 {{ $produto->name }}
                             </h1>
                         </div>
