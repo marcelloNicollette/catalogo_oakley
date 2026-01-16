@@ -343,6 +343,8 @@ Route::middleware(['auth', 'user'])->group(function () {
         ->name('user.colecao');
     Route::get('/user/{slug}/colecoes/{colecao}/{code}/{codigo_cor}', [frontendController::class, 'detalhe_produto'])
         ->name('user.colecao.produto');
+    Route::get('/user/{slug}/colecoes/{colecao}/{code}/{codigo_cor}/translate', [frontendController::class, 'detalhe_produto_translate'])
+        ->name('user.colecao.produto-translate');
 
     // Export routes
     Route::post('/user/export/pdf', [ExportController::class, 'exportPdf'])->name('user.export.pdf');

@@ -20,7 +20,8 @@ class User extends Authenticatable
         'company',
         'setor',
         'phone',
-        'codigo_lider_comercial'
+        'codigo_lider_comercial',
+        'idioma'
     ];
 
     protected $hidden = [
@@ -68,7 +69,7 @@ class User extends Authenticatable
     public function segmentacoes()
     {
         return $this->belongsToMany(Segmentacao::class, 'user_segmentacao')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     /**
@@ -93,7 +94,7 @@ class User extends Authenticatable
     public function segmentacoesCliente()
     {
         return $this->belongsToMany(SegmentacaoCliente::class, 'user_segmentacao_cliente')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     /**

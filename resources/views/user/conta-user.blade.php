@@ -24,6 +24,20 @@
             @csrf
 
             <input type="hidden" name="id" value="{{ $user->id }}">
+            @if (session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                    {{ session('success') }}
+                </div>
+                @if (session('language_changed'))
+                    <script>
+                        // Aguardar um momento para a mensagem ser vista
+                        setTimeout(function() {
+                            console.log('🔄 Recarregando página após mudança de idioma...');
+                            window.location.reload();
+                        }, 1500);
+                    </script>
+                @endif
+            @endif
             @if ($errors->any())
                 <div class="space-y-2">
                     @foreach ($errors->all() as $error)
@@ -99,6 +113,35 @@
                 </div>
             </div>
 
+            <div>
+                <label for="idioma" class="block text-[16px] font-normal text-black mb-2">Idioma</label>
+                <div class="pb-2">
+                    <input {{ ($user->idioma ?? 'pt') === 'pt' ? 'checked' : '' }} type="radio" name="idioma"
+                        id="idioma_pt" value="pt" class="ml-2" onchange="previewLanguageChange('pt')" />
+                    Português
+
+                    <input {{ ($user->idioma ?? 'pt') === 'en' ? 'checked' : '' }} type="radio" name="idioma"
+                        id="idioma_en" value="en" class="ml-3" onchange="previewLanguageChange('en')" />
+                    Inglês
+
+                    <input {{ ($user->idioma ?? 'pt') === 'es' ? 'checked' : '' }} type="radio" name="idioma"
+                        id="idioma_es" value="es" class="ml-3" onchange="previewLanguageChange('es')" />
+                    Espanhol
+                </div>
+            </div>
+
+            <script>
+                function previewLanguageChange(lang) {
+                    // Mapear esp para es (código do Google)
+                    const googleLang = lang;
+
+                    // Armazenar no localStorage para sincronizar com outras abas
+                    localStorage.setItem('userLanguageChanged', googleLang);
+
+                    console.log('🔄 Idioma selecionado:', lang, '(Google:', googleLang + ')');
+                }
+            </script>
+
             <button id="sendSuggestion"
                 class="w-full bg-black hover:bg-gray-800 text-white font-normal py-3 px-4 rounded-full transition-colors text-base">
                 Editar dados
@@ -144,6 +187,28 @@
 
 
     @push('scripts')
+        <script>
+            // Quando o formulário for submetido com sucesso
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('suggestionForm');
+
+                if (form) {
+                    form.addEventListener('submit', function() {
+                        // Pegar o idioma selecionado
+                        const selectedLang = document.querySelector('input[name="idioma"]:checked');
+
+                        if (selectedLang) {
+                            const lang = selectedLang.value;
+                            const googleLang = lang;
+
+                            // Armazenar no localStorage
+                            localStorage.setItem('userLanguageChanged', googleLang);
+                            console.log('💾 Idioma salvo no localStorage:', googleLang);
+                        }
+                    });
+                }
+            });
+        </script>
     @endpush
 
 </x-layout-user-produto>

@@ -51,6 +51,7 @@ class frontendController extends Controller
             'company' => ['nullable', 'string', 'max:255'],
             'setor' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
+            'idioma' => 'required|in:pt,en,es',
         ];
 
         $request->validate($validationRules);
@@ -63,6 +64,7 @@ class frontendController extends Controller
             'company' => $request->company,
             'setor' => $request->setor,
             'phone' => $request->phone,
+            'idioma' => $request->idioma,
         ];
         //dd($userData);
         // Only update password if provided
@@ -74,7 +76,8 @@ class frontendController extends Controller
         User::where('id', $user->id)->update($userData);
 
         return redirect()->route('user.conta')
-            ->with('success', 'Usuário atualizado com sucesso!');
+            ->with('success', 'Usuário atualizado com sucesso!')
+            ->with('language_changed', true);
     }
 
     public function updatePassword(Request $request)
@@ -237,6 +240,59 @@ class frontendController extends Controller
         $produtos = $produtosQuery->get()->groupBy('product_id');
 
         return view('user.detalhe-produto', ['produto' => $produto]);
+    }
+
+    public function detalhe_produto_translate($slug, $colecao, $produto, $codigo_cor)
+    {
+        $segmentacao = Segmentacao::where('slug', $slug)->first();
+        $colecoes = Collection::where('segmentacao_id', $segmentacao->id)->get();
+        $categories = Category::where('segmento_id', $segmentacao->id)->get();
+
+        // Verificar se o usuário logado tem segmentações de cliente
+        $user = Auth::user();
+        $userSegmentacoesCliente = $user->segmentacoesCliente;
+
+        // Buscar o produto com suas relações
+        $produto = Product::where('code', $produto)->with(['category', 'sizes', 'numeracoes', 'caracteristicas', 'links', 'caracteristicasDestaque', 'colors'])->first();
+
+        // Buscar apenas as cores do produto que estão vinculadas às segmentações do cliente
+        if ($userSegmentacoesCliente->isNotEmpty()) {
+            $allColorsQuery = Color::where('product_id', $produto->id)
+                ->whereHas('segmentacoesCliente', function ($query) use ($userSegmentacoesCliente) {
+                    $segmentacaoIds = $userSegmentacoesCliente->pluck('id')->toArray();
+                    $query->whereIn('segmentacao_cliente_id', $segmentacaoIds);
+                })
+                ->with(['numeracao', 'segmentacoesCliente', 'flagProduct']);
+        } else {
+            // Se o usuário não tem segmentações de cliente, buscar todas as cores
+            $allColorsQuery = Color::where('product_id', $produto->id)
+                ->with(['numeracao', 'segmentacoesCliente', 'flagProduct']);
+        }
+
+        // Se $codigo_cor foi fornecido, ordenar para que essa cor seja a primeira
+        if ($codigo_cor) {
+            $allColorsQuery->orderByRaw("CASE WHEN color_code = ? THEN 0 ELSE 1 END", str_replace('_', '/', $codigo_cor));
+        }
+
+        $allColors = $allColorsQuery->get();
+        //dd($allColors);
+        // Adicionar as cores com segmentações ao produto para uso no JavaScript
+        $produto->allColors = $allColors;
+        $produto->colors = $allColors; // Manter compatibilidade
+
+        $colecao = Collection::where('slug', $colecao)->first();
+
+        $produtosQuery = Color::where('collection_id', $colecao->id)
+            ->with(['product', 'product.caracteristicasDestaque', 'product.category']);
+
+        // Se $codigo_cor foi fornecido, ordenar para que o produto com essa cor seja o primeiro
+        if ($codigo_cor) {
+            $produtosQuery->orderByRaw("CASE WHEN color_code = ? THEN 0 ELSE 1 END", [$codigo_cor]);
+        }
+
+        $produtos = $produtosQuery->get()->groupBy('product_id');
+
+        return view('user.detalhe-produto-translate', ['produto' => $produto]);
     }
 
 
