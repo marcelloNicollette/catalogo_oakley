@@ -66,7 +66,9 @@ class ExportController extends Controller
             }
         }
 
-        $produtos = $query->get();
+        $produtos = $query->get()->sortBy(function ($item) {
+            return optional($item->product->category)->name ?? '';
+        });
         //dd($produtos);
         $opcoes = $request->input('opcoes', []);
         $grupo_opcoes = $request->input('grupo_opcoes', []);

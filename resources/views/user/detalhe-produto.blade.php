@@ -650,7 +650,7 @@
 
                         if (totalImages === 2) {
                             // Caso especial: apenas 2 imagens
-                            cornerClass = index === 0 ? 'rounded-l-lg' : 'rounded-r-lg';
+                            cornerClass = index === 0 ? 'rounded-l-lg border-b border-r' : 'rounded-r-lg border-b';
                         } else if (isFirstRow) {
                             // Primeira linha
                             cornerClass = index === 0 ? 'rounded-tl-lg border-b border-r' : 'rounded-tr-lg border-b';
