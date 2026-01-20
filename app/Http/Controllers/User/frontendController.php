@@ -100,7 +100,7 @@ class frontendController extends Controller
     {
 
         $segmentacao = Segmentacao::all();
-        $banners = Banner::where('active', 1)->get();
+        $banners = Banner::where('active', 1)->orderBy('order', 'asc')->get();
         return view('user.slug', ['segmentacao' => $segmentacao, 'banners' => $banners]);
     }
     public function colecoes($slug)

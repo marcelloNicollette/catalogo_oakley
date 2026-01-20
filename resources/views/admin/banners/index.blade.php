@@ -49,20 +49,29 @@
             <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Image
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Imagem</th>
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Imagem Mobile</th>
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Link
                         </th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Image
-                            Mobile
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status</th>
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ordem
                         </th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status
-                        </th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Ações
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações
                         </th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody id="banners-table-body" class="bg-white divide-y divide-gray-200">
                     @foreach ($banners as $banner)
-                        <tr>
+                        <tr data-id="{{ $banner->id }}" class="cursor-move">
 
                             <td class="px-6 py-4 whitespace-nowrap"><img src="{{ asset('/' . $banner->image) }}"
                                     alt="Imagem atual" class="h-32 w-auto object-cover rounded-lg shadow-sm"></td>
@@ -74,6 +83,7 @@
                                     {{ $banner->active ? 'Ativo' : 'Inativo' }}
                                 </span>
                             </td>
+                            <td class="px-6 py-4 whitespace-nowrap banner-order">{{ $banner->order }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center space-x-3">
                                     <a href="{{ route('admin.banners.edit', $banner->id) }}"
@@ -117,7 +127,52 @@
 @endsection
 
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script>
-        // Scripts custom para dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            var el = document.getElementById('banners-table-body');
+            var sortable = Sortable.create(el, {
+                animation: 150,
+                onEnd: function(evt) {
+                    var order = [];
+                    el.querySelectorAll('tr').forEach(function(row) {
+                        var id = row.getAttribute('data-id');
+                        if (id) {
+                            order.push(id);
+                        }
+                    });
+
+                    // Update the visual order numbers
+                    el.querySelectorAll('tr').forEach(function(row, index) {
+                        var orderCell = row.querySelector('.banner-order');
+                        if (orderCell) {
+                            orderCell.textContent = index + 1;
+                        }
+                    });
+
+                    if (order.length > 0) {
+                        fetch('{{ route('admin.banners.reorder') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    order: order
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    console.log('Ordem atualizada com sucesso.');
+                                } else {
+                                    console.error('Erro ao atualizar ordem.');
+                                }
+                            })
+                            .catch(error => console.error('Erro:', error));
+                    }
+                }
+            });
+        });
     </script>
 @endpush

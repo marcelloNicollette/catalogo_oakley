@@ -81,6 +81,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
             'update' => 'admin.collections.update',
             'destroy' => 'admin.collections.destroy'
         ]);
+
+    Route::post('/admin/banners/reorder', [BannersController::class, 'updateOrder'])->name('admin.banners.reorder');
+
     Route::resource('/admin/banners', BannersController::class)
         ->names([
             'index' => 'admin.banners.index',

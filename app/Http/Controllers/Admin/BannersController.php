@@ -13,8 +13,22 @@ class BannersController extends Controller
 
     public function index()
     {
-        $banners = Banner::paginate(10);
+        $banners = Banner::orderBy('order')->paginate(50);
         return view('admin.banners.index', compact('banners'));
+    }
+
+    public function updateOrder(Request $request)
+    {
+        $request->validate([
+            'order' => 'required|array',
+            'order.*' => 'exists:banners,id',
+        ]);
+
+        foreach ($request->order as $index => $id) {
+            Banner::where('id', $id)->update(['order' => $index + 1]);
+        }
+
+        return response()->json(['success' => true]);
     }
 
     public function create()
