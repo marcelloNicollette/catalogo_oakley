@@ -17,9 +17,13 @@ class UserAccess extends Model
         'company',
         'setor',
         'phone',
+        'rejected_at',
+        'rejected_by',
+        'rejection_reason',
     ];
 
     protected $casts = [
         'approved_at' => 'datetime',
+        'rejected_at' => 'datetime',
     ];
 }

@@ -95,4 +95,23 @@ class AccessRequestController extends Controller
             ->with('new_user_password', $plainPassword)
             ->with('new_user_email', $user->email);
     }
+
+    /**
+     * Rejeitar uma solicitação de acesso.
+     */
+    public function reject(Request $request, UserAccess $user_access)
+    {
+        $validated = $request->validate([
+            'rejection_reason' => ['required', 'string', 'max:1000'],
+        ]);
+
+        $user_access->update([
+            'rejected_at' => now(),
+            'rejected_by' => Auth::id(),
+            'rejection_reason' => $validated['rejection_reason'],
+        ]);
+
+        return redirect()->route('admin.access.index')
+            ->with('success', 'Solicitação rejeitada com sucesso.');
+    }
 }

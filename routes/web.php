@@ -257,6 +257,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('admin.access.index');
     Route::post('/admin/access/{user_access}/approve', [AccessRequestController::class, 'approve'])
         ->name('admin.access.approve');
+    Route::post('/admin/access/{user_access}/reject', [AccessRequestController::class, 'reject'])
+        ->name('admin.access.reject');
 
     Route::resource('/admin/users', UserController::class)
         ->names([
