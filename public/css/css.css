@@ -949,6 +949,6 @@ html {
              .custom-scrollbar-wh {
                                 scrollbar-width: thin;
                                 /* auto, thin, none */
-                                scrollbar-color: #A9A9A9 #FFFFFF;
+                                scrollbar-color: #A9A9A9 transparent;
                                 /* thumb track */
                             }

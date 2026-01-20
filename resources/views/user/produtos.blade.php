@@ -53,7 +53,7 @@
                 grid-template-columns: repeat(4, 1fr);
                 /* Sempre 4 colunas iguais */
                 gap: 10px;
-                grid-auto-rows: 1fr;
+                grid-auto-rows: min-content;
                 /* Todas as linhas com mesma altura */
             }
 
