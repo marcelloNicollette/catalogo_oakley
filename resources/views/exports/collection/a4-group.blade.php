@@ -264,7 +264,7 @@
                                                         style="width: 120px; padding: 0; position: relative; float: left; text-align: center;">
                                                         @if ($colorCollection->flagProduct)
                                                             <div
-                                                                style="position: absolute; top: 15px; left: 5px; background: {{ $colorCollection->flagProduct->flag_bg }}; color: {{ $colorCollection->flagProduct->flag_color_text_bg }}; padding: 5px; border-radius: 100px; font-size: 7px;">
+                                                                style="position: absolute; top: 15px; left: 5px; background: {{ $colorCollection->flagProduct->flag_bg }}; color: {{ $colorCollection->flagProduct->flag_color_text_bg }}; padding: 5px; border-radius: 100px; font-size: 7px; margin: 5px 0 0 5px;">
                                                                 {{ $colorCollection->flagProduct->flag_title }}
                                                             </div>
                                                         @endif
