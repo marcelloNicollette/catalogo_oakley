@@ -241,16 +241,17 @@
                                     <tr>
 
 
-                                        <!-- Tênis {{ $vista }} -->
-                                        <td style="padding: 5px; text-align: center; vertical-align: top;">
-                                            <div style="width: 16.66%; padding: 15px; position: relative;">
+                                        <td style="">
+
+                                            <div
+                                                style="width: 120px; padding: 0; position: relative; float: left; text-align: center;">
                                                 @if ($collection->flagProduct)
                                                     <div
-                                                        style="position: absolute; top: 5px; left: 10px; background: {{ $collection->flagProduct->flag_bg }}; color: {{ $collection->flagProduct->flag_color_text_bg }}; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold;">
+                                                        style="position: absolute; top: 15px; left: 5px; background: {{ $collection->flagProduct->flag_bg }}; color: {{ $collection->flagProduct->flag_color_text_bg }}; padding: 5px; border-radius: 100px; font-size: 7px; margin: 5px 0 0 5px;">
                                                         {{ $collection->flagProduct->flag_title }}
                                                     </div>
                                                 @endif
-                                                <div style="margin-top: 30px; margin-bottom: 15px;">
+                                                <div style="margin-top: 10px; margin-bottom: 10px; text-align: center;">
                                                     @php
                                                         $imagePath =
                                                             'images/produtos/' .
@@ -264,17 +265,21 @@
                                                             ? public_path($imagePath)
                                                             : public_path('images/img-padrao-oly.png');
                                                     @endphp
-                                                    <img width="100px" src="{{ $imageSrc }}"
-                                                        alt="{{ $collection->color_name }}"
-                                                        class="width: 100px; height: auto; border-radius: 8px;" />
+                                                    <img src="{{ $imageSrc }}" alt="{{ $collection->color_name }}"
+                                                        style="width: 110px; height: 110px; border-radius: 13px;" />
                                                 </div>
                                                 <div
-                                                    style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 5px;">
-                                                    {{ $collection->color_name }}</div>
-                                                <div style="font-size: 12px; color: #666;">
-                                                    {{ $collection->color_description }}</div>
+                                                    style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 5px; text-align: center;">
+                                                    {{ \Illuminate\Support\Str::limit($collection->color_name, 12, '...') }}
+                                                </div>
+                                                <div style="font-size: 12px; color: #666; text-align: center;">
+                                                    {{ \Illuminate\Support\Str::limit($collection->color_description, 10, '...') }}
+                                                </div>
                                             </div>
+
+                                            <div style="clear: both;"></div>
                                         </td>
+
 
 
                                     </tr>

@@ -373,7 +373,8 @@
                     this.classList.add('selected');
 
                     // Update selected text
-                    document.getElementById('colecaoSelectedTitle').textContent = "Coleção: ";
+                    document.getElementById('colecaoSelectedTitle').textContent = "Coleção: " + this
+                    .textContent;
                     selectedText.textContent = this.textContent;
 
                     // Update selected value for filtering

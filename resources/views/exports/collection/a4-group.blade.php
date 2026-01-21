@@ -268,7 +268,8 @@
                                                                 {{ $colorCollection->flagProduct->flag_title }}
                                                             </div>
                                                         @endif
-                                                        <div style="margin-top: 10px; margin-bottom: 10px;">
+                                                        <div
+                                                            style="margin-top: 10px; margin-bottom: 10px; text-align: center;">
                                                             @php
                                                                 $imagePath =
                                                                     'images/produtos/' .
@@ -291,7 +292,7 @@
                                                                 style="width: 110px; height: 110px; border-radius: 13px;" />
                                                         </div>
                                                         <div
-                                                            style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 5px;text-align: center;">
+                                                            style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 5px; text-align: center;">
                                                             {{ \Illuminate\Support\Str::limit($colorCollection->color_name, 12, '...') }}
                                                         </div>
                                                         <div style="font-size: 12px; color: #666; text-align: center;">
