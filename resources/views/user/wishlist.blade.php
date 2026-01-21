@@ -633,25 +633,7 @@
                         <div class="select-button p-5" id="colecaoSelectButton">
 
                             <span class="text-[16px]" id="colecaoSelectedText">
-                                @if (!empty($currentSlug))
-                                    @foreach ($colecoes as $colecao)
-                                        @if ($currentSlug == $colecao->slug)
-                                            {{ $colecao->name }}
-                                        @endif
-                                    @endforeach
-                                @else
-                                    Selecione uma coleção
-                                @endif
-                            </span>
-                            <span class="text-[18px] text-[#7A7A7A]" id="colecaoSelectedText">
-                                @if (!empty($currentSlug))
-                                    @foreach ($colecoes as $colecao)
-                                        @if ($currentSlug == $colecao->slug)
-                                            {{ $colecao->name }}
-                                        @endif
-                                    @endforeach
-                                @else
-                                @endif
+                                Selecione uma coleção
                             </span>
                             <div class="" id="colecaoArrow">
                                 <div class="pt-1">

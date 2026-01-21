@@ -167,7 +167,7 @@
         @endif
         <table cellspacing="2" width="100%" cellpadding="2" border="0">
             <tr>
-                <td width="70%">
+                <td width="70%" style="padding: 5px;">
                     <table cellspacing="0" width="100%" cellpadding="0" style="">
                         <tr>
                             <td width="75%">

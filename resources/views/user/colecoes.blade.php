@@ -78,16 +78,7 @@
                     <div class="select-container">
                         <div class="select-button p-5" id="colecaoSelectButton">
                             <span class="text-[16px] text-black">Selecione uma coleção</span>
-                            <span class="text-[18px] text-[#7A7A7A]" id="colecaoSelectedText">
-                                @if (!empty($currentSlug))
-                                    @foreach ($colecoes as $colecao)
-                                        @if ($currentSlug == $colecao->slug)
-                                            {{ $colecao->name }}
-                                        @endif
-                                    @endforeach
-                                @else
-                                @endif
-                            </span>
+
                             <div class="" id="colecaoArrow">
                                 <div class="pt-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="7"

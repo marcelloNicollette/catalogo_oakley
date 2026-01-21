@@ -37,7 +37,7 @@
         @endif
 
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 text-gray-900">
+            <div class="p-6 text-gray-900 overflow-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -47,11 +47,11 @@
                                 E-mail
                             </th>
                             <!--<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa
-                                                                                                            </th>
-                                                                                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Setor
-                                                                                                            </th>
-                                                                                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telefone
-                                                                                                            </th>-->
+                                                                                                                </th>
+                                                                                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Setor
+                                                                                                                </th>
+                                                                                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telefone
+                                                                                                                </th>-->
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Criado em
                             </th>
@@ -79,8 +79,8 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $request->email }}</td>
                                 <!--<td class="px-6 py-4 whitespace-nowrap">{{ $request->company }}</td>
-                                                                                                                    <td class="px-6 py-4 whitespace-nowrap">{{ $request->setor }}</td>
-                                                                                                                    <td class="px-6 py-4 whitespace-nowrap">{{ $request->phone }}</td>-->
+                                                                                                                        <td class="px-6 py-4 whitespace-nowrap">{{ $request->setor }}</td>
+                                                                                                                        <td class="px-6 py-4 whitespace-nowrap">{{ $request->phone }}</td>-->
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $request->created_at?->format('d/m/Y H:i') }}
                                 </td>
                                 @php

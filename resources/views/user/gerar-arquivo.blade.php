@@ -79,7 +79,7 @@
                     <div class="select-container">
                         <div class="select-button p-5" id="selectButton">
                             <span class="text-[16px] text-black" id="colecaoSelectedTitle">Selecione uma coleção</span>
-                            <span class="text-[18px] text-[#7A7A7A]" id="selectedText"></span>
+
                             <div class="" id="arrow">
                                 <div class="pt-1" id="arrow">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"

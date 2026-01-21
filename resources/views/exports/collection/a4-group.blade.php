@@ -184,7 +184,7 @@
             @endif
             <table cellspacing="0" width="842" cellpadding="0" border="0">
                 <tr>
-                    <td>
+                    <td style="padding: 10px;">
                         <table cellspacing="0" width="100%" cellpadding="0">
                             <tr>
                                 <td width="75%"><img src="{{ $image }}"
@@ -256,8 +256,7 @@
                             <!-- cores do tenis -->
                             <tr>
                                 <td colspan="2">
-                                    <table
-                                        style="width: 100%; margin: 0 auto;  border-radius: 8px; border:1px solid #CCC; margin-top:5px;">
+                                    <table style="width: 100%; margin: 0 auto;  border-radius: 8px; margin-top:5px;">
                                         <tr>
                                             <td style="">
                                                 @foreach ($collectionsByCode as $colorCollection)
@@ -309,7 +308,7 @@
                             <!-- fim cores do tenis -->
                         </table>
                     </td>
-                    <td width="30%" style="border-radius: 10px; border:1px solid #CBCBCB; vertical-align: top;">
+                    <td width="30%" style="border-radius: 10px; vertical-align: top;">
                         <!-- Cabeçalho do produto -->
                         <div style="padding:10px;">
                             <div style="font-size: 17px; color: #000; margin-bottom: 5px;">
@@ -396,7 +395,7 @@
                             <div style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">Descrição
                             </div>
                             <p style="font-size: 13px; line-height: 1.3; color: #000; margin: 0;">
-                                {{ \Illuminate\Support\Str::limit($collection->product->description, 15, '...') }}
+                                {{ \Illuminate\Support\Str::limit($collection->product->description, 1000, '...') }}
                             </p>
                         </div>
 
