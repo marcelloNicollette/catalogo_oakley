@@ -134,8 +134,8 @@
                         <div class="filter-button" id="filterButton">
                             <span id="filterText" class="text-[1rem] leading-[0px]">Filtrar</span>
                             <span id="filterCount" class="filter-count"
-                                style="display: none; margin-left:10px; color: #7A7A7A;">0</span>
-                            <div class="pl-2 pt-1" id="arrow2">
+                                style="display: none; margin-left:5px; color: #7A7A7A;">0</span>
+                            <div class="pl-[5px] pt-1" id="arrow2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"
                                     fill="none">
                                     <path d="M1 1L5.94975 5.94975L10.8995 1" stroke="black" stroke-width="1.5"
@@ -171,9 +171,9 @@
 
                     <div class="sort-container">
                         <div class="sort-button" id="sortButton">
-                            <span class="text-[1rem] text-black mr-2 leading-[0px]">Ordenar por:</span>
+                            <span class="text-[1rem] text-black pr-[5px] leading-[0px]">Ordenar por:</span>
                             <span id="sortText" class="text-[#7A7A7A] leading-[0px]">Mais nova</span>
-                            <div class="pl-2 pt-1" id="sortArrow">
+                            <div class="pl-[5px] pt-1" id="sortArrow">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
                                     viewBox="0 0 12 8" fill="none">
                                     <path d="M1 1L5.94975 5.94975L10.8995 1" stroke="black" stroke-width="1.5"
@@ -279,7 +279,7 @@
                     }
 
                     // Preencher conteúdo
-                    codigo.textContent = colecao.codigo_colecao;
+                    codigo.textContent = colecao.name;
                     description.textContent = colecao.description || '';
 
                     // Adicionar evento de clique

@@ -20,7 +20,7 @@ class UserMiddleware
             return redirect()->guest(route('login'));
         }
 
-        if (Auth::user()->role === 'user') {
+        if (in_array(Auth::user()->type, ['user', 'user-adm'])) {
             return $next($request);
         }
 

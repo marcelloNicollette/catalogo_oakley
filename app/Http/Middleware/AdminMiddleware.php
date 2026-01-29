@@ -20,7 +20,7 @@ class AdminMiddleware
             return redirect()->guest(route('login'));
         }
 
-        if (Auth::user()->role === 'admin') {
+        if (Auth::user()->type === 'admin') {
             return $next($request);
         }
 

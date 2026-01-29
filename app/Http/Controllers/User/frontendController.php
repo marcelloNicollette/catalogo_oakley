@@ -105,8 +105,16 @@ class frontendController extends Controller
     }
     public function colecoes($slug)
     {
+        $user = Auth::user();
         $segmentacao = Segmentacao::where('slug', $slug)->first();
-        $colecoes = Collection::where('segmentacao_id', $segmentacao->id)->get();
+        $query = Collection::where('segmentacao_id', $segmentacao->id);
+
+        if (!in_array($user->type, ['user-adm', 'admin'])) {
+            //dd('Usuário não tem permissão para ver coleções inativas');
+            $query->where('active', true);
+        }
+
+        $colecoes = $query->get();
         $data_years = Collection::pluck('created_at')->map(function ($item) {
             return date('Y', strtotime($item));
         })->unique()->sort(function ($a, $b) {
@@ -394,10 +402,19 @@ class frontendController extends Controller
     }
     public function gerarArquivo($slug)
     {
+        $user = Auth::user();
         $segmentacao = Segmentacao::where('slug', $slug)->first();
 
-        $colecoes = Collection::where('segmentacao_id', $segmentacao->id)->get();
+        $colecoes = Collection::where('segmentacao_id', $segmentacao->id);
         $categorias = Category::where('segmento_id', $segmentacao->id)->get();
+        //dd($categorias);
+
+        if (!in_array($user->type, ['user-adm', 'admin'])) {
+            //dd('Usuário não tem permissão para ver coleções inativas');
+            $colecoes->where('active', true);
+        }
+
+        $colecoes = $colecoes->get();
         //dd($categorias);
 
         $data_years = Collection::pluck('created_at')->map(function ($item) {

@@ -36,7 +36,7 @@
                     <div class="select-container">
                         <div class="select-button p-5" id="selectButton">
                             <span id="selectedText">Categoria</span>
-                            <div class="" id="arrow">
+                            <div class="pl-[5px]" id="arrow">
                                 <div class="pt-1" id="arrow">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
                                         viewBox="0 0 12 8" fill="none">

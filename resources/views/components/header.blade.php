@@ -75,11 +75,11 @@
                         @foreach ($segmentacoes as $segmentacao)
                             @if ($currentSlug == $segmentacao->slug)
                                 <div
-                                    class="block w-full bg-black text-white border-none px-5 py-[10px] rounded-full shadow leading-tight focus:outline-none focus:shadow-outline font-normal text-sm cursor-pointer hover:bg-gray-900 transition-colors duration-200 text-center">
+                                    class="block w-full bg-black text-white border-none px-5 py-[10px] rounded-full shadow  focus:outline-none focus:shadow-outline font-normal cursor-pointer hover:bg-gray-900 transition-colors duration-200 text-center">
                                     <a href="{{ route('user.segmentacao') }}" class="">
                                         {{ $segmentacao->segmento }}
 
-                                        <img src="/images/icones/setas.svg" class="float-right pl-[0.5rem] pt-1"
+                                        <img src="/images/icones/setas.svg" class="float-right pl-[10px]"
                                             alt="Coleções" />
                                     </a>
 
@@ -140,11 +140,11 @@
                         }" class="relative pl-[10px]">
                             <!-- Botão CTA -->
                             <button @click="showModal = true"
-                                class="flex items-center space-x-2 px-3 py-[8px]  text-black  rounded-full hover:opacity-80 transition-colors border border-black">
+                                class="flex items-center space-x-2 px-5 py-[10px] text-black  rounded-full hover:opacity-80 transition-colors border border-black">
 
                                 <div class="flex flex-row items-start">
                                     <span class="text-sm ">Segmentos: </span>
-                                    <div class="text-sm max-w-[200px] truncate px-[10px] py-0">
+                                    <div class="text-sm max-w-[200px] truncate px-[5px] py-0">
                                         <span class="text-[#7A7A7A]"
                                             x-text="selectedSegmentacoes.length === 0 ? 'Todos' : selectedSegmentacoes.length === 1 ? '1 seleção' : selectedSegmentacoes.length + ' seleções'"></span>
                                     </div>

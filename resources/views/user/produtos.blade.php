@@ -715,7 +715,7 @@
                                     Selecione uma coleção
                                 @endif
                             </span>
-                            <div class="" id="colecaoArrow">
+                            <div class="pl-[5px]" id="colecaoArrow">
                                 <div class="pt-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="7"
                                         viewBox="0 0 12 7" fill="none">
@@ -762,7 +762,7 @@
                     <div class="relative category-select-wrapper">
                         <div class="select-button p-5" id="categorySelectButton">
                             <span id="categorySelectedText">Categoria</span>
-                            <div id="categoryArrow">
+                            <div class="pl-[5px]" id="categoryArrow">
                                 <div class="pt-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="7"
                                         viewBox="0 0 12 7" fill="none">
@@ -833,7 +833,7 @@
                             <span id="filterText" class="text-[1rem] leading-[0px]">Filtrar</span>
                             <span id="filterCount" class="filter-count leading-[0px]"
                                 style="display: none; margin-left:10px; color: #7A7A7A;">0</span>
-                            <div class="pl-2 pt-1" id="arrow2">
+                            <div class="pl-[5px] pt-1" id="arrow2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
                                     viewBox="0 0 12 8" fill="none">
                                     <path d="M1 1L5.94975 5.94975L10.8995 1" stroke="black" stroke-width="1.5"
@@ -898,9 +898,9 @@
                                 <label class="filter-label">Valor</label>
                                 <div class="filter-options price-options" id="priceOptions">
                                     <span class="text-sm pt-2">de</span> <input style="width: 30%;"
-                                        class="filter-option" type="text" id="priceMin" placeholder="0,00">
+                                        class="filter-option" type="text" id="priceMin" placeholder="">
                                     <span class="text-sm pt-2">até</span> <input style="width: 30%;"
-                                        class="filter-option" type="text" id="priceMax" placeholder="999,99">
+                                        class="filter-option" type="text" id="priceMax" placeholder="">
                                 </div>
                             </div>
                         </div>
@@ -908,9 +908,9 @@
 
                     <div class="sort-container">
                         <div class="sort-button" id="sortButton">
-                            <span class="text-[1rem] text-black mr-2 leading-[0px]">Ordenar por:</span>
+                            <span class="text-[1rem] text-black mr-[5px] leading-[0px]">Ordenar por:</span>
                             <span id="sortText" class="text-[#7A7A7A] leading-[0px]"></span>
-                            <div class="pl-2 pt-1" id="sortArrow">
+                            <div class="pl-[5px] pt-1" id="sortArrow">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
                                     viewBox="0 0 12 8" fill="none">
                                     <path d="M1 1L5.94975 5.94975L10.8995 1" stroke="black" stroke-width="1.5"
