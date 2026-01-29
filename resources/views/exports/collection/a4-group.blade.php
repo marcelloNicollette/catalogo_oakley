@@ -356,7 +356,8 @@
                                     @foreach ($collection->product->caracteristicas->chunk(2) as $caracteristicasChunk)
                                         <tr>
                                             @foreach ($caracteristicasChunk as $caract)
-                                                <td style="font-size: 12px; margin-bottom: 2px; padding-bottom: 10px;">
+                                                <td
+                                                    style="width: 50%; font-size: 12px; margin-bottom: 2px; padding-bottom: 10px;">
                                                     <div>
                                                         <div style="color: #000; opacity: 0.5; margin-bottom: 2px;">
                                                             {{ $caract->title }}</div>

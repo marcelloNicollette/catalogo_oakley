@@ -1202,7 +1202,7 @@
                                 categoria: "{{ $produto->category ? $produto->category->name : '' }}",
                                 subcategory_id: "{{ $produto->subcategory_id ?? '' }}",
                                 preco: "R$ {{ $precoNumerico }}",
-                                precoNumerico: "R$ {{ $precoNumerico }}",
+                                precoNumerico: "{{ $produto->price ?? 0 }}",
                                 genero: "{{ $produtoGroup->genero ?? '' }}",
                                 numeracaoIds: @json($numeracaoIds),
                                 tamanhoIds: @json($tamanhoIds),
@@ -1347,6 +1347,39 @@
                 document.querySelector(".input-estilizado.bg-transparent") ||
                 document.querySelector(".input-estilizado");
 
+            function parseMoney(value) {
+                if (typeof value === 'number') return value;
+                if (!value) return 0;
+                value = value.toString();
+                // Remove caracteres não numéricos exceto ponto e vírgula
+                value = value.replace(/[^\d.,]/g, '');
+
+                if (value === '') return 0;
+
+                // Se tiver vírgula, assume formato BR (ex: 1.000,00 ou 100,00)
+                if (value.includes(',')) {
+                    // Remove pontos (milhar)
+                    value = value.replace(/\./g, '');
+                    // Troca vírgula por ponto
+                    value = value.replace(',', '.');
+                } else {
+                    // Sem vírgula. Verifica pontos.
+                    const parts = value.split('.');
+                    // Se tiver múltiplos pontos, é milhar (ex: 1.000.000) -> remove todos
+                    if (parts.length > 2) {
+                        value = value.replace(/\./g, '');
+                    }
+                    // Se tiver um ponto e 3 dígitos no final (ex: 1.000), assume milhar -> remove ponto
+                    // Cuidado: 1.000 pode ser 1 se for formato US. Mas no Brasil 1.000 é mil.
+                    else if (parts.length === 2 && parts[1].length === 3) {
+                        value = value.replace(/\./g, '');
+                    }
+                    // Caso contrário (ex: 100.50), deixa o ponto como decimal
+                }
+
+                return parseFloat(value) || 0;
+            }
+
             function filtrarProdutos(termo, categoria = '') {
                 return produtosData.filter(
                     (p) => {
@@ -1378,13 +1411,16 @@
                         }
 
                         let matchesPreco = true;
-                        const productPrice = parseFloat(p.precoNumerico.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+                        // O preço do produto vem do PHP/DB como float (ex: 199.90), então usamos parseFloat direto.
+                        // Usar parseMoney aqui poderia quebrar se o formato fosse interpretado incorretamente.
+                        const productPrice = parseFloat(p.precoNumerico) || 0;
+
                         if (selectedFilters.priceMin !== null && selectedFilters.priceMin !== '') {
-                            const minPrice = parseFloat(selectedFilters.priceMin.replace(',', '.'));
+                            const minPrice = parseMoney(selectedFilters.priceMin);
                             matchesPreco = matchesPreco && productPrice >= minPrice;
                         }
                         if (selectedFilters.priceMax !== null && selectedFilters.priceMax !== '') {
-                            const maxPrice = parseFloat(selectedFilters.priceMax.replace(',', '.'));
+                            const maxPrice = parseMoney(selectedFilters.priceMax);
                             matchesPreco = matchesPreco && productPrice <= maxPrice;
                         }
 
@@ -1746,17 +1782,21 @@
             const priceMinInput = document.getElementById('priceMin');
             const priceMaxInput = document.getElementById('priceMax');
 
+            let priceDebounceTimer;
+
             if (priceMinInput) {
                 priceMinInput.addEventListener('input', function() {
                     selectedFilters.priceMin = this.value;
-                    updateFilterCount();
+                    clearTimeout(priceDebounceTimer);
+                    priceDebounceTimer = setTimeout(updateFilterCount, 500);
                 });
             }
 
             if (priceMaxInput) {
                 priceMaxInput.addEventListener('input', function() {
                     selectedFilters.priceMax = this.value;
-                    updateFilterCount();
+                    clearTimeout(priceDebounceTimer);
+                    priceDebounceTimer = setTimeout(updateFilterCount, 500);
                 });
             }
 
@@ -1960,15 +2000,15 @@
                         break;
                     case 'maior-valor':
                         sortedProdutos.sort((a, b) => {
-                            const precoA = parseFloat(a.precoNumerico.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
-                            const precoB = parseFloat(b.precoNumerico.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+                            const precoA = parseFloat(a.precoNumerico) || 0;
+                            const precoB = parseFloat(b.precoNumerico) || 0;
                             return precoB - precoA;
                         });
                         break;
                     case 'menor-valor':
                         sortedProdutos.sort((a, b) => {
-                            const precoA = parseFloat(a.precoNumerico.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
-                            const precoB = parseFloat(b.precoNumerico.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+                            const precoA = parseFloat(a.precoNumerico) || 0;
+                            const precoB = parseFloat(b.precoNumerico) || 0;
                             return precoA - precoB;
                         });
                         break;

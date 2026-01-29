@@ -138,7 +138,7 @@
                 <div class="capa" style="background: #000; height: 100%;">
                     <div style="padding: 5rem;">
                         <h1
-                            style="font-size: 110px; color: #fff; font-family: 'Neue-Plak'; font-weight: 900;  margin:0; padding:0; line-height: 80px; text-transform: uppercase;">
+                            style="font-size: 110px; color: #fff; font-family: 'Neue-Plak-Extended'; font-weight: 900;  margin:0; padding:0; line-height: 80px; text-transform: uppercase;">
                             {{ $collection->product->category->name }}
                         </h1>
 
@@ -167,14 +167,14 @@
         @endif
         <table cellspacing="2" width="100%" cellpadding="2" border="0">
             <tr>
-                <td width="70%" style="padding: 5px;">
+                <td style="padding: 10px;">
                     <table cellspacing="0" width="100%" cellpadding="0" style="">
                         <tr>
                             <td width="75%">
                                 <img src="{{ $image }}" alt="{{ $collection->product->name }}"
                                     style="width: 100%; object-fit: cover; border-radius: 8px 0 0 8px; border-top:1px solid #CCC; border-left:1px solid #CCC; border-bottom:1px solid #CCC; border-right:0 solid #CCC;">
                             </td>
-                            <td width="24.8%">
+                            <td width="24.925%">
                                 @php
                                     $suffixes = ['_A', '_B', '_C'];
                                     $vista = 1;
@@ -299,7 +299,7 @@
                             @endif
                         </div>
                         <h1
-                            style="font-family: 'fkolympikus', sans-serif; font-weight: normal; margin: 0 0 15px 0; line-height: 1.2;">
+                            style="font-family: 'Neue-Plak-Extended'; font-weight: 900; margin: 0 0 10px 0; line-height: 0.5;">
                             {{ $collection->product->name }}</h1>
 
                         <table width="100%">
@@ -321,7 +321,8 @@
                                 @if ($collection->product->caracteristicasDestaque)
                                     @if ($collection->product->caracteristicasDestaque->first())
                                         @php $caracteristica = $collection->product->caracteristicasDestaque->first() @endphp
-                                        <td style="font-size: 12px;  margin-bottom: 2px; padding-bottom: 10px;">
+                                        <td
+                                            style="width: 50%; font-size: 12px; margin-bottom: 2px; padding-bottom: 10px;">
                                             <div
                                                 style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">
                                                 {{ $caracteristica->title }}
@@ -336,7 +337,8 @@
                                 @foreach ($collection->product->caracteristicas->chunk(2) as $caracteristicasChunk)
                                     <tr>
                                         @foreach ($caracteristicasChunk as $caract)
-                                            <td style="font-size: 12px; margin-bottom: 2px; padding-bottom: 10px;">
+                                            <td
+                                                style="width: 50%; font-size: 12px; margin-bottom: 2px; padding-bottom: 10px;">
                                                 <div>
                                                     <div style="color: #000; opacity: 0.5; margin-bottom: 2px;">
                                                         {{ $caract->title }}</div>
