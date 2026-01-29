@@ -832,7 +832,7 @@
                         <div class="filter-button" id="filterButton">
                             <span id="filterText" class="text-[1rem] leading-[0px]">Filtrar</span>
                             <span id="filterCount" class="filter-count leading-[0px]"
-                                style="display: none; margin-left:10px; color: #7A7A7A;">0</span>
+                                style="display: none; margin-left:5px; color: #7A7A7A;">0</span>
                             <div class="pl-[5px] pt-1" id="arrow2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
                                     viewBox="0 0 12 8" fill="none">
@@ -903,6 +903,8 @@
                                         class="filter-option" type="text" id="priceMax" placeholder="">
                                 </div>
                             </div>
+                            <div class="text-[#7A7A7A] text-[14px] underline cursor-pointer" id="clearFiltersBtn">
+                                Limpar</div>
                         </div>
                     </div>
 
@@ -1376,13 +1378,14 @@
                         }
 
                         let matchesPreco = true;
+                        const productPrice = parseFloat(p.precoNumerico.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
                         if (selectedFilters.priceMin !== null && selectedFilters.priceMin !== '') {
                             const minPrice = parseFloat(selectedFilters.priceMin.replace(',', '.'));
-                            matchesPreco = matchesPreco && p.precoNumerico >= minPrice;
+                            matchesPreco = matchesPreco && productPrice >= minPrice;
                         }
                         if (selectedFilters.priceMax !== null && selectedFilters.priceMax !== '') {
                             const maxPrice = parseFloat(selectedFilters.priceMax.replace(',', '.'));
-                            matchesPreco = matchesPreco && p.precoNumerico <= maxPrice;
+                            matchesPreco = matchesPreco && productPrice <= maxPrice;
                         }
 
                         return matchesTermo && matchesCategoria && matchesSubcategoria && matchesNumeracao &&
@@ -1753,6 +1756,34 @@
             if (priceMaxInput) {
                 priceMaxInput.addEventListener('input', function() {
                     selectedFilters.priceMax = this.value;
+                    updateFilterCount();
+                });
+            }
+
+
+            const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+            if (clearFiltersBtn) {
+                clearFiltersBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+
+                    // Clear selected filters object
+                    selectedFilters.numeracao = [];
+                    selectedFilters.tamanho = [];
+                    selectedFilters.classification = [];
+                    selectedFilters.priceMin = null;
+                    selectedFilters.priceMax = null;
+
+                    // Clear inputs
+                    if (priceMinInput) priceMinInput.value = '';
+                    if (priceMaxInput) priceMaxInput.value = '';
+
+                    // Clear UI selections
+                    document.querySelectorAll('.filter-option.selected').forEach(option => {
+                        option.classList.remove('selected');
+                        const removeBtn = option.querySelector('.tag-remove');
+                        if (removeBtn) removeBtn.remove();
+                    });
+
                     updateFilterCount();
                 });
             }
