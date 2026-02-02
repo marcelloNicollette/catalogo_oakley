@@ -357,7 +357,7 @@ html {
         #colecaoOptions.options {
             position: absolute;
     top: 4rem;
-    left: 5px;
+    left: 0px;
     right: 0;
     background: white;
     border: 1px solid #DDD;
@@ -372,7 +372,7 @@ html {
         .options {
             position: absolute;
     top: 4rem;
-    left: 5px;
+    left: 0px;
     right: 0;
     background: white;
     border: 1px solid #DDD;
@@ -621,6 +621,12 @@ html {
             background: #000000;
             border-color: #000000;
             color: white;
+        }
+        .price-options > .filter-option.selected {
+            background: #EDEDED;
+            border-color: #000000;
+            color: #000;
+            text-align: center;
         }
 
         /*.classification-options {

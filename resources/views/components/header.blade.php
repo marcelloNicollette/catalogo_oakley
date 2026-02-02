@@ -79,7 +79,7 @@
                                     <a href="{{ route('user.segmentacao') }}" class="">
                                         {{ $segmentacao->segmento }}
 
-                                        <img src="/images/icones/setas.svg" class="float-right pl-[10px]"
+                                        <img src="/images/icones/setas.svg" class="float-right pl-[10px] pt-[6px]"
                                             alt="Coleções" />
                                     </a>
 
