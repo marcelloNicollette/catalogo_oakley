@@ -232,6 +232,29 @@
                     </div>
                 </div>
 
+                <!-- Níveis de Acesso -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Níveis de Acesso (Se vazio, visível para
+                        todos)</label>
+                    <div class="space-y-2">
+                        @php
+                            $accessLevels = ['representante', 'interno', 'fornecedor', 'convidado', 'cliente'];
+                            $currentLevels = old('access_levels', $calendario->access_levels ?? []);
+                        @endphp
+                        @foreach ($accessLevels as $level)
+                            <label class="inline-flex items-center mr-4">
+                                <input type="checkbox" name="access_levels[]" value="{{ $level }}"
+                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                    @checked(in_array($level, $currentLevels))>
+                                <span class="ml-2 text-sm text-gray-600">{{ ucfirst($level) }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                    @error('access_levels')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <div class="flex justify-end space-x-3 mt-6">
                     <a href="{{ route('admin.calendario.index') }}"
                         class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">

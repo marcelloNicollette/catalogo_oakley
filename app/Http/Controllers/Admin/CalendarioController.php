@@ -47,7 +47,9 @@ class CalendarioController extends Controller
             'data_mkt' => 'nullable|date',
             'data_trade' => 'nullable|date',
             'data_cliente' => 'nullable|date',
-            'data_dtc' => 'nullable|date'
+            'data_dtc' => 'nullable|date',
+            'access_levels' => 'nullable|array',
+            'access_levels.*' => 'string|in:representante,interno,fornecedor,convidado,cliente',
         ]);
 
         // Upload da imagem se fornecida
@@ -88,7 +90,9 @@ class CalendarioController extends Controller
             'data_mkt' => 'nullable|date',
             'data_trade' => 'nullable|date',
             'data_cliente' => 'nullable|date',
-            'data_dtc' => 'nullable|date'
+            'data_dtc' => 'nullable|date',
+            'access_levels' => 'nullable|array',
+            'access_levels.*' => 'string|in:representante,interno,fornecedor,convidado,cliente',
         ]);
 
         // Upload da nova imagem se fornecida

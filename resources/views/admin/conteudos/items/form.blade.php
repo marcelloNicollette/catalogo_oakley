@@ -85,6 +85,29 @@
                             @enderror
                         </div>
 
+                        <!-- Níveis de Acesso -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Níveis de Acesso (Se vazio, visível
+                                para todos)</label>
+                            <div class="space-y-2">
+                                @php
+                                    $accessLevels = ['representante', 'interno', 'fornecedor', 'convidado', 'cliente'];
+                                    $currentLevels = old('access_levels', $item->access_levels ?? []);
+                                @endphp
+                                @foreach ($accessLevels as $level)
+                                    <label class="inline-flex items-center mr-4">
+                                        <input type="checkbox" name="access_levels[]" value="{{ $level }}"
+                                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                            @checked(in_array($level, $currentLevels))>
+                                        <span class="ml-2 text-sm text-gray-600">{{ ucfirst($level) }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                            @error('access_levels')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <div class="mb-4">
                             <label for="active" class="inline-flex items-center">
                                 <input type="checkbox" name="active" id="active" value="1"

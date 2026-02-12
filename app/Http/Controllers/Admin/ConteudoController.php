@@ -30,7 +30,9 @@ class ConteudoController extends Controller
             'description' => 'nullable|string',
             'link_url' => 'nullable|string|max:255',
             'order' => 'nullable|integer',
-            'active' => 'nullable|boolean'
+            'active' => 'nullable|boolean',
+            'access_levels' => 'nullable|array',
+            'access_levels.*' => 'string|in:representante,interno,fornecedor,convidado,cliente',
         ]);
         // Define valor padrão se 'order' não for enviado
         $validated['order'] = $request->has('order') ? (int) $request->input('order') : 0;
@@ -57,7 +59,9 @@ class ConteudoController extends Controller
             'description' => 'nullable|string',
             'link_url' => 'nullable|string|max:255',
             'order' => 'nullable|integer',
-            'active' => 'nullable|boolean'
+            'active' => 'nullable|boolean',
+            'access_levels' => 'nullable|array',
+            'access_levels.*' => 'string|in:representante,interno,fornecedor,convidado,cliente',
         ]);
         // Define valor padrão se 'order' não for enviado
         $validated['order'] = $request->has('order') ? (int) $request->input('order') : 0;

@@ -18,7 +18,8 @@
         <a href="{{ route('admin.calendario.index') }}"
             class="flex items-center bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+                </path>
             </svg>
             {{ __('Voltar') }}
         </a>
@@ -61,9 +62,18 @@
                             <option value="">Selecione o mês</option>
                             @php
                                 $meses = [
-                                    1 => 'Janeiro', 2 => 'Fevereiro', 3 => 'Março', 4 => 'Abril',
-                                    5 => 'Maio', 6 => 'Junho', 7 => 'Julho', 8 => 'Agosto',
-                                    9 => 'Setembro', 10 => 'Outubro', 11 => 'Novembro', 12 => 'Dezembro'
+                                    1 => 'Janeiro',
+                                    2 => 'Fevereiro',
+                                    3 => 'Março',
+                                    4 => 'Abril',
+                                    5 => 'Maio',
+                                    6 => 'Junho',
+                                    7 => 'Julho',
+                                    8 => 'Agosto',
+                                    9 => 'Setembro',
+                                    10 => 'Outubro',
+                                    11 => 'Novembro',
+                                    12 => 'Dezembro',
                                 ];
                             @endphp
                             @foreach ($meses as $numero => $nome)
@@ -140,7 +150,8 @@
 
                     <!-- Data Cliente -->
                     <div>
-                        <label for="data_cliente" class="block text-sm font-medium text-gray-700 mb-2">Data Cliente</label>
+                        <label for="data_cliente" class="block text-sm font-medium text-gray-700 mb-2">Data
+                            Cliente</label>
                         <input type="date" name="data_cliente" id="data_cliente" value="{{ old('data_cliente') }}"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('data_cliente') border-red-500 @enderror">
                         @error('data_cliente')
@@ -157,6 +168,29 @@
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+                </div>
+
+                <!-- Níveis de Acesso -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Níveis de Acesso (Se vazio, visível
+                        para todos)</label>
+                    <div class="space-y-2">
+                        @php
+                            $accessLevels = ['representante', 'interno', 'fornecedor', 'convidado', 'cliente'];
+                            $currentLevels = old('access_levels', []);
+                        @endphp
+                        @foreach ($accessLevels as $level)
+                            <label class="inline-flex items-center mr-4">
+                                <input type="checkbox" name="access_levels[]" value="{{ $level }}"
+                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                    @checked(in_array($level, $currentLevels))>
+                                <span class="ml-2 text-sm text-gray-600">{{ ucfirst($level) }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                    @error('access_levels')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="flex justify-end space-x-3 mt-6">

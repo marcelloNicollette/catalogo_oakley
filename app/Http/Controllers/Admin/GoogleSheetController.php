@@ -65,7 +65,7 @@ class GoogleSheetController extends Controller
             DB::beginTransaction();
 
             // Lê os cabeçalhos das colunas
-            $headerRange = "UA-Catalogo!A2:AM";
+            $headerRange = "UA-Catalogo!A2:AN";
             $headerRows = $this->sheetService->readSheet($spreadsheetId, $headerRange);
 
             if (empty($headerRows) || empty($headerRows[0])) {
@@ -75,7 +75,7 @@ class GoogleSheetController extends Controller
             $headers = $headerRows[0];
 
             // Lê os dados da planilha
-            $dataRange = "UA-Catalogo!A4:AM";
+            $dataRange = "UA-Catalogo!A4:AN";
             $rows = $this->sheetService->readSheet($spreadsheetId, $dataRange);
 
             if (empty($rows)) {
@@ -117,6 +117,7 @@ class GoogleSheetController extends Controller
                     $groupedProducts[$sku]['colors'][] = [
                         'code' => $productData['COR_COD'],
                         'description' => $productData['COR_DESCRIÇÃO'] ?? $productData['COR_COD'],
+                        'genero' => $productData['GENERO'],
                         'flag' => $productData['COR_CLASSIFICAÇÃO'],
                         // Tenta obter numeração da cor a partir de possíveis cabeçalhos
                         'numeracao' => $this->extractColorNumeracao($productData)
@@ -181,7 +182,7 @@ class GoogleSheetController extends Controller
         // Busca ou cria categoria
         $category = $this->findOrCreateCategory($data['CATEGORIA'] ?? '', $segmentacao);
         $subcategory = $this->findOrCreateSubcategory($data['FAIXA GTM'] ?? '', $category->id ?? null);
-        $collection = $this->findOrCreateCollection($data['COLEÇÃO'] ?? '');
+        $collection = $this->findOrCreateCollection($data['COLEÇÃO'] ?? '', $data['COLEÇÃO_SECUNDÁRIA'] ?? '');
         $flag = $this->findOrCreateFlag($data['COR_CLASSIFICAÇÃO'] ?? '');
         $tecnologia = $this->findOrCreateTecnologia($data['TECNOLOGIAS'] ?? '');
 
@@ -195,6 +196,7 @@ class GoogleSheetController extends Controller
             'slug' => Str::slug($data['NOME']) . '-' . $data['CÓDIGO'],
             'category_id' => $category->id ?? null,
             'subcategory_id' => $subcategory->id ?? null,
+            'genero' => $data['GENERO'],
             'active' => true,
             'technologies' => json_encode($tecnologia),
             'flag_calendario' => !empty($data['LANÇAMENTO']) || !empty($data['LANÇAMENTO_DTC']) || !empty($data['LANÇAMENTO_TRADE']) || !empty($data['LANÇAMENTO_CLIENTE']),
@@ -378,16 +380,18 @@ class GoogleSheetController extends Controller
     /**
      * Busca ou cria uma coleção
      */
-    private function findOrCreateCollection($collectionName)
+    private function findOrCreateCollection($collectionName, $collectionSecondaryName)
     {
         if (empty($collectionName)) {
             return null;
         }
 
         return Collection::firstOrCreate(
-            ['name' => $collectionName],
             [
-                'slug' => Str::slug($collectionName),
+                'name' => $collectionName,
+                'slug' => Str::slug($collectionName) . "-" . Str::slug($collectionSecondaryName)
+            ],
+            [
                 'active' => true
             ]
         );
@@ -566,7 +570,7 @@ class GoogleSheetController extends Controller
             [
                 'color_name' => $corData['code'],
                 'color_description' => $corData['description'],
-                'genero' => $corData['genero'] ?? 'Masculino',
+                'genero' => $corData['genero'],
                 'collection_id' => $collection->id ?? null,
                 'flag_product_id' => $flag ?? null,
                 'numeracao_id' => $corData['numeracao_id'] ?? null,
@@ -601,6 +605,7 @@ class GoogleSheetController extends Controller
             'peso_1' => $data['PESO_1'] ?? '',
             'peso_1_ref' => $data['PESO_1_REF'] ?? '',
             'peso_2' => $data['PESO_2'] ?? '',
+            'peso_2_ref' => $data['PESO_2_REF'] ?? '',
             'drop' => $data['DROP'] ?? '',
             'origem' => $data['ORIGEM'] ?? '',
             'indicacao' => $data['INDICAÇÃO'] ?? '',

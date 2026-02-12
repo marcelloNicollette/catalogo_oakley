@@ -20,12 +20,15 @@ use App\Http\Controllers\User\ExportController;
 use App\Http\Controllers\User\WishlistController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\PasswordRecoveryController;
 use App\Http\Controllers\Admin\NumeracaoController;
 use App\Http\Controllers\Admin\ConteudoCategoryController;
 use App\Http\Controllers\Admin\ConteudoController;
+use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CalendarioController;
 use App\Http\Controllers\Admin\GoogleSheetController as AdminGoogleSheetController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\PasswordRecoveryController as AdminPasswordRecoveryController;
 use App\Http\Controllers\GoogleSheetController;
 use App\Http\Controllers\User\frontendController;
 use App\Http\Controllers\Admin\ProductImageController;
@@ -66,6 +69,8 @@ Route::get('/user/login', function () {
     return redirect('/acessos');
 })->name('user.login');
 Route::post('/user/login', [AuthenticatedSessionController::class, 'store']);
+
+Route::post('/password/recovery', [PasswordRecoveryController::class, 'store'])->name('password.recovery');
 
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -239,6 +244,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
             'update' => 'admin.conteudos.items.update',
             'destroy' => 'admin.conteudos.items.destroy'
         ]);
+    Route::resource('/admin/blogs', BlogController::class)
+        ->names([
+            'index' => 'admin.blogs.index',
+            'create' => 'admin.blogs.create',
+            'store' => 'admin.blogs.store',
+            'edit' => 'admin.blogs.edit',
+            'update' => 'admin.blogs.update',
+            'destroy' => 'admin.blogs.destroy'
+        ]);
     Route::resource('/admin/calendario', CalendarioController::class)
         ->names([
             'index' => 'admin.calendario.index',
@@ -274,6 +288,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Reset de senha por admin
     Route::post('/admin/users/{user}/reset-password', [UserController::class, 'resetPassword'])
         ->name('admin.users.reset-password');
+
+    // Recuperação de Senha (Admin)
+    Route::get('/admin/password-recovery', [AdminPasswordRecoveryController::class, 'index'])->name('admin.password-recovery.index');
+    Route::put('/admin/password-recovery/{user}', [AdminPasswordRecoveryController::class, 'update'])->name('admin.password-recovery.update');
 
     Route::resource('/admin/segmentacao-cliente', SegmentacaoClienteController::class)
         ->names([

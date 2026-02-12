@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Traits\HasAccessControl;
 
 class Conteudo extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasAccessControl;
 
     protected $table = 'conteudo';
 
@@ -17,11 +18,13 @@ class Conteudo extends Model
         'name',
         'description',
         'link_url',
-        'order'
+        'order',
+        'access_levels',
     ];
 
     protected $casts = [
-        'active' => 'boolean'
+        'active' => 'boolean',
+        'access_levels' => 'array',
     ];
 
     public function category()

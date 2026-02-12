@@ -84,6 +84,23 @@
         </div>
 
         <div>
+            <label for="classification" class="block text-sm font-medium text-gray-700">Classificação</label>
+            <select name="classification" id="classification"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Selecione a classificação</option>
+                <option value="admin-user" @selected(old('classification', $user->classification ?? '') == 'admin-user')>Administrador Usuário</option>
+                <option value="representante" @selected(old('classification', $user->classification ?? '') == 'representante')>Representante</option>
+                <option value="interno" @selected(old('classification', $user->classification ?? '') == 'interno')>Interno</option>
+                <option value="fornecedor" @selected(old('classification', $user->classification ?? '') == 'fornecedor')>Fornecedor</option>
+                <option value="convidado" @selected(old('classification', $user->classification ?? '') == 'convidado')>Convidado</option>
+                <option value="cliente" @selected(old('classification', $user->classification ?? '') == 'cliente')>Cliente</option>
+            </select>
+            @error('classification')
+                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
             <label for="company" class="block text-sm font-medium text-gray-700">Empresa</label>
             <input type="text" name="company" id="company" value="{{ old('company', $user->company ?? '') }}"
                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">

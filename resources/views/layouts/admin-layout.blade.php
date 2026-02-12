@@ -122,233 +122,247 @@
                     $currentRoute = request()->path();
                 @endphp
                 <nav class="flex-1 py-2 px-4 space-y-1">
-                    <a href="{{ url('/admin/dashboard') }}"
-                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/dashboard') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
-                            </path>
-                        </svg>
-                        <span>Dashboard</span>
-                    </a>
-                    <a href="{{ url('/admin/img-login') }}"
-                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/banners') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                            </path>
-                        </svg>
-
-                        <span>Imagem Login</span>
-                    </a>
-
-                    <a href="{{ url('/admin/banners') }}"
-                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/banners') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                            </path>
-                        </svg>
-
-                        <span>Banners</span>
-                    </a>
-                    <a href="{{ route('admin.product-images.index') }}"
-                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/product-images') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 4h16v16H4V4zm4 12l3-4 2 3 3-4 4 5H8z" />
-                        </svg>
-                        <span>Imagens</span>
-                    </a>
-                    <a href="{{ url('/admin/segmento') }}"
-                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/segmento') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 0 1-1.125-1.125v-3.75ZM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-8.25ZM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-2.25Z">
-                            </path>
-                        </svg>
-                        <span>Segmentação</span>
-                    </a>
-
-                    <a href="{{ url('/admin/collections') }}"
-                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/collections') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-                            </path>
-                        </svg>
-                        <span>Coleções</span>
-                    </a>
-                    <a href="{{ url('/admin/categories') }}"
-                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/categories') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
-                            </path>
-                        </svg>
-                        <span>Categorias</span>
-                    </a>
-                    <a href="{{ url('/admin/subcategories') }}"
-                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/subcategories') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
-                            </path>
-                        </svg>
-                        <span>Subcategorias(Faixas)</span>
-                    </a>
-                    <a href="{{ url('/admin/flag-product') }}"
-                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/flag-product') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9">
-                            </path>
-                        </svg>
-                        <span>Flags Produtos</span>
-                    </a>
-                    <a href="{{ url('/admin/numeracao') }}"
-                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/numeracao') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M8.242 5.992h12m-12 6.003H20.24m-12 5.999h12M4.117 7.495v-3.75H2.99m1.125 3.75H2.99m1.125 0H5.24m-1.92 2.577a1.125 1.125 0 1 1 1.591 1.59l-1.83 1.83h2.16M2.99 15.745h1.125a1.125 1.125 0 0 1 0 2.25H3.74m0-.002h.375a1.125 1.125 0 0 1 0 2.25H2.99" />
-                        </svg>
-
-                        <span>Numeração</span>
-                    </a>
-                    <a href="{{ url('/admin/sizes') }}"
-                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/sizes') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
-                        </svg>
-
-                        <span>Tamanhos</span>
-                    </a>
-
-                    <div x-data="{ open: false }" class="relative">
-                        <button @click="open = !open"
-                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/technology') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                    @if (auth()->user()->classification !== 'admin-user')
+                        <a href="{{ url('/admin/dashboard') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/dashboard') ? 'bg-indigo-50 text-indigo-600' : '' }}">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                                 </path>
                             </svg>
-                            <span>{{ __('Tecnologia') }}</span>
-                            <svg class="w-4 h-4 ml-2" :class="{ 'rotate-180': open }" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="{{ url('/admin/img-login') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/banners') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
                             </svg>
-                        </button>
 
-                        <div x-show="open" @click.away="open = false"
-                            class="absolute left-0 w-full mt-2 origin-top-right rounded-md shadow-lg z-10">
-                            <div class="px-2 py-2 bg-white rounded-md shadow">
-                                <a href="{{ route('admin.technology.categories.index') }}"
-                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ str_contains($currentRoute, 'admin/technology/categories') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                                    {{ __('Categorias') }}
-                                </a>
-                                <a href="{{ route('admin.technology.items.index') }}"
-                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ str_contains($currentRoute, 'admin/technology/items') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                                    {{ __('Itens') }}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                            <span>Imagem Login</span>
+                        </a>
 
-                    <a href="{{ url('/admin/products') }}"
-                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/products') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                        </svg>
-                        <span>Produtos</span>
-                    </a>
+                        <a href="{{ url('/admin/banners') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/banners') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
 
-                    <div x-data="{ open: false }" class="relative">
-                        <button @click="open = !open"
-                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/sync') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <span>Banners</span>
+                        </a>
+                        <a href="{{ route('admin.product-images.index') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/product-images') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 4h16v16H4V4zm4 12l3-4 2 3 3-4 4 5H8z" />
+                            </svg>
+                            <span>Imagens</span>
+                        </a>
+                        <a href="{{ url('/admin/segmento') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/segmento') ? 'bg-indigo-50 text-indigo-600' : '' }}">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                    d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 0 1-1.125-1.125v-3.75ZM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-8.25ZM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-2.25Z">
                                 </path>
                             </svg>
-                            <span>{{ __('Sincronismo') }}</span>
-                            <svg class="w-4 h-4 ml-2" :class="{ 'rotate-180': open }" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
+                            <span>Segmentação</span>
+                        </a>
 
-                        <div x-show="open" @click.away="open = false"
-                            class="absolute left-0 w-full mt-2 origin-top-right rounded-md shadow-lg z-10">
-                            <div class="px-2 py-2 bg-white rounded-md shadow">
-                                <a href="{{ route('admin.sync-produtos') }}"
-                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ str_contains($currentRoute, 'admin/sync-produtos') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                                    {{ __('Produtos') }}
-                                </a>
-                                <a href="{{ route('admin.sync-representantes') }}"
-                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ str_contains($currentRoute, 'admin/sync-representantes') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                                    {{ __('Representantes') }}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <a href="{{ route('admin.calendario.index') }}"
-                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/calendario') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                            </path>
-                        </svg>
-                        <span>Calendário</span>
-                    </a>
-                    <div x-data="{ open: false }" class="relative">
-                        <button @click="open = !open"
-                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/conteudos') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                        <a href="{{ url('/admin/collections') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/collections') ? 'bg-indigo-50 text-indigo-600' : '' }}">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
                                 </path>
                             </svg>
-                            <span>{{ __('Conteúdos') }}</span>
-                            <svg class="w-4 h-4 ml-2" :class="{ 'rotate-180': open }" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
+                            <span>Coleções</span>
+                        </a>
+                        <a href="{{ url('/admin/categories') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/categories') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
+                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                                </path>
                             </svg>
-                        </button>
+                            <span>Categorias</span>
+                        </a>
+                        <a href="{{ url('/admin/subcategories') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/subcategories') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                                </path>
+                            </svg>
+                            <span>Subcategorias(Faixas)</span>
+                        </a>
+                        <a href="{{ url('/admin/flag-product') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/flag-product') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9">
+                                </path>
+                            </svg>
+                            <span>Flags Produtos</span>
+                        </a>
+                        <a href="{{ url('/admin/numeracao') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/numeracao') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M8.242 5.992h12m-12 6.003H20.24m-12 5.999h12M4.117 7.495v-3.75H2.99m1.125 3.75H2.99m1.125 0H5.24m-1.92 2.577a1.125 1.125 0 1 1 1.591 1.59l-1.83 1.83h2.16M2.99 15.745h1.125a1.125 1.125 0 0 1 0 2.25H3.74m0-.002h.375a1.125 1.125 0 0 1 0 2.25H2.99" />
+                            </svg>
 
-                        <div x-show="open" @click.away="open = false"
-                            class="absolute left-0 w-full mt-2 origin-top-right rounded-md shadow-lg">
-                            <div class="px-2 py-2 bg-white rounded-md shadow">
-                                <a href="{{ route('admin.conteudos.categories.index') }}"
-                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ str_contains($currentRoute, 'admin/conteudos/categories') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                                    {{ __('Categorias') }}
-                                </a>
-                                <a href="{{ route('admin.conteudos.items.index') }}"
-                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ str_contains($currentRoute, 'admin/conteudos/items') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                                    {{ __('Conteúdo Itens') }}
-                                </a>
+                            <span>Numeração</span>
+                        </a>
+                        <a href="{{ url('/admin/sizes') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/sizes') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                            </svg>
+
+                            <span>Tamanhos</span>
+                        </a>
+
+                        <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open"
+                                class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/technology') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                    </path>
+                                </svg>
+                                <span>{{ __('Tecnologia') }}</span>
+                                <svg class="w-4 h-4 ml-2" :class="{ 'rotate-180': open }" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+
+                            <div x-show="open" @click.away="open = false"
+                                class="absolute left-0 w-full mt-2 origin-top-right rounded-md shadow-lg z-10">
+                                <div class="px-2 py-2 bg-white rounded-md shadow">
+                                    <a href="{{ route('admin.technology.categories.index') }}"
+                                        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ str_contains($currentRoute, 'admin/technology/categories') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                                        {{ __('Categorias') }}
+                                    </a>
+                                    <a href="{{ route('admin.technology.items.index') }}"
+                                        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ str_contains($currentRoute, 'admin/technology/items') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                                        {{ __('Itens') }}
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <a href="{{ url('/admin/segmentacao-cliente') }}"
-                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/segmentacao-cliente') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                            </path>
-                        </svg>
-                        <span>Segmentação de Clientes</span>
-                    </a>
+
+                        <a href="{{ url('/admin/products') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/products') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                            <span>Produtos</span>
+                        </a>
+
+                        <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open"
+                                class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/sync') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                    </path>
+                                </svg>
+                                <span>{{ __('Sincronismo') }}</span>
+                                <svg class="w-4 h-4 ml-2" :class="{ 'rotate-180': open }" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+
+                            <div x-show="open" @click.away="open = false"
+                                class="absolute left-0 w-full mt-2 origin-top-right rounded-md shadow-lg z-10">
+                                <div class="px-2 py-2 bg-white rounded-md shadow">
+                                    <a href="{{ route('admin.sync-produtos') }}"
+                                        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ str_contains($currentRoute, 'admin/sync-produtos') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                                        {{ __('Produtos') }}
+                                    </a>
+                                    <a href="{{ route('admin.sync-representantes') }}"
+                                        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ str_contains($currentRoute, 'admin/sync-representantes') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                                        {{ __('Representantes') }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="{{ route('admin.calendario.index') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/calendario') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                            <span>Calendário</span>
+                        </a>
+
+                        <a href="{{ route('admin.blogs.index') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/blogs') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
+                                </path>
+                            </svg>
+                            <span>Blogs</span>
+                        </a>
+
+                        <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open"
+                                class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/conteudos') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                    </path>
+                                </svg>
+                                <span>{{ __('Conteúdos') }}</span>
+                                <svg class="w-4 h-4 ml-2" :class="{ 'rotate-180': open }" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+
+                            <div x-show="open" @click.away="open = false"
+                                class="absolute left-0 w-full mt-2 origin-top-right rounded-md shadow-lg">
+                                <div class="px-2 py-2 bg-white rounded-md shadow">
+                                    <a href="{{ route('admin.conteudos.categories.index') }}"
+                                        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ str_contains($currentRoute, 'admin/conteudos/categories') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                                        {{ __('Categorias') }}
+                                    </a>
+                                    <a href="{{ route('admin.conteudos.items.index') }}"
+                                        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ str_contains($currentRoute, 'admin/conteudos/items') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                                        {{ __('Conteúdo Itens') }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="{{ url('/admin/segmentacao-cliente') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/segmentacao-cliente') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                                </path>
+                            </svg>
+                            <span>Segmentação de Clientes</span>
+                        </a>
+                    @endif
                     <a href="{{ url('/admin/users') }}"
                         class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/users') ? 'bg-indigo-50 text-indigo-600' : '' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -359,7 +373,17 @@
                         <span>Usuários</span>
                     </a>
 
-
+                    @if (auth()->user()->classification !== 'admin-user')
+                        <a href="{{ route('admin.password-recovery.index') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/password-recovery') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z">
+                                </path>
+                            </svg>
+                            <span>Recuperação de Senha</span>
+                        </a>
+                    @endif
                     <a href="{{ route('admin.access.index') }}"
                         class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/access') ? 'bg-indigo-50 text-indigo-600' : '' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -369,15 +393,17 @@
                         <span>Solicitação de Acessos</span>
                     </a>
 
-                    <a href="{{ route('admin.suggestions.index') }}"
-                        class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/suggestions') ? 'bg-indigo-50 text-indigo-600' : '' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M7 8h10M7 12h6m-6 4h8M5 7a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V7z">
-                            </path>
-                        </svg>
-                        <span>Sugestões enviadas</span>
-                    </a>
+                    @if (auth()->user()->classification !== 'admin-user')
+                        <a href="{{ route('admin.suggestions.index') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/suggestions') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 8h10M7 12h6m-6 4h8M5 7a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V7z">
+                                </path>
+                            </svg>
+                            <span>Sugestões enviadas</span>
+                        </a>
+                    @endif
                 </nav>
             </div>
         </aside>

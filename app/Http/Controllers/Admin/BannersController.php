@@ -41,7 +41,19 @@ class BannersController extends Controller
         $validated = $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'image_mobile' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'active' => 'boolean'
+            'active' => 'boolean',
+            'link' => [
+                'nullable',
+                'string',
+                'max:2048',
+                function ($attribute, $value, $fail) {
+                    if ($value && !preg_match('/^(https?:\\/\\/|\\/)/i', $value)) {
+                        $fail('O link deve iniciar com http(s):// ou /.');
+                    }
+                },
+            ],
+            'access_levels' => 'nullable|array',
+            'access_levels.*' => 'string|in:representante,interno,fornecedor,convidado,cliente',
         ]);
 
         //dd($validated);
@@ -74,7 +86,19 @@ class BannersController extends Controller
         $validated = $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'image_mobile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'active' => 'boolean'
+            'active' => 'boolean',
+            'link' => [
+                'nullable',
+                'string',
+                'max:2048',
+                function ($attribute, $value, $fail) {
+                    if ($value && !preg_match('/^(https?:\\/\\/|\\/)/i', $value)) {
+                        $fail('O link deve iniciar com http(s):// ou /.');
+                    }
+                },
+            ],
+            'access_levels' => 'nullable|array',
+            'access_levels.*' => 'string|in:representante,interno,fornecedor,convidado,cliente',
         ]);
 
 

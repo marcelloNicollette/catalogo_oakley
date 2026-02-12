@@ -21,7 +21,8 @@ class User extends Authenticatable
         'setor',
         'phone',
         'codigo_lider_comercial',
-        'idioma'
+        'idioma',
+        'classification',
     ];
 
     protected $hidden = [

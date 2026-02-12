@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Traits\HasAccessControl;
 
 class Calendario extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasAccessControl;
 
     protected $table = 'calendario';
 
@@ -24,7 +25,8 @@ class Calendario extends Model
         'data_trade',
         'data_cliente',
         'data_dtc',
-        'product_id'
+        'product_id',
+        'access_levels',
     ];
 
     protected $casts = [
@@ -33,7 +35,8 @@ class Calendario extends Model
         'data_trade' => 'date',
         'data_cliente' => 'date',
         'data_dtc' => 'date',
-        'mes' => 'integer'
+        'mes' => 'integer',
+        'access_levels' => 'array',
     ];
 
     /**
