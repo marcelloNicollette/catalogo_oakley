@@ -319,7 +319,7 @@
                                 @endif
                             </div>
                             <h1
-                                style="font-family: 'Neue-Plak-Extended'; font-weight: 900; margin: 0 0 10px 0; line-height: 0.5;">
+                                style="font-family: 'Neue-Plak-Extended'; font-weight: 900; margin: 20px 0 10px 0; line-height: 0.5;">
                                 {{ $collection->product->name }}</h1>
 
                             <table width="100%">
@@ -393,7 +393,7 @@
                         </div>
 
                         <!-- Descrição -->
-                        <div style="padding: 0 10px 10px 10px;">
+                        <div style="padding: 0 20px 10px 10px;">
                             <div style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">Descrição
                             </div>
                             <p style="font-size: 13px; line-height: 1.3; color: #000; margin: 0;">
@@ -403,13 +403,13 @@
 
                         @unless ($remove_description)
                             <!-- Tecnologias -->
-                            <div style="padding: 0 10px 10px 10px; margin-top:20px">
+                            <div style="padding: 0 20px 10px 10px; margin-top:20px">
                                 <div style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">Tecnologias
                                 </div>
                             </div>
 
                             @if (count($collection->product->technologyItems) > 0)
-                                <div style="padding: 0 10px 10px 10px;">
+                                <div style="padding: 0 20px 10px 10px;">
 
                                     @foreach ($collection->product->technologyItems->chunk(5) as $itemsChunk)
                                         <div style="overflow: hidden;">
