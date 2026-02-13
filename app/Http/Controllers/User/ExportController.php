@@ -131,7 +131,7 @@ class ExportController extends Controller
                 }
                 $row[] = $color->product->name ?? '';
                 $row[] = $color->color_code ?? '';
-                $row[] = $color->color_name ?? '';
+                $row[] = $color->color_description ?? '';
                 $row[] = $color->genero ?? '';
                 if (!in_array('remover_preco', $opcoes)) {
                     $row[] = $color->product->price ?? '';
