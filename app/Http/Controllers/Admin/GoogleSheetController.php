@@ -382,17 +382,32 @@ class GoogleSheetController extends Controller
      */
     private function findOrCreateCollection($collectionName, $collectionSecondaryName)
     {
-        if (empty($collectionName)) {
+        // Normaliza strings
+        $collectionName = trim((string) $collectionName);
+        $collectionSecondaryName = trim((string) $collectionSecondaryName);
+
+        if ($collectionName === '') {
             return null;
+        }
+
+        // Monta o slug considerando nome + secundária quando existir
+        if ($collectionSecondaryName === '') {
+            // Coleção sem secundária → sempre mesmo slug
+            $slug = Str::slug($collectionName);
+        } else {
+            // Coleção com secundária → par (nome, secundária) diferencia
+            $slug = Str::slug($collectionName . '-' . $collectionSecondaryName);
         }
 
         return Collection::firstOrCreate(
             [
                 'name' => $collectionName,
-                'slug' => Str::slug($collectionName) . "-" . Str::slug($collectionSecondaryName)
+                'slug' => $slug,
+                'description' => $collectionSecondaryName,
+                'codigo_colecao' => $collectionName . '-' . $collectionSecondaryName,
             ],
             [
-                'active' => true
+                'active' => true,
             ]
         );
     }
