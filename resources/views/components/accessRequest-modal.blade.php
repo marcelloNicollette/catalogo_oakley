@@ -21,7 +21,7 @@
         }
 
         input[type="email"]:-webkit-autofill {
-            -webkit-box-shadow: 0 0 0 1000px rgba(39, 53, 212, 1) inset !important;
+            -webkit-box-shadow: 0 0 0 1000px #E31B23 inset !important;
             -webkit-text-fill-color: white !important;
             border-bottom: 1px solid white;
         }
