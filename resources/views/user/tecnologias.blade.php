@@ -106,7 +106,7 @@
                                                     alt="{{ $tecnologia->name }}" />
                                             </div>
                                             <div class="">
-                                                <p class="text-xs opacity-50">{{ $tecnologia->name }} </p>
+                                                <p class="notranslate text-xs opacity-50">{{ $tecnologia->name }} </p>
                                                 <p class="text-xs font-normal max-w-[460px] pr-6">
                                                     {{ $tecnologia->description }}
                                                 </p>

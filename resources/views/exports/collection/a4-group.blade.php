@@ -311,7 +311,7 @@
                     </td>
                     <td width="30%" style="border-radius: 10px; vertical-align: top;">
                         <!-- Cabeçalho do produto -->
-                        <div style="padding:10px;">
+                        <div style="padding:20px 10px 0px 10px;">
                             <div style="font-size: 17px; color: #000; margin-bottom: 5px;">
                                 {{ $collection->product->category->name }}
                                 @if (!$remove_code)

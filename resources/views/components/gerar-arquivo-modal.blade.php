@@ -612,8 +612,8 @@
                            ${(Array.isArray(produtosSelecionados) && produtosSelecionados.some(p => p.id === produto.id && p.cor === produto.cor)) || produto.selected ? 'checked' : ''}>
                 </div>
                 <div class="col-span-2 text-sm ">${produto.codigo}</div>
-                <div class="col-span-3 text-sm ">${produto.title}</div>
-                <div class="col-span-2 text-sm ">${produto.cor}</div>
+                <div class="notranslate col-span-3 text-sm ">${produto.title}</div>
+                <div class="notranslate col-span-2 text-sm ">${produto.cor}</div>
                 <div class="col-span-2 text-sm ">${produto.categoria}</div>
                 <div class="col-span-2 text-sm ">${produto.preco}</div>
             </div>

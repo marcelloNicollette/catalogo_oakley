@@ -21,6 +21,8 @@ class UserController extends Controller
     {
         $query = User::with('collection');
 
+        $user_login = Auth::user();
+
         // Aplicar filtro de busca se fornecido
         if ($request->filled('search')) {
             $search = $request->get('search');
@@ -36,7 +38,7 @@ class UserController extends Controller
         }
 
         $users = $query->paginate(3000)->appends($request->query());
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.index', compact('user_login', 'users'));
     }
 
     /**
@@ -111,6 +113,7 @@ class UserController extends Controller
         $collections = Collection::where('active', true)->get();
         $segmentacoesCliente = \App\Models\SegmentacaoCliente::where('active', true)->get();
         $user->load('segmentacoesCliente');
+
         return view('admin.users.edit', compact('user', 'collections', 'segmentacoesCliente'));
     }
 

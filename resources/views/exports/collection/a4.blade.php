@@ -291,7 +291,7 @@
                 </td>
                 <td width="30%" style="border-radius: 8px; vertical-align: top;">
                     <!-- Cabeçalho do produto -->
-                    <div style="padding:10px;">
+                    <div style="padding:20px 10px 0px 10px;">
                         <div style="font-size: 17px; color: #000; margin-bottom: 5px;">
                             {{ $collection->product->category->name }}
                             @if (!$remove_code)
@@ -299,7 +299,7 @@
                             @endif
                         </div>
                         <h1
-                            style="font-family: 'Neue-Plak-Extended'; font-weight: 900; margin: 20px 0 10px 0; line-height: 0.5;">
+                            style="font-family: 'Neue-Plak-Extended'; font-weight: 900; margin: 0px 0 10px 0; line-height: 0.5;">
                             {{ $collection->product->name }}</h1>
 
                         <table width="100%">

@@ -30,10 +30,13 @@
 
                 <div class="mb-4">
                     <label for="segmentacao_id" class="block text-sm font-medium text-gray-700">Segmentação</label>
-                    <select name="segmentacao_id" id="segmentacao_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    <select name="segmentacao_id" id="segmentacao_id"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                         <option value="">Selecione uma segmentação</option>
-                        @foreach($segmentacoes as $segmentacao)
-                            <option value="{{ $segmentacao->id }}" {{ (old('segmentacao_id', $collection->segmentacao_id) == $segmentacao->id) ? 'selected' : '' }}>{{ $segmentacao->segmento }}</option>
+                        @foreach ($segmentacoes as $segmentacao)
+                            <option value="{{ $segmentacao->id }}"
+                                {{ old('segmentacao_id', $collection->segmentacao_id) == $segmentacao->id ? 'selected' : '' }}>
+                                {{ $segmentacao->segmento }}</option>
                         @endforeach
                     </select>
                     @error('segmentacao_id')
@@ -91,7 +94,7 @@
                     @enderror
                 </div>
 
-                
+
 
                 <!-- Imagem -->
                 <div class="mb-6">

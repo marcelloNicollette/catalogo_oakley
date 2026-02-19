@@ -111,7 +111,7 @@
                         <img src="/images/tenis-1.jpg" alt="Tênis" class="w-full object-contain rounded" />
                         <div class="px-4">
                             <h2
-                                class="title font-normal font-fko text-[24px] leading-[26px] py-3 uppercase min-h-[3vh]">
+                                class="notranslate title font-normal font-fko text-[24px] leading-[26px] py-3 uppercase min-h-[3vh]">
                             </h2>
                             <p class="text-black text-xs pb-3">
                                 <span class="categoria text-black"></span>

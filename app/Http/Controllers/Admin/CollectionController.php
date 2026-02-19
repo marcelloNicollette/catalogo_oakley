@@ -61,13 +61,14 @@ class CollectionController extends Controller
             'name' => 'required|max:255',
             'description' => 'nullable|max:255',
             'codigo_colecao' => 'nullable|max:255',
+            'slug' => 'required|max:255',
             'bg_color' => 'nullable|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'segmentacao_id' => 'nullable|exists:segmentacao,id',
             'active' => 'boolean'
         ]);
 
-        $validated['slug'] = Str::slug($validated['name']) . "-" . Str::slug($validated['codigo_colecao']);
+        //$validated['slug'] = Str::slug($validated['name']) . "-" . Str::slug($validated['codigo_colecao']);
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');

@@ -241,7 +241,8 @@
                             </button>
                         </div>
                         <div class="my-4">
-                            <h1 class="title extra-black text-[30px] lg:text-[35px] font-fko leading-[30px] uppercase">
+                            <h1
+                                class="notranslate title extra-black text-[30px] lg:text-[35px] font-fko leading-[30px] uppercase">
                                 {{ $produto->name }}
                             </h1>
                         </div>
@@ -298,8 +299,8 @@
                                             </div>
 
                                             <div class="text-center pb-2">
-                                                <p class="text-xs text-black">{{ $color->color_name }}</p>
-                                                <p class="text-xs text-black opacity-50 word">
+                                                <p class="notranslate text-xs text-black">{{ $color->color_name }}</p>
+                                                <p class="notranslate text-xs text-black opacity-50 word">
                                                     {{ $color->color_description }}</p>
                                             </div>
                                         </div>
@@ -377,7 +378,8 @@
                                                     alt="{{ $item->name }}" />
                                             </div>
                                             <div class="w-[380px] min-h-[65px]">
-                                                <p class="text-xs text-black opacity-50">{{ $item->name }}</p>
+                                                <p class="notranslate text-xs text-black opacity-50">
+                                                    {{ $item->name }}</p>
                                                 <p class="text-xs">
                                                     {{ $item->description }}
                                                 </p>

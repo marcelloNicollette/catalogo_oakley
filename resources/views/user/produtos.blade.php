@@ -959,7 +959,8 @@
                                     class="w-full object-contain rounded-md" />
 
                                 <div class="p-4 flex-1 flex flex-col">
-                                    <h2 class="title uppercase font-black font-fko text-[22px] leading-[18px] pb-2">
+                                    <h2
+                                        class="notranslate title uppercase font-black font-fko text-[22px] leading-[18px] pb-2">
                                     </h2>
 
                                     <!-- Wrapper para empurrar preço para baixo -->
@@ -967,7 +968,7 @@
                                         <div class="mt-auto">
                                             <p class="text-sm pb-2">
                                                 <span class="categoria text-black "></span>
-                                                <span class="genero text-black opacity-50 px-2"></span>
+                                                <span class="genero text-black opacity-50 pr-2"></span>
                                                 <span class="codigo text-black opacity-50"></span>
                                             </p>
                                             <div class="float-right mr-[25%]">
@@ -975,7 +976,7 @@
                                                 <p class="numeracao text-black text-xs desc-caract-1"></p>
                                             </div>
                                             <p class="text-black opacity-50 text-xs">Cor</p>
-                                            <p class="cor text-black text-xs pb-2"></p>
+                                            <p class="notranslate cor text-black text-xs pb-2"></p>
 
 
                                             <p class="text-black opacity-50 mt-1 text-xs ">PDV</p>

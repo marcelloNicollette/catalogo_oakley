@@ -1,4 +1,4 @@
-<form action="{{ isset($user) ? route('admin.users.update', $user) : route('admin.users.store') }}" method="POST"
+<form action="{{ isset($user) ? route('admin.users.update', $user) : route('admin.users.store', $user) }}" method="POST"
     class="space-y-4">
     @csrf
     @if (isset($user))
@@ -74,9 +74,13 @@
                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 required>
                 <option value="">Selecione o tipo</option>
-                <option value="admin" @selected(old('type', $user->type ?? '') == 'admin')>Administrador</option>
-                <option value="user" @selected(old('type', $user->type ?? '') == 'user')>Usuário</option>
-                <option value="user-adm" @selected(old('type', $user->type ?? '') == 'user-adm')>Usuário Administrador</option>
+                @if ($user->type == 'admin' && $user->classification == 'admin-user')
+                    <option value="user" @selected(old('type', $user->type ?? '') == 'user')>Usuário</option>
+                @else
+                    <option value="admin" @selected(old('type', $user->type ?? '') == 'admin')>Administrador</option>
+                    <option value="user" @selected(old('type', $user->type ?? '') == 'user')>Usuário</option>
+                    <option value="user-adm" @selected(old('type', $user->type ?? '') == 'user-adm')>Usuário Administrador</option>
+                @endif
             </select>
             @error('type')
                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>

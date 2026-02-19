@@ -333,8 +333,18 @@ class ExportController extends Controller
         $produtos = $query->get()->groupBy('product_id');
         $opcoes = $exportUser->opcoes ?? [];
 
+        $merged = $produtos->collapse();
+
+        $svgPath = public_path('/images/logo-branco.svg');
+        $svgContent = file_get_contents($svgPath);
+        $base64Svg = 'data:image/svg+xml;base64,' . base64_encode($svgContent);
+
+        $svgPath_azul = public_path('/images/logo-azul.svg');
+        $svgContent_azul = file_get_contents($svgPath_azul);
+        $base64Svg_azul = 'data:image/svg+xml;base64,' . base64_encode($svgContent_azul);
+
         $data = [
-            'collections' => $produtos,
+            'collections' => $merged,
             'remove_price'       => $exportUser->remove_price,
             'remove_code'        => $exportUser->remove_code,
             'remove_description' => $exportUser->remove_description,
@@ -347,10 +357,124 @@ class ExportController extends Controller
                 'formato' => $exportUser->formato,
                 'collectionHistoryName' => $exportUser->collection_history_name
             ],
-            'isPdf' => true,
+            'base64Svg' => $base64Svg,
+            'base64Svg_azul' => $base64Svg_azul,
         ];
 
         $view = $exportUser->formato === '16_9' ? 'exports.collection.presentation' : 'exports.collection.a4';
+
+        if ($exportUser->formato === 'planilha') {
+
+            $headings = ['Imagem', 'Coleção', 'Categoria'];
+            if (!in_array('remover_codigo', $opcoes)) {
+                $headings[] = 'Código';
+            }
+            $headings[] = 'Produto';
+            $headings[] = 'Cor código';
+            $headings[] = 'Cor';
+            $headings[] = 'Gênero';
+            if (!in_array('remover_preco', $opcoes)) {
+                $headings[] = 'Preço';
+            }
+            if (!in_array('remover_descricao', $opcoes)) {
+                $headings[] = 'Descrição';
+            }
+
+            $rows = [];
+            $imagePaths = [];
+
+            foreach ($produtos as $color) {
+                //dd($color);
+                foreach ($color as $item) {
+                    $row = [];
+                    // placeholder for image column (handled by drawings)
+                    $row[] = '';
+                    $row[] = $item->collection->codigo_colecao ?? ($item->collection->name ?? '');
+                    $row[] = optional($item->product->category)->name ?? '';
+                    if (!in_array('remover_codigo', $opcoes)) {
+                        $row[] = $item->product->code ?? '';
+                    }
+                    $row[] = $item->product->name ?? '';
+                    $row[] = $item->color_code ?? '';
+                    $row[] = $item->color_description ?? '';
+                    $row[] = $item->genero ?? '';
+
+                    if (!in_array('remover_preco', $opcoes)) {
+                        $row[] = $item->product->price ?? '';
+                    }
+                    if (!in_array('remover_descricao', $opcoes)) {
+                        $row[] = $item->product->description ?? '';
+                    }
+                    $rows[] = $row;
+
+                    $imgRel = 'images/produtos/' . ($item->product->code ?? '') . '_' . str_replace('/', '_', ($item->color_code ?? '')) . '.jpg';
+                    $imgPath = public_path($imgRel);
+                    if (!file_exists($imgPath)) {
+                        $imgPath = public_path('images/img-padrao-oly.png');
+                    }
+                    $imagePaths[] = $imgPath;
+                }
+            }
+
+            $export = new class($rows, $headings, $imagePaths) implements \Maatwebsite\Excel\Concerns\FromArray, \Maatwebsite\Excel\Concerns\WithHeadings, WithDrawings, WithColumnWidths, WithEvents {
+                private $rows;
+                private $headings;
+                private $imagePaths;
+                public function __construct(array $rows, array $headings, array $imagePaths)
+                {
+                    $this->rows = $rows;
+                    $this->headings = $headings;
+                    $this->imagePaths = $imagePaths;
+                }
+                public function array(): array
+                {
+                    return $this->rows;
+                }
+                public function headings(): array
+                {
+                    return $this->headings;
+                }
+                public function drawings(): array
+                {
+                    $drawings = [];
+                    $rowIndex = 2; // start after headings
+                    foreach ($this->imagePaths as $path) {
+                        if ($path && file_exists($path)) {
+                            $drawing = new Drawing();
+                            $drawing->setName('Imagem Produto');
+                            $drawing->setDescription('Imagem do produto');
+                            $drawing->setPath($path);
+                            $drawing->setHeight(60);
+                            $drawing->setCoordinates('A' . $rowIndex);
+                            $drawings[] = $drawing;
+                        }
+                        $rowIndex++;
+                    }
+                    return $drawings;
+                }
+                public function columnWidths(): array
+                {
+                    return [
+                        'A' => 18,
+                    ];
+                }
+                public function registerEvents(): array
+                {
+                    return [
+                        AfterSheet::class => function (AfterSheet $event) {
+                            $rowCount = count($this->rows) + 1; // include heading
+                            for ($r = 2; $r <= $rowCount; $r++) {
+                                $event->sheet->getRowDimension($r)->setRowHeight(46);
+                            }
+                        }
+                    ];
+                }
+            };
+
+            $filename = $exportUser->collection_history_name . '.xls';
+
+            return Excel::download($export, $filename, ExcelWriter::XLS);
+        }
 
         $pdf = PDF::loadView($view, $data)
             ->setPaper('A4', 'landscape');
