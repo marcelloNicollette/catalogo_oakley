@@ -699,7 +699,8 @@ class GoogleSheetController extends Controller
                 LinksProduct::create([
                     'product_id' => $product->id,
                     'link_url' => $linkData['url'],
-                    'link_title' => $linkData['description']
+                    'link_title' => $linkData['description'],
+                    'access_levels' => null,
                 ]);
             }
         }

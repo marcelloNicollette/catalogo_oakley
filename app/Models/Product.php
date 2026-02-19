@@ -147,8 +147,9 @@ class Product extends Model
         foreach ($LinkData['link_title'] as $index => $title) {
             LinksProduct::create([
                 'link_title' => $title,
-                'link_url' => $caracteristicaData['link_url'][$index] ?? null,
+                'link_url' => $LinkData['link_url'][$index] ?? null,
                 'product_id' => $this->id,
+                'access_levels' => $LinkData['access_levels'][$index] ?? null,
             ]);
         }
     }
@@ -204,6 +205,7 @@ class Product extends Model
                 'link_title' => $title,
                 'link_url' => $linksData['link_url'][$index] ?? null,
                 'product_id' => $this->id,
+                'access_levels' => $linksData['access_levels'][$index] ?? null,
             ]);
         }
 

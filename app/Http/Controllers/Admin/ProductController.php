@@ -155,10 +155,10 @@ class ProductController extends Controller
 
         // Inserir links (se houver)
         if ($request->has('link_title') && count($request->input('link_title')) > 0) {
-            $product->addCaracteristicas([
-                'titles' => $request->input('caracteristica_title'),
-                'descriptions' => $request->input('caracteristica_description', []),
-                'destaques' => $request->input('caracteristica_destaque', []),
+            $product->addLinks([
+                'link_title' => $request->input('link_title'),
+                'link_url' => $request->input('link_url', []),
+                'access_levels' => $request->input('access_levels', []),
             ]);
         }
         if ($request->has('size_ids') && count($request->input('size_ids')) > 0) {
@@ -283,6 +283,7 @@ class ProductController extends Controller
             $product->syncLinks([
                 'link_title' => $request->input('link_title'),
                 'link_url' => $request->input('link_url', ''),
+                'access_levels' => $request->input('access_levels', []),
             ]);
         } else {
             $product->links()->delete();

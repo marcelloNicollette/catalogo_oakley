@@ -426,10 +426,28 @@
 
                         <!-- Arquivos/Links -->
                         <div class="my-[30px]">
-                            @if (count($produto->links) > 0)
+                            @php
+                                $user = auth()->user();
+                                $linksVisiveis =
+                                    $user && $produto->links
+                                        ? $produto->links->filter(function ($link) use ($user) {
+                                            if (in_array($user->type, ['admin', 'user-adm'])) {
+                                                return true;
+                                            }
+                                            if ($link->access_levels === null) {
+                                                return true;
+                                            }
+                                            if (!is_array($link->access_levels)) {
+                                                return false;
+                                            }
+                                            return in_array($user->classification, $link->access_levels);
+                                        })
+                                        : collect();
+                            @endphp
+                            @if ($linksVisiveis->count() > 0)
                                 <h3 class="text-xs mb-5 text-black opacity-50">Arquivos/Links</h3>
                                 <div class="flex flex-wrap gap-2">
-                                    @foreach ($produto->links as $link)
+                                    @foreach ($linksVisiveis as $link)
                                         <a href="{{ $link->link_url }}" target="_blank"
                                             class="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm transition-colors">
                                             <img src="/images/icones/clip.png" alt="" />

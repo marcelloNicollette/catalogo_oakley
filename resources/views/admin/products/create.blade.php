@@ -508,12 +508,15 @@
                         <legend class="block text-sm font-medium text-gray-700">Arquivos ou Links
                         </legend>
                         <div x-data="{
-                            campos: [{ link_title: '', link_url: '' }],
+                            campos: [{ link_title: '', link_url: '', access_levels: [] }],
                             adicionarCampo() {
-                                this.campos.push({ link_title: '', link_url: '' });
+                                this.campos.push({ link_title: '', link_url: '', access_levels: [] });
                             },
                             removerCampo(index) {
                                 this.campos.splice(index, 1);
+                                if (this.campos.length === 0) {
+                                    this.campos.push({ link_title: '', link_url: '', access_levels: [] });
+                                }
                             }
                         }">
 
@@ -536,7 +539,34 @@
                                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                                                 name="link_url[]" required placeholder="http://">
                                         </div>
-
+                                        <div class="md:col-span-2">
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Classificações com
+                                                acesso</label>
+                                            <div class="space-y-1">
+                                                @php
+                                                    $accessLevels = [
+                                                        'representante',
+                                                        'interno',
+                                                        'fornecedor',
+                                                        'convidado',
+                                                        'cliente',
+                                                    ];
+                                                @endphp
+                                                @foreach ($accessLevels as $level)
+                                                    <label class="inline-flex items-center mr-4">
+                                                        <input type="checkbox" :name="`access_levels[${index}][]`"
+                                                            :value="'{{ $level }}'"
+                                                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                                            x-model="campo.access_levels">
+                                                        <span
+                                                            class="ml-2 text-sm text-gray-600">{{ ucfirst($level) }}</span>
+                                                    </label>
+                                                @endforeach
+                                            </div>
+                                            <p class="mt-1 text-xs text-gray-500">Se nenhuma classificação for marcada, o
+                                                link ficará visível
+                                                para todos os usuários logados.</p>
+                                        </div>
                                         <!-- Coluna 3: Botões -->
                                         <div class="mt-6 flex items-start justify-start w-auto">
                                             <button type="button" @click="adicionarCampo()"
