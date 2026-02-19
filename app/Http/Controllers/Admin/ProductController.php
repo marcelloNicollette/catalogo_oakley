@@ -185,7 +185,7 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        $collections = Collection::where('active', true)->get();
+        $collections = Collection::get();
         $categories = Category::where('active', true)->get();
         $colors = Color::where('product_id', $product->id)->with('segmentacoesCliente')->get();
         $caracteristicas = CaracteristicaProduct::where('product_id', $product->id)->get();

@@ -342,12 +342,45 @@
                                 @endif
 
                                 @if ($produto->caracteristicas)
-                                    @foreach ($produto->caracteristicas as $caract)
+                                    @php
+                                        $pesos = $produto->caracteristicas->filter(
+                                            fn($c) => preg_match('/^Peso \d+( ref)?$/i', $c->title),
+                                        );
+                                        $outras = $produto->caracteristicas->filter(
+                                            fn($c) => !preg_match('/^Peso \d+( ref)?$/i', $c->title),
+                                        );
+
+                                        // Agrupa por número: ['1' => ['valor' => '40g', 'ref' => 'Tam 40'], ...]
+                                        $pesosAgrupados = [];
+                                        foreach ($pesos as $p) {
+                                            preg_match('/Peso (\d+)( ref)?/i', $p->title, $matches);
+                                            $num = $matches[1];
+                                            $isRef = isset($matches[2]);
+                                            if ($isRef) {
+                                                $pesosAgrupados[$num]['ref'] = $p->description;
+                                            } else {
+                                                $pesosAgrupados[$num]['valor'] = $p->description;
+                                            }
+                                        }
+                                    @endphp
+
+                                    @if (count($pesosAgrupados) > 0)
+                                        <div>
+                                            <p class="text-xs text-black opacity-50">Peso</p>
+                                            @foreach ($pesosAgrupados as $num => $peso)
+                                                <p class="text-sm">
+                                                    {{ $peso['valor'] ?? '' }}{{ isset($peso['ref']) ? ' (' . $peso['ref'] . ')' : '' }}
+                                                </p>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                    @foreach ($outras as $caract)
                                         <div>
                                             <p class="text-xs text-black opacity-50">{{ $caract->title }}</p>
                                             <p class="text-sm">{!! nl2br(e($caract->description)) !!}</p>
                                         </div>
                                     @endforeach
+
                                 @endif
 
 
