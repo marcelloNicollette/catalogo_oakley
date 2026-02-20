@@ -203,6 +203,8 @@ class frontendController extends Controller
         $colecoes = Collection::where('segmentacao_id', $segmentacao->id)->get();
         $categories = Category::where('segmento_id', $segmentacao->id)->get();
 
+        $colecao = Collection::where('slug', $colecao)->first();
+
         // Verificar se o usuário logado tem segmentações de cliente
         $user = Auth::user();
         $userSegmentacoesCliente = $user->segmentacoesCliente;
@@ -213,6 +215,7 @@ class frontendController extends Controller
         // Buscar apenas as cores do produto que estão vinculadas às segmentações do cliente
         if ($userSegmentacoesCliente->isNotEmpty()) {
             $allColorsQuery = Color::where('product_id', $produto->id)
+                ->where('collection_id', $colecao->id)
                 ->whereHas('segmentacoesCliente', function ($query) use ($userSegmentacoesCliente) {
                     $segmentacaoIds = $userSegmentacoesCliente->pluck('id')->toArray();
                     $query->whereIn('segmentacao_cliente_id', $segmentacaoIds);
@@ -221,6 +224,7 @@ class frontendController extends Controller
         } else {
             // Se o usuário não tem segmentações de cliente, buscar todas as cores
             $allColorsQuery = Color::where('product_id', $produto->id)
+                ->where('collection_id', $colecao->id)
                 ->with(['segmentacoesCliente', 'flagProduct']);
         }
 
