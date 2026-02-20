@@ -20,6 +20,12 @@
             --tw-ring-shadow: transparent;
             padding: 0;
         }
+
+        .input-email-password:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset !important;
+            -webkit-text-fill-color: white !important;
+            border-bottom: 1px solid black;
+        }
     </style>
     <div class="bg-white rounded-lg w-[630px] mx-4 px-[4rem] lg:px-[8rem] py-[3rem]">
         <!-- Tela 1: Formulário de Sugestão -->

@@ -48,7 +48,7 @@
             border-bottom: 1px solid white;
         }
 
-        E31B23 .input-style {
+        .input-style {
             padding: 20px 0;
         }
     </style>

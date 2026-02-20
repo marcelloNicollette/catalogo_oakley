@@ -141,7 +141,7 @@
                                 <span class="ml-2 text-sm">Impressão A4</span>
                             </label>
                             <label class="inline-flex items-center">
-                                <input disabled type="radio" name="formato"
+                                <input type="radio" name="formato"
                                     class="form-radio radio-custom w-4 h-4 rounded-full border border-black bg-white checked:bg-white checked:border-black focus:ring-0 cursor-pointer relative"
                                     value="16_9">
                                 <span class="ml-2 text-sm opacity-50">Apresentação 16:9</span>

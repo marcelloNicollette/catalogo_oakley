@@ -71,7 +71,7 @@ class ExportController extends Controller
         });
         //dd($produtos);
         $opcoes = $request->input('opcoes', []);
-        $grupo_opcoes = $request->input('grupo_opcoes', []);
+        $grupo_opcoes = array_push($opcoes, $request->input('grupo_opcoes', []));
 
         $svgPath = public_path('/images/logo-preto.svg');
         $svgContent = file_get_contents($svgPath);
@@ -95,11 +95,11 @@ class ExportController extends Controller
             'base64Svg_preto' => $base64Svg_preto,
             'base64Svg_vermelho' => $base64Svg_vermelho,
         ];
-        //dd($data);
-        if ($grupo_opcoes === 'separado') {
-            $view = $request->formato === '16_9' ? 'exports.collection.presentation' : 'exports.collection.a4';
+
+        if (in_array('separado', $opcoes)) {
+            $view = $request->formato === '16_9' ? 'exports.collection.16-9' : 'exports.collection.a4';
         } else {
-            $view = $request->formato === '16_9' ? 'exports.collection.presentation-group' : 'exports.collection.a4-group';
+            $view = $request->formato === '16_9' ? 'exports.collection.16-9-group' : 'exports.collection.a4-group';
         }
 
         if ($request->formato === 'planilha') {
@@ -225,12 +225,17 @@ class ExportController extends Controller
             return Excel::download($export, $filename, ExcelWriter::XLS);
         }
 
-        $pdf = PDF::loadView($view, $data)
-            ->setPaper('A4', 'landscape');
-        $pdf->setOption(['dpi' => 120]);
+
+        $customPaper = [0, 0, 810, 1440];
 
         if ($request->formato === '16_9') {
-            $pdf->setPaper('a4', 'landscape');
+            $pdf = PDF::loadView($view, $data);
+            $pdf->setPaper($customPaper, 'landscape');
+            $pdf->setOption(['dpi' => 120]);
+        } else {
+            $pdf = PDF::loadView($view, $data)
+                ->setPaper('A4', 'landscape');
+            $pdf->setOption(['dpi' => 120]);
         }
 
         $filename = $request->collectionHistoryName . '.pdf';
@@ -361,7 +366,12 @@ class ExportController extends Controller
             'base64Svg_azul' => $base64Svg_azul,
         ];
 
-        $view = $exportUser->formato === '16_9' ? 'exports.collection.presentation' : 'exports.collection.a4';
+
+        if (in_array('separado', $opcoes)) {
+            $view = $exportUser->formato === '16_9' ? 'exports.collection.16-9' : 'exports.collection.a4';
+        } else {
+            $view = $exportUser->formato === '16_9' ? 'exports.collection.16-9-group' : 'exports.collection.a4-group';
+        }
 
         if ($exportUser->formato === 'planilha') {
 
@@ -476,13 +486,17 @@ class ExportController extends Controller
             return Excel::download($export, $filename, ExcelWriter::XLS);
         }
 
-        $pdf = PDF::loadView($view, $data)
-            ->setPaper('A4', 'landscape');
 
-        $pdf->setOption(['dpi' => 120]);
+        $customPaper = [0, 0, 810, 1440];
 
         if ($exportUser->formato === '16_9') {
-            $pdf->setPaper('a4', 'landscape');
+            $pdf = PDF::loadView($view, $data);
+            $pdf->setPaper($customPaper, 'landscape');
+            $pdf->setOption(['dpi' => 120]);
+        } else {
+            $pdf = PDF::loadView($view, $data)
+                ->setPaper('A4', 'landscape');
+            $pdf->setOption(['dpi' => 120]);
         }
 
         $filename = $exportUser->filename;
