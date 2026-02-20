@@ -239,7 +239,7 @@ class frontendController extends Controller
         $produto->allColors = $allColors;
         $produto->colors = $allColors; // Manter compatibilidade
         //dd($produto->colors);
-        $colecao = Collection::where('slug', $colecao)->first();
+
 
         $produtosQuery = Color::where('collection_id', $colecao->id)
             ->with(['product', 'product.caracteristicasDestaque', 'product.category']);
