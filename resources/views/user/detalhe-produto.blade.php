@@ -369,7 +369,12 @@
                                             <p class="text-xs text-black opacity-50">Peso</p>
                                             @foreach ($pesosAgrupados as $num => $peso)
                                                 <p class="text-sm">
-                                                    {{ $peso['valor'] ?? '' }}{{ isset($peso['ref']) ? ' (' . $peso['ref'] . ')' : '' }}
+                                                    @if (isset($peso['valor']) && $peso['valor'] !== '-')
+                                                        {{ $peso['valor'] ?? '' }}
+                                                        @if (isset($peso['ref']))
+                                                            <i style="font-size: 0.8em;">{{ $peso['ref'] }}</i>
+                                                        @endif
+                                                    @endif
                                                 </p>
                                             @endforeach
                                         </div>
