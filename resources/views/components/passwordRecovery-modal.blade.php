@@ -21,7 +21,7 @@
             padding: 0;
         }
 
-        .input-email-password:-webkit-autofill, input[name="email"]:-webkit-autofill {
+        .input-email-password:-webkit-autofill {
             -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 1) inset !important;
             -webkit-text-fill-color: white !important;
             border-bottom: 1px solid black;
