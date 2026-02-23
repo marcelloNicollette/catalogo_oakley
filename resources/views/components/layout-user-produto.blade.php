@@ -29,6 +29,45 @@
 
     <!-- Scripts e estilos adicionais -->
     @stack('styles')
+
+
+    @php
+        // Obter idioma do usuário
+        $userLanguage = auth()->check() ? auth()->user()->idioma ?? 'pt' : 'pt';
+
+        // Mapear códigos de idioma
+        $languageMap = [
+            'pt' => ['code' => 'pt', 'name' => 'Português', 'flag' => '🇧🇷'],
+            'en' => ['code' => 'en', 'name' => 'English', 'flag' => '🇺🇸'],
+            'es' => ['code' => 'es', 'name' => 'Español', 'flag' => '🇪🇸'],
+        ];
+
+        $currentLang = $languageMap[$userLanguage] ?? $languageMap['pt'];
+        $googleTranslateCode = $currentLang['code'];
+    @endphp
+
+    <style>
+        /* Esconder completamente todos os elementos do Google Translate */
+        #google_translate_element {
+            position: fixed !important;
+            left: -9999px !important;
+            top: -9999px !important;
+            opacity: 0 !important;
+        }
+
+        .goog-te-banner-frame,
+        .goog-te-banner-frame.skiptranslate,
+        .skiptranslate,
+        body>.skiptranslate,
+        iframe.skiptranslate {
+            display: none !important;
+            visibility: hidden !important;
+        }
+
+        body {
+            top: 0 !important;
+        }
+    </style>
 </head>
 
 <body class="bg-[#F1F1F1] flex flex-col min-h-screen">
@@ -58,6 +97,46 @@
             {{ $footer }}
         </footer>
     @endisset
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        const USER_LANGUAGE = '{{ $googleTranslateCode }}';
+
+        function setGoogleTranslateCookie(langCode) {
+            const cookieName = 'googtrans';
+            const cookieValue = '/pt/' + langCode;
+            const domain = window.location.hostname;
+            document.cookie = cookieName + '=' + cookieValue + '; path=/; domain=' + domain;
+            document.cookie = cookieName + '=' + cookieValue + '; path=/';
+        }
+
+        function removeGoogleTranslateCookie() {
+            const domain = window.location.hostname;
+            document.cookie = 'googtrans=; path=/; domain=' + domain + '; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            document.cookie = 'googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        }
+
+        if (USER_LANGUAGE !== 'pt') {
+            setGoogleTranslateCookie(USER_LANGUAGE);
+        } else {
+            removeGoogleTranslateCookie();
+        }
+
+        function googleTranslateElementInit() {
+            try {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'pt',
+                    includedLanguages: 'pt,en,es',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                    autoDisplay: false
+                }, 'google_translate_element');
+            } catch (error) {
+                console.error('Erro ao inicializar Google Translate:', error);
+            }
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+    </script>
 
     <!-- SweetAlert2 JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.27/sweetalert2.min.js"></script>

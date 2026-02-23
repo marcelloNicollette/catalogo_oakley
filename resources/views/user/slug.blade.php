@@ -241,6 +241,44 @@
                 padding: 0 15px;
             }
         }
+
+
+
+        @media (max-width: 359px) {
+            .carousel-wrapper {
+                height: 40vh;
+            }
+        }
+
+        /* Mobile XS — < 576px */
+
+        @media (min-width: 360px) and (max-width: 575px) {
+            .carousel-wrapper {
+                height: 40vh;
+            }
+        }
+
+        /* Mobile SM — 576px até 767px */
+        @media (min-width: 576px) and (max-width: 767px) {
+            .carousel-wrapper {
+                height: 42vh;
+            }
+        }
+
+        /* Tablet MD — 768px até 991px */
+        @media (min-width: 768px) and (max-width: 991px) {
+            .carousel-wrapper {
+                height: 45vh;
+            }
+        }
+
+        /* Tablet MD — 768px até 991px */
+        @media (max-width: 991px) {
+
+            .nav-arrow {
+                top: 25%;
+            }
+        }
     </style>
     <main class="lg:flex flex-1">
         <!-- Menu lateral -->

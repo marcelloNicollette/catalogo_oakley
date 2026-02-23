@@ -51,12 +51,18 @@
             $segmentacoes = \App\Models\Segmentacao::where('active', 1)->get();
             $currentUrl = request()->path();
             $currentSlug = '';
+            $parts = [];
 
             if (strpos($currentUrl, 'user/') === 0) {
                 $parts = explode('/', $currentUrl);
                 if (count($parts) > 1) {
                     $currentSlug = $parts[1];
                 }
+            }
+
+            $backColecoesUrl = null;
+            if (count($parts) >= 4 && ($parts[2] ?? null) === 'colecoes') {
+                $backColecoesUrl = url('/user/' . $parts[1] . '/colecoes');
             }
         @endphp
 
@@ -131,7 +137,7 @@
                     </button>
                 </form>
             @else
-                <a href="javascript: history.go(-1);"
+                <a href="{{ url()->previous() }}"
                     class="flex items-center border border-black rounded-full px-3 py-2 text-md bg-gray-100 hover:bg-gray-200 transition text-[14px]">
                     Voltar
                     <img src="/images/icon-voltar.png" alt="" class="px-1" />

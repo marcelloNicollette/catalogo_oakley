@@ -4,32 +4,53 @@
             height: calc(100vh - 167px);
         }
 
-        @media (max-width: 768px) {
+
+        @media (min-width: 280px) and (max-width: 420px) {
+
+            .colecao-card {
+                height: 15vh;
+            }
+        }
+
+        @media (min-width: 421px) and (max-width: 639px) {
+
+            .colecao-card {
+                height: 22vh;
+            }
+        }
+
+        @media (min-width: 640px) and (max-width: 767px) {
 
             .colecao-card {
                 height: 30vh;
             }
         }
 
-        @media (min-width: 768px) {
+        @media (min-width: 768px) and (max-width: 840px) {
 
             .colecao-card {
                 height: 30vh;
             }
         }
 
-        @media (min-width: 1080px) {
+        @media (min-width: 841px) and (max-width: 1079px) {
 
             .colecao-card {
-                height: 20vh;
+                height: 30vh;
             }
         }
 
-
-        @media (min-width: 1280px) {
+        @media (min-width: 1024px) and (max-width: 1279px) {
 
             .colecao-card {
-                height: 35vh;
+                height: 30vh;
+            }
+        }
+
+        @media (min-width: 1280px) and (max-width: 2565px) {
+
+            .colecao-card {
+                height: 30vh;
             }
         }
 

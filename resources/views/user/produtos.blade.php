@@ -1,6 +1,8 @@
 <x-layout-user title="Under Armour - Produtos">
     <main class="lg:flex flex-1 produtos-page">
         <style>
+            <style>
+
             /* Container do card com altura mínima fixa */
             .bg-white.hover\:shadow-md {
                 min-height: 450px;
@@ -12,7 +14,7 @@
             /* Título com altura fixa e ellipsis para overflow */
             .title {
                 display: -webkit-box;
-
+                -webkit-line-clamp: 4;
                 /* Limita a 3 linhas */
                 -webkit-box-orient: vertical;
                 overflow: hidden;
@@ -20,7 +22,7 @@
 
                 /* 3 linhas × ~18px por linha */
 
-                line-height: 20px;
+                line-height: 25px;
             }
 
             /* Alternativa: Se preferir que todos tenham exatamente a mesma altura */
@@ -61,7 +63,7 @@
             #produtos>a {
                 display: flex;
                 flex-direction: column;
-                height: 100%;
+                height: auto;
             }
 
             /* Card ocupa todo o espaço disponível */
@@ -90,11 +92,8 @@
                 visibility: hidden;
                 opacity: 0;
                 background-color: #fff;
-                /* pode trocar pelo badge_bg */
                 color: #000;
-                /* ou badge_color */
                 text-align: center;
-
                 position: absolute;
                 z-index: 10;
                 top: 15%;
@@ -110,9 +109,8 @@
             }
 
             .height-ultra {
-                height: calc(100vh - 158px);
+                height: calc(100vh - 160px);
             }
-
 
             /* Estilos para dropdown aninhado de subcategorias */
             .category-option {
@@ -145,7 +143,6 @@
             .subcategory-dropdown {
                 display: none;
                 padding-left: 20px;
-                margin-top: 5px;
             }
 
             .category-option.expanded .subcategory-dropdown {
@@ -153,12 +150,11 @@
             }
 
             .subcategory-option {
-                padding: 0 12px;
+                padding: 0 0 0 25px;
                 cursor: pointer;
                 transition: background-color 0.2s;
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
                 font-size: 16px;
                 color: #5B5B5B;
                 font-weight: 400;
@@ -172,6 +168,7 @@
             .subcategory-option.selected {
                 font-weight: 400;
                 color: #5B5B5B;
+                padding: 0 3px;
             }
 
             .subcategory-option .check-icon {
@@ -182,10 +179,6 @@
                 margin-right: 8px;
             }
 
-            .subcategory-option.selected .check-icon {
-                display: inline;
-            }
-
             .subcategory-option .x-icon {
                 margin-left: 8px;
                 font-size: 18px;
@@ -193,7 +186,7 @@
                 display: none;
             }
 
-            .subcategory-option.selected .x-icon {
+            .subcategory-option.selected .check-icon {
                 display: inline-table;
             }
 
@@ -202,17 +195,6 @@
                 max-height: 500px;
                 border: 1px solid #DDD;
             }
-
-
-
-            /* Para Firefox */
-            .custom-scrollbar {
-                scrollbar-width: thin;
-                /* auto, thin, none */
-                scrollbar-color: #A9A9A9 #000000;
-                /* thumb track */
-            }
-
 
             /* Adicione estas regras ao seu css.css */
 
@@ -662,7 +644,6 @@
                 color: #666;
             }
 
-
             /* Adjusting the scrollbar track's style */
             ::-webkit-scrollbar-track {
                 background-color: #f5f5f5;
@@ -679,25 +660,25 @@
                 background-color: #333;
             }
         </style>
+
         <!-- Conteúdo principal -->
         <section class="flex-1 flex flex-col overflow-hidden">
             @php
-
                 $currentUrl = request()->path();
                 $currentUrlComplete = request()->path();
                 $currentSlug = '';
 
                 if (strpos($currentUrl, 'user') === 0) {
                     $parts = explode('/', $currentUrl);
-                    //dd($parts);
                     if (count($parts) > 1) {
                         $currentSlug = $parts[3];
                     }
                 }
-
             @endphp
+            <!-- Filtros superiores -->
             <div
                 class="fixed top-[70px] left-0 right-0 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-4 pb-3 px-[10px] bg-[#F1F1F1] z-10">
+
                 <!-- Esquerda: Coleção e Categoria (FLEXÍVEL) -->
                 <div class="filters-left-section">
                     <!-- Coleção (largura fixa baseada no conteúdo) -->
@@ -708,7 +689,11 @@
                                 @if (!empty($currentSlug))
                                     @foreach ($colecoes as $colecao)
                                         @if ($currentSlug == $colecao->slug)
-                                            {{ $colecao->name }}
+                                            @if ($colecao->description)
+                                                {{ $colecao->name }} ({{ $colecao->description }})</>
+                                            @else
+                                                {{ $colecao->name }}
+                                            @endif
                                         @endif
                                     @endforeach
                                 @else
@@ -730,31 +715,26 @@
                                 <div class="option text-[18px]" data-slug="{{ $colecao->slug }}"
                                     data-value="{{ $colecao->slug }}"
                                     {{ $currentSlug == $colecao->slug ? 'selected' : '' }}
-                                    style=" {{ $currentSlug == $colecao->slug ? 'padding: 6px 0;' : '' }}">
+                                    style=" {{ $currentSlug == $colecao->slug ? 'padding: 6px 15px 6px 1px;' : '' }}">
                                     <span class="check-icon"
-                                        style="display: {{ $currentSlug == $colecao->slug ? 'inline; margin:0 10px 0 0;' : 'none' }};"><svg
+                                        style="display: {{ $currentSlug == $colecao->slug ? 'inline; margin:0 5px 0 0 ;' : 'none' }};"><svg
                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                             <path
                                                 d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
                                         </svg></span>
                                     <span class="option-content"
                                         style="margin: {{ $currentSlug == $colecao->slug ? '0' : '0 20px' }};">
-                                        {{ $colecao->name }}
+                                        @if ($colecao->description)
+                                            {{ $colecao->name }}<span
+                                                class="text-[14px] line-height-[16px] text-[#000] ml-[10px]">{{ $colecao->description }}</span>
+                                        @else
+                                            {{ $colecao->name }}
+                                        @endif
                                     </span>
                                     <span class="x-icon"
                                         style="display: {{ $currentSlug == $colecao->slug ? 'inline-table' : 'none' }};">×</span>
                                 </div>
                             @endforeach
-                            <div class="option" data-slug="" data-value="">
-                                <span class="check-icon" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 640 640">
-                                        <path
-                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
-                                    </svg></span>
-                                <span class="text-sm option-content"
-                                    style="margin: 0 5px 0 25px; font-size:16px">Todas</span>
-                                <span class="x-icon" style="display: none;">×</span>
-                            </div>
                         </div>
                     </div>
 
@@ -772,10 +752,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="options min-w-[210px] p-5 custom-scrollbar" id="categoryOptions">
+                        <div class="options min-w-[250px] p-5 custom-scrollbar-wh" id="categoryOptions">
                             @foreach ($categories as $category)
-                                <div class="option category-option " data-value="{{ $category->name }}"
-                                    data-id="{{ $category->id }}">
+                                @php $hasSub = isset($category->subcategories) && count($category->subcategories) > 0; @endphp
+                                <div class="option category-option {{ $hasSub ? 'has-subcategories' : '' }}"
+                                    data-value="{{ $category->name }}" data-id="{{ $category->id }}">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
                                             <span class="check-icon" style="display: none;"><svg
@@ -785,11 +766,49 @@
                                                 </svg></span>
                                             <span class="option-content">{{ $category->name }}</span>
                                         </div>
-
+                                        @if ($hasSub)
+                                            <span class="arrow-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"
+                                                    viewBox="0 0 12 8" fill="none">
+                                                    <path d="M1 1L5.94975 5.94975L10.8995 1" stroke="currentColor"
+                                                        stroke-width="1.5" stroke-linecap="round" />
+                                                </svg>
+                                            </span>
+                                        @endif
                                         <span class="x-icon" style="display: none;">×</span>
                                     </div>
 
-
+                                    @if ($hasSub)
+                                        <div class="subcategory-dropdown" data-category-id="{{ $category->id }}">
+                                            <div class="subcategory-option" data-value=""
+                                                data-category-id="{{ $category->id }}">
+                                                <div style="display: flex; align-items: center;">
+                                                    <svg class="check-icon" xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 640 640">
+                                                        <path
+                                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
+                                                    </svg>
+                                                    <span class="text-base">Todas</span>
+                                                </div>
+                                                <span class="x-icon">×</span>
+                                            </div>
+                                            @foreach ($category->subcategories as $sub)
+                                                <div class="subcategory-option" data-value="{{ $sub->id }}"
+                                                    data-category-id="{{ $category->id }}">
+                                                    <div style="display: flex; align-items: center;">
+                                                        <svg class="check-icon" xmlns="http://www.w3.org/2000/svg"
+                                                            viewBox="0 0 640 640">
+                                                            <path
+                                                                d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
+                                                        </svg>
+                                                        <span>{{ $sub->faixa }}</span>
+                                                    </div>
+                                                    <span class="x-icon">×</span>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                    @endif
                                 </div>
                             @endforeach
                             <div class="option category-option selected" data-value="" data-id="">
@@ -809,7 +828,7 @@
                     </div>
                 </div>
 
-                <!-- Direita: Busca e outros -->
+                <!-- Direita: Busca, Filtros e Ordenação (LARGURA FIXA) -->
                 <div class="flex flex-wrap gap-2 items-end justify-end">
                     <div class="flex items-center border-b border-b-black px-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-black ml-1" viewBox="0 0 20 20"
@@ -822,7 +841,7 @@
                             class="input-estilizado bg-transparent border-0 focus:outline-none focus:ring-0 p-1" />
                     </div>
 
-                    <label class="inline-flex items-center text-sm bg-white px-[20px] py-[10px] rounded-lg h-[36px]">
+                    <label class="inline-flex items-center bg-white px-[20px] py-[10px] rounded-lg h-[36px]">
                         <span class="text-[1rem] mr-1 leading-[0px]">Agrupar cores</span>
                         <input id="groupColors" type="checkbox"
                             class="w-[15px] h-[15px] rounded border-2 border-[#7A7A7A] bg-white checked:bg-white checked:border-[#7A7A7A] focus:ring-0 cursor-pointer relative">
@@ -845,6 +864,7 @@
                         @php
                             $availableNumeracaoIds = [];
                             $availableSizeIds = [];
+                            $availableGeneros = [];
                             if (!empty($produtos)) {
                                 foreach ($produtos as $produtoGroup) {
                                     if ($produtoGroup && $produtoGroup->product) {
@@ -862,11 +882,15 @@
                                                 $availableSizeIds[$sid] = true;
                                             }
                                         }
+                                        if (!empty($produtoGroup->genero)) {
+                                            $availableGeneros[$produtoGroup->genero] = true;
+                                        }
                                     }
                                 }
                             }
                             $availableNumeracaoIds = array_keys($availableNumeracaoIds);
                             $availableSizeIds = array_keys($availableSizeIds);
+                            $availableGeneros = array_keys($availableGeneros);
                         @endphp
                         <div class="filter-dropdown custom-scrollbar-wh" id="filterDropdown">
                             <div class="filter-section">
@@ -895,6 +919,16 @@
                             </div>
 
                             <div class="filter-section">
+                                <label class="filter-label">Gênero</label>
+                                <div class="filter-options" id="generoOptions">
+                                    @foreach ($availableGeneros as $gen)
+                                        <div class="filter-option" data-type="genero"
+                                            data-value="{{ $gen }}">{{ $gen }}</div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div class="filter-section">
                                 <label class="filter-label">Valor</label>
                                 <div class="filter-options price-options" id="priceOptions">
                                     <span class="text-sm pt-2">de</span> <input style="width: 30%;"
@@ -906,6 +940,8 @@
                             <div class="text-[#7A7A7A] text-[14px] underline cursor-pointer" id="clearFiltersBtn">
                                 Limpar</div>
                         </div>
+
+
                     </div>
 
                     <div class="sort-container">
@@ -937,33 +973,28 @@
 
             <!-- Lista de Produtos -->
             <div id="produtos"
-                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[10px] p-1 bg-[#1D1D1D] lg:p-[10px] mt-72 lg:mt-[4.8rem] overflow-auto height-ultra custom-scrollbar">
+                class="gap-[10px] bg-[#E6E6E6] p-[10px] lg:mt-[4.8rem] overflow-auto height-ultra custom-scrollbar">
 
                 @if (empty($produtos) || count($produtos) == 0)
-                    <!-- Mensagem quando não há produtos -->
                     <div class="col-span-full flex items-center justify-center h-[100vh]">
                         <div class="text-center">
                             <p class="text-gray-600 text-xl font-medium">Nenhum produto disponível</p>
                         </div>
                     </div>
                 @else
-                    <!-- Template de Produto -->
                     <template id="template-produto">
                         <a href="" class="block h-full">
                             <div
                                 class="bg-white hover:shadow-md transition relative rounded-md border border-[#DEDEDE] flex flex-col">
                                 <div class="badge-container pt-1 px-2" style="position:absolute; min-height: 35px;">
-
                                 </div>
                                 <img src="/images/tenis-1.jpg" alt="Tênis"
                                     class="w-full object-contain rounded-md" />
 
                                 <div class="p-4 flex-1 flex flex-col">
-                                    <h2
-                                        class="notranslate title uppercase font-black font-fko text-[22px] leading-[18px] pb-2">
+                                    <h2 class="notranslate title font-normal font-fko text-[28px] leading-[24px] pb-2">
                                     </h2>
 
-                                    <!-- Wrapper para empurrar preço para baixo -->
                                     <div class="flex-1 flex flex-col justify-between">
                                         <div class="mt-auto">
                                             <p class="text-sm pb-2">
@@ -978,8 +1009,7 @@
                                             <p class="text-black opacity-50 text-xs">Cor</p>
                                             <p class="notranslate cor text-black text-xs pb-2"></p>
 
-
-                                            <p class="text-black opacity-50 mt-1 text-xs ">PDV</p>
+                                            <p class="text-black opacity-50 mt-1 text-xs">PDV</p>
                                             <p class="text-base preco text-black"></p>
                                         </div>
                                     </div>
@@ -990,7 +1020,6 @@
                 @endif
             </div>
         </section>
-
 
 
         <!-- Botão flutuante para abrir filtros (mobile) -->
@@ -1166,6 +1195,7 @@
         </div>
 
 
+
     </main>
 
     @push('scripts')
@@ -1178,8 +1208,7 @@
                                 $produto = $produtoGroup->product;
                                 $imgPath = '/images/produtos/' . $produto->code . '_' . str_replace('/', '_', $produtoGroup->color_code) . '.jpg';
                                 $imgFullPath = public_path($imgPath);
-                                $img = file_exists($imgFullPath) ? $imgPath : '/images/img-padrao-ua.png';
-                                $numeracaoIdsProduct = $produto->numeracoes ? $produto->numeracoes->pluck('id')->toArray() : [];
+                                $img = file_exists($imgFullPath) ? $imgPath : '/images/img-padrao-oly.png';
                                 $numeracaoIdsProduct = $produto->numeracoes ? $produto->numeracoes->pluck('id')->toArray() : [];
                                 $numeracaoIdColor = $produtoGroup->numeracao ? $produtoGroup->numeracao->id : null;
                                 $numeracaoIds = $numeracaoIdsProduct;
@@ -1400,6 +1429,9 @@
                         const matchesClassificacao = selectedFilters.classification.length === 0 ||
                             (p.classificacaoId && selectedFilters.classification.includes(p.classificacaoId.toString()));
 
+                        const matchesGenero = selectedFilters.genero.length === 0 ||
+                            selectedFilters.genero.some(gen => (p.genero || '').toLowerCase() === gen.toLowerCase());
+
                         let matchesSegmentacao = true;
                         try {
                             const selectedSegmentacoes = JSON.parse(localStorage.getItem('selectedSegmentacoes') || '[]');
@@ -1426,7 +1458,7 @@
                         }
 
                         return matchesTermo && matchesCategoria && matchesSubcategoria && matchesNumeracao &&
-                            matchesTamanho && matchesClassificacao && matchesSegmentacao && matchesPreco;
+                            matchesTamanho && matchesClassificacao && matchesGenero && matchesSegmentacao && matchesPreco;
                     }
                 );
             }
@@ -1501,6 +1533,7 @@
                             container.querySelectorAll('.subcategory-option').forEach(subOption => {
                                 subOption.addEventListener('click', function(e) {
                                     e.stopPropagation();
+
                                     handleSubcategorySelection(this);
                                 });
                             });
@@ -1515,6 +1548,7 @@
 
             // Função para lidar com a seleção de subcategoria
             function handleSubcategorySelection(subcategoryOption) {
+
                 const subcategoryId = subcategoryOption.getAttribute('data-value');
                 const categoryId = subcategoryOption.getAttribute('data-category-id');
                 const subcategoryName = subcategoryOption.querySelector('span').textContent;
@@ -1547,9 +1581,41 @@
                 //categoryOption.querySelector('.check-icon').style.display = 'inline';
                 //categoryOption.querySelector('.x-icon').style.display = 'inline';
 
+                const subcategoryContainer = subcategoryOption.closest('.subcategory-dropdown');
+
+                document.querySelectorAll('.subcategory-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                    opt.querySelector('.check-icon').style.display = 'none';
+                    opt.querySelector('.x-icon').style.display = 'none';
+                });
+                subcategoryOption.classList.add('selected');
+                subcategoryOption.querySelector('.check-icon').style.display = 'inline';
+                subcategoryOption.querySelector('.x-icon').style.display = 'inline-table';
 
                 //closeCategoryDropdown();
                 aplicarFiltros();
+
+                subcategoryOption.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('x-icon')) {
+
+                        e.stopPropagation();
+                        const option = e.target.closest('.option');
+                        console.log(option);
+                        if (option) {
+                            categorySelectedText.innerHTML = "<span class='text-[16px] text-black'>Categoria</span>";
+                            selectedCategory = '';
+                            selectedSubcategory = '';
+                            subcategoryOption.classList.remove('selected');
+                            subcategoryOption.querySelector('.check-icon').style.display = 'none';
+                            subcategoryOption.querySelector('.x-icon').style.display = 'none';
+
+                            //closeCategoryDropdown();
+                            aplicarFiltros();
+                        }
+                        return;
+                    }
+                });
+
             }
 
             // Inicializar estrutura de subcategorias nos options de categoria
@@ -1576,45 +1642,96 @@
                                 return;
                             }
 
-                            const categoryName = this.getAttribute('data-value');
-                            const categoryId = this.getAttribute('data-id');
+                            const subcategoryContainer = this.querySelector('.subcategory-dropdown');
+                            const hasSubcategories = this.classList.contains('has-subcategories');
 
-                            // Define a categoria selecionada
-                            selectedCategory = categoryName;
-                            selectedSubcategory = ''; // Limpa subcategoria
+                            // Se NÃO tem subcategorias, filtra diretamente pela categoria
+                            if (!hasSubcategories || (subcategoryContainer && subcategoryContainer.children
+                                    .length === 0)) {
+                                const categoryName = this.getAttribute('data-value');
+                                const categoryId = this.getAttribute('data-id');
 
-                            // Atualiza o texto do botão
-                            categorySelectedText.innerHTML = `
+                                // Define a categoria selecionada
+                                selectedCategory = categoryName;
+                                selectedSubcategory = ''; // Limpa subcategoria
+
+                                // Atualiza o texto do botão
+                                categorySelectedText.innerHTML = `
                         <span class='text-[16px] text-black'>Categoria: </span> 
                         <span class='text-[18px] text-[#7A7A7A]'>${categoryName}</span>
                     `;
 
-                            // Atualiza visual de seleção
-                            categoryOptions.querySelectorAll('.category-option').forEach(opt => {
-                                opt.classList.remove('selected');
-                                opt.querySelector('.check-icon').style.display = 'none';
-                                const xIcon = opt.querySelector('.x-icon');
-                                if (xIcon) xIcon.style.display = 'none';
-                            });
+                                categoryOptions.querySelectorAll('.subcategory-option').forEach(
+                                    opt => {
+                                        opt.classList.remove('selected');
+                                        opt.querySelector('.check-icon').style.display = 'none';
+                                        opt.querySelector('.x-icon').style.display = 'none';
+                                    });
 
-                            categoryOptions.querySelectorAll('.option').forEach(opt => {
-                                opt.classList.remove('selected');
-                                opt.querySelector('.check-icon').style.display = 'none';
-                                opt.querySelector('.x-icon').style.display = 'none';
-                            });
+                                // Atualiza visual de seleção
+                                categoryOptions.querySelectorAll('.category-option').forEach(opt => {
+                                    opt.classList.remove('selected');
+                                    opt.querySelector('.check-icon').style.display = 'none';
+                                    const xIcon = opt.querySelector('.x-icon');
+                                    if (xIcon) xIcon.style.display = 'none';
+                                });
 
-                            this.classList.add('selected');
-                            //this.querySelector('.option-content').style.margin = '0';
-                            this.querySelector('.check-icon').style.display = 'inline';
-                            const xIcon = this.querySelector('.x-icon');
-                            if (xIcon) xIcon.style.display = 'inline-table';
+                                categoryOptions.querySelectorAll('.option').forEach(opt => {
+                                    opt.classList.remove('selected');
+                                    opt.querySelector('.check-icon').style.display = 'none';
+                                    opt.querySelector('.x-icon').style.display = 'none';
+                                });
 
-                            // Aplica o filtro
-                            aplicarFiltros();
+                                this.classList.add('selected');
+                                //this.querySelector('.option-content').style.margin = '0';
+                                this.querySelector('.check-icon').style.display = 'inline';
+                                const xIcon = this.querySelector('.x-icon');
+                                if (xIcon) xIcon.style.display = 'inline-table';
 
+                                // Aplica o filtro
+                                aplicarFiltros();
+
+                                // Opcional: fechar o dropdown após selecionar
+                                // closeCategoryDropdown();
+
+                                return;
+                            }
+
+                            const isExpanded = this.classList.contains('expanded');
+
+                            // Não fecha outros dropdowns, apenas expande o clicado
+                            if (!isExpanded) {
+
+                                this.classList.add('expanded');
+                                // Garante que o dropdown abre abaixo do item principal
+                                const subcategoryContainer = this.querySelector('.subcategory-dropdown');
+                                if (subcategoryContainer) {
+                                    subcategoryContainer.style.display = 'block';
+                                }
+                                if (!subcategoryContainer.hasAttribute('data-loaded') &&
+                                    subcategoryContainer
+                                    .children.length === 0) {
+                                    loadSubcategoriesInline(categoryId, subcategoryContainer,
+                                        categoryOption);
+                                }
+                            } else {
+
+                                this.classList.remove('expanded');
+                                const subcategoryContainer = this.querySelector('.subcategory-dropdown');
+                                if (subcategoryContainer) {
+                                    subcategoryContainer.style.display = 'none';
+                                }
+                            }
 
                         });
 
+                        // Bind de seleção para subcategorias já renderizadas
+                        subcategoryContainer.querySelectorAll('.subcategory-option').forEach(subOption => {
+                            subOption.addEventListener('click', function(e) {
+                                e.stopPropagation();
+                                handleSubcategorySelection(this);
+                            });
+                        });
                     }
                 });
             }
@@ -1645,6 +1762,7 @@
                     closeColecaoDropdown();
                 } else {
                     closeCategoryDropdown();
+                    closeColecaoDropdown();
                     closeFilterDropdown();
                     closeSortDropdown();
                     openColecaoDropdown();
@@ -1654,7 +1772,6 @@
             colecaoOptions.addEventListener('click', function(e) {
                 if (e.target.classList.contains('x-icon')) {
                     e.stopPropagation();
-
                     const option = e.target.closest('.option');
                     if (option) {
                         //colecaoSelectedText.textContent = 'Selecione uma coleção';
@@ -1690,7 +1807,10 @@
                     const newUrl = currentUrl.replace(/\/[^/]+$/, "") + '/' + slug;
 
                     const text = option.querySelector('.option-content').textContent;
-                    colecaoSelectedText.textContent = text;
+
+                    const description = (option.querySelector('.option-content span') !== null) ? option.querySelector(
+                        '.option-content span').textContent : '';
+                    colecaoSelectedText.textContent = (description === '') ? text : text + ' ' + description;
                     closeColecaoDropdown();
 
                     window.location.href = newUrl;
@@ -1703,6 +1823,7 @@
 
                 if (categoryOptions.classList.contains('show')) {
                     closeCategoryDropdown();
+                    closeFilterDropdown();
                 } else {
                     closeColecaoDropdown();
                     closeFilterDropdown();
@@ -1711,7 +1832,78 @@
                 }
             });
 
+            categoryOptions.addEventListener('click', function(e) {
+                //console.log('chegou quix');
+                if (e.target.closest('.subcategory-dropdown')) {
+                    return;
+                }
 
+                if (e.target.classList.contains('x-icon')) {
+
+                    e.stopPropagation();
+                    const option = e.target.closest('.option');
+                    if (option) {
+                        categorySelectedText.innerHTML = "<span class='text-[16px] text-black'>Categoria</span>";
+                        selectedCategory = '';
+                        selectedSubcategory = '';
+
+                        // Fechar todas as categorias expandidas
+                        categoryOptions.querySelectorAll('.category-option').forEach(opt => {
+                            opt.classList.remove('expanded');
+                        });
+
+                        //closeCategoryDropdown();
+                        aplicarFiltros();
+                    }
+                    return;
+                }
+
+                let option = e.target;
+
+                if (!option.classList.contains('option')) {
+                    option = option.closest('.option');
+                }
+
+                if (option && option.classList.contains('option')) {
+                    //console.log('Clicou na categoria opção abaixo');
+                    const hasSubcategories = option.classList.contains('has-subcategories');
+
+                    // Se não tem subcategorias ou já está carregado e não expandido, selecionar
+                    if (!hasSubcategories || (option.hasAttribute('data-no-subcategories'))) {
+                        categoryOptions.querySelectorAll('.option').forEach(opt => {
+                            opt.classList.remove('selected');
+                            opt.classList.remove('expanded');
+                            opt.querySelector('.check-icon').style.display = 'none';
+                            opt.querySelector('.x-icon').style.display = 'none';
+                        });
+
+                        option.classList.add('selected');
+                        option.querySelector('.check-icon').style.display = 'inline';
+                        option.querySelector('.x-icon').style.display = 'inline-table';
+
+                        const value = option.getAttribute('data-value');
+                        const text = option.querySelector('.option-content').textContent;
+                        categorySelectedText.innerHTML = `
+                            <span class='text-[16px] text-black'>Categoria: </span> 
+                            <span class='text-[18px] text-[#7A7A7A]'>${text}</span>
+                        `;
+
+                        categoryOptions.querySelectorAll('.subcategory-option').forEach(opt => {
+                            opt.classList.remove('selected');
+                            opt.classList.remove('expanded');
+                            opt.querySelector('.check-icon').style.display = 'none';
+                            opt.querySelector('.x-icon').style.display = 'none';
+                        });
+
+                        selectedCategory = value;
+                        selectedSubcategory = '';
+                        //closeCategoryDropdown();
+                        aplicarFiltros();
+                    } else {
+
+                    }
+                }
+            });
 
             const filterButton = document.getElementById('filterButton');
             const filterText = document.getElementById('filterText');
@@ -1724,6 +1916,7 @@
                 numeracao: [],
                 tamanho: [],
                 classification: [],
+                genero: [],
                 priceMin: null,
                 priceMax: null
             };
@@ -1801,7 +1994,6 @@
                 });
             }
 
-
             const clearFiltersBtn = document.getElementById('clearFiltersBtn');
             if (clearFiltersBtn) {
                 clearFiltersBtn.addEventListener('click', function(e) {
@@ -1811,6 +2003,7 @@
                     selectedFilters.numeracao = [];
                     selectedFilters.tamanho = [];
                     selectedFilters.classification = [];
+                    selectedFilters.genero = [];
                     selectedFilters.priceMin = null;
                     selectedFilters.priceMax = null;
 
@@ -1853,7 +2046,7 @@
 
             function updateFilterCount() {
                 const totalSelected = selectedFilters.numeracao.length + selectedFilters.tamanho.length +
-                    selectedFilters.classification.length +
+                    selectedFilters.classification.length + selectedFilters.genero.length +
                     (selectedFilters.priceMin ? 1 : 0) +
                     (selectedFilters.priceMax ? 1 : 0);
 
@@ -1967,6 +2160,7 @@
             }
 
             function applySorting(sortValue) {
+
                 const termo = ((searchInput && searchInput.value) ? searchInput.value : '').toLowerCase();
                 const categoria = selectedCategory;
                 const produtosFiltrados = filtrarProdutos(termo, categoria);
@@ -2021,6 +2215,7 @@
                         break;
                     default:
                         sortedProdutos.sort((a, b) => Number(a.order ?? 0) - Number(b.order ?? 0));
+
                         break;
                 }
 
@@ -2049,9 +2244,178 @@
             updateCategoryDropdownStructure();
 
             aplicarFiltros();
+        </script>
 
 
+        <script>
+            // Abrir/fechar menu mobile
+            const trigger = document.getElementById('mobileFilterTrigger');
+            const overlay = document.getElementById('mobileFilterOverlay');
+            const menu = document.getElementById('mobileFilterMenu');
+            const closeBtn = document.getElementById('mobileFilterClose');
 
+            function openMobileFilters() {
+                overlay.classList.add('active');
+                menu.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMobileFilters() {
+                overlay.classList.remove('active');
+                menu.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            trigger.addEventListener('click', openMobileFilters);
+            overlay.addEventListener('click', closeMobileFilters);
+            closeBtn.addEventListener('click', closeMobileFilters);
+
+            // Toggle select mobile
+            function toggleMobileSelect(type) {
+                const options = document.getElementById(`mobile${type.charAt(0).toUpperCase() + type.slice(1)}Options`);
+                const select = options.previousElementSibling;
+
+                options.classList.toggle('active');
+                select.classList.toggle('active');
+            }
+
+            // Selecionar coleção
+            function selectCollection(name) {
+                document.getElementById('mobileCollectionText').textContent = name;
+
+                const options = document.querySelectorAll('#mobileCollectionOptions .mobile-select-option');
+                options.forEach(opt => {
+                    opt.classList.remove('selected');
+                    opt.querySelector('span:last-child').style.display = 'none';
+                });
+
+                event.target.closest('.mobile-select-option').classList.add('selected');
+                event.target.closest('.mobile-select-option').querySelector('span:last-child').style.display = 'block';
+
+                toggleMobileSelect('collection');
+                updateBadge();
+            }
+
+            // Selecionar categoria
+            function selectCategory(name, subcategoryId) {
+                if (subcategoryId) {
+                    const subcategories = document.getElementById(`subcategory-${subcategoryId}`);
+                    subcategories.classList.toggle('active');
+                } else {
+                    document.getElementById('mobileCategoryText').textContent = name;
+                    toggleMobileSelect('category');
+                    updateBadge();
+                }
+            }
+
+            // Selecionar subcategoria
+            function selectSubcategory(name) {
+                document.getElementById('mobileCategoryText').textContent = name;
+
+                const items = document.querySelectorAll('.mobile-subcategory-item');
+                items.forEach(item => item.classList.remove('selected'));
+                event.target.classList.add('selected');
+
+                toggleMobileSelect('category');
+                updateBadge();
+            }
+
+            // Toggle chips
+            function toggleChip(element, type, value) {
+                element.classList.toggle('selected');
+                updateBadge();
+            }
+
+            // Atualizar badge de contagem
+            function updateBadge() {
+                let count = 0;
+
+                // Contar filtros ativos
+                const selectedChips = document.querySelectorAll('.mobile-filter-chip.selected');
+                count += selectedChips.length;
+
+                if (document.getElementById('mobileCollectionText').textContent !== 'Selecione uma coleção') count++;
+                if (document.getElementById('mobileCategoryText').textContent !== 'Todas as categorias') count++;
+                if (document.getElementById('mobilePriceMin').value) count++;
+                if (document.getElementById('mobilePriceMax').value) count++;
+                if (document.getElementById('mobileGroupColors').checked) count++;
+
+                const badge = document.getElementById('mobileBadge');
+                if (count > 0) {
+                    badge.textContent = count;
+                    badge.style.display = 'inline-flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+
+            // Limpar filtros individuais
+            function clearCollection() {
+                document.getElementById('mobileCollectionText').textContent = 'Selecione uma coleção';
+                const options = document.querySelectorAll('#mobileCollectionOptions .mobile-select-option');
+                options.forEach(opt => {
+                    opt.classList.remove('selected');
+                    opt.querySelector('span:last-child').style.display = 'none';
+                });
+                updateBadge();
+            }
+
+            function clearCategory() {
+                document.getElementById('mobileCategoryText').textContent = 'Todas as categorias';
+                updateBadge();
+            }
+
+            function clearSizes() {
+                const chips = document.querySelectorAll('#mobileSizeChips .mobile-filter-chip');
+                chips.forEach(chip => chip.classList.remove('selected'));
+                updateBadge();
+            }
+
+            function clearClassification() {
+                const chips = document.querySelectorAll('#mobileClassificationChips .mobile-filter-chip');
+                chips.forEach(chip => chip.classList.remove('selected'));
+                updateBadge();
+            }
+
+            function clearPrice() {
+                document.getElementById('mobilePriceMin').value = '';
+                document.getElementById('mobilePriceMax').value = '';
+                updateBadge();
+            }
+
+            // Limpar todos os filtros
+            function clearAllFilters() {
+                clearCollection();
+                clearCategory();
+                clearSizes();
+                clearClassification();
+                clearPrice();
+                document.getElementById('mobileGroupColors').checked = false;
+                document.getElementById('mobileSearch').value = '';
+                updateBadge();
+            }
+
+            // Aplicar filtros
+            function applyFilters() {
+                console.log('Aplicando filtros...');
+                // Aqui você sincronizaria com os filtros desktop
+                closeMobileFilters();
+            }
+
+            // Sincronizar busca com tempo de debounce
+            let searchTimeout;
+            document.getElementById('mobileSearch').addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    console.log('Buscando:', this.value);
+                    // Sincronizar com busca desktop
+                }, 300);
+            });
+
+            // Atualizar badge ao mudar inputs de preço
+            document.getElementById('mobilePriceMin').addEventListener('input', updateBadge);
+            document.getElementById('mobilePriceMax').addEventListener('input', updateBadge);
+            document.getElementById('mobileGroupColors').addEventListener('change', updateBadge);
 
 
 
@@ -2435,6 +2799,7 @@
                         numeracao: [],
                         tamanho: [],
                         classification: [],
+                        genero: [],
                         priceMin: null,
                         priceMax: null
                     };
