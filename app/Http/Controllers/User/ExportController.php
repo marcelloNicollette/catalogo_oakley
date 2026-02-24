@@ -16,12 +16,17 @@ use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class ExportController extends Controller
 {
 
     public function exportPdf(Request $request)
     {
+        if ($request->user() && $request->user()->idioma) {
+            App::setLocale($request->user()->idioma);
+        }
+
         ini_set('memory_limit', '2048M'); // ou '3072M' se necessário
         ini_set('max_execution_time', '300'); // 5 minutos
         set_time_limit(300);
@@ -69,6 +74,89 @@ class ExportController extends Controller
         $produtos = $query->get()->sortBy(function ($item) {
             return optional($item->product->category)->name ?? '';
         });
+
+        // Tradução dinâmica se o idioma não for PT
+        $userLocale = $request->user()->idioma ?? 'pt';
+        if ($userLocale !== 'pt') {
+            try {
+                $tr = new \Stichoza\GoogleTranslate\GoogleTranslate();
+                $tr->setSource('pt');
+                $tr->setTarget($userLocale);
+
+                // Cache local para evitar requisições repetidas
+                $translationsCache = [];
+
+                $translate = function ($text) use ($tr, &$translationsCache) {
+                    if (empty($text)) return $text;
+                    $text = trim($text);
+                    if (empty($text)) return $text;
+
+                    $hash = md5($text);
+                    if (isset($translationsCache[$hash])) {
+                        return $translationsCache[$hash];
+                    }
+
+                    try {
+                        $translated = $tr->translate($text);
+                        $translationsCache[$hash] = $translated;
+                        return $translated;
+                    } catch (\Exception $e) {
+                        return $text;
+                    }
+                };
+                //dd($produtos->first()->product);
+                foreach ($produtos as $collection) {
+                    // Traduzir Categoria
+                    if ($collection->product && $collection->product->category) {
+                        $collection->product->category->name = $translate($collection->product->category->name);
+                    }
+
+                    if ($collection->product && $collection->product->description) {
+                        $collection->product->description = $translate($collection->product->description);
+                    }
+
+                    // Traduzir Cor
+                    if ($collection->color_name) {
+                        $collection->color_name = $translate($collection->color_name);
+                    }
+                    if ($collection->color_description) {
+                        $collection->color_description = $translate($collection->color_description);
+                    }
+
+                    // Traduzir Flag
+                    if ($collection->flagProduct) {
+                        $collection->flagProduct->flag_title = $translate($collection->flagProduct->flag_title);
+                    }
+
+                    // Traduzir Características Destaque
+                    if ($collection->product->caracteristicasDestaque) {
+                        foreach ($collection->product->caracteristicasDestaque as $caracteristica) {
+                            $caracteristica->title = $translate($caracteristica->title);
+                            $caracteristica->description = $translate($caracteristica->description);
+                        }
+                    }
+
+                    // Traduzir Características
+                    if ($collection->product->caracteristicas) {
+                        foreach ($collection->product->caracteristicas as $caracteristica) {
+                            $caracteristica->title = $translate($caracteristica->title);
+                            $caracteristica->description = $translate($caracteristica->description);
+                        }
+                    }
+
+                    // Traduzir Numerações (se contiver texto)
+                    if ($collection->product->numeracoes) {
+                        foreach ($collection->product->numeracoes as $numeracao) {
+                            if (preg_match('/[a-zA-Z]/', $numeracao->numero)) {
+                                $numeracao->numero = $translate($numeracao->numero);
+                            }
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Erro na tradução PDF: ' . $e->getMessage());
+            }
+        }
         //dd($produtos);
         $opcoes = $request->input('opcoes', []);
         $grupo_opcoes = array_push($opcoes, $request->input('grupo_opcoes', []));

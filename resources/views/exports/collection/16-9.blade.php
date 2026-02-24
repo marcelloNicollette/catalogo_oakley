@@ -114,7 +114,7 @@
 
                 <h1 class="font-neueplak"
                     style="font-size: 130px; color: #fff; font-family: 'Neue-Plak-Extended'; font-weight: 900; margin:0; padding:0; line-height: 80px;">
-                    COLEÇÃO
+                    {{ __('COLEÇÃO') }}
                 </h1>
                 <h1
                     style="font-size: 130px; color: #fff; font-family: 'Neue-Plak-Extended'; font-weight: 900; margin:0; padding:0; line-height: 80px; text-transform: uppercase;">
@@ -300,7 +300,7 @@
                                                     <div>
                                                         <div
                                                             style="font-size: 12px; color: #000; opacity: 0.5;  margin-bottom: 2px;">
-                                                            PDV</div>
+                                                            {{ __('PDV') }}</div>
                                                         <div style="font-size: 17px; ">
                                                             {{ $collection->product->price }}
                                                         </div>
@@ -355,7 +355,7 @@
                                                         style="font-size: 12px; margin-bottom: 2px; padding-bottom: 10px;">
                                                         <div>
                                                             <div style="color: #000; opacity: 0.5; margin-bottom: 2px;">
-                                                                Numeração</div>
+                                                                {{ __('Numeração') }}</div>
                                                             <div style="font-size: 14px;">{!! nl2br(e($numeracao->numero)) !!}</div>
                                                         </div>
                                                     </td>
@@ -371,7 +371,7 @@
                                 <!-- Descrição -->
                                 <div style="padding: 0 20px 10px 10px;">
                                     <div style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">
-                                        Descrição</div>
+                                        {{ __('Descrição') }}</div>
                                     <p style="font-size: 13px; line-height: 1.3; color: #000; margin: 0;">
                                         {{ \Illuminate\Support\Str::limit($collection->product->description, 1000, '...') }}
                                     </p>
@@ -381,7 +381,7 @@
                                     <!-- Tecnologias -->
                                     <div style="padding: 0 20px 10px 10px; margin-top:20px">
                                         <div style="font-size: 12px; color: #000; opacity: 0.5; margin-bottom: 2px;">
-                                            Tecnologias
+                                            {{ __('Tecnologias') }}
                                         </div>
                                     </div>
 
