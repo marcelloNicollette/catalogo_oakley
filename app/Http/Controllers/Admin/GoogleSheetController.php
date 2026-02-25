@@ -190,6 +190,7 @@ class GoogleSheetController extends Controller
         $productData = [
             'name' => $data['NOME'],
             'description' => $data['DESCRIÇÃO'] ?? '',
+            'linha' => ($data['LINHA'] != '-' && $data['LINHA'] !== '') ? $data['LINHA'] : null,
             'code' => $data['CÓDIGO'],
             'sku' => $data['CÓDIGO'], // Usando CÓDIGO como SKU
             'price' =>  (float) str_replace(',', '.', $data['PDV']) ?? 0, // Preço não está na planilha atual

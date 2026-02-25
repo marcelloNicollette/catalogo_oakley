@@ -865,6 +865,7 @@
                             $availableNumeracaoIds = [];
                             $availableSizeIds = [];
                             $availableGeneros = [];
+                            $availableLinhas = [];
                             if (!empty($produtos)) {
                                 foreach ($produtos as $produtoGroup) {
                                     if ($produtoGroup && $produtoGroup->product) {
@@ -885,12 +886,16 @@
                                         if (!empty($produtoGroup->genero)) {
                                             $availableGeneros[$produtoGroup->genero] = true;
                                         }
+                                        if (!empty($produto->linha)) {
+                                            $availableLinhas[$produto->linha] = true;
+                                        }
                                     }
                                 }
                             }
                             $availableNumeracaoIds = array_keys($availableNumeracaoIds);
                             $availableSizeIds = array_keys($availableSizeIds);
                             $availableGeneros = array_keys($availableGeneros);
+                            $availableLinhas = array_keys($availableLinhas);
                         @endphp
                         <div class="filter-dropdown custom-scrollbar-wh" id="filterDropdown">
                             <div class="filter-section">
@@ -927,6 +932,18 @@
                                     @endforeach
                                 </div>
                             </div>
+
+                            @if (!empty($availableLinhas))
+                                <div class="filter-section">
+                                    <label class="filter-label">Linha</label>
+                                    <div class="filter-options" id="linhaOptions">
+                                        @foreach ($availableLinhas as $linha)
+                                            <div class="filter-option" data-type="linha"
+                                                data-value="{{ $linha }}">{{ $linha }}</div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
 
                             <div class="filter-section">
                                 <label class="filter-label">Valor</label>
@@ -1234,6 +1251,7 @@
                                 preco: "R$ {{ $precoNumerico }}",
                                 precoNumerico: "{{ $produto->price ?? 0 }}",
                                 genero: "{{ $produtoGroup->genero ?? '' }}",
+                                linha: "{{ $produto->linha ?? '' }}",
                                 numeracaoIds: @json($numeracaoIds),
                                 tamanhoIds: @json($tamanhoIds),
                                 classificacaoId: {{ $classificacaoId ?? 'null' }},
@@ -1432,6 +1450,9 @@
                         const matchesGenero = selectedFilters.genero.length === 0 ||
                             selectedFilters.genero.some(gen => (p.genero || '').toLowerCase() === gen.toLowerCase());
 
+                        const matchesLinha = selectedFilters.linha.length === 0 ||
+                            selectedFilters.linha.some(lin => (p.linha || '').toLowerCase() === lin.toLowerCase());
+
                         let matchesSegmentacao = true;
                         try {
                             const selectedSegmentacoes = JSON.parse(localStorage.getItem('selectedSegmentacoes') || '[]');
@@ -1458,7 +1479,8 @@
                         }
 
                         return matchesTermo && matchesCategoria && matchesSubcategoria && matchesNumeracao &&
-                            matchesTamanho && matchesClassificacao && matchesGenero && matchesSegmentacao && matchesPreco;
+                            matchesTamanho && matchesClassificacao && matchesGenero && matchesLinha && matchesSegmentacao &&
+                            matchesPreco;
                     }
                 );
             }
@@ -1917,6 +1939,7 @@
                 tamanho: [],
                 classification: [],
                 genero: [],
+                linha: [],
                 priceMin: null,
                 priceMax: null
             };
@@ -2004,6 +2027,7 @@
                     selectedFilters.tamanho = [];
                     selectedFilters.classification = [];
                     selectedFilters.genero = [];
+                    selectedFilters.linha = [];
                     selectedFilters.priceMin = null;
                     selectedFilters.priceMax = null;
 
