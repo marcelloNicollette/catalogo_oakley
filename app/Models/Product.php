@@ -19,6 +19,7 @@ class Product extends Model
         'name',
         'description',
         'linha',
+        'silhueta',
         'slug',
         'code',
         'sku',

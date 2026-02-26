@@ -106,7 +106,7 @@
                         @enderror
                     </div>
 
-                    <div class="mb-4">
+                    <div>
                         <label for="subcategory_id" class="block text-sm font-medium text-gray-700">Subcategoria do
                             Produto</label>
                         <select name="subcategory_id" id="subcategory_id"
@@ -118,6 +118,27 @@
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    <div class="mb-4">
+                        <label for="linha" class="block text-sm font-medium text-gray-700">Linha</label>
+                        <input type="text" name="linha" id="linha"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            value="">
+                        @error('linha')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="silhueta" class="block text-sm font-medium text-gray-700">Silhueta</label>
+                        <input type="text" name="silhueta" id="silhueta"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            value="{{ old('silhueta') }}">
+                        @error('silhueta')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                 </div>
 
                 <div class="mb-4">

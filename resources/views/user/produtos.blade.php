@@ -865,6 +865,7 @@
                             $availableNumeracaoIds = [];
                             $availableSizeIds = [];
                             $availableGeneros = [];
+                            $availableSilhuetas = [];
                             $availableLinhas = [];
                             if (!empty($produtos)) {
                                 foreach ($produtos as $produtoGroup) {
@@ -886,6 +887,9 @@
                                         if (!empty($produtoGroup->genero)) {
                                             $availableGeneros[$produtoGroup->genero] = true;
                                         }
+                                        if (!empty($produto->silhueta)) {
+                                            $availableSilhuetas[$produto->silhueta] = true;
+                                        }
                                         if (!empty($produto->linha)) {
                                             $availableLinhas[$produto->linha] = true;
                                         }
@@ -895,6 +899,7 @@
                             $availableNumeracaoIds = array_keys($availableNumeracaoIds);
                             $availableSizeIds = array_keys($availableSizeIds);
                             $availableGeneros = array_keys($availableGeneros);
+                            $availableSilhuetas = array_keys($availableSilhuetas);
                             $availableLinhas = array_keys($availableLinhas);
                         @endphp
                         <div class="filter-dropdown custom-scrollbar-wh" id="filterDropdown">
@@ -932,6 +937,18 @@
                                     @endforeach
                                 </div>
                             </div>
+
+                            @if (!empty($availableSilhuetas))
+                                <div class="filter-section">
+                                    <label class="filter-label">Silhueta</label>
+                                    <div class="filter-options" id="silhuetaOptions">
+                                        @foreach ($availableSilhuetas as $silhueta)
+                                            <div class="filter-option" data-type="silhueta"
+                                                data-value="{{ $silhueta }}">{{ $silhueta }}</div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
 
                             @if (!empty($availableLinhas))
                                 <div class="filter-section">
@@ -1251,6 +1268,7 @@
                                 preco: "R$ {{ $precoNumerico }}",
                                 precoNumerico: "{{ $produto->price ?? 0 }}",
                                 genero: "{{ $produtoGroup->genero ?? '' }}",
+                                silhueta: "{{ $produto->silhueta ?? '' }}",
                                 linha: "{{ $produto->linha ?? '' }}",
                                 numeracaoIds: @json($numeracaoIds),
                                 tamanhoIds: @json($tamanhoIds),
@@ -1450,6 +1468,9 @@
                         const matchesGenero = selectedFilters.genero.length === 0 ||
                             selectedFilters.genero.some(gen => (p.genero || '').toLowerCase() === gen.toLowerCase());
 
+                        const matchesSilhueta = selectedFilters.silhueta.length === 0 ||
+                            selectedFilters.silhueta.some(sil => (p.silhueta || '').toLowerCase() === sil.toLowerCase());
+
                         const matchesLinha = selectedFilters.linha.length === 0 ||
                             selectedFilters.linha.some(lin => (p.linha || '').toLowerCase() === lin.toLowerCase());
 
@@ -1479,7 +1500,8 @@
                         }
 
                         return matchesTermo && matchesCategoria && matchesSubcategoria && matchesNumeracao &&
-                            matchesTamanho && matchesClassificacao && matchesGenero && matchesLinha && matchesSegmentacao &&
+                            matchesTamanho && matchesClassificacao && matchesGenero && matchesSilhueta && matchesLinha &&
+                            matchesSegmentacao &&
                             matchesPreco;
                     }
                 );
@@ -1939,6 +1961,7 @@
                 tamanho: [],
                 classification: [],
                 genero: [],
+                silhueta: [],
                 linha: [],
                 priceMin: null,
                 priceMax: null
@@ -2027,6 +2050,7 @@
                     selectedFilters.tamanho = [];
                     selectedFilters.classification = [];
                     selectedFilters.genero = [];
+                    selectedFilters.silhueta = [];
                     selectedFilters.linha = [];
                     selectedFilters.priceMin = null;
                     selectedFilters.priceMax = null;
@@ -2071,6 +2095,7 @@
             function updateFilterCount() {
                 const totalSelected = selectedFilters.numeracao.length + selectedFilters.tamanho.length +
                     selectedFilters.classification.length + selectedFilters.genero.length +
+                    selectedFilters.silhueta.length + selectedFilters.linha.length +
                     (selectedFilters.priceMin ? 1 : 0) +
                     (selectedFilters.priceMax ? 1 : 0);
 
@@ -2824,6 +2849,8 @@
                         tamanho: [],
                         classification: [],
                         genero: [],
+                        silhueta: [],
+                        linha: [],
                         priceMin: null,
                         priceMax: null
                     };
