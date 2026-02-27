@@ -36,9 +36,10 @@ use App\Http\Controllers\AccessRequestController;
 use App\Models\Collection;
 use App\Models\ImgLogin;
 use App\Http\Controllers\Admin\ImgLoginController;
+use App\Http\Controllers\User\SharedCollectionController;
 
 
-
+Route::get('/shared/{uuid}', [SharedCollectionController::class, 'show'])->name('shared.collection');
 
 Route::get('/', function () {
     return view('acessos', ['imgLogin' => ImgLogin::latest()->first()]);
@@ -358,6 +359,8 @@ Route::middleware(['auth', 'user'])->group(function () {
         ->name('user.conteudos');
     Route::get('/user/{slug}/gerar-arquivo', [frontendController::class, 'gerarArquivo'])
         ->name('user.gerar-arquivo');
+    Route::get('/user/{slug}/compartilhar', [frontendController::class, 'compartilhar'])
+        ->name('user.compartilhar');
     Route::get('/user/{slug}/calendario', [frontendController::class, 'calendario'])
         ->name('user.calendario');
     Route::get('/user/{slug}/colecoes', [frontendController::class, 'colecoes'])
@@ -368,6 +371,12 @@ Route::middleware(['auth', 'user'])->group(function () {
         ->name('user.colecao.produto');
     Route::get('/user/{slug}/colecoes/{colecao}/{code}/{codigo_cor}/translate', [frontendController::class, 'detalhe_produto_translate'])
         ->name('user.colecao.produto-translate');
+
+    Route::post('/user/shared-collection/generate', [SharedCollectionController::class, 'generate'])
+        ->name('shared.collection.generate');
+
+
+    Route::get('/shared/collection/{uuid}', [SharedCollectionController::class, 'show'])->name('shared.collection');
 
     // Export routes
     Route::post('/user/export/pdf', [ExportController::class, 'exportPdf'])->name('user.export.pdf');

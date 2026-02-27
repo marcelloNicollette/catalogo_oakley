@@ -14,6 +14,18 @@
         <span class="text-xs md:text-base mt-1">Coleções</span>
     </a>
 
+    <a href="{{ route('user.compartilhar', request()->route('slug')) }}"
+        class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $activeItem === 'compartilhar' ? 'bg-[#E7E7E7]' : '' }}">
+        <img src="/images/icones/compartilhar.svg" class="float-left pr-[0.5rem]" alt="Compartilhar" />
+        <span class="text-xs md:text-base mt-1">Compartilhar</span>
+    </a>
+
+    <a href="{{ route('user.gerar-arquivo', request()->route('slug')) }}"
+        class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $activeItem === 'gerar-arquivo' ? 'bg-[#E7E7E7]' : '' }}">
+        <img src="/images/icones/baixar.svg" class="float-left pr-[0.5rem]" alt="Baixar" />
+        <span class="text-xs md:text-base mt-1">Baixar</span>
+    </a>
+
     <a href="{{ route('user.wishlist', request()->route('slug')) }}"
         class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $activeItem === 'favoritos' ? 'bg-[#E7E7E7]' : '' }}">
         <img src="/images/icones/favoritos.svg" class="float-left pr-[0.5rem]" alt="Favoritos" />
@@ -30,12 +42,6 @@
         class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $activeItem === 'conteudos' ? 'bg-[#E7E7E7]' : '' }}">
         <img src="/images/icones/conteudo.svg" class="float-left pr-[0.5rem]" alt="Conteúdos" />
         <span class="text-xs md:text-base mt-1">Conteúdos</span>
-    </a>
-
-    <a href="{{ route('user.gerar-arquivo', request()->route('slug')) }}"
-        class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $activeItem === 'gerar-arquivo' ? 'bg-[#E7E7E7]' : '' }}">
-        <img src="/images/icones/arquivo.svg" class="float-left pr-[0.5rem]" alt="Gerar Arquivo" />
-        <span class="text-xs md:text-base mt-1">Gerar Arquivo</span>
     </a>
 
     <!--<a href="{{ route('user.calendario', request()->route('slug')) }}"

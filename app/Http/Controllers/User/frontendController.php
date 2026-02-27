@@ -13,6 +13,7 @@ use App\Models\FlagProduct;
 use App\Models\Numeracao;
 use App\Models\Product;
 use App\Models\Segmentacao;
+use App\Models\SharedCollection;
 use App\Models\Size;
 use App\Models\TechnologyCategory;
 use App\Models\User;
@@ -428,6 +429,37 @@ class frontendController extends Controller
         })->values();
 
         return view('user.gerar-arquivo', ['colecoes' => $colecoes, 'categorias' => $categorias, 'years' => $data_years]);
+    }
+
+    public function compartilhar($slug)
+    {
+        $user = Auth::user();
+        $segmentacao = Segmentacao::where('slug', $slug)->first();
+
+        $colecoes = Collection::where('segmentacao_id', $segmentacao->id);
+        $categorias = Category::where('segmento_id', $segmentacao->id)->get();
+
+        if (!in_array($user->type, ['user-adm', 'admin'])) {
+            $colecoes->where('active', true);
+        }
+
+        $colecoes = $colecoes->orderBy('id', 'desc')->get();
+        $data_years = Collection::pluck('created_at')->map(function ($item) {
+            return date('Y', strtotime($item));
+        })->unique()->sort(function ($a, $b) {
+            return $b <=> $a;
+        })->values();
+
+        $sharedCollections = SharedCollection::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('user.compartilhar', [
+            'colecoes' => $colecoes,
+            'categorias' => $categorias,
+            'years' => $data_years,
+            'sharedCollections' => $sharedCollections
+        ]);
     }
 
 

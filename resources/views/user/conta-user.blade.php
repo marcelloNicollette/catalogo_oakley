@@ -187,28 +187,6 @@
 
 
     @push('scripts')
-        <script>
-            // Quando o formulário for submetido com sucesso
-            document.addEventListener('DOMContentLoaded', function() {
-                const form = document.getElementById('suggestionForm');
-
-                if (form) {
-                    form.addEventListener('submit', function() {
-                        // Pegar o idioma selecionado
-                        const selectedLang = document.querySelector('input[name="idioma"]:checked');
-
-                        if (selectedLang) {
-                            const lang = selectedLang.value;
-                            const googleLang = lang;
-
-                            // Armazenar no localStorage
-                            localStorage.setItem('userLanguageChanged', googleLang);
-                            console.log('💾 Idioma salvo no localStorage:', googleLang);
-                        }
-                    });
-                }
-            });
-        </script>
     @endpush
 
 </x-layout-user-produto>
