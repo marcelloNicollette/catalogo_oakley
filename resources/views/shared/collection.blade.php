@@ -1082,7 +1082,8 @@
                 listaParaRenderizar.forEach((produto) => {
                     const clone = template.content.cloneNode(true);
                     const link = clone.querySelector("a");
-                    link.href = `{{ $currentSlug }}/${produto.codigo}/${produto.codigo_cor}`;
+                    link.href =
+                        `/user/{{ $segmentacaoSlug }}/colecoes/{{ $colecoes->first()->slug }}/${produto.codigo}/${produto.codigo_cor}`;
                     clone.querySelector("img").src = produto.imagem;
                     clone.querySelector("h2").textContent = produto.title;
                     clone.querySelector(".codigo").textContent = produto.codigo;
