@@ -20,7 +20,7 @@
             }
 
             .colecao-card {
-                height: 35vh;
+                height: 30vh;
             }
         }
 
