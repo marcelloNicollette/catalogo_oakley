@@ -679,62 +679,6 @@
 
                 <!-- Esquerda: Coleção e Categoria (FLEXÍVEL) -->
                 <div class="filters-left-section">
-                    <!-- Coleção (largura fixa baseada no conteúdo) -->
-                    <div class="select-container">
-                        <div class="select-button p-5" id="colecaoSelectButton">
-                            <span class="text-[16px] text-black">Coleção:</span>
-                            <span class="text-[18px] text-[#7A7A7A]" id="colecaoSelectedText">
-                                @if (!empty($currentSlug))
-                                    @foreach ($colecoes as $colecao)
-                                        @if ($currentSlug == $colecao->slug)
-                                            @if ($colecao->description)
-                                                {{ $colecao->name }} ({{ $colecao->description }})</>
-                                            @else
-                                                {{ $colecao->name }}
-                                            @endif
-                                        @endif
-                                    @endforeach
-                                @else
-                                    Selecione uma coleção
-                                @endif
-                            </span>
-                            <div class="pl-[5px]" id="colecaoArrow">
-                                <div class="pt-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="7"
-                                        viewBox="0 0 12 7" fill="none">
-                                        <path d="M0.75 0.75L5.69975 5.69975L10.6495 0.750001" stroke="black"
-                                            stroke-width="1.5" stroke-linecap="round" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="options p-5" id="colecaoOptions">
-                            @foreach ($colecoes as $colecao)
-                                <div class="option text-[18px]" data-slug="{{ $colecao->slug }}"
-                                    data-value="{{ $colecao->slug }}"
-                                    {{ $currentSlug == $colecao->slug ? 'selected' : '' }}
-                                    style=" {{ $currentSlug == $colecao->slug ? 'padding: 6px 15px 6px 1px;' : '' }}">
-                                    <span class="check-icon"
-                                        style="display: {{ $currentSlug == $colecao->slug ? 'inline; margin:0 5px 0 0 ;' : 'none' }};"><svg
-                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                            <path
-                                                d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
-                                        </svg></span>
-                                    <span class="option-content"
-                                        style="margin: {{ $currentSlug == $colecao->slug ? '0' : '0 20px' }};">
-                                        @if ($colecao->description)
-                                            {{ $colecao->name }}<span
-                                                class="text-[14px] line-height-[16px] text-[#000] ml-[10px]">{{ $colecao->description }}</span>
-                                        @else
-                                            {{ $colecao->name }}
-                                        @endif
-                                    </span>
-                                    <span class="x-icon"
-                                        style="display: {{ $currentSlug == $colecao->slug ? 'inline-table' : 'none' }};">×</span>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
 
                     <!-- Categoria (OCUPA O ESPAÇO RESTANTE) -->
                     <div class="relative category-select-wrapper">
@@ -1101,14 +1045,6 @@
             let selectedSubcategory = '';
 
 
-
-            // Coleção dropdown
-            const colecaoSelectButton = document.getElementById('colecaoSelectButton');
-            const colecaoOptions = document.getElementById('colecaoOptions');
-            const colecaoSelectedText = document.getElementById('colecaoSelectedText');
-            const colecaoArrow = document.getElementById('colecaoArrow');
-
-
             // Category dropdown
             const categorySelectButton = document.getElementById('categorySelectButton');
             const categoryOptions = document.getElementById('categoryOptions');
@@ -1455,7 +1391,7 @@
 
                         e.stopPropagation();
                         const option = e.target.closest('.option');
-                        console.log(option);
+
                         if (option) {
                             categorySelectedText.innerHTML = "<span class='text-[16px] text-black'>Categoria</span>";
                             selectedCategory = '';
@@ -1591,16 +1527,6 @@
                 });
             }
 
-            function openColecaoDropdown() {
-                colecaoOptions.classList.add('show');
-                colecaoArrow.classList.add('up');
-            }
-
-            function closeColecaoDropdown() {
-                colecaoOptions.classList.remove('show');
-                colecaoArrow.classList.remove('up');
-            }
-
             function openCategoryDropdown() {
                 categoryOptions.classList.add('show');
                 categoryArrow.classList.add('up');
@@ -1611,67 +1537,6 @@
                 categoryArrow.classList.remove('up');
             }
 
-            colecaoSelectButton.addEventListener('click', function(e) {
-                e.stopPropagation();
-                if (colecaoOptions.classList.contains('show')) {
-                    closeColecaoDropdown();
-                } else {
-                    closeCategoryDropdown();
-                    closeColecaoDropdown();
-                    closeFilterDropdown();
-                    closeSortDropdown();
-                    openColecaoDropdown();
-                }
-            });
-
-            colecaoOptions.addEventListener('click', function(e) {
-                if (e.target.classList.contains('x-icon')) {
-                    e.stopPropagation();
-                    const option = e.target.closest('.option');
-                    if (option) {
-                        //colecaoSelectedText.textContent = 'Selecione uma coleção';
-                        closeColecaoDropdown();
-                        const slug = option.getAttribute('data-slug');
-                        const currentUrl = window.location.href;
-                        const newUrl = currentUrl.replace(/\/[^/]+$/, "");
-                        window.location.href = newUrl;
-                    }
-                    return;
-                }
-
-                let option = e.target;
-
-                if (!option.classList.contains('option')) {
-                    option = option.closest('.option');
-                }
-
-                if (option && option.classList.contains('option')) {
-                    colecaoOptions.querySelectorAll('.option').forEach(opt => {
-                        opt.classList.remove('selected');
-                        opt.querySelector('.check-icon').style.display = 'none';
-                        opt.querySelector('.x-icon').style.display = 'none';
-                    });
-
-                    option.classList.add('selected');
-                    option.style.padding = '6px 15px 6px 1px';
-                    option.querySelector('.check-icon').style.display = 'inline';
-                    option.querySelector('.x-icon').style.display = 'inline-table';
-
-                    const slug = option.getAttribute('data-slug');
-                    const currentUrl = window.location.href;
-                    const newUrl = currentUrl.replace(/\/[^/]+$/, "") + '/' + slug;
-
-                    const text = option.querySelector('.option-content').textContent;
-
-                    const description = (option.querySelector('.option-content span') !== null) ? option.querySelector(
-                        '.option-content span').textContent : '';
-                    colecaoSelectedText.textContent = (description === '') ? text : text + ' ' + description;
-                    closeColecaoDropdown();
-
-                    window.location.href = newUrl;
-                }
-            });
-
             categorySelectButton.addEventListener('click', function(e) {
 
                 e.stopPropagation();
@@ -1680,7 +1545,6 @@
                     closeCategoryDropdown();
                     closeFilterDropdown();
                 } else {
-                    closeColecaoDropdown();
                     closeFilterDropdown();
                     closeSortDropdown();
                     openCategoryDropdown();
@@ -1785,7 +1649,6 @@
                     closeFilterDropdown();
                 } else {
                     closeCategoryDropdown();
-                    closeColecaoDropdown();
                     closeSortDropdown();
                     openFilterDropdown();
                 }
@@ -1970,7 +1833,6 @@
                     closeSortDropdown();
                 } else {
                     closeCategoryDropdown();
-                    closeColecaoDropdown();
                     closeFilterDropdown();
                     openSortDropdown();
                 }
@@ -2085,7 +1947,7 @@
                 if (!e.target.closest('.select-container') &&
                     !e.target.closest('.filter-container') &&
                     !e.target.closest('.sort-container')) {
-                    closeColecaoDropdown();
+
                     closeCategoryDropdown();
                     closeFilterDropdown();
                     closeSortDropdown();
