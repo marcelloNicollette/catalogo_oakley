@@ -375,6 +375,9 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/user/shared-collection/generate', [SharedCollectionController::class, 'generate'])
         ->name('shared.collection.generate');
 
+    Route::delete('/user/shared-collection/{uuid}', [SharedCollectionController::class, 'destroy'])
+        ->name('shared.collection.destroy');
+
 
     Route::get('/shared/collection/{uuid}', [SharedCollectionController::class, 'show'])->name('shared.collection');
 

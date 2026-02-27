@@ -26,13 +26,15 @@
 
             <!-- Tela 1: Formulário de Histórico -->
             <div id="historyForm" class="space-y-6">
-                <h2 class="text-xl font-medium text-center text-black" id="collectionHistoryNameText">
+                <p class="text-center">Compartilhar</p>
+                <h2 class="text-xl font-medium text-center text-black" style="margin-top: 0px !important;"
+                    id="collectionHistoryNameText">
                     1S25 Exclusivo Sapatarias
                 </h2>
 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-xs font-normal text-black mb-2">Nome do arquivo</label>
+                        <label class="block text-xs font-normal text-black mb-2">Nome da lista</label>
                         <input id="collectionHistoryName" name="collectionHistoryName" type="text" value=""
                             class="w-full font-normal text-base border-b border-black pb-2 outline-none" />
                     </div>
@@ -124,25 +126,26 @@
 
                 <div class="flex flex-col items-center gap-4 w-full">
                     <input type="text" id="generatedLink" readonly
-                        class="w-full text-center border border-gray-300 p-2 rounded bg-gray-50 text-sm" value="">
+                        class="w-full text-center p-2 rounded bg-gray-50 text-sm" value="">
 
-                    <div class="flex gap-3 w-full justify-center">
+                    <div class="w-full justify-center">
                         <button type="button" id="copyLinkBtn"
-                            class="bg-black text-white px-6 py-2 rounded-full text-sm hover:bg-gray-800 transition">
+                            class="w-full bg-black text-white font-normal text-base py-3 px-4 rounded-full transition-colors">
                             Copiar Link
                         </button>
                         <a id="openLinkBtn" href="#" target="_blank"
-                            class="border border-black text-black px-6 py-2 rounded-full text-sm hover:bg-gray-50 transition flex items-center">
+                            class="w-full border border-black text-black px-4 py-3 rounded-full text-base hover:bg-gray-50 transition flex items-center mt-3 text-center justify-center">
                             Abrir Link
-                            <img src="/images/icon-voltar.png" alt="" class="ml-2 w-3 h-3 rotate-180" />
                         </a>
                     </div>
                 </div>
 
                 <div class="flex justify-center pt-4">
-                    <button type="button" class="text-gray-500 hover:text-black underline text-sm transition"
+                    <button type="button"
+                        class="flex items-center border border-black rounded-full px-6 py-3 text-sm transition"
                         id="closeSuccessModal">
-                        Fechar e voltar
+                        Voltar
+                        <img src="/images/icon-voltar.png" alt="" class="ml-2 w-4 h-4" />
                     </button>
                 </div>
 

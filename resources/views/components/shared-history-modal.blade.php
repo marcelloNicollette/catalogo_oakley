@@ -28,7 +28,7 @@
                             <td class="py-[10px] px-4 text-sm">{{ $sharedCollection->name ?? 'Sem nome' }}</td>
                             <td class="py-[10px] px-4 text-sm">{{ $sharedCollection->created_at->format('d/m/Y H:i') }}
                             </td>
-                            <td class="py-[10px] px-4 text-sm">
+                            <td class="py-[10px] px-4 text-sm whitespace-nowrap">
                                 <a href="{{ route('shared.collection', $sharedCollection->uuid) }}"
                                     class="text-[#808080] hover:text-blue-800 underline mr-4" target="_blank"
                                     title="Abrir Link">
@@ -36,10 +36,21 @@
                                 </a>
                                 <button
                                     onclick="copiarLinkCompartilhamento('{{ route('shared.collection', $sharedCollection->uuid) }}')"
-                                    class="text-[#808080] hover:text-blue-800 underline cursor-pointer"
+                                    class="text-[#808080] hover:text-blue-800 underline cursor-pointer mr-4"
                                     title="Copiar Link">
                                     Copiar
                                 </button>
+                                <form action="{{ route('shared.collection.destroy', $sharedCollection->uuid) }}"
+                                    method="POST" class="inline-block"
+                                    onsubmit="return confirm('Tem certeza que deseja excluir este item?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="text-[#808080] hover:text-red-600 underline cursor-pointer"
+                                        title="Excluir Link">
+                                        Excluir
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach

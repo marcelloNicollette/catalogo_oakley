@@ -135,4 +135,12 @@ class SharedCollectionController extends Controller
 
         return view('shared.collection', compact('produtos', 'categories', 'numeracao', 'tamanhos', 'flags', 'options', 'currentSlug', 'segmentacaoSlug', 'colecoes'));
     }
+
+    public function destroy($uuid)
+    {
+        $sharedCollection = SharedCollection::where('uuid', $uuid)->where('user_id', Auth::id())->firstOrFail();
+        $sharedCollection->delete();
+
+        return back()->with('success', 'Histórico excluído com sucesso!');
+    }
 }
