@@ -133,7 +133,7 @@ class SharedCollectionController extends Controller
             $produto->segmentacoesCliente = $segmentacoesDaCor;
         }
 
-        return view('shared.collection', compact('produtos', 'categories', 'numeracao', 'tamanhos', 'flags', 'options', 'currentSlug', 'segmentacaoSlug', 'colecoes'));
+        return view('shared.collection', compact('produtos', 'categories', 'numeracao', 'tamanhos', 'flags', 'options', 'currentSlug', 'segmentacaoSlug', 'colecoes', 'sharedCollection'));
     }
 
     public function destroy($uuid)

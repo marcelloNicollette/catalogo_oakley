@@ -26,6 +26,7 @@
 
             <!-- Tela 1: Formulário de Histórico -->
             <div id="historyForm" class="space-y-6">
+                <p class="text-center">Baixar</p>
                 <h2 class="text-xl font-medium text-center text-black" id="collectionHistoryNameText">
                     1S25 Exclusivo Sapatarias
                 </h2>

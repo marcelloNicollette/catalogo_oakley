@@ -110,12 +110,12 @@
                     </button>
                 </div>
 
-                <div class="text-center text-xs text-gray-600">
+                <!--<div class="text-center text-xs text-gray-600">
                     <p>
                         Precisa de ajuda? Envie um e-mail para
                         <a href="mailto:estudio@vulcabras.com" class="text-gray-600 underline">estudio@vulcabras.com</a>
                     </p>
-                </div>
+                </div>-->
             </div>
 
             <!-- Tela 2: Confirmação de Envio -->
@@ -123,10 +123,11 @@
                 <h2 class="text-xl font-semibold text-center text-gray-900">
                     Link gerado com sucesso!
                 </h2>
+                <h3 class="text-sm text-center text-gray-900" id="generatedNameText"></h3>
 
                 <div class="flex flex-col items-center gap-4 w-full">
-                    <input type="text" id="generatedLink" readonly
-                        class="w-full text-center p-2 rounded bg-gray-50 text-sm" value="">
+                    <a id="generatedLink" href="http://" class="w-full text-center p-2 rounded text-sm" target="_blank"
+                        rel="noopener noreferrer"></a>
 
                     <div class="w-full justify-center">
                         <button type="button" id="copyLinkBtn"
@@ -149,13 +150,13 @@
                     </button>
                 </div>
 
-                <div class="text-center text-xs text-gray-600">
+                <!--<div class="text-center text-xs text-gray-600">
                     <p>
                         Precisa de ajuda? Envie um e-mail para
                         <a href="mailto:estudio@vulcabras.com"
                             class="text-gray-600 underline">estudio@vulcabras.com</a>
                     </p>
-                </div>
+                </div>-->
             </div>
         </form>
     </div>
@@ -506,7 +507,13 @@
                             const generatedLinkInput = document.getElementById('generatedLink');
                             const openLinkBtn = document.getElementById('openLinkBtn');
 
-                            generatedLinkInput.value = data.link;
+                            const generatedNameText = document.getElementById('generatedNameText');
+
+                            // Atualizar texto com nome da coleção
+                            generatedNameText.textContent = data.name;
+
+                            generatedLinkInput.href = data.link;
+                            generatedLinkInput.innerText = data.link;
                             openLinkBtn.href = data.link;
 
                             historyForm.classList.add('hidden');
@@ -519,18 +526,22 @@
                             copyBtn.parentNode.replaceChild(newCopyBtn, copyBtn);
 
                             newCopyBtn.addEventListener('click', function() {
-                                generatedLinkInput.select();
-                                document.execCommand('copy');
+                                const tempInput = document.createElement("input");
+                                tempInput.value = data.link;
+                                document.body.appendChild(tempInput);
+                                tempInput.select();
+                                document.execCommand("copy");
+                                document.body.removeChild(tempInput);
 
                                 const originalText = this.textContent;
                                 this.textContent = 'Copiado!';
-                                this.classList.remove('bg-black');
-                                this.classList.add('bg-green-600');
+                                //this.classList.remove('bg-black');
+                                //this.classList.add('bg-green-600');
 
                                 setTimeout(() => {
                                     this.textContent = originalText;
-                                    this.classList.remove('bg-green-600');
-                                    this.classList.add('bg-black');
+                                    //this.classList.remove('bg-green-600');
+                                    //this.classList.add('bg-black');
                                 }, 2000);
                             });
                         } else {

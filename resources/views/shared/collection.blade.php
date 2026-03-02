@@ -679,7 +679,12 @@
 
                 <!-- Esquerda: Coleção e Categoria (FLEXÍVEL) -->
                 <div class="filters-left-section">
-
+                    <div>
+                        <div class="select-button p-5">
+                            <span class="text-[16px]">Lista: </span>
+                            <p class="text-[18px] text-[#7A7A7A]">{{ $sharedCollection->name }}</p>
+                        </div>
+                    </div>
                     <!-- Categoria (OCUPA O ESPAÇO RESTANTE) -->
                     <div class="relative category-select-wrapper">
                         <div class="select-button p-5" id="categorySelectButton">
