@@ -58,6 +58,7 @@ class SharedCollectionController extends Controller
         return response()->json([
             'success' => true,
             'link' => route('shared.collection', $uuid),
+            'name' => $sharedCollection->name,
         ]);
     }
 

@@ -119,16 +119,17 @@
             </div>
 
             <!-- Tela 2: Confirmação de Envio -->
-            <div id="historySuccess" class="space-y-6 hidden">
-                <h2 class="text-xl font-semibold text-center text-gray-900">
+            <div id="historySuccess" class="hidden">
+                <h2 class="text-xl font-semibold text-center text-gray-900 pb-[16px]">
                     Link gerado com sucesso!
                 </h2>
-                <h3 class="text-sm text-center text-gray-900" id="generatedNameText"></h3>
+                <h3 class="text-[16px] text-center text-black" id="generatedNameText"></h3>
 
                 <div class="flex flex-col items-center gap-4 w-full">
-                    <a id="generatedLink" href="http://" class="w-full text-center p-2 rounded text-sm" target="_blank"
-                        rel="noopener noreferrer"></a>
 
+                    <a id="generatedLink" href="http://"
+                        class="w-full text-center p-2 rounded text-sm text-black opacity-50" target="_blank"
+                        rel="noopener noreferrer"></a>
                     <div class="w-full justify-center">
                         <button type="button" id="copyLinkBtn"
                             class="w-full bg-black text-white font-normal text-base py-3 px-4 rounded-full transition-colors">
@@ -150,13 +151,12 @@
                     </button>
                 </div>
 
-                <!--<div class="text-center text-xs text-gray-600">
-                    <p>
-                        Precisa de ajuda? Envie um e-mail para
-                        <a href="mailto:estudio@vulcabras.com"
-                            class="text-gray-600 underline">estudio@vulcabras.com</a>
+                <div id="alertLinkGerado" class="hidden text-center text-[16px] text-black pt-10">
+                    <p>Link copiado! <span class="opacity-50" id="spanLinkVisualizar">Para visualizar, é necessário
+                            estar logado na plataforma.</span>
+
                     </p>
-                </div>-->
+                </div>
             </div>
         </form>
     </div>
@@ -535,6 +535,8 @@
 
                                 const originalText = this.textContent;
                                 this.textContent = 'Copiado!';
+                                document.getElementById('alertLinkGerado').classList.remove(
+                                    'hidden');
                                 //this.classList.remove('bg-black');
                                 //this.classList.add('bg-green-600');
 
@@ -726,6 +728,7 @@
 
         // Adicionar produtos selecionados ao formulário
         const form = document.querySelector('#compartilharModal form');
+
 
         // Remover inputs de produtos anteriores se existirem
         const existingProductInputs = form.querySelectorAll('input[name^="produtos_selecionados"]');
