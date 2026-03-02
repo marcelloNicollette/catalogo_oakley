@@ -1,5 +1,5 @@
-<x-layout-user title="Olympikus - Produtos">
-    <main class="lg:flex flex-1 produtos-page">
+<x-layout-user title="Under Armour - Produtos">
+    <main class="flex flex-col lg:flex-row flex-1 produtos-page h-full">
         <style>
             /* Container do card com altura mínima fixa */
             .bg-white.hover\:shadow-md {
@@ -675,10 +675,11 @@
             @endphp
             <!-- Filtros superiores -->
             <div
-                class="fixed top-[70px] left-0 right-0 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-4 pb-3 px-[10px] bg-[#F1F1F1] z-10">
+                class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-4 pb-3 px-[10px] bg-[#F1F1F1] z-10">
 
                 <!-- Esquerda: Coleção e Categoria (FLEXÍVEL) -->
                 <div class="filters-left-section">
+
                     <div>
                         <div class="select-button p-5">
                             <span class="text-[16px]">Lista: </span>
@@ -937,7 +938,7 @@
 
             <!-- Lista de Produtos -->
             <div id="produtos"
-                class="gap-[10px] bg-[#E6E6E6] p-[10px] lg:mt-[4.8rem] overflow-auto height-ultra custom-scrollbar">
+                class="gap-[10px] bg-[#E6E6E6] p-[10px] overflow-auto flex-1 min-h-0 custom-scrollbar">
 
                 @if (empty($produtos) || count($produtos) == 0)
                     <div class="col-span-full flex items-center justify-center h-[100vh]">
@@ -1050,6 +1051,10 @@
             let selectedSubcategory = '';
 
 
+
+
+
+
             // Category dropdown
             const categorySelectButton = document.getElementById('categorySelectButton');
             const categoryOptions = document.getElementById('categoryOptions');
@@ -1087,6 +1092,7 @@
                 listaParaRenderizar.forEach((produto) => {
                     const clone = template.content.cloneNode(true);
                     const link = clone.querySelector("a");
+                    // Ajuste do link para refletir a segmentação correta
                     link.href =
                         `/user/{{ $segmentacaoSlug }}/colecoes/{{ $colecoes->first()->slug }}/${produto.codigo}/${produto.codigo_cor}`;
                     clone.querySelector("img").src = produto.imagem;
@@ -1397,7 +1403,7 @@
 
                         e.stopPropagation();
                         const option = e.target.closest('.option');
-
+                        //console.log(option);
                         if (option) {
                             categorySelectedText.innerHTML = "<span class='text-[16px] text-black'>Categoria</span>";
                             selectedCategory = '';
@@ -1533,6 +1539,8 @@
                 });
             }
 
+
+
             function openCategoryDropdown() {
                 categoryOptions.classList.add('show');
                 categoryArrow.classList.add('up');
@@ -1543,6 +1551,8 @@
                 categoryArrow.classList.remove('up');
             }
 
+
+
             categorySelectButton.addEventListener('click', function(e) {
 
                 e.stopPropagation();
@@ -1551,6 +1561,7 @@
                     closeCategoryDropdown();
                     closeFilterDropdown();
                 } else {
+
                     closeFilterDropdown();
                     closeSortDropdown();
                     openCategoryDropdown();
@@ -1655,6 +1666,7 @@
                     closeFilterDropdown();
                 } else {
                     closeCategoryDropdown();
+
                     closeSortDropdown();
                     openFilterDropdown();
                 }
@@ -1839,6 +1851,7 @@
                     closeSortDropdown();
                 } else {
                     closeCategoryDropdown();
+
                     closeFilterDropdown();
                     openSortDropdown();
                 }
