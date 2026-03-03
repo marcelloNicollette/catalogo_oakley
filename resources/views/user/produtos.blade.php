@@ -1,7 +1,44 @@
 <x-layout-user title="Under Armour - Produtos">
+    @php
+        $userWishlist = [];
+        if (Illuminate\Support\Facades\Auth::check()) {
+            $userWishlist = \App\Models\Wishlist::where('user_id', Illuminate\Support\Facades\Auth::id())
+                ->get(['product_id', 'color_code'])
+                ->map(function ($item) {
+                    return $item->product_id . '-' . str_replace('/', '_', $item->color_code);
+                })
+                ->toArray();
+        }
+    @endphp
     <main class="lg:flex flex-1 produtos-page">
         <style>
-            <style>
+            @keyframes favFadeIn {
+                from {
+                    opacity: 0
+                }
+
+                to {
+                    opacity: 1
+                }
+            }
+
+            @keyframes favFadeOut {
+                from {
+                    opacity: 1
+                }
+
+                to {
+                    opacity: 0
+                }
+            }
+
+            .fade-in {
+                animation: favFadeIn 400ms ease-in forwards;
+            }
+
+            .fade-out {
+                animation: favFadeOut 400ms ease-out forwards;
+            }
 
             /* Container do card com altura mínima fixa */
             .bg-white.hover\:shadow-md {
@@ -1019,9 +1056,33 @@
                     <template id="template-produto">
                         <a href="" class="block h-full">
                             <div
-                                class="bg-white hover:shadow-md transition relative rounded-md border border-[#DEDEDE] flex flex-col">
+                                class="bg-white hover:shadow-md transition relative rounded-md border border-[#DEDEDE] flex flex-col group">
                                 <div class="badge-container pt-1 px-2" style="position:absolute; min-height: 35px;">
                                 </div>
+
+                                <button
+                                    class="favorite-btn absolute top-2 right-2 z-20 text-black hover:text-black transition-colors opacity-0 group-hover:opacity-100 transition-opacity duration-300 outline-none"
+                                    type="button" onclick="event.preventDefault();">
+                                    <!-- Ícone Outline (vazio) -->
+                                    <svg class="icon-outline w-6 h-6 float-right" xmlns="http://www.w3.org/2000/svg"
+                                        width="18" height="16" viewBox="0 0 18 16" fill="none">
+                                        <path
+                                            d="M0 5.26362C0 8.97604 3.23565 12.6275 8.34743 15.7647C8.53776 15.878 8.80967 16 9 16C9.19033 16 9.46224 15.878 9.66163 15.7647C14.7644 12.6275 18 8.97604 18 5.26362C18 2.17865 15.7976 0 12.861 0C11.1843 0 9.82477 0.766885 9 1.94336C8.19335 0.775599 6.81571 0 5.13897 0C2.20242 0 0 2.17865 0 5.26362ZM1.45921 5.26362C1.45921 2.94553 3.01813 1.40305 5.12085 1.40305C6.82477 1.40305 7.80363 2.42266 8.38369 3.29412C8.6284 3.6427 8.78248 3.73856 9 3.73856C9.21752 3.73856 9.35347 3.63399 9.61631 3.29412C10.2417 2.44009 11.1843 1.40305 12.8792 1.40305C14.9819 1.40305 16.5408 2.94553 16.5408 5.26362C16.5408 8.50545 12.9789 12 9.19033 14.4227C9.0997 14.4837 9.03625 14.5272 9 14.5272C8.96375 14.5272 8.9003 14.4837 8.81873 14.4227C5.02115 12 1.45921 8.50545 1.45921 5.26362Z"
+                                            fill="black" />
+                                    </svg>
+                                    <span
+                                        class="favorite-text text-sm opacity-50 float-left pt-[2px] pr-2 hidden rounded px-1 shadow-sm absolute right-8 w-max z-30 pointer-events-none">Adicionado
+                                        aos Favoritos</span>
+                                    <!-- Ícone Preenchido (solid) -->
+                                    <svg class="icon-filled w-6 h-6 text-black hidden"
+                                        xmlns="http://www.w3.org/2000/svg" width="18" height="16"
+                                        viewBox="0 0 18 16" fill="none">
+                                        <path
+                                            d="M0 5.26362C0 8.97604 3.23565 12.6275 8.34743 15.7647C8.53776 15.878 8.80967 16 9 16C9.19033 16 9.46224 15.878 9.66163 15.7647C14.7643 12.6275 18 8.97604 18 5.26362C18 2.17865 15.7976 0 12.861 0C11.1843 0 9.82477 0.766885 9 1.94336C8.19335 0.775599 6.81571 0 5.13897 0C2.20242 0 0 2.17865 0 5.26362Z"
+                                            fill="black" />
+                                    </svg>
+                                </button>
+
                                 <img src="/images/tenis-1.jpg" alt="Tênis"
                                     class="w-full object-contain rounded-t-md" />
 
@@ -1234,6 +1295,7 @@
 
     @push('scripts')
         <script>
+            const userWishlist = @json($userWishlist);
             const produtosData = [
                 @if (!empty($produtos) && count($produtos) > 0)
                     @foreach ($produtos as $produtoGroup)
@@ -1255,6 +1317,7 @@
                                 $classificacaoId = $produtoGroup->flagProduct ? $produtoGroup->flagProduct->id : null;
                                 $segmentacaoIds = $produtoGroup->segmentacoesCliente ? $produtoGroup->segmentacoesCliente->pluck('id')->toArray() : [];
                             @endphp {
+                                id: {{ $produto->id }},
                                 title: "{{ $produto->name ?? '' }}",
                                 imagem: "{{ $img }}",
                                 codigo: "{{ $produto->code ?? '' }}",
@@ -1404,6 +1467,105 @@
                             badgeContainer.appendChild(badge);
                         }
                     }
+
+                    // Lógica de Favoritos
+                    const favBtn = clone.querySelector('.favorite-btn');
+                    const iconOutline = clone.querySelector('.icon-outline');
+                    const iconFilled = clone.querySelector('.icon-filled');
+                    const favText = clone.querySelector('.favorite-text');
+
+                    const prodKey = `${produto.id}-${produto.codigo_cor}`;
+
+                    // Verifica se userWishlist está definido (pode estar vazio se não logado)
+                    const isFavorited = (typeof userWishlist !== 'undefined' && Array.isArray(userWishlist)) ?
+                        userWishlist.includes(prodKey) :
+                        false;
+
+                    if (isFavorited) {
+                        iconFilled.classList.remove('hidden');
+                        iconOutline.classList.add('hidden');
+                        favBtn.classList.add('favorited');
+                    } else {
+                        iconFilled.classList.add('hidden');
+                        iconOutline.classList.remove('hidden');
+                        favBtn.classList.remove('favorited');
+                    }
+
+                    favBtn.onclick = function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        // Verificar login (se userWishlist não existir ou auth falhar no back)
+                        // Como injetamos userWishlist via PHP auth check, se for vazio pode ser user não logado ou sem favoritos.
+                        // O backend vai retornar 401 se não logado.
+
+                        const isFav = !iconFilled.classList.contains('hidden');
+                        const url = isFav ? '/user/wishlist/remove' : '/user/wishlist/add';
+                        const method = isFav ? 'DELETE' : 'POST';
+
+                        // Optimistic UI update
+                        if (isFav) {
+                            iconFilled.classList.add('hidden');
+                            iconOutline.classList.remove('hidden');
+                            favText.textContent = 'Removido dos Favoritos';
+
+                            if (typeof userWishlist !== 'undefined') {
+                                const idx = userWishlist.indexOf(prodKey);
+                                if (idx > -1) userWishlist.splice(idx, 1);
+                            }
+                        } else {
+                            iconFilled.classList.remove('hidden');
+                            iconOutline.classList.add('hidden');
+                            favText.textContent = 'Adicionado aos Favoritos';
+
+                            if (typeof userWishlist !== 'undefined') {
+                                userWishlist.push(prodKey);
+                            }
+                        }
+
+                        // Mostrar texto
+                        favText.classList.remove('hidden', 'fade-out');
+                        favText.classList.add('fade-in');
+
+                        if (favBtn.msgTimeout) clearTimeout(favBtn.msgTimeout);
+
+                        favBtn.msgTimeout = setTimeout(() => {
+                            favText.classList.remove('fade-in');
+                            favText.classList.add('fade-out');
+                            setTimeout(() => {
+                                favText.classList.add('hidden');
+                                favText.classList.remove('fade-out');
+                            }, 400);
+                        }, 2000);
+
+                        fetch(url, {
+                                method: method,
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                        .getAttribute('content')
+                                },
+                                body: JSON.stringify({
+                                    product_id: produto.id,
+                                    color_code: produto.codigo_cor
+                                })
+                            }).then(res => {
+                                if (res.status === 401) {
+                                    alert('Você precisa estar logado para favoritar produtos.');
+                                    window.location.href = '/login'; // Redirecionar se necessário
+                                    return {
+                                        success: false
+                                    };
+                                }
+                                return res.json();
+                            })
+                            .then(data => {
+                                if (data && !data.success && data.message) {
+                                    console.error('Erro:', data.message);
+                                }
+                            })
+                            .catch(err => console.error('Erro:', err));
+                    };
 
                     produtosContainer.appendChild(clone);
                 });
