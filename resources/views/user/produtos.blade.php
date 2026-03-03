@@ -1023,7 +1023,7 @@
                                 <div class="badge-container pt-1 px-2" style="position:absolute; min-height: 35px;">
                                 </div>
                                 <img src="/images/tenis-1.jpg" alt="Tênis"
-                                    class="w-full object-contain rounded-md" />
+                                    class="w-full object-contain rounded-t-md" />
 
                                 <div class="p-4 flex-1 flex flex-col">
                                     <h2 class="notranslate title extra-black font-fko text-[28px] leading-[24px] pb-2">
