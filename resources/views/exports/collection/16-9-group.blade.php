@@ -191,7 +191,7 @@
                                         border-top:1px solid #CCC; border-left:1px solid #CCC; border-bottom:1px solid
                                         #CCC; border-right:0 solid; padding: 0;">
                                 </td>
-                                <td width="262.5">
+                                <td width="262.3">
                                     @php
                                         $suffixes = ['_A', '_B', '_C'];
                                         $vista = 1;

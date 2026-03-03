@@ -170,11 +170,11 @@
                 <td style="padding: 10px;">
                     <table cellspacing="0" width="100%" cellpadding="0" style="">
                         <tr>
-                            <td width="792">
+                            <td width="790">
                                 <img src="{{ $image }}" alt="{{ $collection->product->name }}"
                                     style="width: 100%; object-fit: cover; border-radius: 8px 0 0 8px; border-top:1px solid #CCC; border-left:1px solid #CCC; border-bottom:1px solid #CCC; border-right:0 solid #CCC;">
                             </td>
-                            <td width="262.5">
+                            <td width="262.3">
                                 @php
                                     $suffixes = ['_A', '_B', '_C'];
                                     $vista = 1;
