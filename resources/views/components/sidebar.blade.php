@@ -2,51 +2,65 @@
 
 <!-- Menu lateral -->
 <aside class="w-full lg:w-64 flex flex-col items-start p-5 space-y-3">
-    <a href="{{ route('user.slug', request()->route('slug')) }}"
-        class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $activeItem === 'inicio' ? 'bg-[#E7E7E7]' : '' }}">
-        <img src="/images/icones/inicio.svg" class="float-left pr-[0.5rem]" alt="Início" />
-        <span class="text-xs md:text-base mt-1">Início</span>
-    </a>
+    @php
+        $user = auth()->user();
+        $classification = $user ? $user->classification : null;
 
-    <a href="{{ route('user.slug.colecoes', request()->route('slug')) }}"
-        class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $activeItem === 'colecoes' ? 'bg-[#E7E7E7]' : '' }}">
-        <img src="/images/icones/colecoes.svg" class="float-left pr-[0.5rem]" alt="Coleções" />
-        <span class="text-xs md:text-base mt-1">Coleções</span>
-    </a>
+        $menuItems = \App\Models\MenuItem::where('active', true)
+            ->orderBy('order')
+            ->get()
+            ->filter(function ($item) use ($classification) {
+                if (empty($item->allowed_classifications)) {
+                    return true;
+                }
+                // Se o usuário não tem classificação mas o item exige, esconde (ou mostra se for permitido para null? assumindo que não)
+                if (!$classification) {
+                    return false;
+                }
+                return in_array($classification, $item->allowed_classifications);
+            });
 
-    <a href="{{ route('user.compartilhar', request()->route('slug')) }}"
-        class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $activeItem === 'compartilhar' ? 'bg-[#E7E7E7]' : '' }}">
-        <img src="/images/icones/compartilhar.svg" class="float-left pr-[0.5rem]" alt="Compartilhar" />
-        <span class="text-xs md:text-base mt-1">Compartilhar</span>
-    </a>
+        // Mapa para compatibilidade com o activeItem existente
+        $activeMap = [
+            'Início' => 'inicio',
+            'Coleções' => 'colecoes',
+            'Compartilhar' => 'compartilhar',
+            'Baixar' => 'gerar-arquivo',
+            'Favoritos' => 'favoritos',
+            'Tecnologias' => 'tecnologias',
+            'Conteúdos' => 'conteudos',
+            'Calendário' => 'calendario',
+        ];
+    @endphp
 
-    <a href="{{ route('user.gerar-arquivo', request()->route('slug')) }}"
-        class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $activeItem === 'gerar-arquivo' ? 'bg-[#E7E7E7]' : '' }}">
-        <img src="/images/icones/baixar.svg" class="float-left pr-[0.5rem]" alt="Baixar" />
-        <span class="text-xs md:text-base mt-1">Baixar</span>
-    </a>
+    @foreach ($menuItems as $item)
+        @php
+            $key = $activeMap[$item->label] ?? \Illuminate\Support\Str::slug($item->label);
+            $isActive = $activeItem === $key;
 
-    <a href="{{ route('user.wishlist', request()->route('slug')) }}"
-        class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $activeItem === 'favoritos' ? 'bg-[#E7E7E7]' : '' }}">
-        <img src="/images/icones/favoritos.svg" class="float-left pr-[0.5rem]" alt="Favoritos" />
-        <span class="text-xs md:text-base mt-1">Favoritos</span>
-    </a>
+            // Tratamento especial para rotas que precisam de parâmetros
+            $routeParams = [];
+            if (request()->route('slug')) {
+                $routeParams['slug'] = request()->route('slug');
+            }
 
-    <a href="{{ route('user.tecnologias', request()->route('slug')) }}"
-        class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $activeItem === 'tecnologias' ? 'bg-[#E7E7E7]' : '' }}">
-        <img src="/images/icones/tecnologia.svg" class="float-left pr-[0.5rem]" alt="Tecnologias" />
-        <span class="text-xs md:text-base mt-1">Tecnologias</span>
-    </a>
+            $url = $item->url;
+            if ($item->route) {
+                // Verifica se a rota existe para evitar erro
+                if (\Illuminate\Support\Facades\Route::has($item->route)) {
+                    $url = route($item->route, $routeParams);
+                } else {
+                    $url = '#';
+                }
+            }
+        @endphp
 
-    <a href="{{ route('user.conteudos', request()->route('slug')) }}"
-        class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $activeItem === 'conteudos' ? 'bg-[#E7E7E7]' : '' }}">
-        <img src="/images/icones/conteudo.svg" class="float-left pr-[0.5rem]" alt="Conteúdos" />
-        <span class="text-xs md:text-base mt-1">Conteúdos</span>
-    </a>
-
-    <!--<a href="{{ route('user.calendario', request()->route('slug')) }}"
-        class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $activeItem === 'calendario' ? 'bg-[#E7E7E7]' : '' }}">
-        <img src="/images/icones/calendario.svg" class="float-left pr-[0.5rem]" alt="Calendário" />
-        <span class="text-xs md:text-base mt-1">Calendário</span>
-    </a>-->
+        <a href="{{ $url }}"
+            class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $isActive ? 'bg-[#E7E7E7]' : '' }}">
+            @if ($item->icon)
+                <img src="{{ $item->icon }}" class="float-left pr-[0.5rem]" alt="{{ $item->label }}" />
+            @endif
+            <span class="text-xs md:text-base mt-1">{{ $item->label }}</span>
+        </a>
+    @endforeach
 </aside>

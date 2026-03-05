@@ -131,7 +131,7 @@
                         </svg></a>
                 @endif
             </div>
-            <div class="hidden lg:flex items-center">
+            <div class="hidden lg:flex items-center min-h-[40px]">
 
 
                 <div class="relative inline-block text-left">
@@ -205,7 +205,7 @@
                                 }" class="relative pl-[10px]">
                                     <!-- Botão CTA -->
                                     <button @click="showModal = true"
-                                        class="flex items-center space-x-2 px-5 py-[10px] text-black  rounded-full hover:opacity-80 transition-colors border border-black">
+                                        class="flex items-center space-x-2 px-5 py-[9px] text-black  rounded-full hover:opacity-80 transition-colors border border-black">
 
                                         <div class="flex flex-row items-start">
                                             <span class="text-sm ">Segmentos: </span>

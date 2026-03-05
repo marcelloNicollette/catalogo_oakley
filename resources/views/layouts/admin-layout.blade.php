@@ -144,6 +144,16 @@
                             <span>Imagem Login</span>
                         </a>
 
+                        <a href="{{ route('admin.menu-items.index') }}"
+                            class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/menu-items') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                            <span>Itens de Menu</span>
+                        </a>
+
                         <a href="{{ url('/admin/banners') }}"
                             class="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150 {{ str_contains($currentRoute, 'admin/banners') ? 'bg-indigo-50 text-indigo-600' : '' }}">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"

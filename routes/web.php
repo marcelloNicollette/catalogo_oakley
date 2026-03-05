@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\AccessRequestController;
 use App\Models\Collection;
 use App\Models\ImgLogin;
+use App\Http\Controllers\Admin\MenuItemController;
 use App\Http\Controllers\Admin\ImgLoginController;
 use App\Http\Controllers\User\SharedCollectionController;
 
@@ -328,6 +329,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/batch-status', [AdminGoogleSheetController::class, 'getBatchStatus'])
         ->name('admin.batch-status');
 
+
+    Route::resource('/admin/menu-items', MenuItemController::class)
+        ->names([
+            'index' => 'admin.menu-items.index',
+            'create' => 'admin.menu-items.create',
+            'store' => 'admin.menu-items.store',
+            'edit' => 'admin.menu-items.edit',
+            'update' => 'admin.menu-items.update',
+            'destroy' => 'admin.menu-items.destroy'
+        ]);
 
     Route::resource('/admin/img-login', ImgLoginController::class)
         ->names([
