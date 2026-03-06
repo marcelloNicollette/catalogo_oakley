@@ -142,6 +142,24 @@
                                                 Gerar e Enviar Senha
                                             </button>
                                         </form>
+
+
+
+                                        <form action="{{ route('admin.password-recovery.destroy', $user) }}" method="POST"
+                                            class="inline-block"
+                                            onsubmit="return confirm('Tem certeza que deseja excluir a solicitação de senha deste usuário?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="flex items-center text-red-600 hover:text-red-800 transition duration-150 ease-in-out bg-red-50 px-3 py-2 rounded-md border border-red-200">
+                                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                                EXCLUIR
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

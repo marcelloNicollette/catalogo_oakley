@@ -58,4 +58,19 @@ class PasswordRecoveryController extends Controller
         return redirect()->route('admin.password-recovery.index')
             ->with('success', "Nova senha gerada para {$user->name}: {$newPassword} (A senha deve ser enviada para o usuário)");
     }
+
+    /**
+     * Remove the specified user from storage.
+     */
+    public function destroy(User $user)
+    {
+        //$user->delete();
+        // Update user
+        $user->forceFill([
+            'remember_token' => null, // Clear the token to mark as resolved
+        ])->save();
+
+        return redirect()->route('admin.password-recovery.index')
+            ->with('success', 'Solicitação de senha excluído com sucesso.');
+    }
 }
