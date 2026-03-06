@@ -294,6 +294,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Recuperação de Senha (Admin)
     Route::get('/admin/password-recovery', [AdminPasswordRecoveryController::class, 'index'])->name('admin.password-recovery.index');
     Route::put('/admin/password-recovery/{user}', [AdminPasswordRecoveryController::class, 'update'])->name('admin.password-recovery.update');
+    Route::delete('/admin/password-recovery/{user}', [AdminPasswordRecoveryController::class, 'destroy'])->name('admin.password-recovery.destroy');
 
     Route::resource('/admin/segmentacao-cliente', SegmentacaoClienteController::class)
         ->names([
