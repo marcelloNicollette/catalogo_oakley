@@ -47,7 +47,8 @@
     <!-- Formulário de Busca -->
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
         <div class="p-6">
-            <form method="GET" action="{{ route('admin.users.index') }}" class="flex items-center space-x-4">
+            <form id="usersSearchForm" method="GET" action="{{ route('admin.users.index') }}"
+                class="flex items-center space-x-4">
                 <div class="flex-1">
                     <label for="search" class="block float-left text-sm font-medium text-gray-700"
                         style="margin:.6rem 1rem .6rem 1rem;">Filtrar: </label>
@@ -57,14 +58,15 @@
                         style="width: 33%;">
                 </div>
                 <div class="flex space-x-2">
-                    Total de registros: {{ $users->total() }}
+                    Total de registros: <span
+                        id="usersTotalCount">{{ method_exists($users, 'total') ? $users->total() : $users->count() }}</span>
                 </div>
             </form>
-            @if (request('search'))
-                <div class="mt-3 text-sm text-gray-600">
-                    Resultados para: <strong>"{{ request('search') }}"</strong>
-                </div>
-            @endif
+            <div id="usersSearchResult" class="mt-3 text-sm text-gray-600"
+                @if (!request('search')) style="display:none" @endif>
+                Resultados para: <strong
+                    id="usersSearchTerm">{{ request('search') ? '"' . request('search') . '"' : '' }}</strong>
+            </div>
         </div>
     </div>
 
@@ -76,7 +78,7 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Dados</th>
+                                Nome</th>
 
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Tipo</th>
@@ -88,121 +90,20 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach ($users as $user)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            <div
-                                                class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-                                                <span class="text-sm font-medium text-gray-700">
-                                                    {{ strtoupper(substr($user->name, 0, 2)) }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">
-                                                {{ $user->name }}<br>
-                                                <span class="text-[12px] text-gray-500">
-                                                    {{ $user->email }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $user->type === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800' }}">
-                                        {{ ucfirst($user->type) }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $user->codigo_lider_comercial ?? '-' }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    @if ($user->collection)
-                                        <span
-                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                            {{ $user->collection->name }}
-                                        </span>
-                                    @else
-                                        <span class="text-gray-400">Nenhuma</span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex items-center space-x-3">
-                                        <a href="{{ route('admin.users.show', $user) }}"
-                                            class="flex items-center text-blue-600 hover:text-blue-900 transition duration-150 ease-in-out">
-                                            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                                </path>
-                                            </svg>
-                                            Ver
-                                        </a>
-                                        @if ($user_login->type === 'admin' && $user_login->classification === null)
-                                            <a href="{{ route('admin.users.edit', $user) }}"
-                                                class="flex items-center text-indigo-600 hover:text-indigo-900 transition duration-150 ease-in-out">
-                                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                    </path>
-                                                </svg>
-                                                Editar
-                                            </a>
-                                            @if ($user->id !== auth()->id())
-                                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
-                                                    class="inline-block">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="flex items-center text-red-600 hover:text-red-900 transition duration-150 ease-in-out"
-                                                        onclick="return confirm('Tem certeza que deseja excluir este usuário?')">
-                                                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                            </path>
-                                                        </svg>
-                                                        Excluir
-                                                    </button>
-                                                </form>
-                                                <form action="{{ route('admin.users.reset-password', $user) }}"
-                                                    method="POST" class="inline-block"
-                                                    onsubmit="return confirm('Gerar nova senha para este usuário? A senha será enviada por e-mail.')">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="flex items-center text-yellow-600 hover:text-yellow-800 transition duration-150 ease-in-out">
-                                                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M12 4v1m0 14v1m7-7h1M4 12H3m15.364-6.364l.707.707M5.636 18.364l-.707.707M18.364 18.364l.707-.707M5.636 5.636l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
-                                                        </svg>
-                                                        Gerar nova senha
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        @endif
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
+                    <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
+                        @include('admin.users.partials.rows', [
+                            'users' => $users,
+                            'user_login' => $user_login,
+                        ])
                     </tbody>
                 </table>
             </div>
 
-            @if (method_exists($users, 'links'))
-                <div class="mt-4">
-                    {{ $users->links() }}
-                </div>
-            @endif
+            <div id="usersPagination" class="mt-4" @if (!method_exists($users, 'links')) style="display:none" @endif>
+                @if (method_exists($users, 'links'))
+                    {{ $users->appends(request()->except('page'))->links() }}
+                @endif
+            </div>
         </div>
     </div>
 @endsection
@@ -211,102 +112,111 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('search');
-            const tableBody = document.querySelector('tbody');
-            const tableRows = Array.from(tableBody.querySelectorAll('tr'));
-            const noResultsMessage = document.querySelector('.text-center.py-8');
-            const paginationDiv = document.querySelector('.mt-4');
+            const form = document.getElementById('usersSearchForm');
+            const tableBody = document.getElementById('usersTableBody');
+            const totalCount = document.getElementById('usersTotalCount');
+            const pagination = document.getElementById('usersPagination');
+            const searchResult = document.getElementById('usersSearchResult');
+            const searchTermEl = document.getElementById('usersSearchTerm');
 
-            // Função de debounce para otimizar performance
-            function debounce(func, wait) {
-                let timeout;
-                return function executedFunction(...args) {
-                    const later = () => {
-                        clearTimeout(timeout);
-                        func(...args);
-                    };
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
-                };
+            if (!searchInput || !form || !tableBody || !totalCount || !pagination || !searchResult || !
+                searchTermEl) {
+                return;
             }
 
-            // Função para filtrar a tabela
-            function filterTable(searchTerm) {
-                const term = searchTerm.toLowerCase().trim();
-                let visibleRows = 0;
+            let timeout;
+            let lastTerm = searchInput.value.trim();
 
-                tableRows.forEach(row => {
-                    const cells = row.querySelectorAll('td');
-                    let rowText = '';
-
-                    // Concatena o texto de todas as células (exceto a última que contém os botões)
-                    for (let i = 0; i < cells.length - 1; i++) {
-                        rowText += cells[i].textContent.toLowerCase() + ' ';
-                    }
-
-                    if (term === '' || rowText.includes(term)) {
-                        row.style.display = '';
-                        visibleRows++;
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-
-                // Mostrar/ocultar mensagem de "nenhum resultado"
-                if (noResultsMessage) {
-                    if (visibleRows === 0 && term !== '') {
-                        noResultsMessage.style.display = 'block';
-                        noResultsMessage.querySelector('h3').textContent = 'Nenhum usuário encontrado';
-                        noResultsMessage.querySelector('p').textContent = `Nenhum resultado para "${searchTerm}"`;
-                    } else {
-                        noResultsMessage.style.display = 'none';
-                    }
-                }
-
-                // Ocultar paginação durante filtro local
-                if (paginationDiv) {
-                    paginationDiv.style.display = term === '' ? 'block' : 'none';
-                }
-            }
-
-            // Aplicar debounce na função de filtro
-            const debouncedFilter = debounce(filterTable, 300);
-
-            // Event listener para o campo de busca
-            if (searchInput) {
-                searchInput.addEventListener('input', function(e) {
-                    debouncedFilter(e.target.value);
-                });
-
-                // Limpar filtro quando o campo estiver vazio
-                searchInput.addEventListener('keyup', function(e) {
-                    if (e.key === 'Escape' || e.target.value === '') {
-                        filterTable('');
-                    }
-                });
-            }
-
-            // Adicionar indicador visual de filtro ativo
-            function updateSearchIndicator(isActive) {
-                const searchContainer = searchInput.closest('.flex-1');
-                const label = searchContainer.querySelector('label');
-
-                if (isActive) {
-                    label.textContent = 'Buscar Usuários (Filtro Ativo)';
-                    label.classList.add('text-blue-600', 'font-semibold');
-                    searchInput.classList.add('border-blue-500', 'ring-1', 'ring-blue-500');
+            function setUrl(term) {
+                const nextUrl = new URL(window.location.href);
+                nextUrl.searchParams.delete('page');
+                if (term) {
+                    nextUrl.searchParams.set('search', term);
                 } else {
-                    label.textContent = 'Buscar Usuários';
-                    label.classList.remove('text-blue-600', 'font-semibold');
-                    searchInput.classList.remove('border-blue-500', 'ring-1', 'ring-blue-500');
+                    nextUrl.searchParams.delete('search');
+                }
+                history.replaceState({}, '', nextUrl.toString());
+            }
+
+            function applyResult(term, data) {
+                tableBody.innerHTML = data.rowsHtml || '';
+                totalCount.textContent = typeof data.total === 'number' ? String(data.total) : String(data.total ||
+                    '');
+
+                if (term) {
+                    searchTermEl.textContent = `"${term}"`;
+                    searchResult.style.display = 'block';
+                    pagination.style.display = 'none';
+                } else {
+                    searchTermEl.textContent = '';
+                    searchResult.style.display = 'none';
+                    if (data.paginationHtml) {
+                        pagination.innerHTML = data.paginationHtml;
+                        pagination.style.display = 'block';
+                    } else {
+                        pagination.innerHTML = '';
+                        pagination.style.display = 'none';
+                    }
                 }
             }
 
-            // Atualizar indicador quando houver mudanças
-            if (searchInput) {
-                searchInput.addEventListener('input', function(e) {
-                    updateSearchIndicator(e.target.value.trim() !== '');
-                });
+            function load(term) {
+                if (term === lastTerm) {
+                    return;
+                }
+                lastTerm = term;
+
+                const url = new URL(form.action, window.location.origin);
+                if (term) {
+                    url.searchParams.set('search', term);
+                }
+
+                const onSuccess = function(data) {
+                    applyResult(term, data || {});
+                    setUrl(term);
+                };
+
+                if (window.jQuery) {
+                    window.jQuery.ajax({
+                        url: url.toString(),
+                        method: 'GET',
+                        dataType: 'json',
+                        success: onSuccess,
+                    });
+                    return;
+                }
+
+                fetch(url.toString(), {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(onSuccess);
             }
+
+            searchInput.addEventListener('input', function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(function() {
+                    load(searchInput.value.trim());
+                }, 400);
+            });
+
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    clearTimeout(timeout);
+                    load(searchInput.value.trim());
+                }
+            });
+
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Escape') {
+                    searchInput.value = '';
+                    clearTimeout(timeout);
+                    load('');
+                }
+            });
         });
     </script>
 @endpush

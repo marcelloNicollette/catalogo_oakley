@@ -20,8 +20,9 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $query = User::with('collection');
-
         $user_login = Auth::user();
+
+        $isAjax = $request->ajax();
 
         // Aplicar filtro de busca se fornecido
         if ($request->filled('search')) {
@@ -35,9 +36,36 @@ class UserController extends Controller
                     ->orWhere('phone', 'LIKE', "%{$search}%")
                     ->orWhere('type', 'LIKE', "%{$search}%");
             });
+            if ($isAjax) {
+                $users = $query->orderBy('name')->get();
+
+                return response()->json([
+                    'rowsHtml' => view('admin.users.partials.rows', compact('users', 'user_login'))->render(),
+                    'paginationHtml' => '',
+                    'total' => $users->count(),
+                ]);
+            }
+
+            if ($request->filled('page') && (int) $request->get('page') !== 1) {
+                $queryParams = $request->query();
+                unset($queryParams['page']);
+                return redirect()->route('admin.users.index', $queryParams);
+            }
+
+            $users = $query->orderBy('name')->get();
+            return view('admin.users.index', compact('user_login', 'users'));
         }
 
-        $users = $query->paginate(3000)->appends($request->query());
+        $users = $query->paginate(1000)->appends($request->query());
+
+        if ($isAjax) {
+            return response()->json([
+                'rowsHtml' => view('admin.users.partials.rows', compact('users', 'user_login'))->render(),
+                'paginationHtml' => (string) $users->links(),
+                'total' => $users->total(),
+            ]);
+        }
+
         return view('admin.users.index', compact('user_login', 'users'));
     }
 
