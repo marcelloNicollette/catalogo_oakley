@@ -333,13 +333,13 @@
                 gap: 8px;
             }
 
-            @media (max-width: 1200px) {
+            @media (max-width: 1060px) {
                 .fixed {
                     display: none;
                 }
 
                 .mobile-filter-trigger {
-                    display: flex;
+                    display: none;
                 }
 
                 /* Esconde os filtros desktop em mobile */
