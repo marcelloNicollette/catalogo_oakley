@@ -137,7 +137,7 @@
                     </button>
                 </form>
             @else
-                <a href="{{ url()->previous() }}"
+                <a href="{{ request()->route('slug') == null ? route('user.segmentacao') : url()->previous() }}"
                     class="flex items-center border border-black rounded-full px-3 py-2 text-md bg-gray-100 hover:bg-gray-200 transition text-[14px]">
                     Voltar
                     <img src="/images/icon-voltar.png" alt="" class="px-1" />
