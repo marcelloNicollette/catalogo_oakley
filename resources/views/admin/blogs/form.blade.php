@@ -88,7 +88,7 @@
                         <!-- Conteudo (Editor Texto) -->
                         <div class="mb-4">
                             <label for="content" class="block text-sm font-medium text-gray-700">Conteúdo</label>
-                            <textarea name="content" id="content" rows="10"
+                            <textarea name="content" id="content" rows="100"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('content', $blog->content ?? '') }}</textarea>
                             @error('content')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -203,23 +203,29 @@
     </div>
 
     @push('scripts')
-        <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
-        <style>
-            .ck-editor__editable_inline {
-                min-height: 300px;
-            }
-        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.6/tinymce.min.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                ClassicEditor
-                    .create(document.querySelector('#content'), {
-                        toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList',
-                            'blockQuote', 'undo', 'redo'
-                        ]
-                    })
-                    .catch(error => {
-                        console.error(error);
+                tinymce.init({
+                    selector: '#content',
+                    menubar: true,
+                    plugins: 'lists link image table code autoresize',
+                    toolbar: 'undo redo | blocks | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image table | removeformat | code',
+                    toolbar_mode: 'sliding',
+                    paste_data_images: true,
+                    automatic_uploads: true,
+                    images_upload_handler: (blobInfo, progress) => new Promise(resolve => {
+                        resolve(`data:${blobInfo.blob().type};base64,${blobInfo.base64()}`);
+                    }),
+                    content_style: 'body { font-family: Helvetica, Arial, sans-serif; font-size: 14px; }'
+                });
+
+                const form = document.querySelector('form');
+                if (form) {
+                    form.addEventListener('submit', function() {
+                        tinymce.triggerSave();
                     });
+                }
             });
         </script>
     @endpush

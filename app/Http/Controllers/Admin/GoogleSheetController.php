@@ -119,6 +119,7 @@ class GoogleSheetController extends Controller
                         'description' => $productData['COR_DESCRIÇÃO'] ?? $productData['COR_COD'],
                         'genero' => $productData['GENERO'],
                         'flag' => $productData['COR_CLASSIFICAÇÃO'],
+                        'collection' => $this->findOrCreateCollection($productData['COLEÇÃO'] ?? '', $productData['COLEÇÃO_SECUNDÁRIA'] ?? ''),
                         // Tenta obter numeração da cor a partir de possíveis cabeçalhos
                         'numeracao' => $this->extractColorNumeracao($productData)
                     ];
@@ -525,7 +526,7 @@ class GoogleSheetController extends Controller
     {
 
         // Remove cores existentes (hasMany relationship)
-        Color::where('product_id', $product->id)->delete();
+        //Color::where('product_id', $product->id)->delete();
 
         // Se não há cores, não faz nada
         if (empty($colors)) {
