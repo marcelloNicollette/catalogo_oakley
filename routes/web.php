@@ -367,8 +367,8 @@ Route::middleware(['auth', 'user'])->group(function () {
         ->name('user.slug');
     Route::get('/user/{slug}/tecnologias', [frontendController::class, 'tecnologias'])
         ->name('user.tecnologias');
-    Route::get('/user/{slug}/conteudos', [frontendController::class, 'conteudos'])
-        ->name('user.conteudos');
+    Route::get('/user/{slug}/materiais', [frontendController::class, 'materiais'])
+        ->name('user.materiais');
     Route::get('/user/{slug}/gerar-arquivo', [frontendController::class, 'gerarArquivo'])
         ->name('user.gerar-arquivo');
     Route::get('/user/{slug}/compartilhar', [frontendController::class, 'compartilhar'])

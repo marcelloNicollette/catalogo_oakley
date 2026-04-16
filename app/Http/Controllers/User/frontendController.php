@@ -396,7 +396,7 @@ class frontendController extends Controller
         return response()->json($produtosFormatados);
     }
 
-    public function conteudos()
+    public function materiais()
     {
         $categories = ConteudoCategory::get();
 
