@@ -4,88 +4,23 @@
             height: calc(100vh - 85px);
         }
 
-        @media (max-width: 768px) {
+        /* Proporção fixa dos cards baseada na largura da coluna */
+        .colecao-card {
+            aspect-ratio: 4/3;
+        }
 
+        /* Mobile: 2 colunas abaixo de 640px */
+        @media (max-width: 639px) {
             .colecao-card {
-                height: 30vh;
+                aspect-ratio: 4/3;
             }
         }
 
-        @media (min-width: 768px) {
-
-            .colecao-card {
-                height: 30vh;
-            }
-        }
-
-        @media (min-width: 1080px) {
-
-            .colecao-card {
-                height: 20vh;
-            }
-        }
-
-        @media (max-width: 1279px) {
-
-            .colecao-card {
-                height: 35vh;
-            }
-        }
-
-        @media (min-width: 1280px) {
-
-            .colecao-card {
-                height: 30vh;
-            }
-        }
-
-        @media (min-width: 2566px) {
-
-            .colecao-card {
-                height: 28vh;
-            }
-        }
-
-        @media (min-width: 3000px) {
-
-
-            .colecao-card {
-                height: 25vh;
-            }
-        }
-
-        @media (min-width: 1280px) {
-            .grid-colecao-gerar {
-                height: 77vh;
-            }
-
-        }
-
-        @media (min-width: 1366px) {
-            .grid-colecao-gerar {
-                height: 79vh;
-            }
-
-        }
-
-        @media (min-width: 1470px) {
-            .grid-colecao-gerar {
-                height: 79vh;
-            }
-        }
-
-        @media (min-width: 2566px) {
-            .grid-colecao-gerar {
-                height: 88vh;
-            }
-
-        }
-
-        @media (min-width: 3000px) {
-            .grid-colecao-gerar {
-                height: 91vh;
-            }
-
+        .select-button:hover,
+        .select-button:focus,
+        .select-button:active,
+        .select-button.active {
+            border-color: transparent;
         }
     </style>
     <main class="lg:flex flex-1 produtos-page">

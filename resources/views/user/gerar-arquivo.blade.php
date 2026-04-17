@@ -1,67 +1,26 @@
 <x-layout-user title="Under Armour - Gerar Arquivo">
     <style>
         .height-ultra {
-            height: calc(100vh - 168px);
+            height: calc(100vh - 85px);
         }
 
-        @media (min-width: 1280px) {
-            .grid-colecao-gerar {
-                height: 77vh;
-            }
+        /* Proporção fixa dos cards baseada na largura da coluna */
+        .colecao-card {
+            aspect-ratio: 4/3;
+        }
 
+        /* Mobile: 2 colunas abaixo de 640px */
+        @media (max-width: 639px) {
             .colecao-card {
-                height: 35vh;
+                aspect-ratio: 4/3;
             }
         }
 
-        @media (min-width: 1366px) {
-            .grid-colecao-gerar {
-                height: 79vh;
-            }
-
-            .colecao-card {
-                height: 30vh;
-            }
-        }
-
-        @media (min-width: 1470px) {
-            .grid-colecao-gerar {
-                height: 79vh;
-            }
-        }
-
-        @media (min-width: 2566px) {
-            .grid-colecao-gerar {
-                height: 88vh;
-            }
-
-
-            .colecao-card {
-                height: 28vh;
-            }
-        }
-
-        @media (min-width: 3000px) {
-            .grid-colecao-gerar {
-                height: 91vh;
-            }
-
-
-            .colecao-card {
-                height: 25vh;
-            }
-        }
-
-        .option {
-            padding: 8px 16px;
-            cursor: pointer;
-            border-bottom: 0;
-            transition: all 0.2s ease;
-        }
-
-        .select-estilizado,
-        .input-estilizado {
-            border: 0px;
+        .select-button:hover,
+        .select-button:focus,
+        .select-button:active,
+        .select-button.active {
+            border-color: transparent;
         }
     </style>
     <main class="lg:flex flex-1">

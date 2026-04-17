@@ -1,71 +1,18 @@
 <x-layout-user title="Under Armour - Coleções">
     <style>
         .height-ultra {
-            height: calc(100vh - 167px);
+            height: calc(100vh - 85px);
         }
 
-
-        @media (min-width: 280px) and (max-width: 420px) {
-
-            .colecao-card {
-                height: 15vh;
-            }
+        /* Proporção fixa dos cards baseada na largura da coluna */
+        .colecao-card {
+            aspect-ratio: 4/3;
         }
 
-        @media (min-width: 421px) and (max-width: 639px) {
-
+        /* Mobile: 2 colunas abaixo de 640px */
+        @media (max-width: 639px) {
             .colecao-card {
-                height: 22vh;
-            }
-        }
-
-        @media (min-width: 640px) and (max-width: 767px) {
-
-            .colecao-card {
-                height: 30vh;
-            }
-        }
-
-        @media (min-width: 768px) and (max-width: 840px) {
-
-            .colecao-card {
-                height: 30vh;
-            }
-        }
-
-        @media (min-width: 841px) and (max-width: 1079px) {
-
-            .colecao-card {
-                height: 30vh;
-            }
-        }
-
-        @media (min-width: 1024px) and (max-width: 1279px) {
-
-            .colecao-card {
-                height: 30vh;
-            }
-        }
-
-        @media (min-width: 1280px) and (max-width: 2565px) {
-
-            .colecao-card {
-                height: 30vh;
-            }
-        }
-
-        @media (min-width: 2566px) {
-
-            .colecao-card {
-                height: 28vh;
-            }
-        }
-
-        @media (min-width: 3000px) {
-
-
-            .colecao-card {
-                height: 25vh;
+                aspect-ratio: 4/3;
             }
         }
 
@@ -75,6 +22,7 @@
         .select-button.active {
             border-color: transparent;
         }
+
 
         /* Para Firefox */
         .custom-scrollbar {
@@ -215,8 +163,7 @@
 
             <!-- Grid de Coleções -->
             <div class="bg-[#000000] p-[10px] rounded-tl-lg height-ultra overflow-auto custom-scrollbar">
-                <div id="colecoes-grid"
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-[10px]"
+                <div id="colecoes-grid" class="grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-[10px]"
                     style="border-radius: 10px 0 0 0;">
                     <!-- Cards serão renderizados via JavaScript -->
                 </div>
