@@ -588,7 +588,7 @@ class GoogleSheetController extends Controller
             [
                 'color_name' => $corData['code'],
                 'color_description' => $corData['description'],
-                'genero' => $corData['genero'],
+                'genero' => ($corData['genero'] != '') ? $corData['genero'] : 'UNISSEX',
                 'collection_id' => $collection->id ?? null,
                 'flag_product_id' => $flag ?? null,
                 'numeracao_id' => $corData['numeracao_id'] ?? null,
@@ -720,9 +720,9 @@ class GoogleSheetController extends Controller
         // Cria nova entrada se houver datas
         if ($product->flag_calendario) {
             // Trunca a descrição para evitar erro de dados muito longos
-            $info2 = $product->description;
-            if (strlen($info2) > 255) {
-                $info2 = substr($info2, 0, 252) . '...';
+            $info2 = (string) ($product->description ?? '');
+            if (mb_strlen($info2, 'UTF-8') > 255) {
+                $info2 = mb_substr($info2, 0, 252, 'UTF-8') . '...';
             }
 
             Calendario::create([
