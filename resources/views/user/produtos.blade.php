@@ -147,6 +147,8 @@
 
             .height-ultra {
                 height: calc(100vh - 160px);
+                padding-bottom: 100px;
+                /* ← adicionar isso */
             }
 
             /* Estilos para dropdown aninhado de subcategorias */

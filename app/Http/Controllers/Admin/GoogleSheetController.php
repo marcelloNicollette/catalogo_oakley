@@ -402,17 +402,26 @@ class GoogleSheetController extends Controller
             $slug = Str::slug($collectionName . '-' . $collectionSecondaryName);
         }
 
-        return Collection::firstOrCreate(
-            [
-                'name' => $collectionName,
-                'slug' => $slug,
-                'description' => $collectionSecondaryName,
-                'codigo_colecao' => $collectionName . '-' . $collectionSecondaryName,
-            ],
-            [
-                'active' => true,
-            ]
-        );
+        $codigoColecao = $collectionSecondaryName === ''
+            ? $collectionName
+            : ($collectionName . '-' . $collectionSecondaryName);
+
+        $collection = Collection::withTrashed()->firstOrNew(['slug' => $slug]);
+
+        if ($collection->exists && $collection->trashed()) {
+            $collection->restore();
+        }
+
+        $collection->fill([
+            'name' => $collectionName,
+            'description' => $collectionSecondaryName,
+            'codigo_colecao' => $codigoColecao,
+            'active' => true,
+        ]);
+
+        $collection->save();
+
+        return $collection;
     }
 
     /**
@@ -718,7 +727,7 @@ class GoogleSheetController extends Controller
         Calendario::where('product_id', $product->id)->delete();
 
         // Cria nova entrada se houver datas
-        if ($product->flag_calendario) {
+        if ($product->flag_calendario && $product->flag_calendario != '-') {
             // Trunca a descrição para evitar erro de dados muito longos
             $info2 = (string) ($product->description ?? '');
             if (mb_strlen($info2, 'UTF-8') > 255) {
