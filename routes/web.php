@@ -122,6 +122,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
             'destroy' => 'admin.segmento.destroy'
         ]);
     Route::resource('/admin/categories', CategoryController::class)
+        ->except(['show'])
         ->names([
             'index' => 'admin.categories.index',
             'create' => 'admin.categories.create',
@@ -169,6 +170,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/products/subcategories/{category}', [ProductController::class, 'getSubcategories'])
         ->name('admin.products.subcategories');
     Route::resource('/admin/technology/categories', TechnologyCategoryController::class)
+        ->except(['show'])
         ->names([
             'index' => 'admin.technology.categories.index',
             'create' => 'admin.technology.categories.create',
@@ -182,6 +184,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('admin.technology.items.order');
 
     Route::resource('/admin/technology/items', TechnologyItemController::class)
+        ->except(['show'])
         ->names([
             'index' => 'admin.technology.items.index',
             'create' => 'admin.technology.items.create',
@@ -231,6 +234,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
             'destroy' => 'admin.caracteristicas.destroy'
         ]);
     Route::resource('/admin/conteudos/categories', ConteudoCategoryController::class)
+        ->except(['show'])
         ->names([
             'index' => 'admin.conteudos.categories.index',
             'create' => 'admin.conteudos.categories.create',
@@ -241,6 +245,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ]);
 
     Route::resource('/admin/conteudos/items', ConteudoController::class)
+        ->except(['show'])
         ->names([
             'index' => 'admin.conteudos.items.index',
             'create' => 'admin.conteudos.items.create',
@@ -497,8 +502,6 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::delete('/user/shared-collection/{uuid}', [SharedCollectionController::class, 'destroy'])
         ->name('shared.collection.destroy');
 
-
-    Route::get('/shared/collection/{uuid}', [SharedCollectionController::class, 'show'])->name('shared.collection');
 
     // Export routes
     Route::post('/user/export/pdf', [ExportController::class, 'exportPdf'])->name('user.export.pdf');
