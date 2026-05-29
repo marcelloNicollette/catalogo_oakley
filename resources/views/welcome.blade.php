@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Olympikus</title>
+    <title>Oakley</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -22,9 +22,9 @@
         /* Customização do autocomplete */
         input[type="email"]:-webkit-autofill,
         input[type="password"]:-webkit-autofill {
-            -webkit-box-shadow: 0 0 0 1000px rgba(39, 53, 212, 1) inset !important;
-            -webkit-text-fill-color: rgba(39, 53, 212, 1) !important;
-            border-bottom: 1px solid rgba(39, 53, 212, 1);
+            -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+            -webkit-text-fill-color: #000 !important;
+            border-bottom: 1px solid #000;
         }
 
         .input-style {
@@ -42,16 +42,18 @@
 
         <!-- Lado direito (fica acima no mobile, 1/4 no desktop) -->
         <div
-            class="lg:w-[40%] 2xl:w-[30%] 3xl:w-[20%] w-full bg-[#2735D4] flex flex-col items-center justify-start lg:justify-center p-6 lg:p-12 rounded-xl">
+            class="lg:w-[40%] 2xl:w-[30%] 3xl:w-[20%] w-full bg-white flex flex-col items-center justify-start lg:justify-center p-6 lg:p-12 rounded-xl border border-black">
 
-            <div class="m-5"><img src="/images/logo-branco.png" alt=""></div>
+            <div class="m-5"><img src="/images/Oakley_logo.svg" alt="Oakley" class="h-10 w-auto"></div>
 
             <div class="mt-5">
-                <a href="admin/login" class="bg-[#2735D4] border-white border rounded-full text-white py-2 px-5">Acesso
+                <a href="admin/login"
+                    class="bg-white border-black border rounded-full text-black py-2 px-5 hover:bg-black hover:text-white transition">Acesso
                     Administrativo</a>
             </div>
             <div class="mt-5">
-                <a href="user/login" class="bg-[#2735D4] border-white border rounded-full text-white py-2 px-5">Acesso
+                <a href="user/login"
+                    class="bg-white border-black border rounded-full text-black py-2 px-5 hover:bg-black hover:text-white transition">Acesso
                     Usuário</a>
             </div>
         </div>

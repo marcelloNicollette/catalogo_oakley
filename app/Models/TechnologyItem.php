@@ -15,11 +15,13 @@ class TechnologyItem extends Model
         'name',
         'description',
         'icon',
+        'order',
         'active'
     ];
 
     protected $casts = [
-        'active' => 'boolean'
+        'active' => 'boolean',
+        'order' => 'integer'
     ];
 
     public function category()

@@ -1,4 +1,4 @@
-<x-layout-user title="Under Armour - Segmentação">
+<x-layout-user title="Oakley - Segmentação">
     <style>
         .carousel-container {
             position: relative;

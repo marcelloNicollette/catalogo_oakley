@@ -8,7 +8,7 @@
     </style>
 @endpush
 
-@section('page_title', 'Under Armour - Detalhes da Subcategoria')
+@section('page_title', 'Oakley - Detalhes da Subcategoria')
 
 @section('content-wrapper')
     <div class="flex items-center space-x-2 mb-6">

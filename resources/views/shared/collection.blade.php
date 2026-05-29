@@ -1,4 +1,4 @@
-<x-layout-user title="Under Armour - Produtos">
+<x-layout-user title="Oakley - Produtos">
     <main class="flex flex-col lg:flex-row flex-1 produtos-page h-full">
         <style>
             /* Container do card com altura mínima fixa */
@@ -19,8 +19,12 @@
                 text-overflow: ellipsis;
 
                 /* 3 linhas × ~18px por linha */
-
-                line-height: 25px;
+                font-size: 22px;
+                font-style: normal;
+                line-height: 20px;
+                /* 90.909% */
+                letter-spacing: -0.66px;
+                text-transform: uppercase;
             }
 
             /* Alternativa: Se preferir que todos tenham exatamente a mesma altura */
@@ -675,7 +679,7 @@
             @endphp
             <!-- Filtros superiores -->
             <div
-                class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-4 pb-3 px-[10px] bg-[#F1F1F1] z-10">
+                class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-4 pb-3 px-[10px] bg-white z-10">
 
                 <!-- Esquerda: Coleção e Categoria (FLEXÍVEL) -->
                 <div class="filters-left-section">
@@ -951,13 +955,13 @@
                         <a href="" class="block h-full">
                             <div
                                 class="bg-white hover:shadow-md transition relative rounded-md border border-[#DEDEDE] flex flex-col">
-                                <div class="badge-container pt-1 px-2" style="position:absolute; min-height: 35px;">
+                                <div class="badge-container pt-2 px-2" style="">
                                 </div>
                                 <img src="/images/tenis-1.jpg" alt="Tênis"
                                     class="w-full object-contain rounded-md" />
 
                                 <div class="p-4 flex-1 flex flex-col">
-                                    <h2 class="notranslate title font-normal font-fko text-[28px] leading-[24px] pb-2">
+                                    <h2 class="notranslate title extra-black font-fko text-[28px] leading-[24px] pb-2">
                                     </h2>
 
                                     <div class="flex-1 flex flex-col justify-between">
@@ -998,7 +1002,7 @@
                                 $produto = $produtoGroup->product;
                                 $imgPath = '/images/produtos/' . $produto->code . '_' . str_replace('/', '_', $produtoGroup->color_code) . '.jpg';
                                 $imgFullPath = public_path($imgPath);
-                                $img = file_exists($imgFullPath) ? $imgPath : '/images/img-padrao-oly.png';
+                                $img = file_exists($imgFullPath) ? $imgPath : '/images/img-padrao-mz.png';
                                 $numeracaoIdsProduct = $produto->numeracoes ? $produto->numeracoes->pluck('id')->toArray() : [];
                                 $numeracaoIdColor = $produtoGroup->numeracao ? $produtoGroup->numeracao->id : null;
                                 $numeracaoIds = $numeracaoIdsProduct;
@@ -1008,8 +1012,26 @@
                                 $numeracaoIds = array_values(array_unique($numeracaoIds));
                                 $tamanhoIds = $produto->sizes ? $produto->sizes->pluck('id')->toArray() : [];
                                 $precoNumerico = $produto->price ?? 0;
-                                $classificacaoId = $produtoGroup->flagProduct ? $produtoGroup->flagProduct->id : null;
+                                $badges = $produtoGroup->flagProducts
+                                    ? $produtoGroup->flagProducts
+                                        ->map(function ($flag) {
+                                            return [
+                                                'id' => $flag->id,
+                                                'title' => $flag->flag_title ?? '',
+                                                'icon' => $flag->icon ?? '',
+                                                'bg' => $flag->flag_bg ?? '',
+                                                'color' => $flag->flag_color_text_bg ?? '',
+                                                'align' => $flag->alinhamento ?? '',
+                                                'orderfilterflag' => $flag->orderfilterflag ?? 0,
+                                            ];
+                                        })
+                                        ->values()
+                                        ->toArray()
+                                    : [];
+                                $firstBadge = !empty($badges) ? $badges[0] : null;
+                                $classificacaoId = $firstBadge ? $firstBadge['id'] ?? null : ($produtoGroup->flagProduct ? $produtoGroup->flagProduct->id : null);
                                 $segmentacaoIds = $produtoGroup->segmentacoesCliente ? $produtoGroup->segmentacoesCliente->pluck('id')->toArray() : [];
+                                $orderfilterflag = $firstBadge ? $firstBadge['orderfilterflag'] ?? 0 : $produtoGroup->flagProduct->orderfilterflag ?? 0;
                             @endphp {
                                 title: "{{ $produto->name ?? '' }}",
                                 imagem: "{{ $img }}",
@@ -1029,12 +1051,13 @@
                                 tamanhoIds: @json($tamanhoIds),
                                 classificacaoId: {{ $classificacaoId ?? 'null' }},
                                 segmentacaoIds: @json($segmentacaoIds),
+                                badges: @json($badges),
                                 badge_title: "{{ $produtoGroup->flagProduct->flag_title ?? '' }}",
                                 badge_icon: "{{ $produtoGroup->flagProduct->icon ?? '' }}",
                                 badge_bg: "{{ $produtoGroup->flagProduct->flag_bg ?? '' }}",
                                 badge_color: "{{ $produtoGroup->flagProduct->flag_color_text_bg ?? '' }}",
                                 badge_icon_align: "{{ $produtoGroup->flagProduct->alinhamento ?? '' }}",
-                                orderfilterflag: {{ $produtoGroup->flagProduct->orderfilterflag ?? 0 }},
+                                orderfilterflag: {{ $orderfilterflag ?? 0 }},
                                 slug: "{{ $produto->slug ?? '' }}",
                                 order: {{ $produto->order ?? 0 }}
                             },
@@ -1115,55 +1138,69 @@
 
                     const badgeContainer = clone.querySelector(".badge-container");
 
-                    if (produto.badge_title != "") {
-                        const badge_icon_align = produto.badge_icon_align;
+                    const badges = Array.isArray(produto.badges) && produto.badges.length ? produto.badges : (
+                        produto.badge_title ? [{
+                            title: produto.badge_title,
+                            icon: produto.badge_icon,
+                            bg: produto.badge_bg,
+                            color: produto.badge_color,
+                            align: produto.badge_icon_align
+                        }] : []
+                    );
 
-                        if (produto.badge_icon != "") {
-                            const badgeIconWrapper = document.createElement("div");
-                            badgeIconWrapper.className = "badge-icon-wrapper";
-                            badgeIconWrapper.style.position = "relative";
-                            badgeIconWrapper.style.display = "inline-block";
+                    if (badges.length) {
+                        badgeContainer.innerHTML = "";
 
-                            const badgeIcon = document.createElement("img");
-                            badgeIcon.className = "badge-icon";
-                            badgeIcon.src = "/" + produto.badge_icon;
-                            badgeIcon.alt = produto.badge_title;
-                            badgeIcon.style.width = "19px";
-                            badgeIcon.style.height = "19px";
-
-                            if (badge_icon_align == "right") {
-                                badgeContainer.style.right = "5px";
-                            }
-                            if (badge_icon_align == "left") {
-                                badgeContainer.style.left = "5px";
-                            }
-
-                            const badge = document.createElement("span");
-                            badge.className = "badge-tooltip";
-                            badge.textContent = produto.badge_title;
-                            badge.style.backgroundColor = 'transparent';
-                            badge.style.color = produto.badge_color;
-                            badge.style.fontSize = "10px";
-
-                            badgeIconWrapper.appendChild(badgeIcon);
-                            badgeIconWrapper.appendChild(badge);
-                            badgeContainer.appendChild(badgeIconWrapper);
-                        } else {
-                            const badge = document.createElement("span");
-                            badge.className = "badge";
-                            badge.textContent = produto.badge_title;
-                            badge.style.backgroundColor = produto.badge_bg;
-                            badge.style.color = produto.badge_color;
-
-                            if (badge_icon_align == "right") {
-                                badgeContainer.style.right = "5px";
-                            }
-                            if (badge_icon_align == "left") {
-                                badgeContainer.style.left = "5px";
-                            }
-
-                            badgeContainer.appendChild(badge);
+                        const align = (badges[0] && badges[0].align) ? badges[0].align : produto.badge_icon_align;
+                        if (align == "right") {
+                            badgeContainer.style.right = "0px";
+                            badgeContainer.style.left = "";
                         }
+                        if (align == "left") {
+                            badgeContainer.style.left = "0px";
+                            badgeContainer.style.right = "";
+                        }
+
+                        badges.forEach((badgeData) => {
+                            const title = badgeData && badgeData.title ? badgeData.title : "";
+                            if (!title) return;
+
+                            const icon = badgeData && badgeData.icon ? badgeData.icon : "";
+                            const bg = badgeData && badgeData.bg ? badgeData.bg : "";
+                            const color = badgeData && badgeData.color ? badgeData.color : "";
+
+                            if (icon) {
+                                const badgeIconWrapper = document.createElement("div");
+                                badgeIconWrapper.className = "badge-icon-wrapper";
+                                badgeIconWrapper.style.position = "relative";
+                                badgeIconWrapper.style.display = "block";
+
+                                const badgeIcon = document.createElement("img");
+                                badgeIcon.className = "badge-icon";
+                                badgeIcon.src = "/" + icon;
+                                badgeIcon.alt = title;
+                                badgeIcon.style.width = "19px";
+                                badgeIcon.style.height = "19px";
+
+                                const badge = document.createElement("span");
+                                badge.className = "badge-tooltip";
+                                badge.textContent = title;
+                                badge.style.backgroundColor = "transparent";
+                                badge.style.color = color;
+                                badge.style.fontSize = "10px";
+
+                                badgeIconWrapper.appendChild(badgeIcon);
+                                badgeIconWrapper.appendChild(badge);
+                                badgeContainer.appendChild(badgeIconWrapper);
+                            } else {
+                                const badge = document.createElement("span");
+                                badge.className = "badge";
+                                badge.textContent = title;
+                                badge.style.backgroundColor = bg;
+                                badge.style.color = color;
+                                badgeContainer.appendChild(badge);
+                            }
+                        });
                     }
 
                     produtosContainer.appendChild(clone);

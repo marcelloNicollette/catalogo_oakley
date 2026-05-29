@@ -1,6 +1,6 @@
 @extends('layouts.admin-layout')
 
-@section('page_title', 'Olympikus - Itens de Menu')
+@section('page_title', 'Oakley - Itens de Menu')
 
 @section('content-wrapper')
     <div class="flex justify-between items-center mb-6">

@@ -5,7 +5,7 @@
 @push('css')
 @endpush
 
-@section('page_title', 'Under Armour - Imagem Login')
+@section('page_title', 'Oakley - Imagem Login')
 
 @section('content-wrapper')
     <div class="container mx-auto p-6 max-w-2xl">

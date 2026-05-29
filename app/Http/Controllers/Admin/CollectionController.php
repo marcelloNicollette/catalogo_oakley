@@ -12,7 +12,7 @@ class CollectionController extends Controller
 {
     public function index()
     {
-        $collections = Collection::paginate(10);
+        $collections = Collection::get();
         return view('admin.collections.index', compact('collections'));
     }
 
@@ -57,6 +57,7 @@ class CollectionController extends Controller
 
     public function update(Request $request, Collection $collection)
     {
+
         $validated = $request->validate([
             'name' => 'required|max:255',
             'description' => 'nullable|max:255',
@@ -67,7 +68,7 @@ class CollectionController extends Controller
             'segmentacao_id' => 'nullable|exists:segmentacao,id',
             'active' => 'boolean'
         ]);
-
+        //dd($validated);
         //$validated['slug'] = Str::slug($validated['name']) . "-" . Str::slug($validated['codigo_colecao']);
 
         if ($request->hasFile('image')) {
@@ -78,6 +79,7 @@ class CollectionController extends Controller
         }
 
         $collection->update($validated);
+        //dd($collection);
 
         return redirect()->route('admin.collections.index')
             ->with('success', 'Coleção atualizada com sucesso.');

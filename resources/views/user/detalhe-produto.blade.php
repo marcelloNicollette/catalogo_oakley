@@ -1,4 +1,4 @@
-<x-layout-user-produto title="Under Armour - Detalhe Produto">
+<x-layout-user-produto title="Oakley - Detalhe Produto">
     <style>
         .badge-icon-wrapper .badge-tooltip {
             visibility: hidden;
@@ -158,7 +158,8 @@
                 <!-- Seção de Imagens - Esquerda -->
                 <div class="left-section">
                     <!-- Grid de Imagens para Desktop (2 colunas x 4 linhas) -->
-                    <div class="hidden lg:block bg-white rounded-lg border border-[#CBCBCB] overflow-hidden h-full">
+                    <div id="desktopGridWrapper"
+                        class="hidden lg:block bg-white rounded-lg border border-[#CBCBCB] overflow-hidden h-full">
                         <div class="image-grid-container h-full" id="desktopGrid">
                             <!-- Imagens serão carregadas dinamicamente via JavaScript -->
                         </div>
@@ -191,9 +192,9 @@
                         class="bg-white rounded-lg shadow-sm border border-[#CBCBCB] flex items-center justify-center hidden"
                         style="margin-top: 0px;">
                         <div class="transition-opacity">
-                            <img src="/images/img-padrao-ua.png" alt="Vista 1"
+                            <img src="/images/img-padrao-mz.png" alt="Vista 1"
                                 class="w-full object-contain rounded-lg "
-                                onerror="this.src='/images/img-padrao-ua.png'">
+                                onerror="this.src='/images/img-padrao-mz.png'">
                         </div>
                     </div>
 
@@ -266,35 +267,57 @@
                                                             str_replace('/', '_', $produto->code) .
                                                             '_' .
                                                             $baseColorCode .
-                                                            '.jpg',
+                                                            '_A.jpg',
                                                     );
+
                                                     $imgSrc = file_exists($basePath)
                                                         ? '/images/produtos/' .
                                                             str_replace('/', '_', $produto->code) .
                                                             '_' .
                                                             $baseColorCode .
-                                                            '.jpg'
-                                                        : '/images/img-padrao-ua.png';
+                                                            '_A.jpg'
+                                                        : '/images/img-padrao-mz.png';
+
                                                 @endphp
                                                 <img src="{{ $imgSrc }}" alt="{{ $color->color_name }}"
                                                     class="w-full object-contain rounded-lg" loading="lazy" />
-                                                @if ($color->flag_product_id)
-                                                    @if ($color->flagProduct->icon != null)
-                                                        <div
-                                                            class="badge-icon-wrapper absolute top-1 {{ $color->flagProduct->alinhamento }}-0">
-                                                            <img src="/{{ $color->flagProduct->icon }}"
-                                                                alt="{{ $color->flagProduct->flag_title }}"
-                                                                class="badge-icon"
-                                                                style="width:19px; height:19px; margin-right:3px">
-                                                            <span class="badge-tooltip"
-                                                                style="color: {{ $color->flagProduct->flag_color_text_bg }};">
-                                                                {{ $color->flagProduct->flag_title }}
-                                                            </span>
-                                                        </div>
-                                                    @else
-                                                        <span
-                                                            class="absolute top-2 left-1 bg-[{{ $color->flagProduct->flag_bg }}] text-[{{ $color->flagProduct->flag_color_text_bg }}] text-[10px] px-2 py-0.5 rounded-full">{{ $color->flagProduct->flag_title }}</span>
-                                                    @endif
+                                                @php
+                                                    $badges = collect();
+                                                    if (!empty($hasColorFlagProductTable)) {
+                                                        $badges = $color->flagProducts ?? collect();
+                                                    }
+                                                    if ($badges->isEmpty() && $color->flagProduct) {
+                                                        $badges = collect([$color->flagProduct]);
+                                                    }
+                                                    $badgeAlign =
+                                                        $badges->first() && !empty($badges->first()->alinhamento)
+                                                            ? $badges->first()->alinhamento
+                                                            : 'left';
+                                                @endphp
+                                                @if ($badges->isNotEmpty())
+                                                    <div class="badge-container pt-2 px-2"
+                                                        style="top:0px; {{ $badgeAlign === 'right' ? 'right:0px; left:auto;' : 'left:0px; right:auto;' }}">
+                                                        @foreach ($badges as $badge)
+                                                            @if (!empty($badge->icon))
+                                                                <div class="badge-icon-wrapper"
+                                                                    style="position: relative; display: block;">
+                                                                    <img src="/{{ $badge->icon }}"
+                                                                        alt="{{ $badge->flag_title }}"
+                                                                        class="badge-icon"
+                                                                        style="width:19px; height:19px;">
+                                                                    <span class="badge-tooltip"
+                                                                        style="color: {{ $badge->flag_color_text_bg }};">
+                                                                        {{ $badge->flag_title }}
+                                                                    </span>
+                                                                </div>
+                                                            @else
+                                                                <span class="badge line-clamp-1"
+                                                                    style="background-color: {{ $badge->flag_bg }}; color: {{ $badge->flag_color_text_bg }};">
+                                                                    {{ $badge->flag_title }}
+                                                                </span>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
                                                 @endif
                                             </div>
 
@@ -329,7 +352,7 @@
 
                                 <div>
                                     <p class="text-xs text-black opacity-50">Gênero</p>
-                                    <p class="text-base genero">{{ $produto->colors->first()->genero }}</p>
+                                    <p class="text-sm genero">{{ $produto->colors->first()->genero }}</p>
                                 </div>
                                 @if ($produto->caracteristicasDestaque)
                                     @foreach ($produto->caracteristicasDestaque as $caracteristica)
@@ -401,6 +424,39 @@
                                     <p class="text-sm" id="numeracao">{{ $initialNumeracao }}</p>
                                 </div>
 
+
+                                @php
+                                    $mesesAbrevPeriodoVendas = [
+                                        1 => 'Jan',
+                                        2 => 'Fev',
+                                        3 => 'Mar',
+                                        4 => 'Abr',
+                                        5 => 'Mai',
+                                        6 => 'Jun',
+                                        7 => 'Jul',
+                                        8 => 'Ago',
+                                        9 => 'Set',
+                                        10 => 'Out',
+                                        11 => 'Nov',
+                                        12 => 'Dez',
+                                    ];
+                                    $firstColorPeriodoVendas = $produto->colors->first()->periodo_vendas ?? [];
+                                    if (!is_array($firstColorPeriodoVendas)) {
+                                        $firstColorPeriodoVendas = [];
+                                    }
+                                    $initialPeriodoVendasText = collect($firstColorPeriodoVendas)
+                                        ->map(fn($m) => $mesesAbrevPeriodoVendas[(int) $m] ?? null)
+                                        ->filter()
+                                        ->implode(' | ');
+                                    if (empty($initialPeriodoVendasText)) {
+                                        $initialPeriodoVendasText = '-';
+                                    }
+                                @endphp
+                                <div>
+                                    <p class="text-xs text-black opacity-50">Período de Vendas</p>
+                                    <p class="text-sm" id="periodo_vendas">{{ $initialPeriodoVendasText }}</p>
+                                </div>
+
                             </div>
                         </div>
 
@@ -411,7 +467,8 @@
                                 <div class="">
                                     @foreach ($produto->technologyItems as $item)
                                         <div class="mb-[30px] flex">
-                                            <div class="w-[65px] h-[65px] float-left mr-[10px] bg-black rounded-lg ">
+                                            <div
+                                                class="w-[65px] h-[65px] float-left mr-[10px] bg-white border border-black rounded-lg">
                                                 <img src="/{{ $item->icon }}" class="w-100 h-100 my-0 rounded-lg"
                                                     alt="{{ $item->name }}" />
                                             </div>
@@ -534,7 +591,7 @@
                                         alt="Vista {{ $vista }}"
                                         class="max-w-full max-h-full object-contain transition-transform duration-300 cursor-zoom-in"
                                         data-modal-image="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
-                                        onerror="this.src='/images/img-padrao-ua.png'" />
+                                        onerror="this.src='/images/img-padrao-mz.png'" />
                                 </div>
                             @endif
                             @php $vista++; @endphp
@@ -542,7 +599,7 @@
                     </div>
 
                     <!-- Navigation buttons -->
-                    <div class="swiper-button-next text-white">
+                    <div class="swiper-button-next text-black">
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"
                             fill="none">
                             <circle cx="20" cy="20" r="20" transform="rotate(-180 20 20)"
@@ -553,7 +610,7 @@
                                 stroke-linecap="round" />
                         </svg>
                     </div>
-                    <div class="swiper-button-prev text-white">
+                    <div class="swiper-button-prev text-black">
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"
                             fill="none">
                             <circle cx="20" cy="20" r="20" fill="white" fill-opacity="1" />
@@ -582,7 +639,7 @@
         <script>
             // Cache para armazenar informações de imagens válidas
             const imageCache = new Map();
-            const suffixes = ['', '_A', '_B', '_C', '_D', '_E', '_F', '_G', '_H', '_I', '_J', '_K', '_L', '_M', '_N'];
+            const suffixes = ['_A', '_B', '_C', '_D', '_E', '_F', '_G', '_H', '_I', '_J', '_K', '_L', '_M', '_N'];
             const productCode = '{{ str_replace('/', '_', $produto->code) }}';
 
             // Variáveis globais
@@ -731,7 +788,7 @@
             <img src="${imgInfo.path}" 
                  alt="Vista ${imgInfo.index + 1}" 
                  class=""
-                 onerror="this.src='/images/img-padrao-ua.png'" />
+                 onerror="this.src='/images/img-padrao-mz.png'" />
         `;
 
                         desktopGrid.appendChild(imageDiv);
@@ -754,7 +811,7 @@
                                 <img src="${imgInfo.path}"
                                      alt="Vista ${imgInfo.index + 1}"
                                      class="max-w-[80%] max-h-[80%] object-contain"
-                                     onerror="this.src='/images/img-padrao-ua.png'" />
+                                     onerror="this.src='/images/img-padrao-mz.png'" />
                             </div>
                         `;
 
@@ -856,8 +913,10 @@
             }
 
             function setContentVisibility(visible) {
+                const desktopGridWrapper = document.getElementById('desktopGridWrapper');
                 const desktopGrid = document.getElementById('desktopGrid');
                 const mobileSwiper = document.getElementById('mobileSwiper');
+                if (desktopGridWrapper) desktopGridWrapper.style.display = visible ? '' : 'none';
                 if (desktopGrid) desktopGrid.style.display = visible ? '' : 'none';
                 if (mobileSwiper) mobileSwiper.style.display = visible ? '' : 'none';
             }
@@ -1156,6 +1215,7 @@
                             carregarImagensProdutoOtimizado(selectedColorCode);
                             // Atualizar numeração conforme a cor selecionada
                             updateNumeracaoByColorCode(selectedColorCode);
+                            updatePeriodoVendasByColorCode(selectedColorCode);
 
                             // Verificar status da wishlist (pode ser assíncrono sem afetar UX)
                             checkWishlistStatus();
@@ -1233,7 +1293,30 @@
                 "{{ $produto->numeracoes ? $produto->numeracoes->pluck('numero')->implode(', ') : '' }}";
             const coresData = [
                 @foreach ($produto->allColors as $color)
-                    {
+                    @php
+                        $badgesPayload = [];
+                        if (!empty($hasColorFlagProductTable) && !empty($color->flagProducts)) {
+                            foreach ($color->flagProducts as $badge) {
+                                $badgesPayload[] = [
+                                    'title' => $badge->flag_title,
+                                    'icon' => $badge->icon,
+                                    'bg' => $badge->flag_bg,
+                                    'color' => $badge->flag_color_text_bg,
+                                    'align' => $badge->alinhamento,
+                                ];
+                            }
+                        }
+                        if (empty($badgesPayload) && $color->flagProduct) {
+                            $badge = $color->flagProduct;
+                            $badgesPayload[] = [
+                                'title' => $badge->flag_title,
+                                'icon' => $badge->icon,
+                                'bg' => $badge->flag_bg,
+                                'color' => $badge->flag_color_text_bg,
+                                'align' => $badge->alinhamento,
+                            ];
+                        }
+                    @endphp {
                         id: {{ $color->id }},
                         color_code: "{{ $color->color_code }}",
                         color_name: "{{ $color->color_name }}",
@@ -1252,10 +1335,80 @@
                         @else
                             null
                         @endif ,
+                        badges: @json($badgesPayload),
+                        periodo_vendas: @json($color->periodo_vendas ?? []),
                         segmentacaoIds: @json($color->segmentacoesCliente->pluck('id')->toArray())
                     },
                 @endforeach
             ];
+
+            function renderizarBadges(badgeContainer, colorData) {
+                if (!badgeContainer) return;
+
+                const badges = Array.isArray(colorData.badges) && colorData.badges.length ? colorData.badges : (
+                    colorData.flagProduct ? [{
+                        title: colorData.flagProduct.flag_title,
+                        icon: colorData.flagProduct.icon,
+                        bg: colorData.flagProduct.flag_bg,
+                        color: colorData.flagProduct.flag_color_text_bg,
+                        align: colorData.flagProduct.alinhamento
+                    }] : []
+                );
+
+                badgeContainer.innerHTML = "";
+                if (!badges.length) return;
+
+                const align = (badges[0] && badges[0].align) ? badges[0].align : "left";
+                badgeContainer.style.top = "0px";
+                if (align === "right") {
+                    badgeContainer.style.right = "0px";
+                    badgeContainer.style.left = "";
+                } else {
+                    badgeContainer.style.left = "0px";
+                    badgeContainer.style.right = "";
+                }
+
+                badges.forEach((badgeData) => {
+                    const title = badgeData && badgeData.title ? badgeData.title : "";
+                    if (!title) return;
+
+                    const icon = badgeData && badgeData.icon ? badgeData.icon : "";
+                    const bg = badgeData && badgeData.bg ? badgeData.bg : "";
+                    const color = badgeData && badgeData.color ? badgeData.color : "";
+
+                    if (icon) {
+                        const badgeIconWrapper = document.createElement("div");
+                        badgeIconWrapper.className = "badge-icon-wrapper";
+                        badgeIconWrapper.style.position = "relative";
+                        badgeIconWrapper.style.display = "block";
+
+                        const badgeIcon = document.createElement("img");
+                        badgeIcon.className = "badge-icon";
+                        badgeIcon.src = "/" + icon;
+                        badgeIcon.alt = title;
+                        badgeIcon.style.width = "19px";
+                        badgeIcon.style.height = "19px";
+
+                        const badge = document.createElement("span");
+                        badge.className = "badge-tooltip";
+                        badge.textContent = title;
+                        badge.style.backgroundColor = "transparent";
+                        badge.style.color = color;
+                        badge.style.fontSize = "10px";
+
+                        badgeIconWrapper.appendChild(badgeIcon);
+                        badgeIconWrapper.appendChild(badge);
+                        badgeContainer.appendChild(badgeIconWrapper);
+                    } else {
+                        const badge = document.createElement("span");
+                        badge.className = "badge truncate whitespace-nowrap overflow-hidden block max-w-[93px]";
+                        badge.textContent = title;
+                        badge.style.backgroundColor = bg;
+                        badge.style.color = color;
+                        badgeContainer.appendChild(badge);
+                    }
+                });
+            }
 
             function updateNumeracaoByColorCode(colorCode) {
                 try {
@@ -1268,6 +1421,44 @@
                     console.error('Erro atualizando numeração da cor:', e);
                 }
             }
+
+            function formatPeriodoVendas(meses) {
+                const mesesAbrev = {
+                    1: 'Jan',
+                    2: 'Fev',
+                    3: 'Mar',
+                    4: 'Abr',
+                    5: 'Mai',
+                    6: 'Jun',
+                    7: 'Jul',
+                    8: 'Ago',
+                    9: 'Set',
+                    10: 'Out',
+                    11: 'Nov',
+                    12: 'Dez',
+                };
+
+                if (!Array.isArray(meses) || meses.length === 0) return '-';
+
+                const mesesOrdenados = [...new Set(meses.map(m => parseInt(m, 10)).filter(m => m >= 1 && m <= 12))].sort((a,
+                    b) => a - b);
+                const texto = mesesOrdenados.map(m => mesesAbrev[m]).filter(Boolean).join(' | ');
+                return texto || '-';
+            }
+
+            function updatePeriodoVendasByColorCode(colorCode) {
+                try {
+                    const cor = coresData.find(c => c.color_code === colorCode);
+                    const periodoEl = document.getElementById('periodo_vendas');
+                    if (periodoEl) {
+                        periodoEl.textContent = cor ? formatPeriodoVendas(cor.periodo_vendas) : '-';
+                    }
+                } catch (e) {
+                    console.error('Erro atualizando período de vendas da cor:', e);
+                }
+            }
+
+
 
             // Função para filtrar cores baseado nas segmentações selecionadas
             function filtrarCoresPorSegmentacao() {
@@ -1308,47 +1499,26 @@
                     const colorCodeFormatted = cor.color_code.replace(/\//g, '_');
                     const isFirst = index === 0;
 
-                    let flagHtml = '';
-                    if (cor.flagProduct && cor.flagProduct.icon) {
-                        flagHtml = `
-                            <div class="badge-icon-wrapper absolute top-1 ${cor.flagProduct.alinhamento}-0">
-                                <img src="/${cor.flagProduct.icon}" 
-                                     alt="${cor.flagProduct.flag_title}" 
-                                     class="badge-icon" 
-                                     style="width:19px; height:19px; margin-right:3px">
-                                <span class="badge-tooltip" 
-                                      style="color: ${cor.flagProduct.flag_color_text_bg};">
-                                    ${cor.flagProduct.flag_title}
-                                </span>
-                            </div>
-                        `;
-                    } else if (cor.flagProduct) {
-                        flagHtml = `
-                            <span class="absolute top-1 left-1 bg-[${cor.flagProduct.flag_bg}] text-[${cor.flagProduct.flag_color_text_bg}] text-[10px] px-2 py-0.5 rounded-full">
-                                ${cor.flagProduct.flag_title}
-                            </span>
-                        `;
-                    }
-
                     corElement.innerHTML = `
                         <div class="box-color bg-white ${isFirst ? 'border border-black' : 'border border-white'} rounded-lg cursor-pointer transition-all duration-200 " 
                              data-color-code="${cor.color_code}"
                              data-genero="${cor.genero}">
                             <div class="relative">
-                                <img src="/images/produtos/{{ $produto->code }}_${colorCodeFormatted}.jpg" 
+                                <img src="/images/produtos/{{ $produto->code }}_${colorCodeFormatted}_A.jpg" 
                                      alt="${cor.color_name}" 
                                      class="w-full object-contain rounded-lg"
                                      loading="lazy"
-                                     onerror="this.src='/images/img-padrao-ua.png'" />
-                                ${flagHtml}
+                                     onerror="this.src='/images/img-padrao-mz.png'" />
+                                <div class="badge-container pt-2 px-2"></div>
                             </div>
                             <div class="text-center pb-2">
-                                <p class="text-xs text-black">${cor.color_name}</p>
-                                <p class="text-xs text-black opacity-50 word">${cor.color_description}</p>
+                                <p class="text-xs text-black notranslate">${cor.color_name}</p>
+                                <p class="text-xs text-black opacity-50 notranslate word">${cor.color_description}</p>
                             </div>
                         </div>
                     `;
 
+                    renderizarBadges(corElement.querySelector('.badge-container'), cor);
                     fragment.appendChild(corElement);
                 });
 
@@ -1363,6 +1533,7 @@
                 if (coresFiltradas.length > 0) {
                     carregarImagensProdutoOtimizado(coresFiltradas[0].color_code);
                     updateNumeracaoByColorCode(coresFiltradas[0].color_code);
+                    updatePeriodoVendasByColorCode(coresFiltradas[0].color_code);
                 }
             }
 
@@ -1378,6 +1549,7 @@
                     if (coresFiltradas.length > 0) {
                         carregarImagensProdutoOtimizado(coresFiltradas[0].color_code);
                         updateNumeracaoByColorCode(coresFiltradas[0].color_code);
+                        updatePeriodoVendasByColorCode(coresFiltradas[0].color_code);
                     }
                 });
             }

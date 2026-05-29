@@ -13,7 +13,7 @@ class LayoutUser extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct($title = 'Under Armour')
+    public function __construct($title = 'Oakley')
     {
         $this->title = $title;
     }

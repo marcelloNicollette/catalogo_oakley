@@ -1,6 +1,6 @@
 @extends('layouts.admin-layout')
 
-@section('page_title', 'Under Armour - Visualizar Item do Calendário')
+@section('page_title', 'Oakley - Visualizar Item do Calendário')
 
 @section('content-wrapper')
     <div class="flex justify-between items-center mb-6">
@@ -192,26 +192,26 @@
 
             <!-- Informações do Sistema -->
             <!--<div class="mt-6">
-                                <div class="bg-gray-50 rounded-lg p-6">
-                                    <h3 class="text-lg font-medium text-gray-900 mb-4">Informações do Sistema</h3>
+                                    <div class="bg-gray-50 rounded-lg p-6">
+                                        <h3 class="text-lg font-medium text-gray-900 mb-4">Informações do Sistema</h3>
 
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700">Criado em</label>
-                                            <p class="mt-1 text-sm text-gray-900 bg-white px-3 py-2 rounded border">
-                                                {{ $calendario->created_at->format('d/m/Y H:i:s') }}
-                                            </p>
-                                        </div>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Criado em</label>
+                                                <p class="mt-1 text-sm text-gray-900 bg-white px-3 py-2 rounded border">
+                                                    {{ $calendario->created_at->format('d/m/Y H:i:s') }}
+                                                </p>
+                                            </div>
 
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700">Última atualização</label>
-                                            <p class="mt-1 text-sm text-gray-900 bg-white px-3 py-2 rounded border">
-                                                {{ $calendario->updated_at->format('d/m/Y H:i:s') }}
-                                            </p>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Última atualização</label>
+                                                <p class="mt-1 text-sm text-gray-900 bg-white px-3 py-2 rounded border">
+                                                    {{ $calendario->updated_at->format('d/m/Y H:i:s') }}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>-->
+                                </div>-->
 
             <!-- Ações -->
             <div class="mt-6 flex justify-end space-x-3">

@@ -13,7 +13,7 @@
     </style>
 @endpush
 
-@section('page_title', 'Under Armour - Coleções')
+@section('page_title', 'Oakley - Coleções')
 
 @section('content-wrapper')
     <div class="flex justify-between items-center mb-6">

@@ -1,37 +1,29 @@
-<x-layout-user title="Under Armour - Segmentação">
+<x-layout-user title="Oakley - Calendário">
     <style>
-        .select-container {
-            position: relative;
-            width: 150px;
-            margin: 0 auto;
+        .options {
+            width: 200px;
+            max-width: none;
+        }
+
+        .check-icon {
+            color: #000;
+            font-weight: bold;
+            font-size: 16px;
+            width: 16px;
+            text-align: center;
         }
 
         .option {
-            padding: 8px 16px;
-            font-size: 18px;
-            color: #000;
-            cursor: pointer;
+            padding: 1px 20px;
             border-bottom: 0;
-            transition: all 0.2s ease;
         }
 
-        @media (min-width: 1280px) {
-
-            #produtos {
-                min-height: 79vh;
-            }
+        .option.selected {
+            padding: 1px 0px;
         }
 
-        @media (min-width: 2566px) {
-            #produtos {
-                min-height: 88vh;
-            }
-        }
-
-        @media (min-width: 3000px) {
-            #produtos {
-                min-height: 91vh;
-            }
+        .height-ultra {
+            height: calc(100vh - 85px);
         }
     </style>
     <main class="lg:flex flex-1">
@@ -39,7 +31,8 @@
         <x-sidebar activeItem="calendario" />
 
         <!-- Conteúdo principal -->
-        <section class="flex-1 flex flex-col p-4 md:pt-0 md:pr-0 md:pl-4 md:pb-0 overflow-hidden">
+        <section class="flex-1 flex flex-col md:pr-0 md:pb-0 overflow-hidden">
+
             @php
 
                 $currentUrl = request()->path();
@@ -56,11 +49,13 @@
 
             @endphp
             <!-- Filtros superiores -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 pr-4">
+            <div
+                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 pr-4 bg-white">
                 <!-- Esquerda: fitro ano -->
                 <div class="flex gap-2">
+
                     <div class="select-container">
-                        <div class="select-button" id="selectButton">
+                        <div class="select-button p-5" id="selectButton">
                             <span id="selectedText">Ano</span>
                             <div class="" id="arrow">
                                 <div class="pt-1" id="arrow">
@@ -72,19 +67,41 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="options" id="options">
+
+
+                        <div class="options  p-5" id="options">
+
                             @foreach ($anos as $ano)
-                                <div class="option text-[18px]" data-value="{{ $ano }}"
-                                    {{ $calendarios->first()->ano == $ano ? 'data-selected="true"' : '' }}>
-                                    {{ $ano }}
+                                <div class="option gap-[10px] text-[18px] font-normal opacity-50"
+                                    data-value="{{ $ano }}">
+                                    <span class="check-icon" style="display: none;"><svg
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                                            <path
+                                                d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
+                                        </svg></span>
+                                    <span class="option-content text-black">
+                                        {{ $ano }}
+                                    </span>
+                                    <span class="x-icon" style="display: none;">×</span>
                                 </div>
                             @endforeach
+                            <div class="option" data-categoria-id="" data-value="">
+                                <span class="check-icon" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 640 640">
+                                        <path
+                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
+                                    </svg></span>
+                                <span class="text-[16px] text-black font-normal option-content">Todas</span>
+                                <span class="x-icon" style="display: none;">×</span>
+                            </div>
                         </div>
                     </div>
+
+
                 </div>
 
                 <!-- Direita: Busca -->
-                <div class="flex flex-wrap gap-2 items-end justify-end mt-6">
+                <div class="flex flex-wrap gap-2 items-end justify-end">
                     <div class="flex items-center border-b border-b-black px-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-black ml-1" viewBox="0 0 20 20"
                             fill="currentColor">
@@ -101,8 +118,8 @@
             </div>
 
             <!-- Lista de Produtos -->
-            <div id="produtos"
-                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-1 bg-[#E6E6E6] lg:p-[3.125rem] rrounded-tl-lg overflow-auto lg:h-[75vh] xl:h-[79vh] 2xl:h-[78vh] 3xl:h-[80vh]">
+            <div id="calendario"
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-1 bg-white lg:p-[3.125rem] rounded-tl-lg overflow-auto height-ultra custom-scrollbar">
                 <!-- Template de Produto -->
                 <template id="template-produto">
 
@@ -118,19 +135,23 @@
                                 <span class="codigo text-black opacity-50"></span>
                             </p>
                             <section class="grid grid-cols-2">
-                                <div class="pb-2">
+                                <div class="pb-2" id="data">
+                                    <p class="text-black opacity-50 text-xs title-caract-1">Data</p>
+                                    <p class="data text-black text-xs desc-caract-1"></p>
+                                </div>
+                                <div class="pb-2" id="data_mkt">
                                     <p class="text-black opacity-50 text-xs title-caract-1">Data Mkt</p>
                                     <p class="dt_mkt text-black text-xs desc-caract-1"></p>
                                 </div>
-                                <div class="pb-2">
+                                <div class="pb-2" id="data_trade">
                                     <p class="text-black opacity-50 text-xs title-caract-1">Data Trade</p>
                                     <p class="dt_trade text-black text-xs desc-caract-1"></p>
                                 </div>
-                                <div class="">
+                                <div class="pb-2" id="data_cliente">
                                     <p class="text-black opacity-50 text-xs title-caract-1">Data Cliente</p>
                                     <p class="dt_cliente text-black text-xs desc-caract-1"></p>
                                 </div>
-                                <div class="">
+                                <div class="pb-2" id="data_dtc">
                                     <p class="text-black opacity-50 text-xs title-caract-1">Data DTC</p>
                                     <p class="dt_dtc text-black text-xs desc-caract-1"></p>
                                 </div>
@@ -160,13 +181,13 @@
                         imagem: "{{ $img }}",
                         info1: {!! json_encode($produtoGroup->info_1) !!},
                         info2: {!! json_encode($produtoGroup->info_2) !!},
-                        data: "{{ $produtoGroup->data->format('d/m/Y') }}",
-                        data_mkt: "{{ $produtoGroup->data_mkt->format('d/m/Y') }}",
-                        data_trade: "{{ $produtoGroup->data_trade->format('d/m/Y') }}",
-                        data_cliente: "{{ $produtoGroup->data_cliente->format('d/m/Y') }}",
-                        data_dtc: "{{ $produtoGroup->data_dtc->format('d/m/Y') }}",
-                        ano: "{{ $produtoGroup->ano }}",
-                        mes: "{{ $produtoGroup->mes }}",
+                        data: "{{ $produtoGroup->data != null ? $produtoGroup->data->format('d/m/Y') : '' }}",
+                        data_mkt: "{{ $produtoGroup->data_mkt != null ? $produtoGroup->data_mkt->format('d/m/Y') : '' }}",
+                        data_trade: "{{ $produtoGroup->data_trade != null ? $produtoGroup->data_trade->format('d/m/Y') : '' }}",
+                        data_cliente: "{{ $produtoGroup->data_cliente != null ? $produtoGroup->data_cliente->format('d/m/Y') : '' }}",
+                        data_dtc: "{{ $produtoGroup->data_dtc != null ? $produtoGroup->data_dtc->format('d/m/Y') : '' }}",
+                        ano: "{{ $produtoGroup->ano != null ? $produtoGroup->ano : date('Y') }}",
+                        mes: "{{ $produtoGroup->mes != null ? $produtoGroup->mes : date('m') }}",
                     },
                 @endforeach
             ];
@@ -176,7 +197,7 @@
             const groupCheckbox = document.getElementById("groupColors");
 
             // Declarar selectedYear antes de usar
-            let selectedYear = '{{ $calendarios->first()->ano }}';
+            let selectedYear = '{{ $calendarios->count() != 0 ? $calendarios->first()->ano : date('Y') }}';
 
             function renderProdutos(produtos, agrupado = false) {
                 produtosContainer.innerHTML = "";
@@ -231,10 +252,31 @@
                     clone.querySelector("h2").textContent = produto.title;
                     clone.querySelector(".codigo").textContent = produto.info2;
                     clone.querySelector(".categoria").textContent = produto.info1;
-                    clone.querySelector(".dt_mkt").textContent = produto.data_mkt;
-                    clone.querySelector(".dt_trade").textContent = produto.data_trade;
-                    clone.querySelector(".dt_cliente").textContent = produto.data_cliente;
-                    clone.querySelector(".dt_dtc").textContent = produto.data_dtc;
+                    if (produto.data != '') {
+                        clone.querySelector(".data").textContent = produto.data;
+                    } else {
+                        clone.querySelector("#data").style.display = 'none';
+                    }
+                    if (produto.data_mkt != '') {
+                        clone.querySelector(".dt_mkt").textContent = produto.data_mkt;
+                    } else {
+                        clone.querySelector("#data_mkt").style.display = 'none';
+                    }
+                    if (produto.data_trade != '') {
+                        clone.querySelector(".dt_trade").textContent = produto.data_trade;
+                    } else {
+                        clone.querySelector("#data_trade").style.display = 'none';
+                    }
+                    if (produto.data_cliente != '') {
+                        clone.querySelector(".dt_cliente").textContent = produto.data_cliente;
+                    } else {
+                        clone.querySelector("#data_cliente").style.display = 'none';
+                    }
+                    if (produto.data_dtc != '') {
+                        clone.querySelector(".dt_dtc").textContent = produto.data_dtc;
+                    } else {
+                        clone.querySelector("#data_dtc").style.display = 'none';
+                    }
 
                     produtosContainer.appendChild(clone);
                 });
@@ -304,16 +346,57 @@
                 toggleDropdown();
             });
 
-            // Event listener para as opções
             selectOptions.addEventListener('click', function(e) {
-                const option = e.target.closest('.option');
-                if (option) {
+                // Handle X icon click to remove selection
+                if (e.target.classList.contains('x-icon')) {
+                    e.stopPropagation();
+                    const option = e.target.closest('.option');
+                    if (option) {
+                        // Remove selection and reset category filter
+                        selectButton.querySelector('span').textContent = 'Ano';
+                        selectedCategoryId = '';
+                        // Atualizar ano selecionado
+                        selectedYear = "";
+
+                        // Fechar dropdown
+                        closeDropdown();
+
+                        // Aplicar filtro
+                        aplicarFiltros();
+                    }
+                    return;
+                }
+
+                let option = e.target;
+
+                // Find the option element if clicked on child elements
+                if (!option.classList.contains('option')) {
+                    option = option.closest('.option');
+                }
+
+                if (option && option.classList.contains('option')) {
                     e.stopPropagation();
 
-                    // Atualizar texto do botão
-                    selectButton.querySelector('span').innerHTML = 'Ano: <span class="opacity-50">' + option
-                        .textContent + '</span>';
+                    // Remove selected state from all options
+                    selectOptions.querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('selected');
+                        opt.classList.add('opacity-50');
+                        opt.querySelector('.check-icon').style.display = 'none';
+                        opt.querySelector('.x-icon').style.display = 'none';
+                    });
 
+                    // Add selected state to clicked option
+                    option.classList.add('selected');
+                    option.classList.remove('opacity-50');
+                    option.querySelector('.check-icon').style.display = 'inline-table';
+                    option.querySelector('.x-icon').style.display = 'inline-table';
+
+                    const value = option.getAttribute('data-value');
+                    const text = option.querySelector('.option-content') ? option.querySelector(
+                        '.option-content').textContent : option.textContent;
+                    selectButton.querySelector('span').innerHTML =
+                        "Ano: <span style='font-size:18px; color:#7A7A7A;'>" +
+                        text + "</span>";
                     // Atualizar ano selecionado
                     selectedYear = option.getAttribute('data-value');
 

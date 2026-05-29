@@ -22,10 +22,12 @@ use App\Services\GoogleSheetsService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class GoogleSheetController extends Controller
 {
@@ -51,9 +53,19 @@ class GoogleSheetController extends Controller
         return view('admin.sync.sync-representantes');
     }
 
-    public function sync()
+    private function resolveValueDomain(Request $request): string
     {
-        $spreadsheetId = "1skMcMlapMDLis7oZCz2dyRzFPMBfEmDoMLzYqqIInkU";
+        return match($request->getHost()) {
+            '127.0.0.1' => 'Catalogo_Oakley',
+            'catalogooakley.com.br' => 'Catalogo_Oakley',           
+        };
+    }
+
+    public function sync(Request $request)
+    {
+        $planilha = $this->resolveValueDomain($request);
+
+        $spreadsheetId = env('GOOGLE_SHEETS_SPREADSHEET_ID');
         $syncResults = [
             'success' => 0,
             'errors' => 0,
@@ -61,11 +73,12 @@ class GoogleSheetController extends Controller
             'messages' => []
         ];
 
-        try {
+        try { 
             DB::beginTransaction();
 
             // Lê os cabeçalhos das colunas
-            $headerRange = "UA-Catalogo!A2:AN";
+            $headerRange = $planilha."!A2:AK";
+            
             $headerRows = $this->sheetService->readSheet($spreadsheetId, $headerRange);
 
             if (empty($headerRows) || empty($headerRows[0])) {
@@ -75,7 +88,7 @@ class GoogleSheetController extends Controller
             $headers = $headerRows[0];
 
             // Lê os dados da planilha
-            $dataRange = "UA-Catalogo!A4:AN";
+            $dataRange = $planilha."!A4:AK";
             $rows = $this->sheetService->readSheet($spreadsheetId, $dataRange);
 
             if (empty($rows)) {
@@ -87,7 +100,7 @@ class GoogleSheetController extends Controller
 
             foreach ($rows as $rowIndex => $row) {
                 $productData = [];
-
+                
                 // Mapeia cada valor da linha com o nome da coluna correspondente
                 for ($i = 0; $i < count($headers); $i++) {
                     $columnName = $headers[$i] != "" ? $headers[$i] : "coluna_" . ($i + 1);
@@ -111,29 +124,31 @@ class GoogleSheetController extends Controller
                         'row_indexes' => []
                     ];
                 }
-
+                //dd($productData);
                 // Adiciona a cor desta linha se existir
                 if (!empty($productData['COR_COD'])) {
                     $groupedProducts[$sku]['colors'][] = [
                         'code' => $productData['COR_COD'],
                         'description' => $productData['COR_DESCRIÇÃO'] ?? $productData['COR_COD'],
-                        'genero' => $productData['GENERO'],
+                        'genero' => $productData['GENERO'] ?? 'UNISSEX',
                         'flag' => $productData['COR_CLASSIFICAÇÃO'],
                         'collection' => $this->findOrCreateCollection($productData['COLEÇÃO'] ?? '', $productData['COLEÇÃO_SECUNDÁRIA'] ?? ''),
                         // Tenta obter numeração da cor a partir de possíveis cabeçalhos
-                        'numeracao' => $this->extractColorNumeracao($productData)
+                        'numeracao' => $this->extractColorNumeracao($productData),
+                        'cliente_segmento' => $productData['CLIENTE_SEGMENTO'] ?? '',
                     ];
                 }
 
                 $groupedProducts[$sku]['row_indexes'][] = $rowIndex + 4;
             }
 
-            // Processa cada produto único com todas suas cores
+            //dd($groupedProducts['1326413']);
+            // Processa cada produto único com todas suas cores, mantendo ordem da planilha
             $orderIndex = 1;
             foreach ($groupedProducts as $sku => $productGroup) {
                 try {
                     // Sincroniza o produto com todas as cores coletadas e define ordem sequencial
-                    $this->syncProductWithColors($productGroup['data'], $productGroup['colors'], $orderIndex);
+                    $this->syncProductWithColors($productGroup['data'], $productGroup['colors'], $orderIndex, $syncResults, $productGroup['row_indexes']);
                     $orderIndex++;
                     $syncResults['success']++;
                 } catch (\Exception $e) {
@@ -164,6 +179,263 @@ class GoogleSheetController extends Controller
         }
     }
 
+    public function syncReverse(Request $request)
+    {
+        $planilha = $this->resolveValueDomain($request);
+        set_time_limit(600);
+        ini_set('memory_limit', '512M');
+
+        $spreadsheetId = env('GOOGLE_SHEETS_SPREADSHEET_ID');
+        $baseSheetName = $planilha;
+        $sheetName = $baseSheetName;
+
+        try {
+            $previewRaw = request()->query('preview', request()->input('preview', null));
+            $preview = $previewRaw !== null && $previewRaw !== '' && $previewRaw !== false && $previewRaw !== 0 && $previewRaw !== '0';
+        } catch (\Exception $e) {
+            $preview = false;
+        }
+
+        Log::info('syncReverse started', [
+            'preview' => $preview,
+            'preview_query' => request()->query('preview'),
+            'preview_input' => request()->input('preview'),
+            'full_url' => request()->fullUrl(),
+        ]);
+
+        if ($preview) {
+            $suffix = Carbon::now()->format('d-m-Y_H:i:s');
+            $sheetName = $baseSheetName . '_REVERSE_' . $suffix;
+            $this->sheetService->duplicateSheet($spreadsheetId, $baseSheetName, $sheetName);
+            Log::info('syncReverse preview sheet created', [
+                'base_sheet' => $baseSheetName,
+                'preview_sheet' => $sheetName,
+            ]);
+        }
+        
+        $headerRange = "{$sheetName}!A3:AM";
+        $dataRange = "{$sheetName}!A4:AM";
+
+        $syncResults = [
+            'updated' => 0,
+            'appended' => 0,
+            'skipped' => 0,
+            'errors' => 0,
+            'messages' => []
+        ];
+
+        try {
+            $headerRows = $this->sheetService->readSheet($spreadsheetId, $headerRange);
+            if (empty($headerRows) || empty($headerRows[0])) {
+                throw new \Exception('Não foi possível ler os cabeçalhos da planilha.');
+            }
+
+            $headers = $headerRows[0];
+            $headerIndex = $this->buildHeaderIndex($headers);
+            $headerCount = count($headers);
+            $endColumn = $this->indexToColumnLetter(max(0, $headerCount - 1));
+
+            $rows = $this->sheetService->readSheet($spreadsheetId, $dataRange);
+            if ($rows === null) {
+                Log::warning('syncReverse readSheet retornou null para dados; tratando como planilha vazia', [
+                    'range' => $dataRange,
+                    'sheet' => $sheetName,
+                ]);
+                $rows = [];
+            }
+            if (!is_array($rows)) {
+                throw new \UnexpectedValueException('Falha ao ler os dados da planilha (retorno inválido).');
+            }
+
+            $sheetRowMap = [];
+            $sheetRowMapBySkuColor = [];
+            $sheetRowValuesByNumber = [];
+
+            foreach ($rows as $i => $row) {
+                $rowNumber = $i + 4;
+                $rowPadded = $this->padRowToCount($row, $headerCount);
+                $sheetRowValuesByNumber[$rowNumber] = $rowPadded;
+
+                $codeIndex = $headerIndex['CÓDIGO'] ?? null;
+                if ($codeIndex === null) {
+                    continue;
+                }
+
+                $code = trim((string) ($rowPadded[$codeIndex] ?? ''));
+                if ($code === '') {
+                    continue;
+                }
+
+                $colorCodeIndex = $headerIndex['COR_COD'] ?? null;
+                $colorCode = $colorCodeIndex !== null ? trim((string) ($rowPadded[$colorCodeIndex] ?? '')) : '';
+
+                $collectionIndex = $headerIndex['COLEÇÃO'] ?? null;
+                $collectionSecondaryIndex = $headerIndex['COLEÇÃO_SECUNDÁRIA'] ?? null;
+                $collectionName = $collectionIndex !== null ? trim((string) ($rowPadded[$collectionIndex] ?? '')) : '';
+                $collectionSecondary = $collectionSecondaryIndex !== null ? trim((string) ($rowPadded[$collectionSecondaryIndex] ?? '')) : '';
+
+                $collectionKey = $this->normalizeSheetHeader($collectionName) . '|' . $this->normalizeSheetHeader($collectionSecondary);
+                $sheetRowMap[$code][$colorCode][$collectionKey] = $rowNumber;
+                $sheetRowMapBySkuColor[$code][$colorCode] = $rowNumber;
+            }
+
+            $lastRunIso = Cache::get('google_sheets_reverse_sync_produtos_last_run');
+            $since = null;
+            if (!empty($lastRunIso)) {
+                try {
+                    $since = Carbon::parse($lastRunIso);
+                } catch (\Exception $e) {
+                    $since = null;
+                }
+            }
+
+            $forceFull = $preview;
+            try {
+                $forceFull = (bool) request()->boolean('force');
+            } catch (\Exception $e) {
+                $forceFull = $preview;
+            }
+
+            if ($forceFull) {
+                $since = null;
+            }
+
+            $productIds = $this->getProductIdsToReverseSync($since);
+            if (empty($productIds)) {
+                if ($since !== null) {
+                    $productIds = $this->getProductIdsToReverseSync(null);
+                }
+                if (empty($productIds)) {
+                    return back()->with('success', 'Nenhuma alteração encontrada no banco para enviar para a planilha.');
+                }
+            }
+
+            $products = Product::with([
+                'category.segmentacao',
+                'subcategory',
+                'colors.collection',
+                'colors.flagProduct',
+                'colors.flagProducts',
+                'colors.numeracao',
+                'colors.segmentacoesCliente',
+                'caracteristicas',
+                'links',
+                'numeracoes',
+                'calendario'
+            ])->whereIn('id', $productIds)->get();
+
+            $updates = [];
+            $appends = [];
+
+            foreach ($products as $product) {
+                $sku = trim((string) ($product->sku ?? $product->code ?? ''));
+                if ($sku === '') {
+                    $syncResults['skipped']++;
+                    continue;
+                }
+
+                $baseValues = $this->buildBaseProductSheetValues($product);
+
+                $colors = $product->colors ?? collect();
+                if ($colors->isEmpty()) {
+                    $colors = collect([null]);
+                }
+
+                foreach ($colors as $color) {
+                    $colorCode = $color ? trim((string) ($color->color_code ?? '')) : '';
+                    $collectionKey = '';
+                    if ($color && $color->collection) {
+                        $collectionKey = $this->normalizeSheetHeader((string) ($color->collection->name ?? '')) . '|' .
+                            $this->normalizeSheetHeader((string) ($color->collection->description ?? ''));
+                    }
+
+                    $rowNumber = null;
+                    if ($collectionKey !== '') {
+                        $rowNumber = $sheetRowMap[$sku][$colorCode][$collectionKey] ?? null;
+                    }
+                    if ($rowNumber === null) {
+                        $rowNumber = $sheetRowMapBySkuColor[$sku][$colorCode] ?? null;
+                    }
+
+                    if ($rowNumber !== null) {
+                        $rowValues = $sheetRowValuesByNumber[$rowNumber] ?? array_fill(0, $headerCount, '');
+                        $rowValues = $this->padRowToCount($rowValues, $headerCount);
+                        $this->applyValuesToRow($rowValues, $headerIndex, $baseValues);
+                        $this->applyColorValuesToRow($rowValues, $headerIndex, $product, $color);
+
+                        $updates[] = [
+                            'range' => "{$sheetName}!A{$rowNumber}:{$endColumn}{$rowNumber}",
+                            'values' => [$rowValues],
+                        ];
+                    } else {
+                        $rowValues = array_fill(0, $headerCount, '');
+                        $this->applyValuesToRow($rowValues, $headerIndex, $baseValues);
+                        $this->applyColorValuesToRow($rowValues, $headerIndex, $product, $color);
+                        if ($this->isEmptySheetRow($rowValues)) {
+                            $syncResults['skipped']++;
+                            Log::warning('syncReverse ignorou append de linha vazia', [
+                                'sku' => $sku,
+                                'color_code' => $colorCode,
+                                'sheet' => $sheetName,
+                            ]);
+                            continue;
+                        }
+                        $appends[] = $rowValues;
+                    }
+                }
+            }
+
+            $updateChunks = array_chunk($updates, 200);
+            foreach ($updateChunks as $chunk) {
+                if (empty($chunk)) {
+                    continue;
+                }
+                $this->sheetService->batchUpdateValues($spreadsheetId, $chunk, 'USER_ENTERED');
+                $syncResults['updated'] += count($chunk);
+            }
+
+            $appendChunks = array_chunk($appends, 200);
+            foreach ($appendChunks as $chunk) {
+                if (empty($chunk)) {
+                    continue;
+                }
+                $this->sheetService->appendSheet($spreadsheetId, "{$sheetName}!A4:{$endColumn}", $chunk, 'USER_ENTERED');
+                $syncResults['appended'] += count($chunk);
+            }
+
+            if (!$preview) {
+                Cache::forever('google_sheets_reverse_sync_produtos_last_run', Carbon::now()->toIso8601String());
+            }
+
+            $targetText = $preview ? " (aba {$sheetName})" : '';
+            $message = "Sincronismo reverso concluído{$targetText}! \n
+            Atualizadas: {$syncResults['updated']}, Novas linhas: {$syncResults['appended']}, Ignoradas: {$syncResults['skipped']}, Erros: {$syncResults['errors']}";
+            if (!empty($syncResults['messages'])) {
+                $message .= "\n\nDetalhes:\n" . implode("\n", $syncResults['messages']);
+            }
+
+            return back()->with('success', $message);
+        } catch (\Throwable $e) {
+            Log::error('Erro no sincronismo reverso (Banco -> Planilha)', [
+                'error' => $e->getMessage(),
+                'exception' => get_class($e),
+            ]);
+            return back()->with('error', 'Erro no sincronismo reverso: ' . $e->getMessage());
+        }
+    }
+
+    private function isEmptySheetRow(array $rowValues): bool
+    {
+        foreach ($rowValues as $value) {
+            if (trim((string) $value) !== '') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
     /**
      * Sincroniza um produto individual com base nos dados da planilha
      */
@@ -175,31 +447,30 @@ class GoogleSheetController extends Controller
     /**
      * Sincroniza um produto com suas cores agrupadas
      */
-    private function syncProductWithColors($data, $colors, $desiredOrder = null)
+    private function syncProductWithColors($data, $colors, $desiredOrder = null, &$syncResults = null, $rowIndexes = null)
     {
-
+        //dd($colors);
         $segmentacao = $this->findOrCreateSegmentacao($data['PRODUTOS_SEGMENTO'] ?? '');
 
         // Busca ou cria categoria
         $category = $this->findOrCreateCategory($data['CATEGORIA'] ?? '', $segmentacao);
-        $subcategory = $this->findOrCreateSubcategory($data['FAIXA GTM'] ?? '', $category->id ?? null);
+        $subcategory = $this->findOrCreateSubcategory($data['SUBCATEGORIA'] ?? '', $category->id ?? null);
         $collection = $this->findOrCreateCollection($data['COLEÇÃO'] ?? '', $data['COLEÇÃO_SECUNDÁRIA'] ?? '');
-        $flag = $this->findOrCreateFlag($data['COR_CLASSIFICAÇÃO'] ?? '');
-        $tecnologia = $this->findOrCreateTecnologia($data['TECNOLOGIAS'] ?? '');
+        $defaultFlagsCell = $data['COR_CLASSIFICAÇÃO'] ?? null;
+        $tecnologia = $this->findOrCreateTecnologia($data['TECNOLOGIAS'] ?? '', $syncResults, $data['CÓDIGO'] ?? null, $rowIndexes);
 
         // Prepara dados do produto
         $productData = [
             'name' => $data['NOME'],
             'description' => $data['DESCRIÇÃO'] ?? '',
             'linha' => ($data['LINHA'] != '-' && $data['LINHA'] !== '') ? $data['LINHA'] : null,
-            'silhueta' => (isset($data['SILHUETA']) && $data['SILHUETA'] != '-' && $data['SILHUETA'] !== '') ? $data['SILHUETA'] : null,
             'code' => $data['CÓDIGO'],
             'sku' => $data['CÓDIGO'], // Usando CÓDIGO como SKU
-            'price' =>  (float) str_replace(',', '.', $data['PDV']) ?? 0, // Preço não está na planilha atual
+            'price' => $this->parsePrice($data['PDV'] ?? null),
             'slug' => Str::slug($data['NOME']) . '-' . $data['CÓDIGO'],
             'category_id' => $category->id ?? null,
             'subcategory_id' => $subcategory->id ?? null,
-            'genero' => $data['GENERO'],
+            'genero' => $data['GENERO'] ?? 'UNISSEX',
             'active' => true,
             'technologies' => json_encode($tecnologia),
             'flag_calendario' => !empty($data['LANÇAMENTO']) || !empty($data['LANÇAMENTO_DTC']) || !empty($data['LANÇAMENTO_TRADE']) || !empty($data['LANÇAMENTO_CLIENTE']),
@@ -236,9 +507,9 @@ class GoogleSheetController extends Controller
                 $product->save();
             });
         }
-
+        
         // Sincroniza cores agrupadas
-        $this->syncColorsGrouped($product, $colors, $collection, $flag, $data);
+        $this->syncColorsGrouped($product, $colors, $collection, $defaultFlagsCell, $data, $syncResults, $rowIndexes);
 
         // Sincroniza tecnologias
         //$this->syncTecnologias($product, $tecnologia);
@@ -247,7 +518,7 @@ class GoogleSheetController extends Controller
         $this->syncCharacteristics($product, $data);
 
         // Sincroniza numerações
-        //$this->syncNumeracoes($product, $data);
+        $this->syncNumeracoes($product, $data);
 
         // Sincroniza links
         $this->syncLinks($product, $data);
@@ -300,7 +571,7 @@ class GoogleSheetController extends Controller
     /**
      * Busca ou cria uma categoria
      */
-    private function findOrCreateTecnologia($tecnologias)
+    private function findOrCreateTecnologia($tecnologias, &$syncResults = null, $sku = null, $rowIndexes = null)
     {
         if (empty($tecnologias)) {
             return null;
@@ -308,12 +579,7 @@ class GoogleSheetController extends Controller
         // Ícone padrão para tecnologias sem imagem
         $defaultIcon = 'images/technology/1759344921.png';
 
-        // Normaliza e separa os nomes das tecnologias (remove entradas vazias)
-        $tec = array_filter(array_map(function ($t) {
-            return trim($t);
-        }, explode(',', $tecnologias)), function ($t) {
-            return $t !== '';
-        });
+        $tec = $this->splitListValues($tecnologias);
 
         $array_id_tec = [];
         foreach ($tec as $name) {
@@ -346,20 +612,46 @@ class GoogleSheetController extends Controller
 
                 $array_id_tec[] = $keeper->id;
             } else {
+
                 // Não existe: cria com categoria padrão, descrição igual ao nome e ícone padrão
-                $created = TechnologyItem::create([
+                /*$created = TechnologyItem::create([
                     'technology_category_id' => 1,
                     'name' => $name,
                     'description' => $name,
                     'icon' => $defaultIcon,
                     'active' => true,
                 ]);
-                $array_id_tec[] = $created->id;
+                $array_id_tec[] = $created->id;*/
+                if (is_array($syncResults)) {
+                    $syncResults['errors']++;
+                    $rows = is_array($rowIndexes) ? implode(', ', $rowIndexes) : (string) $rowIndexes;
+                    $rowsText = $rows !== '' ? " (linhas {$rows})" : '';
+                    $skuText = !empty($sku) ? " SKU {$sku}" : '';
+                    $syncResults['messages'][] = "Tecnologia {$name} não existe e precisa ser cadastrada antes de ser vinculada ao produto{$skuText}{$rowsText}.";
+                }
             }
         }
 
+
         // Evita IDs duplicados caso a lista tenha tecnologias repetidas
         return array_values(array_unique($array_id_tec));
+    }
+
+    private function splitListValues($value): array
+    {
+        $text = trim((string) $value);
+        if ($text === '') {
+            return [];
+        }
+
+        $parts = preg_split('/[;,]+/', $text) ?: [];
+        $parts = array_map(function ($t) {
+            return trim((string) $t);
+        }, $parts);
+
+        return array_values(array_filter($parts, function ($t) {
+            return $t !== '' && $t !== '-';
+        }));
     }
 
     /**
@@ -416,7 +708,7 @@ class GoogleSheetController extends Controller
             'name' => $collectionName,
             'description' => $collectionSecondaryName,
             'codigo_colecao' => $codigoColecao,
-            'active' => true,
+            'active' => false,
         ]);
 
         $collection->save();
@@ -427,11 +719,77 @@ class GoogleSheetController extends Controller
     /**
      * Busca ou cria uma flag
      */
-    private function findOrCreateFlag($flagName)
+    private function extractFlagTitles($raw): array
     {
-        if (empty($flagName)) {
+        if ($raw instanceof FlagProduct) {
+            $title = trim((string) ($raw->flag_title ?? ''));
+            return $title === '' ? [] : [$title];
+        }
+
+        if (is_array($raw)) {
+            $titles = [];
+            foreach ($raw as $item) {
+                $titles = array_merge($titles, $this->extractFlagTitles($item));
+            }
+            return $this->uniqueFlagTitles($titles);
+        }
+
+        $text = trim((string) ($raw ?? ''));
+        if ($text === '' || $text === '-') {
+            return [];
+        }
+
+        if (mb_strtolower($text, 'UTF-8') === 'null') {
+            return [];
+        }
+
+        $parts = preg_split('/[,\n;]+/u', $text) ?: [];
+        $titles = [];
+
+        foreach ($parts as $part) {
+            $title = trim((string) $part);
+            if ($title === '' || $title === '-') {
+                continue;
+            }
+            if (mb_strtolower($title, 'UTF-8') === 'null') {
+                continue;
+            }
+            $titles[] = $title;
+        }
+
+        return $this->uniqueFlagTitles($titles);
+    }
+
+    private function uniqueFlagTitles(array $titles): array
+    {
+        $seen = [];
+        $unique = [];
+
+        foreach ($titles as $title) {
+            $title = trim((string) $title);
+            if ($title === '') {
+                continue;
+            }
+
+            $key = mb_strtolower($title, 'UTF-8');
+            if (isset($seen[$key])) {
+                continue;
+            }
+
+            $seen[$key] = true;
+            $unique[] = $title;
+        }
+
+        return $unique;
+    }
+
+    private function findOrCreateFlag($flagName, &$syncResults = null, $sku = null, $rowIndexes = null, $colorCode = null)
+    {
+        $flagName = trim((string) ($flagName ?? ''));
+        if ($flagName === '' || $flagName === '-' || mb_strtolower($flagName, 'UTF-8') === 'null') {
             return null;
         }
+
         // Busca todos os itens com o mesmo título de flag
         $flagsSameTitle = FlagProduct::where('flag_title', $flagName)
             ->orderBy('created_at', 'asc')
@@ -439,7 +797,7 @@ class GoogleSheetController extends Controller
 
         if ($flagsSameTitle->isEmpty()) {
             // Nenhum existente: cria novo e retorna
-            return FlagProduct::create([
+            $created = FlagProduct::create([
                 'flag_title' => $flagName,
                 'flag_description' => $flagName,
                 'flag_bg' => '#000000',
@@ -447,6 +805,31 @@ class GoogleSheetController extends Controller
                 'alinhamento' => 'left',
                 'status' => true,
             ]);
+
+            if (is_array($syncResults)) {
+                $syncResults['_notified_missing_flags'] = $syncResults['_notified_missing_flags'] ?? [];
+                $key = mb_strtolower($flagName, 'UTF-8');
+                if (!isset($syncResults['_notified_missing_flags'][$key])) {
+                    $syncResults['_notified_missing_flags'][$key] = true;
+
+                    $parts = [];
+                    if (!empty($sku)) {
+                        $parts[] = "SKU {$sku}";
+                    }
+                    if (!empty($colorCode)) {
+                        $parts[] = "cor {$colorCode}";
+                    }
+                    if (!empty($rowIndexes)) {
+                        $rowsText = is_array($rowIndexes) ? implode(', ', $rowIndexes) : (string) $rowIndexes;
+                        $parts[] = "linhas {$rowsText}";
+                    }
+
+                    $details = empty($parts) ? '' : ' (' . implode(', ', $parts) . ')';
+                    $syncResults['messages'][] = "Flag {$flagName} não estava cadastrada e foi criada automaticamente{$details}.";
+                }
+            }
+
+            return $created;
         }
 
         if ($flagsSameTitle->count() === 1) {
@@ -454,12 +837,17 @@ class GoogleSheetController extends Controller
             $flag = $flagsSameTitle->first();
             $flag->update([
                 'flag_description' => $flagName,
-                'flag_bg' => '#000000',
-                'flag_color_text_bg' => '#ffffff',
+                //'flag_bg' => '#000000',
+                //'flag_color_text_bg' => '#ffffff',
                 'alinhamento' => 'left',
                 'status' => true,
             ]);
             return $flag;
+        }
+
+        foreach ($flagsSameTitle as $flag) {
+            // Exclui (soft delete) todos os anteriores
+            $flag->delete();
         }
 
         // Mais de um: cria um novo com os valores desejados e exclui os duplicados
@@ -472,10 +860,6 @@ class GoogleSheetController extends Controller
             'status' => true,
         ]);
 
-        foreach ($flagsSameTitle as $flag) {
-            // Exclui (soft delete) todos os anteriores
-            $flag->delete();
-        }
 
         // Usa o item criado
         return $created;
@@ -486,9 +870,31 @@ class GoogleSheetController extends Controller
      */
     private function parsePrice($priceString)
     {
-        $price = preg_replace('/[^0-9,.]/', '', $priceString);
-        $price = str_replace(',', '.', $price);
-        return floatval($price);
+        $text = trim((string) ($priceString ?? ''));
+        if ($text === '' || $text === '-') {
+            return 0;
+        }
+
+        $value = preg_replace('/[^0-9.,]/', '', $text);
+        if ($value === null || $value === '') {
+            return 0;
+        }
+
+        $lastComma = strrpos($value, ',');
+        $lastDot = strrpos($value, '.');
+
+        if ($lastComma !== false && $lastDot !== false) {
+            if ($lastComma > $lastDot) {
+                $value = str_replace('.', '', $value);
+                $value = str_replace(',', '.', $value);
+            } else {
+                $value = str_replace(',', '', $value);
+            }
+        } elseif ($lastComma !== false) {
+            $value = str_replace(',', '.', $value);
+        }
+
+        return (float) $value;
     }
 
     /**
@@ -531,9 +937,9 @@ class GoogleSheetController extends Controller
     /**
      * Sincroniza cores agrupadas do produto
      */
-    private function syncColorsGrouped($product, $colors, $collection, $flag, $data)
+    private function syncColorsGrouped($product, $colors, $collection, $defaultFlagsCell, $data, &$syncResults = null, $rowIndexes = null)
     {
-
+        //dd($colors);
         // Remove cores existentes (hasMany relationship)
         //Color::where('product_id', $product->id)->delete();
 
@@ -542,26 +948,63 @@ class GoogleSheetController extends Controller
             return;
         }
 
-        // Remove duplicatas baseadas no código da cor
+        // Remove duplicatas baseadas no código da cor + coleção
         $uniqueColors = [];
         foreach ($colors as $color) {
-            $uniqueColors[$color['code']] = $color;
-        }
+            $code = (string) ($color['code'] ?? '');
+            if ($code === '') {
+                continue;
+            }
 
+            $colorCollection = $color['collection'] ?? $collection;
+            $collectionId = $colorCollection?->id;
+            $uniqueKey = $code . '|' . ($collectionId ?? 'null');
+
+            $color['collection'] = $colorCollection;
+            $uniqueColors[$uniqueKey] = $color;
+            $uniqueColors[$uniqueKey]['cliente_segmento'] = $this->processClienteSegmento($color['cliente_segmento'] ?? '');
+            
+            //dd($segmentacoesCliente);
+        }
+        
         // Processa segmentações de cliente da coluna CLIENTE_SEGMENTO
-        $segmentacoesCliente = $this->processClienteSegmento($data['CLIENTE_SEGMENTO'] ?? '');
+        
+        
+        $defaultFlagTitles = $this->extractFlagTitles($defaultFlagsCell);
 
         // Log para debug das cores sincronizadas
-        Log::info("Cores sincronizadas para produto {$product->sku}", [
+        /*Log::info("Cores sincronizadas para produto {$product->sku}", [
             'product_id' => $product->id,
             'cores_count' => count($uniqueColors),
             'cores' => array_values($uniqueColors),
             'segmentacoes_cliente' => $segmentacoesCliente,
             'flag' => $flag
-        ]);
+        ]);*/
+        //dd($uniqueColors);
         // Cria as cores encontradas no banco de dados usando findOrCreate
         foreach ($uniqueColors as $cor) {
-            $flag_id = $this->findOrCreateFlag($cor['flag']);
+            $flagTitles = $this->extractFlagTitles($cor['flag'] ?? null);
+            if (empty($flagTitles)) {
+                $flagTitles = $defaultFlagTitles;
+            }
+
+            $flagIds = [];
+            foreach ($flagTitles as $flagTitle) {
+                $flagModel = $this->findOrCreateFlag(
+                    $flagTitle,
+                    $syncResults,
+                    $product->sku ?? null,
+                    $rowIndexes,
+                    $cor['code'] ?? null
+                );
+
+                if ($flagModel) {
+                    $flagIds[] = $flagModel->id;
+                }
+            }
+
+            $flagIds = array_values(array_unique(array_filter($flagIds)));
+            $primaryFlagId = $flagIds[0] ?? null;
 
             // Mapeia numeração por cor, se fornecida na planilha
             $numeracaoId = null;
@@ -571,16 +1014,32 @@ class GoogleSheetController extends Controller
                 $cor['numeracao_id'] = $numeracaoId;
             }
 
-            $colorModel = $this->findOrCreateColor($product, $cor, $collection, $flag_id->id);
+            $colorCollection = $cor['collection'] ?? $collection;
+            //dd($product, $cor, $colorCollection, $flagModel?->id ?? null);
+            $colorModel = $this->findOrCreateColor($product, $cor, $colorCollection, $primaryFlagId);
 
+            if (method_exists($colorModel, 'flagProducts')) {
+                $colorModel->flagProducts()->sync($flagIds);
+            }
+            $segmentacoesCliente = $cor['cliente_segmento'] ?? [];
+            //dd($segmentacoesCliente);
             // Sincroniza segmentações de cliente para esta cor
             if (!empty($segmentacoesCliente)) {
                 $colorModel->segmentacoesCliente()->sync($segmentacoesCliente);
+                //dd($colorModel->segmentacoesCliente()->sync($segmentacoesCliente));
             } else {
                 // Se não há segmentações informadas, remove quaisquer vínculos existentes
                 $colorModel->segmentacoesCliente()->detach();
             }
-        }
+            
+            Log::info('AQUI - Sincronizada cor', [
+                'sku' => $product->sku,
+                'color_code' => $cor['code'] ?? null,
+                'segmentacoes_cliente' => $segmentacoesCliente,
+                'flag_product_id' => $primaryFlagId,
+                'flag_product_ids' => $flagIds,
+            ]);
+                   }
     }
 
     /**
@@ -588,22 +1047,35 @@ class GoogleSheetController extends Controller
      */
     private function findOrCreateColor($product, $corData, $collection, $flag)
     {
-
-        return Color::updateOrCreate(
-            [
+       
+        Log::info("Sincronizando cor para produto {$product->sku}", [
                 'color_code' => $corData['code'],
-                'product_id' => $product->id
-            ],
-            [
+                'product_id' => $product->id,
+                'collection_id' => $collection?->id,
                 'color_name' => $corData['code'],
                 'color_description' => $corData['description'],
-                'genero' => ($corData['genero'] != '') ? $corData['genero'] : 'UNISSEX',
-                'collection_id' => $collection->id ?? null,
+                'genero' => !empty($corData['genero']) ? $corData['genero'] : 'UNISSEX',
+                'collection_id' => $collection?->id,
                 'flag_product_id' => $flag ?? null,
                 'numeracao_id' => $corData['numeracao_id'] ?? null,
                 'active' => true
-            ]
-        );
+            ]);
+            $return_color = Color::updateOrCreate(
+            [
+                'color_code' => $corData['code'],
+                'product_id' => $product->id,
+                'collection_id' => $collection?->id,
+                'color_name' => $corData['code'],
+                'color_description' => $corData['description'],
+                'genero' => !empty($corData['genero']) ? $corData['genero'] : 'UNISSEX',
+            ],[
+                //'collection_id' => $collection?->id,
+                'flag_product_id' => $flag ?? null,
+                'numeracao_id' => $corData['numeracao_id'] ?? null,
+                'active' => true
+            ]);
+             //dd($return_color);
+        return $return_color;
     }
 
     private function syncTecnologias($tecnologia)
@@ -670,14 +1142,14 @@ class GoogleSheetController extends Controller
 
         // Combina dados de numeração e tamanhos
         $allSizes = array_merge(
-            preg_split('/,\s*/', $numeracaoData),
-            preg_split('/,\s*/', $tamanhosData)
+            explode(',', $numeracaoData),
+            explode(',', $tamanhosData)
         );
 
         foreach ($allSizes as $numero) {
             $numero = trim($numero);
             if (!empty($numero) && $numero !== '-') {
-                $numeracao = Numeracao::updateOrCreate(
+                $numeracao = Numeracao::firstOrCreate(
                     ['numero' => $numero],
                     ['active' => true]
                 );
@@ -827,12 +1299,337 @@ class GoogleSheetController extends Controller
             return null;
         }
 
-        $numeracao = Numeracao::updateOrCreate(
+        $numeracao = Numeracao::firstOrCreate(
             ['numero' => $numero],
             ['active' => true]
         );
 
         return $numeracao->id;
+    }
+
+    private function buildHeaderIndex(array $headers): array
+    {
+        $map = [];
+        $normalizedIndexes = [];
+
+        foreach ($headers as $i => $header) {
+            $key = trim((string) $header);
+            if ($key === '') {
+                $key = 'coluna_' . ($i + 1);
+            }
+
+            $map[$key] = $i;
+
+            $normalized = $this->normalizeSheetHeader($key);
+            $normalizedIndexes[$normalized] = $normalizedIndexes[$normalized] ?? [];
+            $normalizedIndexes[$normalized][] = $i;
+        }
+
+        $aliases = [
+            'CÓDIGO' => ['CODIGO'],
+            'COR_COD' => ['COR_COD', 'CORCOD', 'COR_CODIGO', 'CORCODIGO'],
+            'COR_DESCRIÇÃO' => ['COR_DESCRICAO', 'COR_DESCRICAO_'],
+            'COR_CLASSIFICAÇÃO' => [
+                'COR_CLASSIFICACAO',
+                'COR_CLASSIFICACAO_',
+                'COR_CLASSIFICACAO_FLAG',
+                'CLASSIFICACAO_COR',
+                'CLASSIFICACAO_DA_COR',
+                'FLAG',
+            ],
+            'CLIENTE_SEGMENTO' => ['CLIENTE_SEGMENTO', 'CLIENTE_SEGMETNO', 'CLIENTE_SEGMENTACAO', 'CLIENTE_SEGMENTAÇÃO'],
+            'COLEÇÃO' => ['COLECAO'],
+            'COLEÇÃO_SECUNDÁRIA' => ['COLECAO_SECUNDARIA', 'COLECAO_SECUNDARIA_'],
+            'NUMERAÇÃO' => ['NUMERACAO', 'NUMERACAO_TAMANHO', 'NUMERACAO_TAMANHOS'],
+        ];
+
+        foreach ($aliases as $expected => $candidates) {
+            if (array_key_exists($expected, $map)) {
+                continue;
+            }
+
+            foreach ($candidates as $candidate) {
+                $candidateNorm = $this->normalizeSheetHeader($candidate);
+                if (!empty($normalizedIndexes[$candidateNorm])) {
+                    $map[$expected] = $normalizedIndexes[$candidateNorm][0];
+                    break;
+                }
+            }
+        }
+
+        $classificationNorm = $this->normalizeSheetHeader('COR_CLASSIFICAÇÃO');
+        $descriptionNorm = $this->normalizeSheetHeader('COR_DESCRIÇÃO');
+        if (!isset($map['COR_CLASSIFICAÇÃO']) && !empty($normalizedIndexes[$descriptionNorm]) && count($normalizedIndexes[$descriptionNorm]) >= 2) {
+            $map['COR_CLASSIFICAÇÃO'] = $normalizedIndexes[$descriptionNorm][1];
+        }
+
+        return $map;
+    }
+
+    private function normalizeSheetHeader(string $header): string
+    {
+        $header = trim($header);
+        if ($header === '') {
+            return '';
+        }
+
+        $ascii = Str::upper(Str::ascii($header));
+        $ascii = preg_replace('/[^A-Z0-9]+/u', '_', $ascii);
+        $ascii = preg_replace('/_+/', '_', (string) $ascii);
+        $ascii = trim((string) $ascii, '_');
+        return $ascii;
+    }
+
+    private function padRowToCount(array $row, int $count): array
+    {
+        $current = count($row);
+        if ($current >= $count) {
+            return array_slice($row, 0, $count);
+        }
+
+        return array_pad($row, $count, '');
+    }
+
+    private function indexToColumnLetter(int $index): string
+    {
+        $index = max(0, $index);
+        $letters = '';
+
+        while ($index >= 0) {
+            $letters = chr(($index % 26) + 65) . $letters;
+            $index = intdiv($index, 26) - 1;
+        }
+
+        return $letters;
+    }
+
+    private function applyValuesToRow(array &$rowValues, array $headerIndex, array $values): void
+    {
+        foreach ($values as $column => $value) {
+            if (!array_key_exists($column, $headerIndex)) {
+                continue;
+            }
+
+            $rowValues[$headerIndex[$column]] = $value === null ? '' : (string) $value;
+        }
+    }
+
+    private function formatSheetDate($date): string
+    {
+        if (empty($date)) {
+            return '';
+        }
+
+        try {
+            $carbon = $date instanceof Carbon ? $date : Carbon::parse($date);
+            return $carbon->format('d/m/Y');
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
+    private function getTecnologiasAsString(Product $product): string
+    {
+        $raw = $product->technologies ?? null;
+        if (empty($raw)) {
+            return '';
+        }
+
+        $ids = json_decode($raw, true);
+        if (!is_array($ids) || empty($ids)) {
+            return '';
+        }
+
+        $names = TechnologyItem::withTrashed()
+            ->whereIn('id', $ids)
+            ->pluck('name')
+            ->filter()
+            ->values()
+            ->all();
+
+        $text = implode(', ', $names);
+        $text = str_replace(';', ',', $text);
+        $text = preg_replace('/\s*,\s*/', ', ', $text);
+        return trim((string) $text);
+    }
+
+    private function buildCaracteristicasSheetValues(Product $product): array
+    {
+        $map = [
+            'peso 1' => 'PESO_1',
+            'peso 1 ref' => 'PESO_1_REF',
+            'peso 2' => 'PESO_2',
+            'peso 2 ref' => 'PESO_2_REF',
+            'drop' => 'DROP',
+            'origem' => 'ORIGEM',
+            'indicação' => 'INDICAÇÃO',
+            'indicacao' => 'INDICAÇÃO',
+            'linha' => 'LINHA',
+            'composição' => 'COMPOSIÇÃO',
+            'composicao' => 'COMPOSIÇÃO',
+        ];
+
+        $out = [];
+        foreach ($product->caracteristicas ?? [] as $car) {
+            $title = trim(mb_strtolower((string) ($car->title ?? ''), 'UTF-8'));
+            if ($title === '' || !array_key_exists($title, $map)) {
+                continue;
+            }
+            $out[$map[$title]] = (string) ($car->description ?? '');
+        }
+
+        return $out;
+    }
+
+    private function buildBaseProductSheetValues(Product $product): array
+    {
+        $links = $product->links ?? collect();
+        $links = $links instanceof \Illuminate\Support\Collection ? $links->values() : collect($links)->values();
+
+        $link1 = $links->get(0);
+        $link2 = $links->get(1);
+
+        $values = [
+            'NOME' => (string) ($product->name ?? ''),
+            'DESCRIÇÃO' => (string) ($product->description ?? ''),
+            'CÓDIGO' => (string) ($product->sku ?? $product->code ?? ''),
+            'LINHA' => (string) ($product->linha ?? ''),
+            'PDV' => (string) ($product->price ?? ''),
+            'CATEGORIA' => (string) ($product->category?->name ?? ''),
+            'SUBCATEGORIA' => (string) ($product->subcategory?->faixa ?? ''),
+            'PRODUTOS_SEGMENTO' => (string) ($product->category?->segmentacao?->segmento ?? ''),
+            'TECNOLOGIAS' => $this->getTecnologiasAsString($product),
+            'LANÇAMENTO' => $this->formatSheetDate($product->data_mkt),
+            'LANÇAMENTO_TRADE' => $this->formatSheetDate($product->data_trade),
+            'LANÇAMENTO_CLIENTE' => $this->formatSheetDate($product->data_cliente),
+            'LANÇAMENTO_DTC' => $this->formatSheetDate($product->data_dtc),
+            'LINK 1' => (string) ($link1->link_url ?? ''),
+            'LINK 1_DESCRICAO' => (string) ($link1->link_title ?? ''),
+            'LINK 2' => (string) ($link2->link_url ?? ''),
+        ];
+
+        return array_merge($values, $this->buildCaracteristicasSheetValues($product));
+    }
+
+    private function getColorFlagsAsString($color): string
+    {
+        if (empty($color)) {
+            return '';
+        }
+
+        $titles = [];
+
+        if (method_exists($color, 'flagProducts')) {
+            $flags = $color->relationLoaded('flagProducts') ? $color->flagProducts : null;
+            if ($flags) {
+                $titles = $flags
+                    ->pluck('flag_title')
+                    ->filter()
+                    ->unique()
+                    ->values()
+                    ->all();
+            }
+        }
+
+        if (empty($titles) && $color->flagProduct) {
+            $title = trim((string) ($color->flagProduct->flag_title ?? ''));
+            if ($title !== '') {
+                $titles = [$title];
+            }
+        }
+
+        return implode(', ', $titles);
+    }
+
+    private function applyColorValuesToRow(array &$rowValues, array $headerIndex, Product $product, $color): void
+    {
+        $collectionName = $color?->collection?->name ?? '';
+        $collectionSecondary = $color?->collection?->description ?? '';
+
+        $segmentacoesCliente = '';
+        if ($color && $color->segmentacoesCliente) {
+            $segmentacoesCliente = $color->segmentacoesCliente
+                ->pluck('nome')
+                ->filter()
+                ->unique()
+                ->values()
+                ->implode(', ');
+        }
+
+        $numeracao = $color?->numeracao?->numero ?? '';
+        if ($numeracao === '' && $product->numeracoes) {
+            $numeracao = $product->numeracoes
+                ->pluck('numero')
+                ->filter()
+                ->unique()
+                ->values()
+                ->implode(', ');
+        }
+
+        $values = [
+            'COLEÇÃO' => (string) $collectionName,
+            'COLEÇÃO_SECUNDÁRIA' => (string) $collectionSecondary,
+            'COR_COD' => (string) ($color?->color_code ?? ''),
+            'COR_DESCRIÇÃO' => (string) ($color?->color_description ?? $color?->color_code ?? ''),
+            'COR_CLASSIFICAÇÃO' => $this->getColorFlagsAsString($color),
+            'GENERO' => (string) ($color?->genero ?? ''),
+            'CLIENTE_SEGMENTO' => (string) $segmentacoesCliente,
+            'NUMERAÇÃO' => (string) $numeracao,
+        ];
+
+        $this->applyValuesToRow($rowValues, $headerIndex, $values);
+    }
+
+    private function getProductIdsToReverseSync(?Carbon $since): array
+    {
+        if ($since === null) {
+            return Product::whereNull('deleted_at')->pluck('id')->all();
+        }
+
+        $ids = [];
+
+        $ids = array_merge($ids, Product::whereNull('deleted_at')->where('updated_at', '>=', $since)->pluck('id')->all());
+        $ids = array_merge($ids, Color::whereNull('deleted_at')->where('updated_at', '>=', $since)->pluck('product_id')->all());
+        $ids = array_merge($ids, CaracteristicaProduct::whereNull('deleted_at')->where('updated_at', '>=', $since)->pluck('product_id')->all());
+        $ids = array_merge($ids, LinksProduct::whereNull('deleted_at')->where('updated_at', '>=', $since)->pluck('product_id')->all());
+        $ids = array_merge($ids, Calendario::whereNull('deleted_at')->where('updated_at', '>=', $since)->pluck('product_id')->all());
+
+        try {
+            $ids = array_merge($ids, DB::table('product_numeracao')->where('updated_at', '>=', $since)->pluck('product_id')->all());
+        } catch (\Exception $e) {
+        }
+
+        try {
+            $ids = array_merge(
+                $ids,
+                DB::table('color_segmentacao_cliente')
+                    ->join('colors', 'color_segmentacao_cliente.color_id', '=', 'colors.id')
+                    ->where('color_segmentacao_cliente.updated_at', '>=', $since)
+                    ->whereNull('colors.deleted_at')
+                    ->pluck('colors.product_id')
+                    ->all()
+            );
+        } catch (\Exception $e) {
+        }
+
+        try {
+            $ids = array_merge(
+                $ids,
+                DB::table('color_flag_product')
+                    ->join('colors', 'color_flag_product.color_id', '=', 'colors.id')
+                    ->where('color_flag_product.updated_at', '>=', $since)
+                    ->whereNull('colors.deleted_at')
+                    ->pluck('colors.product_id')
+                    ->all()
+            );
+        } catch (\Exception $e) {
+        }
+
+        $ids = array_values(array_unique(array_filter($ids, function ($id) {
+            return !empty($id);
+        })));
+
+        return $ids;
     }
 
     /**
@@ -1309,8 +2106,11 @@ class GoogleSheetController extends Controller
                     $result = $this->syncUserWithSegmentacao($userData);
                     if ($result) {
                         $processedUsers[] = [
-                            'name' => $result['user']->name,
+                            'representante_nome' => $userData['representante_nome'],
+                            'lider_ebm_comercial' => $userData['lider_ebm_comercial'],
+                            'nome_fantasia_ebm' => $userData['nome_fantasia_ebm'],
                             'email' => $result['user']->email,
+                            'segmentacao_cliente' => $userData['segmentacao_cliente'],
                             'password' => $result['password']
                         ];
                         $success++;
@@ -1376,13 +2176,16 @@ class GoogleSheetController extends Controller
     private function generateBatchPasswordsFile($users, $batchNumber)
     {
         $data = [];
-        $data[] = ['Nome', 'Email', 'Senha']; // Cabeçalho
+        $data[] = ['Representante Nome', 'Líder EBM Comercial', 'Nome Fantasia EBM', 'Email', 'Segmentação Cliente', 'Senha']; // Cabeçalho
 
         foreach ($users as $user) {
             $data[] = [
-                $user['name'],
-                $user['email'],
-                $user['password']
+                $user['representante_nome'] ?? '',
+                $user['lider_ebm_comercial'] ?? '',
+                $user['nome_fantasia_ebm'] ?? '',
+                $user['email'] ?? '',
+                $user['segmentacao_cliente'] ?? '',
+                $user['password'] ?? ''
             ];
         }
 

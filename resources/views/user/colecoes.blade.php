@@ -1,4 +1,4 @@
-<x-layout-user title="Under Armour - Coleções">
+<x-layout-user title="Oakley - Coleções">
     <style>
         .height-ultra {
             height: calc(100vh - 85px);
@@ -28,7 +28,7 @@
         .custom-scrollbar {
             scrollbar-width: thin;
             /* auto, thin, none */
-            scrollbar-color: #A9A9A9 #000000;
+            scrollbar-color: #A9A9A9 #ffffff;
             /* thumb track */
         }
     </style>
@@ -162,7 +162,7 @@
             </div>
 
             <!-- Grid de Coleções -->
-            <div class="bg-[#000000] p-[10px] rounded-tl-lg height-ultra overflow-auto custom-scrollbar">
+            <div class="bg-white p-[10px] rounded-tl-lg height-ultra overflow-auto custom-scrollbar">
                 <div id="colecoes-grid" class="grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-[10px]"
                     style="border-radius: 10px 0 0 0;">
                     <!-- Cards serão renderizados via JavaScript -->
@@ -174,10 +174,10 @@
             <template id="template-colecoes">
                 <div class="colecao-card relative rounded overflow-hidden cursor-pointer hover:border hover:border-[#999]"
                     data-codigo="" data-name="" data-description="" data-slug="">
-                    <div class="overlay absolute inset-0 bg-black bg-opacity-40 " style="display: none;"></div>
-                    <div class="absolute inset-0 flex flex-col justify-center items-center text-white p-6">
+                    <div class="overlay absolute inset-0 bg-white bg-opacity-80" style="display: none;"></div>
+                    <div class="absolute inset-0 flex flex-col justify-center items-center text-black p-6">
                         <h2 class="mb-2 codigo font-segmento neue-plak-extended"></h2>
-                        <p class="text-lg opacity-90 description uppercase absolute bottom-6"></p>
+                        <p class="text-white text-lg opacity-90 description uppercase absolute bottom-6"></p>
                     </div>
                 </div>
             </template>

@@ -23,7 +23,7 @@ class ProductsTableSeeder extends Seeder
             [
                 'id' => 27,
                 'name' => 'CORRE SUPRA2',
-                'description' => 'A segunda edição do Olympikus Corre Supra chega para entregar ainda mais desempenho nas ruas. Tecnologia Oxitec 4.0, que permite maior respirabilidade, 
+                'description' => 'A segunda edição do Oakley Corre Supra chega para entregar ainda mais desempenho nas ruas. Tecnologia Oxitec 4.0, que permite maior respirabilidade, 
 resistência e leveza. Lingueta macia e leve ao toque feita em Eco Suede com perfuros. Atacador aprimorado para garantir um ajuste mais preciso e seguro na 
 amarração. Forro interno confeccionado em mescla de poliéster e elastano, trazendo mais conforto, durabilidade e flexibilidade. Puxador traseiro em fita para 
 facilitar o calce. Palmilha NT-X 2mm, gerando leveza e mais energia a cada passada. Solado NT-X 2 PRO, que proporciona maior amortecimento e alto nível 
@@ -49,7 +49,7 @@ performance.',
             [
                 'id' => 28,
                 'name' => 'PRIDE 4',
-                'description' => 'Projetado para corridas intensas, o Olympikus PRIDE chega em sua quarta edição com diversas novidades. Entressola com tecnologia Eleva Pro 2.0, garantindo
+                'description' => 'Projetado para corridas intensas, o Oakley PRIDE chega em sua quarta edição com diversas novidades. Entressola com tecnologia Eleva Pro 2.0, garantindo
 maior resiliência, conforto e responsividade. Solado com tecnologia Gripper, altamente durável, resistente e antiderrapante. Palmilha em EVA que oferece maior
 respirabilidade e um encaixe perfeito para os pés. Atacador em poliéster texturizado. Puxador traseiro em fita para auxiliar no calce. Gáspea produzida com
 tecido giro inglês, uma tecnologia inovadora e flexível, que conta com fios de TPU e TPE para oferecer maior resistência, leveza e um toque macio. Logo em TPU
@@ -74,7 +74,7 @@ espuma e interior produzido em poliéster, oferecendo conforto ao caminhar.',
             [
                 'id' => 29,
                 'name' => 'QUADRA BR1',
-                'description' => 'Co-criado junto com um dos maiores jogadores da história do vôlei mundial, Bruno Rezende, o Olympikus QU4DRA BR1 é uma expressão de excelência, paixão
+                'description' => 'Co-criado junto com um dos maiores jogadores da história do vôlei mundial, Bruno Rezende, o Oakley QU4DRA BR1 é uma expressão de excelência, paixão
 e legado para quem vive as 4 linhas. Possui tecnologia Eleva Pro 2.0, que proporciona leveza e amortecimento, trazendo maior conforto e efeito trampolim.
 Conta também com borracha antiderrapante Gripper, que mantém aderência firme ao solo. O solado apresenta design em curvas e linhas orgânicas, evitando
 o desgaste e garantindo maior segurança nas mudanças de direções em quadra. Já o cabedal confeccionado em poliéster envolve o tornozelo com mais
@@ -174,7 +174,7 @@ bloco de EVA, que proporciona maior leveza, maciez e flexibilidade nas passadas.
             [
                 'id' => 33,
                 'name' => 'EASY 3',
-                'description' => 'Em sua terceira edição, o Olympikus EASY é a escolha ideal para quem busca leveza a cada passada. Cabedal com mescla de tecido bicolor e parte traseira em 
+                'description' => 'Em sua terceira edição, o Oakley EASY é a escolha ideal para quem busca leveza a cada passada. Cabedal com mescla de tecido bicolor e parte traseira em 
 poliéster texturizado. Elástico no cabedal que ressalta a marca. Etiqueta em laminado com arte gráfica. Forro em poliéster com espuma, para maior conforto 
 ao caminhar. Puxador traseiro em fita texturizada para melhor auxílio no calce. Palmilha composta por poliéster e espuma, com aplicação gráfica. Tecnologia 
 EVASENSE de amortecimento, em um único bloco de EVA, que proporciona maior leveza, maciez e flexibilidade nas passadas.',
@@ -197,7 +197,7 @@ EVASENSE de amortecimento, em um único bloco de EVA, que proporciona maior leve
             [
                 'id' => 34,
                 'name' => 'VERSA',
-                'description' => 'O Olympikus Versa é um tênis clássico que nunca sai de moda, perfeito para quem busca mais estilo e conforto para o dia a dia. O seu solado tem o tradicional
+                'description' => 'O Oakley Versa é um tênis clássico que nunca sai de moda, perfeito para quem busca mais estilo e conforto para o dia a dia. O seu solado tem o tradicional
 visual de sola caixa e possui a Tecnologia Evasense, que proporciona conforto e amortecimento. Conta também com a tecnologia Gripper, uma borracha
 antiderrapante que aumenta a resistência à abrasão e proporciona maior aderência e segurança. Já o cabedal é feito em laminado sintético texturizado e conta
 com detalhes como a costura dupla, costura zigue e perfuros laterais distribuídos na gáspea. Possui ainda forro em poliéster com espuma, e palmilha plana
@@ -244,7 +244,7 @@ leveza e conforto do modelo.',
             [
                 'id' => 36,
                 'name' => 'VENUM 2 INFANTIL',
-                'description' => 'Em sua segunda edição, o Olympikus VENUM INFANTIL se destaca pela tecnologia COVERGRID no cabedal, que proporciona maior proteção, resistência e durabilidade. 
+                'description' => 'Em sua segunda edição, o Oakley VENUM INFANTIL se destaca pela tecnologia COVERGRID no cabedal, que proporciona maior proteção, resistência e durabilidade. 
 Logo com pintura que dá destaque ao conjunto, criando efeito visual em 3D que muda conforme o movimento da passada. Lingueta em dupla frontura, com alta 
 capacidade de transpiração, e etiqueta minimalista em high frequency. Atacador em poliéster texturizado com efeito pontilhado. Puxador traseiro em fita para facilitar 
 o calce. Forro em tecido Poliéster com espuma, para maior conforto ao caminhar. Palmilha composta por poliéster e EVA, com aplicação gráfica. Tecnologia EVASENSE 
@@ -290,7 +290,7 @@ antiderrapante com tecnologia GRIPPER, que proporciona maior durabilidade e resi
             [
                 'id' => 38,
                 'name' => 'CORRE MAX',
-                'description' => 'Graças à extrema leveza resultante de nossa mais recente tecnologia, o Olympikus Corre Max oferece um desempenho superior e um conforto incomparável 
+                'description' => 'Graças à extrema leveza resultante de nossa mais recente tecnologia, o Oakley Corre Max oferece um desempenho superior e um conforto incomparável 
 durante as corridas. Sua entressola possui a tecnologia Eleva Pro Max, que melhora os índices de resiliência, leveza, conforto e responsividade. Conta também 
 com a tecnologia Gripper, que garante contato firme com o chão. Seu desenho curvilíneo com pontos de contato distribuídos em seções favorecem a flexão e 
 aderência. Apresenta cabedal e lingueta confeccionados em dupla frontura Jacquard, utilizando fio de poliéster texturizado no enchimento para proporcionar 

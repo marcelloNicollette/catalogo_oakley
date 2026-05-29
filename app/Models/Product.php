@@ -19,7 +19,6 @@ class Product extends Model
         'name',
         'description',
         'linha',
-        'silhueta',
         'slug',
         'code',
         'sku',
@@ -113,17 +112,55 @@ class Product extends Model
     public function addColors(array $colorData): void
     {
         foreach ($colorData['names'] as $index => $name) {
+            $flagIdsRaw = $colorData['flag_ids'][$index] ?? null;
+            if ($flagIdsRaw === null) {
+                $flagIdsRaw = $colorData['flags'][$index] ?? null;
+            }
+
+            if (is_array($flagIdsRaw)) {
+                $flagIds = array_values(array_filter($flagIdsRaw, function ($id) {
+                    return !empty($id);
+                }));
+            } else {
+                $flagIds = !empty($flagIdsRaw) ? [$flagIdsRaw] : [];
+            }
+
+            $primaryFlagId = $flagIds[0] ?? null;
+
+            $periodoVendas = $colorData['periodo_vendas'][$index] ?? [];
+            if (!is_array($periodoVendas)) {
+                $periodoVendas = !empty($periodoVendas) ? [$periodoVendas] : [];
+            }
+            $periodoVendas = array_values(array_unique(array_filter(array_map(function ($mes) {
+                $mesInt = (int) $mes;
+                return ($mesInt >= 1 && $mesInt <= 12) ? $mesInt : null;
+            }, $periodoVendas))));
+            sort($periodoVendas);
+
             $color = $this->colors()->create([
                 'color_name' => $name,
                 'color_description' => $colorData['descriptions'][$index] ?? null,
                 'color_code' => $colorData['codes'][$index] ?? null,
                 'genero' => $colorData['generos'][$index] ?? 'Masculino',
                 'collection_id' => $colorData['collections'][$index] ?? null,
-                'flag_product_id' => $colorData['flags'][$index] ?? null,
+                'flag_product_id' => $primaryFlagId,
                 'numeracao_id' => $colorData['numeracao_ids'][$index] ?? null,
+                'periodo_vendas' => $periodoVendas,
                 'is_new' => false,
                 'active' => true,
             ]);
+
+            if (!empty($flagIds) && method_exists($color, 'flagProducts')) {
+                $color->flagProducts()->sync($flagIds);
+            }
+
+            $shoeGridIds = $colorData['shoe_grid_ids'][$index] ?? [];
+            if (!is_array($shoeGridIds)) {
+                $shoeGridIds = !empty($shoeGridIds) ? [$shoeGridIds] : [];
+            }
+            if (method_exists($color, 'shoeGrids')) {
+                $color->shoeGrids()->sync($shoeGridIds);
+            }
 
             // Sincronizar segmentações de cliente se fornecidas
             if (isset($colorData['segmentacoes_cliente'][$index]) && is_array($colorData['segmentacoes_cliente'][$index])) {
@@ -161,17 +198,55 @@ class Product extends Model
         $this->colors()->delete();
 
         foreach ($colorData['names'] as $index => $name) {
+            $flagIdsRaw = $colorData['flag_ids'][$index] ?? null;
+            if ($flagIdsRaw === null) {
+                $flagIdsRaw = $colorData['flags'][$index] ?? null;
+            }
+
+            if (is_array($flagIdsRaw)) {
+                $flagIds = array_values(array_filter($flagIdsRaw, function ($id) {
+                    return !empty($id);
+                }));
+            } else {
+                $flagIds = !empty($flagIdsRaw) ? [$flagIdsRaw] : [];
+            }
+
+            $primaryFlagId = $flagIds[0] ?? null;
+
+            $periodoVendas = $colorData['periodo_vendas'][$index] ?? [];
+            if (!is_array($periodoVendas)) {
+                $periodoVendas = !empty($periodoVendas) ? [$periodoVendas] : [];
+            }
+            $periodoVendas = array_values(array_unique(array_filter(array_map(function ($mes) {
+                $mesInt = (int) $mes;
+                return ($mesInt >= 1 && $mesInt <= 12) ? $mesInt : null;
+            }, $periodoVendas))));
+            sort($periodoVendas);
+
             $color = $this->colors()->create([
                 'color_name' => $name,
                 'color_description' => $colorData['descriptions'][$index] ?? null,
                 'color_code' => $colorData['codes'][$index] ?? null,
                 'genero' => $colorData['generos'][$index] ?? 'Masculino',
                 'collection_id' => $colorData['collections'][$index] ?? null,
-                'flag_product_id' => $colorData['flags'][$index] ?? null,
+                'flag_product_id' => $primaryFlagId,
                 'numeracao_id' => $colorData['numeracao_ids'][$index] ?? null,
+                'periodo_vendas' => $periodoVendas,
                 'is_new' => false,
                 'active' => true,
             ]);
+
+            if (!empty($flagIds) && method_exists($color, 'flagProducts')) {
+                $color->flagProducts()->sync($flagIds);
+            }
+
+            $shoeGridIds = $colorData['shoe_grid_ids'][$index] ?? [];
+            if (!is_array($shoeGridIds)) {
+                $shoeGridIds = !empty($shoeGridIds) ? [$shoeGridIds] : [];
+            }
+            if (method_exists($color, 'shoeGrids')) {
+                $color->shoeGrids()->sync($shoeGridIds);
+            }
 
             // Sincronizar segmentações de cliente se fornecidas
             if (isset($colorData['segmentacoes_cliente'][$index]) && is_array($colorData['segmentacoes_cliente'][$index])) {

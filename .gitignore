@@ -14,6 +14,7 @@
 /.zed
 /auth.json
 /node_modules
+/storage/*
 /storage/*.key
 /storage/pail
 /vendor
@@ -21,11 +22,9 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
-saop_itau_cr_totem.pem
-saop_itau_cr_totem.pub
 vulcabras-olympikus-327bbc5d700a.json
 /public/images
-
+Untitled-1
 # General patterns
 # Node artifact files
 dist/

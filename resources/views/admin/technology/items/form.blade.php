@@ -45,6 +45,16 @@
                         </div>
 
                         <div class="mb-4">
+                            <label for="order" class="block text-sm font-medium text-gray-700">Order</label>
+                            <input type="number" name="order" id="order" min="1"
+                                value="{{ old('order', $item->order ?? '') }}"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            @error('order')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="mb-4">
                             <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
                             <input type="text" name="name" id="name" value="{{ old('name', $item->name ?? '') }}"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"

@@ -161,13 +161,13 @@ class ExportController extends Controller
         $opcoes = $request->input('opcoes', []);
         $grupo_opcoes = array_push($opcoes, $request->input('grupo_opcoes', []));
 
-        $svgPath = public_path('/images/logo-preto.svg');
+        $svgPath = public_path('/images/Oakley_logo_branco.svg');
         $svgContent = file_get_contents($svgPath);
         $base64Svg_preto = 'data:image/svg+xml;base64,' . base64_encode($svgContent);
 
-        $svgPath_vermelho = public_path('/images/logo-vermelho.svg');
-        $svgContent_vermelho = file_get_contents($svgPath_vermelho);
-        $base64Svg_vermelho = 'data:image/svg+xml;base64,' . base64_encode($svgContent_vermelho);
+        $svgPath_azul = public_path('/images/Oakley_logo.svg');
+        $svgContent_azul = file_get_contents($svgPath_azul);
+        $base64Svg_azul = 'data:image/svg+xml;base64,' . base64_encode($svgContent_azul);
 
         $data = [
             'collections' => $produtos,
@@ -176,12 +176,12 @@ class ExportController extends Controller
             'remove_description' => in_array('remover_descricao', $opcoes),
             'remove_tag'         => in_array('remover_tag', $opcoes),
             'remove_capa_retranca' => in_array('remover_capa_retranca', $opcoes),
-            'image' => public_path('images/tenis-1.jpg'),
+            'image' => public_path('images/Oakley_logo.svg'),
             'name' => $request->user()->name,
             'request' => $request,
             'isPdf' => true,
             'base64Svg_preto' => $base64Svg_preto,
-            'base64Svg_vermelho' => $base64Svg_vermelho,
+            'base64Svg_azul' => $base64Svg_azul,
         ];
 
         if (in_array('separado', $opcoes)) {
@@ -232,7 +232,7 @@ class ExportController extends Controller
                 $imgRel = 'images/produtos/' . ($color->product->code ?? '') . '_' . str_replace('/', '_', ($color->color_code ?? '')) . '.jpg';
                 $imgPath = public_path($imgRel);
                 if (!file_exists($imgPath)) {
-                    $imgPath = public_path('images/img-padrao-ua.png');
+                    $imgPath = public_path('images/img-padrao-mz.png');
                 }
                 $imagePaths[] = $imgPath;
             }
@@ -348,6 +348,100 @@ class ExportController extends Controller
         return $pdf->download($filename);
     }
 
+    public function exportPedidoPdf(Request $request)
+    {
+        if ($request->user() && $request->user()->idioma) {
+            App::setLocale($request->user()->idioma);
+        }
+
+        ini_set('memory_limit', '512M');
+        ini_set('max_execution_time', '120');
+        set_time_limit(120);
+
+        $produtosSelecionados = $request->input('produtos_selecionados', []);
+        $tipoProdutos = $request->input('produtos', 'selecao');
+
+        $query = Color::where('collection_id', $request->collection_id)
+            ->with(['product', 'product.category', 'numeracao', 'collection'])
+            ->orderBy('product_id', 'ASC');
+
+        if ($tipoProdutos === 'selecao' && !empty($produtosSelecionados)) {
+            $first = is_array($produtosSelecionados) ? reset($produtosSelecionados) : null;
+            $isAssociativeSelection = is_array($first);
+
+            if ($isAssociativeSelection && isset($first['id'])) {
+                $query->where(function ($q) use ($produtosSelecionados) {
+                    foreach ($produtosSelecionados as $sel) {
+                        $productId = $sel['id'] ?? null;
+                        $colorCode = $sel['color_code'] ?? null;
+
+                        $q->orWhere(function ($q2) use ($productId, $colorCode) {
+                            if ($productId !== null) {
+                                $q2->where('product_id', $productId);
+                            }
+                            if ($colorCode) {
+                                $q2->where('color_code', $colorCode);
+                            }
+                        });
+                    }
+                });
+            } else {
+                $ids = array_map('intval', (array) $produtosSelecionados);
+                $query->whereIn('product_id', $ids);
+            }
+        }
+
+        $items = $query->get();
+
+        if (!empty($produtosSelecionados)) {
+            $orderMap = [];
+            foreach ($produtosSelecionados as $idx => $sel) {
+                $id = $sel['id'] ?? null;
+                $code = $sel['color_code'] ?? null;
+                if ($id && $code) {
+                    $orderMap["{$id}-{$code}"] = $idx;
+                }
+            }
+            if (!empty($orderMap)) {
+                $items = $items->sortBy(function ($color) use ($orderMap) {
+                    $key = ($color->product_id ?? '') . '-' . ($color->color_code ?? '');
+                    return $orderMap[$key] ?? 999999;
+                })->values();
+            }
+        }
+
+        $svgPathAzul = public_path('/images/Oakley_logo.svg');
+        $svgContentAzul = file_exists($svgPathAzul) ? file_get_contents($svgPathAzul) : '';
+        $base64SvgAzul = $svgContentAzul ? 'data:image/svg+xml;base64,' . base64_encode($svgContentAzul) : null;
+
+        $pedidoTitle = trim((string) $request->input('pedidoTitle', ''));
+        if ($pedidoTitle === '') {
+            $pedidoTitle = trim((string) $request->input('collectionHistoryName', ''));
+        }
+        if ($pedidoTitle === '') {
+            $pedidoTitle = 'Pedido';
+        }
+
+        $data = [
+            'items' => $items,
+            'pedidoTitle' => $pedidoTitle,
+            'isPdf' => true,
+            'base64Svg_azul' => $base64SvgAzul,
+        ];
+
+        $pdf = PDF::loadView('exports.pedido.a4', $data)
+            ->setPaper('A4', 'portrait');
+        $pdf->setOption(['dpi' => 120]);
+
+        $filename = preg_replace('#[\\\\/:*?"<>|]+#u', '-', $pedidoTitle);
+        $filename = trim(preg_replace('/\s+/u', ' ', $filename));
+        if ($filename === '') {
+            $filename = 'Pedido';
+        }
+
+        return $pdf->download($filename . '.pdf');
+    }
+
     /**
      * Listar histórico de exportações do usuário
      */
@@ -428,11 +522,11 @@ class ExportController extends Controller
 
         $merged = $produtos->collapse();
 
-        $svgPath = public_path('/images/logo-branco.svg');
+        $svgPath = public_path('/images/Oakley_logo.svg');
         $svgContent = file_get_contents($svgPath);
         $base64Svg = 'data:image/svg+xml;base64,' . base64_encode($svgContent);
 
-        $svgPath_azul = public_path('/images/logo-azul.svg');
+        $svgPath_azul = public_path('/images/Oakley_logo.svg');
         $svgContent_azul = file_get_contents($svgPath_azul);
         $base64Svg_azul = 'data:image/svg+xml;base64,' . base64_encode($svgContent_azul);
 
@@ -508,7 +602,7 @@ class ExportController extends Controller
                     $imgRel = 'images/produtos/' . ($item->product->code ?? '') . '_' . str_replace('/', '_', ($item->color_code ?? '')) . '.jpg';
                     $imgPath = public_path($imgRel);
                     if (!file_exists($imgPath)) {
-                        $imgPath = public_path('images/img-padrao-oly.png');
+                        $imgPath = public_path('images/img-padrao-mz.png');
                     }
                     $imagePaths[] = $imgPath;
                 }

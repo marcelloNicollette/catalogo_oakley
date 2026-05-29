@@ -1,7 +1,7 @@
 @props(['activeItem' => null])
 
 <!-- Menu lateral -->
-<aside class="w-full lg:w-64 flex flex-col items-start p-5 space-y-3">
+<aside class="w-full lg:w-64 flex flex-col items-start p-5 space-y-3 bg-white text-black">
     @php
         $user = auth()->user();
         $classification = $user ? $user->classification : null;
@@ -28,7 +28,7 @@
             'Baixar' => 'gerar-arquivo',
             'Favoritos' => 'favoritos',
             'Tecnologias' => 'tecnologias',
-            'Conteúdos' => 'conteudos',
+            'Materiais' => 'materiais',
             'Calendário' => 'calendario',
         ];
     @endphp
@@ -46,6 +46,7 @@
 
             $url = $item->url;
             if ($item->route) {
+                //dd($item->route);
                 // Verifica se a rota existe para evitar erro
                 if (\Illuminate\Support\Facades\Route::has($item->route)) {
                     $url = route($item->route, $routeParams);
@@ -56,9 +57,10 @@
         @endphp
 
         <a href="{{ $url }}"
-            class="w-full h-[42px] content-center items-center text-gray-700 hover:bg-[#E7E7E7] pl-4 {{ $isActive ? 'bg-[#E7E7E7]' : '' }}">
+            class="w-full h-[42px] content-center items-center text-black hover:bg-[#E7E7E7] pl-4 rounded {{ $isActive ? 'bg-[#E7E7E7]' : '' }}">
             @if ($item->icon)
-                <img src="{{ $item->icon }}" class="float-left pr-[0.5rem]" alt="{{ $item->label }}" />
+                <img src="{{ $item->icon }}" class="float-left pr-[0.5rem] pt-[3px]" alt="{{ $item->label }}"
+                    style="transform: scale(1.25);" />
             @endif
             <span class="text-xs md:text-base mt-1">{{ $item->label }}</span>
         </a>

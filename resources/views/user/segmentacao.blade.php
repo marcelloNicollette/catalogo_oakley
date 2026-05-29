@@ -1,15 +1,14 @@
-<x-layout-user title="Under Armour - Segmentação">
+<x-layout-user title="Oakley - Segmentação">
     <style>
         .font-segmento {
             color: #FFF;
             text-align: center;
-            font-size: 50px;
+            font-size: 60px;
             font-style: normal;
-            font-weight: 800;
-            line-height: 40px;
-            /* 80% */
-            letter-spacing: -4px;
-            text-transform: uppercase;
+            font-weight: 600;
+            line-height: 70px;
+            letter-spacing: -3px;
+            text-transform: none;
         }
 
         @media (max-width: 1024px) {
@@ -78,7 +77,7 @@
         }
     </style>
 
-    <div id="produtos" class="grid grid-cols-1 lg:grid-cols-2 gap-2 full-height-container p-[10px]">
+    <div id="produtos" class="grid grid-cols-1 lg:grid-cols-3 gap-2 full-height-container p-[10px]">
         @foreach ($segmentacao as $segmento)
             <div class="relative group cursor-pointer rounded-lg grid-item">
                 @if ($segmento->collections->count() > 0)
@@ -97,10 +96,11 @@
 
                 <!-- Text Overlay -->
                 <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div class="bg-[#E31B23] px-10 py-5 pointer-events-auto">
-                        <h2 class="font-segmento text-center">
+                    <div class="px-10 py-5 pointer-events-auto">
+                        <h2 class="font-segmento text-center neue-plak-extended">
                             {{ $segmento->segmento }}
                         </h2>
+
                     </div>
                 </div>
                 @if ($segmento->collections->count() > 0)

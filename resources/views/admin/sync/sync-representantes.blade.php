@@ -1,6 +1,6 @@
 @extends('layouts.admin-layout')
 
-@section('page_title', 'Under Armour - Sincronização Google Sheets')
+@section('page_title', 'Oakley - Sincronização Google Sheets')
 <style>
     h1 {
         color: #333;
@@ -187,57 +187,57 @@
 
         <!-- Sincronização de Usuários -->
         <!--<div class="sync-section">
-                            <h2 class="section-title">👥 Sincronização de Representantes</h2>
-                            <div class="info-box">
-                                <h3>📋 Sobre a Sincronização de Representantes</h3>
-                                <p>Este processo irá sincronizar os dados da aba <strong>REPRESENTANTES</strong> da planilha Google
-                                    Sheets com o banco de dados do sistema, incluindo:</p>
-                                <ul>
-                                    <li><strong>Usuários:</strong> Nome do representante, email, empresa</li>
-                                    <li><strong>Códigos de Liderança:</strong> Código do líder comercial EBM</li>
-                                    <li><strong>Segmentações de Cliente:</strong> Vinculação automática às segmentações</li>
-                                    <li><strong>Senhas:</strong> Geração automática para novos usuários</li>
-                                    <li><strong>Arquivo de Senhas:</strong> Exportação automática dos dados de acesso</li>
-                                </ul>
-                            </div>
+                                <h2 class="section-title">👥 Sincronização de Representantes</h2>
+                                <div class="info-box">
+                                    <h3>📋 Sobre a Sincronização de Representantes</h3>
+                                    <p>Este processo irá sincronizar os dados da aba <strong>REPRESENTANTES</strong> da planilha Google
+                                        Sheets com o banco de dados do sistema, incluindo:</p>
+                                    <ul>
+                                        <li><strong>Usuários:</strong> Nome do representante, email, empresa</li>
+                                        <li><strong>Códigos de Liderança:</strong> Código do líder comercial EBM</li>
+                                        <li><strong>Segmentações de Cliente:</strong> Vinculação automática às segmentações</li>
+                                        <li><strong>Senhas:</strong> Geração automática para novos usuários</li>
+                                        <li><strong>Arquivo de Senhas:</strong> Exportação automática dos dados de acesso</li>
+                                    </ul>
+                                </div>
 
-                            <div class="process-info">
-                                <h4>⚠️ Importante:</h4>
-                                <ul>
-                                    <li>Usuários existentes serão atualizados com base no email</li>
-                                    <li>Senhas são geradas apenas para novos usuários</li>
-                                    <li>Um arquivo CSV será gerado com os dados de acesso dos novos usuários</li>
-                                    <li>As segmentações de cliente serão criadas automaticamente se não existirem</li>
-                                    <li><strong>Sincronização Normal:</strong> Recomendada para até 1000 registros (processamento
-                                        direto)</li>
-                                    <li><strong>Sincronização Assíncrona:</strong> Recomendada para grandes volumes (processamento em
-                                        background)</li>
-                                    <li>O processamento assíncrono divide os dados em lotes menores para evitar timeouts</li>
-                                </ul>
-                            </div>
+                                <div class="process-info">
+                                    <h4>⚠️ Importante:</h4>
+                                    <ul>
+                                        <li>Usuários existentes serão atualizados com base no email</li>
+                                        <li>Senhas são geradas apenas para novos usuários</li>
+                                        <li>Um arquivo CSV será gerado com os dados de acesso dos novos usuários</li>
+                                        <li>As segmentações de cliente serão criadas automaticamente se não existirem</li>
+                                        <li><strong>Sincronização Normal:</strong> Recomendada para até 1000 registros (processamento
+                                            direto)</li>
+                                        <li><strong>Sincronização Assíncrona:</strong> Recomendada para grandes volumes (processamento em
+                                            background)</li>
+                                        <li>O processamento assíncrono divide os dados em lotes menores para evitar timeouts</li>
+                                    </ul>
+                                </div>
 
-                            <div class="sync-form">
-                                <form action="{{ route('admin.sync-users') }}" method="get"
-                                    style="display: inline; margin-right: 10px;">
-                                    <button type="submit" class="btn-users"
-                                        onclick="this.disabled=true; this.innerHTML='🔄 Sincronizando...'; this.form.submit();">
-                                        👥 Sincronizar Representantes (Até 1000 registros)
-                                    </button>
-                                </form>
+                                <div class="sync-form">
+                                    <form action="{{ route('admin.sync-users') }}" method="get"
+                                        style="display: inline; margin-right: 10px;">
+                                        <button type="submit" class="btn-users"
+                                            onclick="this.disabled=true; this.innerHTML='🔄 Sincronizando...'; this.form.submit();">
+                                            👥 Sincronizar Representantes (Até 1000 registros)
+                                        </button>
+                                    </form>
 
-                                <form action="{{ route('admin.sync-users-async') }}" method="get"
-                                    style="display: inline; margin-right: 10px;">
-                                    <button type="submit" class="btn-async"
-                                        onclick="this.disabled=true; this.innerHTML='🔄 Processando...'; this.form.submit();">
-                                        ⚡ Sincronização Assíncrona (Grandes volumes)
-                                    </button>
-                                </form>
+                                    <form action="{{ route('admin.sync-users-async') }}" method="get"
+                                        style="display: inline; margin-right: 10px;">
+                                        <button type="submit" class="btn-async"
+                                            onclick="this.disabled=true; this.innerHTML='🔄 Processando...'; this.form.submit();">
+                                            ⚡ Sincronização Assíncrona (Grandes volumes)
+                                        </button>
+                                    </form>
 
-                                <a href="{{ route('admin.export-users-passwords') }}" class="btn-export">
-                                    📊 Exportar Lista de Representantes
-                                </a>
-                            </div>
-                        </div>-->
+                                    <a href="{{ route('admin.export-users-passwords') }}" class="btn-export">
+                                        📊 Exportar Lista de Representantes
+                                    </a>
+                                </div>
+                            </div>-->
 
         <!-- Gerenciamento de Lotes -->
         <div class="sync-section">

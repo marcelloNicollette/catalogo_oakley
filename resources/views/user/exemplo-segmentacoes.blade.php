@@ -1,4 +1,4 @@
-<x-layout-user title="Olympikus - Segmentação">
+<x-layout-user title="Oakley - Segmentação">
 
 
     <div class="container mx-auto px-4 py-8">

@@ -1,4 +1,4 @@
-<x-layout-user title="Under Armour - Conteúdos">
+<x-layout-user title="Oakley - Conteúdos">
     <style>
         .options {
             width: 270px;
@@ -29,7 +29,7 @@
         <section class="flex-1 flex flex-col md:pr-0 md:pb-0 overflow-hidden">
             <!-- Filtros superiores -->
             <div
-                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 pr-4 bg-[#F1F1F1]">
+                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 pr-4 bg-white">
                 <!-- Esquerda: Coleção e Categoria -->
                 <div class="flex gap-2">
 
@@ -92,7 +92,7 @@
                 </div>
             </div>
 
-            <div class="bg-[#E6E6E6] rounded-tl-lg overflow-auto height-ultra custom-scrollbar">
+            <div class="bg-white rounded-tl-lg overflow-auto height-ultra custom-scrollbar">
                 <div class="my-custom-bg p-12 max-w-[999px] mx-auto pb-0">
                     @foreach ($conteudos as $item)
                         <div class="mb-10" data-categoria-id="{{ $item->id }}">

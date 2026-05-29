@@ -46,8 +46,14 @@ class Wishlist extends Model
      */
     public function colorWithReplace()
     {
-        return Color::where('product_id', $this->product_id)
-            ->whereRaw('REPLACE(color_code, "/", "_") = ?', [str_replace('/', '_', $this->color_code)])
+        $normalized = str_replace('/', '_', $this->color_code);
+
+        return Color::withTrashed()
+            ->where('product_id', $this->product_id)
+            ->where(function ($query) use ($normalized) {
+                $query->whereRaw('REPLACE(color_code, "/", "_") = ?', [$normalized])
+                    ->orWhere('color_code', $normalized);
+            })
             ->first();
     }
 }

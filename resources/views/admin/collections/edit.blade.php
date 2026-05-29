@@ -84,6 +84,17 @@
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
+
+                <div class="mb-4">
+                    <label for="slug" class="block text-sm font-medium text-gray-700">Slug Coleção</label>
+                    <input type="text" name="slug" id="slug"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        value="{{ old('slug', $collection->slug) }}" required>
+                    @error('slug')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <div class="mb-4">
                     <label for="bg_color" class="block text-sm font-medium text-gray-700">Background Color</label>
                     <input type="color" name="bg_color" id="bg_color"

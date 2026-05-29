@@ -1,300 +1,100 @@
-/* NEUE PLAK - CONDENSED */
 @font-face {
-  font-family: 'Neue Plak Condensed';
-  src: url('../fonts/Neue-Plak-Condensed-UltraLight.ttf') format('truetype');
-  font-weight: 200;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Neue Plak Condensed';
-  src: url('../fonts/Neue-Plak-Condensed-Thin.ttf') format('truetype');
-  font-weight: 250;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Neue Plak Condensed';
-  src: url('../fonts/Neue-Plak-Condensed-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Neue Plak Condensed';
-  src: url('../fonts/Neue-Plak-Condensed-Regular.ttf') format('truetype');
+  font-family: 'Montserrat';
+  src: url('../fonts/FONT_MONTSERRAT/Montserrat-Regular.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Neue Plak Condensed';
-  src: url('../fonts/Neue-Plak-Condensed-SemiBold.ttf') format('truetype');
+  font-family: 'Montserrat';
+  src: url('../fonts/FONT_MONTSERRAT/Montserrat-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('../fonts/FONT_MONTSERRAT/Montserrat-SemiBold.otf') format('opentype');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Neue Plak Condensed';
-  src: url('../fonts/Neue-Plak-Condensed-Bold.ttf') format('truetype');
+  font-family: 'Montserrat';
+  src: url('../fonts/FONT_MONTSERRAT/Montserrat-Bold.otf') format('opentype');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Neue Plak Condensed';
-  src: url('../fonts/Neue-Plak-Condensed-Black.ttf') format('truetype');
+  font-family: 'Montserrat';
+  src: url('../fonts/FONT_MONTSERRAT/Montserrat-ExtraBold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('../fonts/FONT_MONTSERRAT/Montserrat-Black.otf') format('opentype');
   font-weight: 900;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Neue Plak Condensed';
-  src: url('../fonts/Neue-Plak-Condensed-ExtraBlack.ttf') format('truetype');
-  font-weight: 950;
-  font-style: normal;
-}
-
-/* NEUE PLAK - EXTENDED */
-@font-face {
-  font-family: 'Neue Plak Extended';
-  src: url('../fonts/Neue-Plak-Extended-UltraLight.ttf') format('truetype');
-  font-weight: 200;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Neue Plak Extended';
-  src: url('../fonts/Neue-Plak-Extended-Thin.ttf') format('truetype');
-  font-weight: 250;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Neue Plak Extended';
-  src: url('../fonts/Neue-Plak-Extended-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Neue Plak Extended';
-  src: url('../fonts/Neue-Plak-Extended-Regular.ttf') format('truetype');
+  font-family: 'Futura';
+  src: url('../fonts/futura/Futura Book font.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Neue Plak Extended';
-  src: url('../fonts/Neue-Plak-Extended-SemiBold.ttf') format('truetype');
-  font-weight: 600;
+  font-family: 'Futura';
+  src: url('../fonts/futura/Futura Medium font.ttf') format('truetype');
+  font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Neue Plak Extended';
-  src: url('../fonts/Neue-Plak-Extended-Bold.ttf') format('truetype');
+  font-family: 'Futura';
+  src: url('../fonts/futura/Futura Heavy font.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Neue Plak Extended';
-  src: url('../fonts/Neue-Plak-Extended-Black.ttf') format('truetype');
+  font-family: 'Futura';
+  src: url('../fonts/futura/Futura Extra Black font.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Neue Plak Extended';
-  src: url('../fonts/Neue-Plak-Extended-ExtraBlack.ttf') format('truetype');
-  font-weight: 950;
-  font-style: normal;
-}
-
-/* NEUE PLAK - REGULAR/NORMAL */
-@font-face {
-  font-family: 'Neue Plak';
-  src: url('../fonts/Neue-Plak-UltraLight.ttf') format('truetype');
-  font-weight: 200;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Neue Plak';
-  src: url('../fonts/Neue-Plak-Thin.ttf') format('truetype');
-  font-weight: 250;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Neue Plak';
-  src: url('../fonts/Neue-Plak-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Neue Plak';
-  src: url('../fonts/Neue-Plak-Regular.ttf') format('truetype');
+  font-family: 'Avenir Next';
+  src: url('../fonts/AvenirNext/AvenirNext-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Neue Plak';
-  src: url('../fonts/Neue-Plak-SemiBold.ttf') format('truetype');
+  font-family: 'Avenir Next';
+  src: url('../fonts/AvenirNext/AvenirNext-DemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
 }
 
-@font-face {
-  font-family: 'Neue Plak';
-  src: url('../fonts/Neue-Plak-ExtraBlack.ttf') format('truetype');
-  font-weight: 950;
-  font-style: normal;
-}
-
-/* NEUE PLAK TEXT - NORMAL */
-@font-face {
-  font-family: 'Neue Plak Text';
-  src: url('../fonts/Neue-Plak-Text-Thin.ttf') format('truetype');
-  font-weight: 250;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Neue Plak Text';
-  src: url('../fonts/Neue-Plak-Text-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Neue Plak Text';
-  src: url('../fonts/Neue-Plak-Text-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Neue Plak Text';
-  src: url('../fonts/Neue-Plak-Text-SemiBold.ttf') format('truetype');
-  font-weight: 600;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Neue Plak Text';
-  src: url('../fonts/Neue-Plak-Text-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Neue Plak Text';
-  src: url('../fonts/Neue-Plak-Text-Black.ttf') format('truetype');
-  font-weight: 900;
-  font-style: normal;
-}
-
-/* NEUE PLAK TEXT - ITALIC */
-@font-face {
-  font-family: 'Neue Plak Text';
-  src: url('../fonts/Neue-Plak-Text-Thin-Italic.ttf') format('truetype');
-  font-weight: 250;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Neue Plak Text';
-  src: url('../fonts/Neue-Plak-Text-Light-Italic.ttf') format('truetype');
-  font-weight: 300;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Neue Plak Text';
-  src: url('../fonts/Neue-Plak-Text-Italic.ttf') format('truetype');
-  font-weight: 400;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Neue Plak Text';
-  src: url('../fonts/Neue-Plak-Text-SemiBold-Italic.ttf') format('truetype');
-  font-weight: 600;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Neue Plak Text';
-  src: url('../fonts/Neue-Plak-Text-Bold-Italic.ttf') format('truetype');
-  font-weight: 700;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Neue Plak Text';
-  src: url('../fonts/Neue-Plak-Text-Black-Italic.ttf') format('truetype');
-  font-weight: 900;
-  font-style: italic;
-}
-
-/* CLASSES DE UTILITÁRIO PARA USAR AS FONTES */
 .neue-plak-condensed {
-  font-family: 'Neue Plak Condensed', Arial, sans-serif;
+  font-family: 'Futura', 'Montserrat', Arial, sans-serif;
 }
 
-.neue-plak-extended {
-  font-family: 'Neue Plak Extended', Arial, sans-serif;
-}
-
-.neue-plak {
-  font-family: 'Neue Plak', Arial, sans-serif;
-}
-
+.neue-plak-extended,
+.neue-plak,
 .neue-plak-text {
-  font-family: 'Neue Plak Text', Arial, sans-serif;
+  font-family: 'Montserrat', Arial, sans-serif;
 }
-
-/* EXEMPLOS DE USO */
-.title {
-  font-family: 'Neue Plak Extended', Arial, sans-serif;
-  font-weight: 900; /* Black */
-}
-
-.subtitle {
-  font-family: 'Neue Plak Condensed', Arial, sans-serif;
-  font-weight: 600; /* SemiBold */
-}
-
-.body-text {
-  font-family: 'Neue Plak Text', Arial, sans-serif;
-  font-weight: 400; /* Regular */
-}
-
-.body-text-italic {
-  font-family: 'Neue Plak Text', Arial, sans-serif;
-  font-weight: 400;
-  font-style: italic;
-}
-
-
-/* CLASSES DE PESO */
-.ultra-light { font-weight: 200; }
-.thin { font-weight: 250; }
-.light { font-weight: 300; }
-.regular { font-weight: 400; }
-.semi-bold { font-weight: 600; }
-.bold { font-weight: 700; }
-.black { font-weight: 900; }
-.extra-black { font-weight: 950; }
-
 
 html {
-    font-family: "Roboto", sans-serif !important;
-  }
+  font-family: 'Montserrat', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
 
   .select-estilizado,
   .input-estilizado {
@@ -803,15 +603,25 @@ html {
   border-radius: 50%;
 }
 
+.badge-container {
+    position: absolute;
+    flex-direction: column;
+    min-height: 35px;
+    left: 5px;
+    display: flex;
+    align-items: flex-start;
+    gap: 1px;
+}
+
   .badge {
-    display: inline-block;
     background-color: #2735d4;
     color: #fff;
-    font-size: 0.63rem;
+    font-size: 10px;
     font-weight: 400;
-    padding: 0.125rem 0.4rem;
+    padding: 4px 6px;
     border-radius: 2rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.2rem;
+    line-height: 1;
   }
 
   :focus {

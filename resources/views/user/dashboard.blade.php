@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Under Armour - Novo Layout</title>
+    <title>Oakley - Novo Layout</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
@@ -17,11 +17,11 @@
     <link rel="stylesheet" href="/css/css.css" />
 </head>
 
-<body class="bg-[#F1F1F1] flex flex-col min-h-screen">
+<body class="bg-white flex flex-col min-h-screen">
     <!-- Header -->
     <header class="flex items-center justify-between gap-4 pt-4 pr-4 pl-4 pb-2">
         <div class="flex items-center space-x-2">
-            <img src="/images/logo.png" alt="Logo" />
+            <img src="/images/Oakley_logo.svg" alt="Oakley" class="h-6 w-auto" />
         </div>
         <div class="flex items-center space-x-4">
             <!--<button class="text-gray-700 font-semibold hover:text-blue-600">

@@ -178,6 +178,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
             'destroy' => 'admin.technology.categories.destroy'
         ]);
 
+    Route::put('/admin/technology/items/{item}/order', [TechnologyItemController::class, 'updateOrder'])
+        ->name('admin.technology.items.order');
+
     Route::resource('/admin/technology/items', TechnologyItemController::class)
         ->names([
             'index' => 'admin.technology.items.index',
@@ -315,6 +318,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('admin.sync-representantes');
     Route::get('/admin/sync-sheet', [AdminGoogleSheetController::class, 'sync'])
         ->name('admin.sync-sheet');
+    Route::get('/admin/sync-sheet-reverse', [AdminGoogleSheetController::class, 'syncReverse'])
+        ->name('admin.sync-sheet-reverse');
     Route::get('/admin/sync-users', [AdminGoogleSheetController::class, 'syncUsers'])
         ->name('admin.sync-users');
     Route::get('/admin/sync-users-async', [AdminGoogleSheetController::class, 'syncUsersAsync'])
@@ -362,6 +367,108 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/user/conta/update', [frontendController::class, 'updateUser'])->name('user.conta.update');
     Route::post('/user/conta/update-password', [frontendController::class, 'updatePassword'])->name('user.conta.update-password');
 
+    Route::post('/user/pedidos', function (\Illuminate\Http\Request $request) {
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'items' => ['required', 'array', 'min:1'],
+        ]);
+
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['message' => 'Não autenticado.'], 401);
+        }
+
+        $now = now();
+        $id = \Illuminate\Support\Facades\DB::table('user_pedidos')->insertGetId([
+            'user_id' => $user->id,
+            'title' => $data['title'],
+            'items_count' => count($data['items']),
+            'items' => json_encode($data['items']),
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pedido salvo com sucesso!',
+            'pedido_id' => $id,
+        ]);
+    })->name('user.pedidos.store');
+
+    Route::get('/user/pedidos', function (\Illuminate\Http\Request $request) {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['message' => 'Não autenticado.'], 401);
+        }
+
+        $rows = \Illuminate\Support\Facades\DB::table('user_pedidos')
+            ->where('user_id', $user->id)
+            ->orderByDesc('created_at')
+            ->limit(200)
+            ->get(['id', 'title', 'items_count', 'items', 'created_at']);
+
+        $pedidos = $rows->map(function ($row) {
+            $items = [];
+            try {
+                $decoded = json_decode($row->items, true);
+                if (is_array($decoded)) $items = $decoded;
+            } catch (\Throwable $e) {
+                $items = [];
+            }
+
+            $createdAtLabel = '';
+            try {
+                $createdAtLabel = \Carbon\Carbon::parse($row->created_at)->format('d/m/Y H:i');
+            } catch (\Throwable $e) {
+                $createdAtLabel = '';
+            }
+
+            return [
+                'id' => $row->id,
+                'title' => $row->title,
+                'items_count' => (int) ($row->items_count ?? 0),
+                'items' => $items,
+                'created_at_label' => $createdAtLabel,
+            ];
+        })->values();
+
+        return response()->json([
+            'success' => true,
+            'pedidos' => $pedidos,
+        ]);
+    })->name('user.pedidos.index');
+
+    Route::delete('/user/pedidos/{pedidoId}', function (\Illuminate\Http\Request $request, $pedidoId) {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['message' => 'Não autenticado.'], 401);
+        }
+
+        $id = (int) $pedidoId;
+        if ($id <= 0) {
+            return response()->json(['success' => false, 'message' => 'Pedido inválido.'], 422);
+        }
+
+        $row = \Illuminate\Support\Facades\DB::table('user_pedidos')
+            ->where('id', $id)
+            ->where('user_id', $user->id)
+            ->first(['id']);
+
+        if (!$row) {
+            return response()->json(['success' => false, 'message' => 'Pedido não encontrado.'], 404);
+        }
+
+        \Illuminate\Support\Facades\DB::table('user_pedidos')
+            ->where('id', $id)
+            ->where('user_id', $user->id)
+            ->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pedido excluído com sucesso!',
+        ]);
+    })->name('user.pedidos.destroy');
+
 
     Route::get('/user/{slug}', [frontendController::class, 'slug'])
         ->name('user.slug');
@@ -395,6 +502,7 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     // Export routes
     Route::post('/user/export/pdf', [ExportController::class, 'exportPdf'])->name('user.export.pdf');
+    Route::post('/user/export/pedido/pdf', [ExportController::class, 'exportPedidoPdf'])->name('user.export.pedido.pdf');
 
 
     Route::get('/user/exports', [ExportController::class, 'index'])->name('exports.index');

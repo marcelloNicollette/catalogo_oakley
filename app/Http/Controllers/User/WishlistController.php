@@ -13,6 +13,8 @@ use App\Models\Segmentacao;
 use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Http\JsonResponse;
 
 class WishlistController extends Controller
@@ -114,12 +116,19 @@ class WishlistController extends Controller
     {
         $user = Auth::user();
         $segmentacao = Segmentacao::where('slug', $slug)->first();
+        if (!$segmentacao) {
+            abort(404);
+        }
         $colecoes = Collection::where('segmentacao_id', $segmentacao->id)->get();
 
         $categories = Category::where('segmento_id', $segmentacao->id)->get();
 
-        $years = Collection::pluck('created_at')->map(function ($item) {
-            return date('Y', strtotime($item));
+
+        $years = $colecoes->pluck('created_at')->map(function ($item) {
+            if ($item instanceof \Carbon\CarbonInterface) {
+                return $item->format('Y');
+            }
+            return date('Y', strtotime((string) $item));
         })->unique()->sort(function ($a, $b) {
             return $b <=> $a;
         })->values();
@@ -128,9 +137,44 @@ class WishlistController extends Controller
 
         $numeracao = Numeracao::get();
         $tamanhos = Size::get();
-        $flags = FlagProduct::whereHas('colors', function ($query) use ($colecao) {
-            $query->where('collection_id', $colecao->id);
-        })->get();
+        $collectionIds = $colecoes->pluck('id')->filter()->values();
+        $hasColorFlagProductTable = Schema::hasTable('color_flag_product');
+
+        $flagIds = collect();
+        if ($collectionIds->isNotEmpty()) {
+            $flagIds = $flagIds
+                ->merge(
+                    DB::table('colors')
+                        ->whereIn('collection_id', $collectionIds)
+                        ->whereNull('deleted_at')
+                        ->whereNotNull('flag_product_id')
+                        ->pluck('flag_product_id')
+                )
+                ->unique()
+                ->filter()
+                ->values();
+
+            if ($hasColorFlagProductTable) {
+                $flagIds = $flagIds
+                    ->merge(
+                        DB::table('color_flag_product')
+                            ->join('colors', 'colors.id', '=', 'color_flag_product.color_id')
+                            ->whereIn('colors.collection_id', $collectionIds)
+                            ->whereNull('colors.deleted_at')
+                            ->pluck('color_flag_product.flag_product_id')
+                    )
+                    ->unique()
+                    ->filter()
+                    ->values();
+            }
+        }
+
+        $flags = $flagIds->isNotEmpty()
+            ? FlagProduct::whereIn('id', $flagIds)
+                ->orderBy('orderfilterflag')
+                ->orderBy('flag_title')
+                ->get()
+            : collect();
 
         $wishlistQuery = Wishlist::with([
             'product' => function ($query) {
@@ -140,9 +184,6 @@ class WishlistController extends Controller
                 $query->withTrashed();
             },
             'product.category' => function ($query) {
-                $query->withTrashed();
-            },
-            'product.colors' => function ($query) {
                 $query->withTrashed();
             }
         ])
@@ -160,17 +201,29 @@ class WishlistController extends Controller
         foreach ($produtos as $produto) {
             $produto->color = $produto->colorWithReplace();
             if ($produto->color) {
-                $produto->color->load(['flagProduct' => function ($query) {
-                    $query->withTrashed();
-                }, 'collection' => function ($query) {
-                    $query->withTrashed();
-                }]);
+                $relations = [
+                    'flagProduct' => function ($query) {
+                        $query->withTrashed();
+                    },
+                    'collection' => function ($query) {
+                        $query->withTrashed();
+                    }
+                ];
+
+                if ($hasColorFlagProductTable) {
+                    $relations['flagProducts'] = function ($query) {
+                        $query->withTrashed();
+                    };
+                }
+
+                $produto->color->load($relations);
             }
         }
 
 
 
-        return view('user.wishlist', compact('produtos', 'colecoes', 'categories', 'years', 'numeracao', 'tamanhos', 'flags'));
+
+        return view('user.wishlist', compact('produtos', 'colecoes', 'categories', 'years', 'numeracao', 'tamanhos', 'flags', 'hasColorFlagProductTable'));
     }
 
     /**

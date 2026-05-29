@@ -226,7 +226,7 @@ class CalendarioTableSeeder extends Seeder
                 'ano' => '2025',
                 'mes' => 3,
                 'info_1' => 'Produto: 43752263',
-                'info_2' => 'O Olympikus Versa é um tênis clássico que nunca sai de moda, perfeito para quem busca mais estilo e conforto para o dia a dia. O seu solado tem o tradicional
+                'info_2' => 'O Oakley Versa é um tênis clássico que nunca sai de moda, perfeito para quem busca mais estilo e conforto para o dia a dia. O seu solado tem o tradicional
 visual de sola caixa e possui a Tecnologia Evasense, que proporciona conforto e amortecimento',
                 'data' => '2025-03-20',
                 'data_mkt' => '2025-03-20',

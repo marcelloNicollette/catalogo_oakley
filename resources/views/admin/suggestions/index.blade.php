@@ -1,6 +1,6 @@
 @extends('layouts.admin-layout')
 
-@section('page_title', 'Under Armour - Sugestões enviadas')
+@section('page_title', 'Oakley - Sugestões enviadas')
 
 @section('content-wrapper')
     <div class="flex justify-between items-center mb-6">

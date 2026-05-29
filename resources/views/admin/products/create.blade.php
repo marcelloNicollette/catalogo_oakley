@@ -128,36 +128,61 @@
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    <div class="mb-4">
-                        <label for="silhueta" class="block text-sm font-medium text-gray-700">Silhueta</label>
-                        <input type="text" name="silhueta" id="silhueta"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            value="{{ old('silhueta') }}">
-                        @error('silhueta')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
                 </div>
 
                 <div class="mb-4">
                     <fieldset class="border border-1 bg-gray-100">
                         <legend class="block text-sm font-medium text-gray-700">Cores disponíveis
                         </legend>
-                        <div class="bg-gray-50 " x-data="{
-                            campos: [{ color_name: '', color_description: '', color_code: '', color_genero: 'Masculino', color_collection_id: '', color_flag_product_id: '', color_numeracao_id: '', segmentacoes_cliente: [] }],
+                        <div x-data="{
+                            campos: [{
+                                color_name: '',
+                                color_description: '',
+                                color_code: '',
+                                color_genero: 'Masculino',
+                                color_collection_id: '',
+                                color_flag_product_ids: [],
+                                color_shoe_grid_ids: [],
+                                color_numeracao_id: '',
+                                segmentacoes_cliente: [],
+                                color_periodo_vendas: [],
+                            }],
                             adicionarCampo() {
-                                this.campos.push({ color_name: '', color_description: '', color_code: '', color_genero: 'Masculino', color_collection_id: '', color_flag_product_id: '', color_numeracao_id: '', segmentacoes_cliente: [] });
+                                this.campos.push({
+                                    color_name: '',
+                                    color_description: '',
+                                    color_code: '',
+                                    color_genero: 'Masculino',
+                                    color_collection_id: '',
+                                    color_flag_product_ids: [],
+                                    color_shoe_grid_ids: [],
+                                    color_numeracao_id: '',
+                                    segmentacoes_cliente: [],
+                                    color_periodo_vendas: [],
+                                });
                             },
                             removerCampo(index) {
                                 this.campos.splice(index, 1);
+                                if (this.campos.length === 0) {
+                                    this.campos.push({
+                                        color_name: '',
+                                        color_description: '',
+                                        color_code: '',
+                                        color_genero: 'Masculino',
+                                        color_collection_id: '',
+                                        color_flag_product_ids: [],
+                                        color_shoe_grid_ids: [],
+                                        color_numeracao_id: '',
+                                        segmentacoes_cliente: [],
+                                        color_periodo_vendas: [],
+                                    });
+                                }
                             }
                         }">
 
                             <div class="grid grid-cols-1">
                                 <template x-for="(campo, index) in campos" :key="index">
-                                    <div class="bg-gray-100 p-4 border border-gray-200 rounded-lg mb-4">
+                                    <div class="bg-gray-100 p-4 border border-gray-200 rounded-lg">
                                         <!-- Grid para os campos principais -->
                                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-4">
                                             <!-- Coluna 1: Título -->
@@ -186,10 +211,10 @@
                                                 <label class="block text-sm font-medium text-gray-700">Gênero</label>
                                                 <select :name="`color_genero[]`" x-model="campo.color_genero"
                                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                    <option value="Infantil">Infantil</option>
                                                     <option value="Masculino">Masculino</option>
                                                     <option value="Feminino">Feminino</option>
                                                     <option value="Unissex">Unissex</option>
+                                                    <option value="Infantil">Infantil</option>
                                                 </select>
                                             </div>
                                             <!-- Coluna 4: Coleção -->
@@ -203,22 +228,6 @@
                                                         <option value="{{ $collection->id }}"
                                                             {{ old('collection_id') == $collection->id ? 'selected' : '' }}>
                                                             {{ $collection->codigo_colecao . ' - ' . $collection->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <!-- Coluna 5: Flag -->
-                                            <div>
-                                                <label class="block text-sm font-medium text-gray-700">Flag</label>
-                                                <select :name="`color_flag_product_id[]`"
-                                                    x-model="campo.color_flag_product_id"
-                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                    required>
-                                                    <option value="">Selecione a Flag</option>
-                                                    @foreach ($flags as $flag)
-                                                        <option value="{{ $flag->id }}"
-                                                            {{ old('flag_product_id') == $flag->id ? 'selected' : '' }}>
-                                                            {{ $flag->flag_title }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -237,68 +246,163 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                        </div>
-
-                                        <!-- Seção de Segmentação Cliente -->
-                                        <div class="mb-4">
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">Segmentação
-                                                Cliente</label>
-                                            <div class="flex items-center mb-2">
-                                                <input type="checkbox" :id="'select_all_segmentacoes_cliente_' + index"
-                                                    @change="
-                                                        if ($event.target.checked) {
-                                                            campo.segmentacoes_cliente = {{ $segmentacoesCliente->pluck('id') }};
-                                                        } else {
-                                                            campo.segmentacoes_cliente = [];
-                                                        }
-                                                    "
-                                                    :checked="campo.segmentacoes_cliente.length ===
-                                                        {{ $segmentacoesCliente->count() }}"
-                                                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                                <label :for="'select_all_segmentacoes_cliente_' + index"
-                                                    class="ml-2 block text-sm text-gray-900">
-                                                    Selecionar todos
-                                                </label>
-                                            </div>
-                                            @if ($segmentacoesCliente->count() > 0)
-                                                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                                                    @foreach ($segmentacoesCliente as $segmentacao)
-                                                        <label class="flex items-center space-x-2 text-sm">
+                                            @php
+                                                $mesesPeriodoVendas = [
+                                                    ['value' => 1, 'label' => 'Jan'],
+                                                    ['value' => 2, 'label' => 'Fev'],
+                                                    ['value' => 3, 'label' => 'Mar'],
+                                                    ['value' => 4, 'label' => 'Abr'],
+                                                    ['value' => 5, 'label' => 'Mai'],
+                                                    ['value' => 6, 'label' => 'Jun'],
+                                                    ['value' => 7, 'label' => 'Jul'],
+                                                    ['value' => 8, 'label' => 'Ago'],
+                                                    ['value' => 9, 'label' => 'Set'],
+                                                    ['value' => 10, 'label' => 'Out'],
+                                                    ['value' => 11, 'label' => 'Nov'],
+                                                    ['value' => 12, 'label' => 'Dez'],
+                                                ];
+                                            @endphp
+                                            <div class="col-span-full">
+                                                <label class="block text-sm font-medium text-gray-700">Período de
+                                                    Vendas</label>
+                                                <div
+                                                    class="grid grid-cols-3 md:grid-cols-6 gap-2 p-3 border border-gray-200 rounded-md bg-white">
+                                                    @foreach ($mesesPeriodoVendas as $mes)
+                                                        <label class="inline-flex items-center">
                                                             <input type="checkbox"
-                                                                :name="`color_segmentacoes_cliente[${index}][]`"
-                                                                value="{{ $segmentacao->id }}"
-                                                                :checked="campo.segmentacoes_cliente.includes(
-                                                                    {{ $segmentacao->id }})"
-                                                                @change="
-                                                                    if ($event.target.checked) {
-                                                                        if (!campo.segmentacoes_cliente.includes({{ $segmentacao->id }})) {
-                                                                            campo.segmentacoes_cliente.push({{ $segmentacao->id }});
-                                                                        }
-                                                                    } else {
-                                                                        campo.segmentacoes_cliente = campo.segmentacoes_cliente.filter(id => id !== {{ $segmentacao->id }});
-                                                                    }
-                                                                "
-                                                                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                                            <span>{{ $segmentacao->nome }}</span>
+                                                                :name="`color_periodo_vendas[${index}][]`"
+                                                                x-model="campo.color_periodo_vendas"
+                                                                :value="{{ $mes['value'] }}"
+                                                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                            <span
+                                                                class="ml-2 text-xs text-gray-700">{{ $mes['label'] }}</span>
                                                         </label>
                                                     @endforeach
                                                 </div>
+                                            </div>
+
+                                            <!-- Coluna 6.1: Grade (por cor) -->
+                                            <!--<div class="col-span-full">
+                                                                                <label class="block text-sm font-medium text-gray-700">Grade</label>
+                                                                                @foreach ($shoeGridGroups as $group)
+    <div class="mb-3">
+                                                                                        <h4 class="text-sm font-medium text-gray-700 mb-2">
+                                                                                            {{ $group->name }}</h4>
+                                                                                        <div
+                                                                                            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-3 border border-gray-200 rounded-md bg-gray-50 max-h-32 overflow-y-auto">
+                                                                                            @foreach ($group->grids as $grid)
+    <label class="flex items-center text-xs">
+                                                                                                    <input type="checkbox"
+                                                                                                        :name="`color_shoe_grid_ids[${index}][]`"
+                                                                                                        :value="{{ $grid->id }}"
+                                                                                                        x-model="campo.color_shoe_grid_ids"
+                                                                                                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                                                                    <span class="ml-2 text-sm text-gray-700">
+                                                                                                        {{ $grid->code }}{{ $grid->description ? ' - ' . $grid->description : '' }}
+                                                                                                    </span>
+                                                                                                </label>
+    @endforeach
+                                                                                        </div>
+                                                                                    </div>
+    @endforeach
+                                                                            </div>-->
+
+                                            <!-- Coluna 5: Flag -->
+                                            <div class="col-span-full">
+                                                <label class="block text-sm font-medium text-gray-700">Flags</label>
+                                                <div
+                                                    class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-3 border border-gray-200 rounded-md bg-gray-50 max-h-32 overflow-y-auto">
+                                                    @foreach ($flags as $flag)
+                                                        <label class="flex items-center text-xs">
+                                                            <input type="checkbox"
+                                                                :name="`color_flag_product_ids[${index}][]`"
+                                                                :value="{{ $flag->id }}"
+                                                                x-model="campo.color_flag_product_ids"
+                                                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                            <span
+                                                                class="ml-2 text-sm text-gray-700">{{ $flag->flag_title }}</span>
+                                                        </label>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- Coluna 6: Segmentação Cliente -->
+                                        <div class="col-span-full">
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Segmentações de
+                                                Cliente</label>
+                                            @if (isset($segmentacoesCliente) && $segmentacoesCliente->count() > 0)
+                                                <div class="flex items-center mb-2">
+                                                    <input type="checkbox"
+                                                        :id="'select_all_segmentacoes_cliente_' + index"
+                                                        @change="
+                                                            if ($event.target.checked) {
+                                                                campo.segmentacoes_cliente = {{ $segmentacoesCliente->pluck('id') }};
+                                                            } else {
+                                                                campo.segmentacoes_cliente = [];
+                                                            }
+                                                        "
+                                                        :checked="campo.segmentacoes_cliente && campo.segmentacoes_cliente
+                                                            .length === {{ $segmentacoesCliente->count() }}"
+                                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                                    <label :for="'select_all_segmentacoes_cliente_' + index"
+                                                        class="ml-2 block text-sm text-gray-900">
+                                                        Selecionar todos
+                                                    </label>
+                                                </div>
+                                                <div
+                                                    class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-3 border border-gray-200 rounded-md bg-gray-50 max-h-32 overflow-y-auto">
+                                                    @foreach ($segmentacoesCliente as $segmentacaoCliente)
+                                                        <label class="flex items-center text-xs">
+                                                            <input type="checkbox"
+                                                                :name="`color_segmentacoes_cliente[${index}][]`"
+                                                                :value="{{ $segmentacaoCliente->id }}"
+                                                                :checked="campo.segmentacoes_cliente && campo
+                                                                    .segmentacoes_cliente
+                                                                    .includes({{ $segmentacaoCliente->id }})"
+                                                                @change="
+                                                       if ($event.target.checked) {
+                                                           if (!campo.segmentacoes_cliente) campo.segmentacoes_cliente = [];
+                                                           if (!campo.segmentacoes_cliente.includes({{ $segmentacaoCliente->id }})) {
+                                                               campo.segmentacoes_cliente.push({{ $segmentacaoCliente->id }});
+                                                           }
+                                                       } else {
+                                                           if (campo.segmentacoes_cliente) {
+                                                               campo.segmentacoes_cliente = campo.segmentacoes_cliente.filter(id => id !== {{ $segmentacaoCliente->id }});
+                                                           }
+                                                       }
+                                                   "
+                                                                class="h-3 w-3 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-1">
+                                                            <span
+                                                                class="text-gray-700">{{ $segmentacaoCliente->nome }}</span>
+                                                        </label>
+                                                    @endforeach
+                                                </div>
+                                                <p class="mt-1 text-xs text-gray-500">Selecione as segmentações de
+                                                    cliente
+                                                    para esta cor</p>
                                             @else
-                                                <p class="text-sm text-gray-500">Nenhuma segmentação de cliente disponível.
-                                                </p>
+                                                <div class="p-3 border border-gray-200 rounded-md bg-gray-50 text-center">
+                                                    <p class="text-xs text-gray-500 mb-1">Nenhuma segmentação de
+                                                        cliente
+                                                        disponível.</p>
+                                                    <a href="{{ route('admin.segmentacao-cliente.create') }}"
+                                                        class="text-blue-600 hover:text-blue-800 text-xs font-medium">
+                                                        Criar nova segmentação de cliente
+                                                    </a>
+                                                </div>
                                             @endif
                                         </div>
 
-                                        <!-- Botões de ação -->
-                                        <div class="flex items-center justify-start space-x-2">
+                                        <!-- Coluna 7: CTAS -->
+                                        <div class="mt-6 flex items-start justify-start w-auto">
                                             <button type="button" @click="adicionarCampo()"
-                                                class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-sm">+
-                                                Adicionar Cor</button>
+                                                class="px-3 py-1 h-8 mr-2 bg-green-500 text-white rounded hover:bg-green-600">+</button>
 
                                             <template x-if="campos.length > 1">
                                                 <button type="button" @click="removerCampo(index)"
-                                                    class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm">−
-                                                    Remover</button>
+                                                    class="px-3 py-1 h-8 bg-red-500 text-white rounded hover:bg-red-600">−</button>
                                             </template>
                                         </div>
                                     </div>
@@ -314,12 +418,15 @@
                         <legend class="block text-sm font-medium text-gray-700">Características do produto
                         </legend>
                         <div x-data="{
-                            campos: [{ caracteristica_title: '', caracteristica_description: '', caracteristica_destaque: '' }],
+                            campos: [{ caracteristica_title: '', caracteristica_description: '', caracteristica_destaque: 0 }],
                             adicionarCampo() {
-                                this.campos.push({ caracteristica_title: '', caracteristica_description: '', caracteristica_destaque: '' });
+                                this.campos.push({ caracteristica_title: '', caracteristica_description: '', caracteristica_destaque: 0 });
                             },
                             removerCampo(index) {
                                 this.campos.splice(index, 1);
+                                if (this.campos.length === 0) {
+                                    this.campos.push({ caracteristica_title: '', caracteristica_description: '', caracteristica_destaque: 0 });
+                                }
                             }
                         }">
 
@@ -389,6 +496,9 @@
                             },
                             removerCampo(index) {
                                 this.campos.splice(index, 1);
+                                if (this.campos.length === 0) {
+                                    this.campos.push({ size_id: '', stock: '' });
+                                }
                             }
                         }">
                             <div class="grid grid-cols-1 md:grid-cols-1">
@@ -441,6 +551,9 @@
                             },
                             removerCampo(index) {
                                 this.campos.splice(index, 1);
+                                if (this.campos.length === 0) {
+                                    this.campos.push({ numeracao_id: '', stock: '' });
+                                }
                             }
                         }">
                             <div class="grid grid-cols-1 md:grid-cols-1">
@@ -564,15 +677,6 @@
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Classificações com
                                                 acesso</label>
                                             <div class="space-y-1">
-                                                @php
-                                                    $accessLevels = [
-                                                        'representante',
-                                                        'interno',
-                                                        'fornecedor',
-                                                        'convidado',
-                                                        'cliente',
-                                                    ];
-                                                @endphp
                                                 @foreach ($accessLevels as $level)
                                                     <label class="inline-flex items-center mr-4">
                                                         <input type="checkbox" :name="`access_levels[${index}][]`"

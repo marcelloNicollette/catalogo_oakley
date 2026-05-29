@@ -13,6 +13,7 @@ use App\Models\FlagProduct;
 use App\Models\Numeracao;
 use App\Models\Product;
 use App\Models\Segmentacao;
+use App\Models\SegmentacaoCliente;
 use App\Models\SharedCollection;
 use App\Models\Size;
 use App\Models\TechnologyCategory;
@@ -21,6 +22,7 @@ use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rules;
 
 class frontendController extends Controller
@@ -115,7 +117,7 @@ class frontendController extends Controller
             $query->where('active', true);
         }
 
-        $colecoes = $query->get();
+        $colecoes = $query->orderBy('id', 'desc')->get();
         $data_years = Collection::pluck('created_at')->map(function ($item) {
             return date('Y', strtotime($item));
         })->unique()->sort(function ($a, $b) {
@@ -159,7 +161,7 @@ class frontendController extends Controller
         //dd($this->getSelectedSegmentacoes($request));
         $segmentacao = Segmentacao::where('slug', $slug)->first();
         $colecoes = Collection::where('segmentacao_id', $segmentacao->id)->get();
-        $categories = Category::where('segmento_id', $segmentacao->id)->get();
+        //$categories = Category::where('segmento_id', $segmentacao->id)->get();
 
         $colecao = Collection::where('slug', $colecao)->first();
 
@@ -174,7 +176,7 @@ class frontendController extends Controller
         $userSegmentacoesCliente = $user->segmentacoesCliente;
 
         $produtosQuery = Color::where('collection_id', $colecao->id)
-            ->with(['product', 'product.caracteristicasDestaque', 'product.category', 'flagProduct', 'segmentacoesCliente'])->orderBy('product_id', 'asc');
+            ->with(['product', 'product.caracteristicasDestaque', 'product.category', 'flagProduct', 'flagProducts', 'segmentacoesCliente'])->orderBy('product_id', 'asc');
 
         // Verificar se há segmentações selecionadas no request (vindas do modal)
         $selectedSegmentacoes = $request->input('selected_segmentacoes');
@@ -196,6 +198,47 @@ class frontendController extends Controller
         //dd($produtos->first()->segmentacoesCliente);
         //dd($produtos->first()->product);
 
+        foreach ($produtos as $produto) {
+
+            // Validação para garantir que o produto tenha ID e evitar erros na busca
+            $segmentacoesDaCor = collect([]);
+
+            if (isset($produto->id)) {
+                $segmentacoesDaCor = SegmentacaoCliente::whereHas('colors', function ($query) use ($produto) {
+                    $query->where('colors.id', $produto->id);
+                })->get();
+            }
+
+            // Inclui as segmentações como um relacionamento no objeto produto
+            $produto->setRelation('segmentacoesCliente', $segmentacoesDaCor);
+        }
+        //dd($produtos->first());
+
+        $availableCategoryIds = $produtos->pluck('product.category_id')->filter()->unique()->values()->all();
+        $availableSubcategoryIds = $produtos->pluck('product.subcategory_id')->filter()->unique()->values()->all();
+
+        $categoriesQuery = Category::where('segmento_id', $segmentacao->id)->orderBy('name', 'asc');
+
+        if (count($availableCategoryIds) > 0) {
+            $categoriesQuery->whereIn('id', $availableCategoryIds);
+        } else {
+            $categoriesQuery->whereRaw('1 = 0');
+        }
+
+        $categoriesQuery->with([
+            'subcategories' => function ($query) use ($availableSubcategoryIds) {
+                if (count($availableSubcategoryIds) > 0) {
+                    $query->whereIn('id', $availableSubcategoryIds);
+                } else {
+                    $query->whereRaw('1 = 0');
+                }
+
+                $query->ordered();
+            }
+        ]);
+
+        $categories = $categoriesQuery->get();
+
         return view('user.produtos', ['colecoes' => $colecoes, 'colecao' => $colecao, 'produtos' => $produtos, 'categories' => $categories, 'numeracao' => $numeracao, 'tamanhos' => $tamanhos, 'flags' => $flags]);
     }
     public function detalhe_produto($slug, $colecao, $produto, $codigo_cor)
@@ -210,6 +253,12 @@ class frontendController extends Controller
         $user = Auth::user();
         $userSegmentacoesCliente = $user->segmentacoesCliente;
 
+        $hasColorFlagProductTable = Schema::hasTable('color_flag_product');
+        $colorRelations = ['numeracao', 'segmentacoesCliente', 'flagProduct'];
+        if ($hasColorFlagProductTable) {
+            $colorRelations[] = 'flagProducts';
+        }
+
         // Buscar o produto com suas relações
         $produto = Product::where('code', $produto)->with(['category', 'sizes', 'numeracoes', 'caracteristicas', 'links', 'caracteristicasDestaque', 'colors'])->first();
 
@@ -221,12 +270,12 @@ class frontendController extends Controller
                     $segmentacaoIds = $userSegmentacoesCliente->pluck('id')->toArray();
                     $query->whereIn('segmentacao_cliente_id', $segmentacaoIds);
                 })
-                ->with(['segmentacoesCliente', 'flagProduct']);
+                ->with($colorRelations);
         } else {
             // Se o usuário não tem segmentações de cliente, buscar todas as cores
             $allColorsQuery = Color::where('product_id', $produto->id)
                 ->where('collection_id', $colecao->id)
-                ->with(['segmentacoesCliente', 'flagProduct']);
+                ->with($colorRelations);
         }
 
         // Se $codigo_cor foi fornecido, ordenar para que essa cor seja a primeira
@@ -252,7 +301,7 @@ class frontendController extends Controller
 
         $produtos = $produtosQuery->get()->groupBy('product_id');
 
-        return view('user.detalhe-produto', ['produto' => $produto]);
+        return view('user.detalhe-produto', ['produto' => $produto, 'hasColorFlagProductTable' => $hasColorFlagProductTable]);
     }
 
     public function detalhe_produto_translate($slug, $colecao, $produto, $codigo_cor)
@@ -265,6 +314,13 @@ class frontendController extends Controller
         $user = Auth::user();
         $userSegmentacoesCliente = $user->segmentacoesCliente;
 
+        $hasColorFlagProductTable = Schema::hasTable('color_flag_product');
+        $colorRelations = ['numeracao', 'segmentacoesCliente', 'flagProduct'];
+        if ($hasColorFlagProductTable) {
+            $colorRelations[] = 'flagProducts';
+        }
+
+
         // Buscar o produto com suas relações
         $produto = Product::where('code', $produto)->with(['category', 'sizes', 'numeracoes', 'caracteristicas', 'links', 'caracteristicasDestaque', 'colors'])->first();
 
@@ -275,11 +331,11 @@ class frontendController extends Controller
                     $segmentacaoIds = $userSegmentacoesCliente->pluck('id')->toArray();
                     $query->whereIn('segmentacao_cliente_id', $segmentacaoIds);
                 })
-                ->with(['numeracao', 'segmentacoesCliente', 'flagProduct']);
+                ->with($colorRelations);
         } else {
             // Se o usuário não tem segmentações de cliente, buscar todas as cores
             $allColorsQuery = Color::where('product_id', $produto->id)
-                ->with(['numeracao', 'segmentacoesCliente', 'flagProduct']);
+                ->with($colorRelations);
         }
 
         // Se $codigo_cor foi fornecido, ordenar para que essa cor seja a primeira
@@ -305,7 +361,7 @@ class frontendController extends Controller
 
         $produtos = $produtosQuery->get()->groupBy('product_id');
 
-        return view('user.detalhe-produto-translate', ['produto' => $produto]);
+        return view('user.detalhe-produto-translate', ['produto' => $produto, 'hasColorFlagProductTable' => $hasColorFlagProductTable]);
     }
 
 
@@ -313,7 +369,11 @@ class frontendController extends Controller
     {
         $tecnologia_categoria = TechnologyCategory::get();
 
-        $tecnologias = TechnologyCategory::where('active', 1)->with('items')->get();
+        $tecnologias = TechnologyCategory::where('active', 1)
+            ->with(['items' => function ($query) {
+                $query->reorder()->orderByRaw('TRIM(name) asc')->orderBy('id');
+            }])
+            ->get();
 
 
         return view('user.tecnologias', ['tecnologia_categoria' => $tecnologia_categoria, 'tecnologias' => $tecnologias]);
@@ -419,7 +479,7 @@ class frontendController extends Controller
             $colecoes->where('active', true);
         }
 
-        $colecoes = $colecoes->get();
+        $colecoes = $colecoes->orderBy('id', 'desc')->get();
         //dd($categorias);
 
         $data_years = Collection::pluck('created_at')->map(function ($item) {

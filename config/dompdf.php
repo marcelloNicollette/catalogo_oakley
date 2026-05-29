@@ -16,7 +16,7 @@ return [
         'pdf_backend' => 'CPDF',
         'default_media_type' => 'screen',
         'default_paper_size' => 'a4',
-        'default_font' => 'Neue-Plak',
+        'default_font' => 'AktivGrotesk',
         'dpi' => 96,
         'enable_php' => false,
         'enable_javascript' => true,
@@ -30,44 +30,47 @@ return [
 
     // Registro da fonte
     'custom_font_data' => [
-        // Registra com o mesmo nome usado nos templates
+        'AktivGrotesk' => [
+            'R' => 'AktivGrotesk-Regular.ttf',
+            'B' => 'AktivGrotesk-Bold.ttf',
+            'I' => 'AktivGrotesk-Italic.ttf',
+            'BI' => 'AktivGrotesk-BoldItalic.ttf',
+        ],
         'Neue-Plak' => [
-            'R' => 'Neue-Plak-Regular.ttf', // relativo ao custom_font_dir
-            'B' => 'Neue-Plak-Bold.ttf',
-            'I' => 'Neue-Plak-Regular.ttf',
-            'BI' => 'Neue-Plak-Bold.ttf',
+            'R' => 'AktivGrotesk-Regular.ttf',
+            'B' => 'AktivGrotesk-Bold.ttf',
+            'I' => 'AktivGrotesk-Italic.ttf',
+            'BI' => 'AktivGrotesk-BoldItalic.ttf',
         ],
-        // Alias para compatibilidade com outros templates
         'neueplak' => [
-            'R' => 'Neue-Plak-Regular.ttf',
-            'B' => 'Neue-Plak-Bold.ttf',
-            'I' => 'Neue-Plak-Regular.ttf',
-            'BI' => 'Neue-Plak-Bold.ttf',
+            'R' => 'AktivGrotesk-Regular.ttf',
+            'B' => 'AktivGrotesk-Bold.ttf',
+            'I' => 'AktivGrotesk-Italic.ttf',
+            'BI' => 'AktivGrotesk-BoldItalic.ttf',
         ],
-        // Famílias específicas por variação
         'Neue-Plak-Thin' => [
-            'R' => 'Neue-Plak-Thin.ttf',
-            'B' => 'Neue-Plak-Bold.ttf',
-            'I' => 'Neue-Plak-Thin.ttf',
-            'BI' => 'Neue-Plak-Bold.ttf',
+            'R' => 'AktivGrotesk-Thin.ttf',
+            'B' => 'AktivGrotesk-Bold.ttf',
+            'I' => 'AktivGrotesk-ThinItalic.ttf',
+            'BI' => 'AktivGrotesk-BoldItalic.ttf',
         ],
         'Neue-Plak-Light' => [
-            'R' => 'Neue-Plak-Light.ttf',
-            'B' => 'Neue-Plak-Bold.ttf',
-            'I' => 'Neue-Plak-Light.ttf',
-            'BI' => 'Neue-Plak-Bold.ttf',
+            'R' => 'AktivGrotesk-Light.ttf',
+            'B' => 'AktivGrotesk-Bold.ttf',
+            'I' => 'AktivGrotesk-LightItalic.ttf',
+            'BI' => 'AktivGrotesk-BoldItalic.ttf',
         ],
         'Neue-Plak-SemiBold' => [
-            'R' => 'Neue-Plak-SemiBold.ttf',
-            'B' => 'Neue-Plak-Bold.ttf',
-            'I' => 'Neue-Plak-SemiBold.ttf',
-            'BI' => 'Neue-Plak-Bold.ttf',
+            'R' => 'AktivGrotesk-Medium.ttf',
+            'B' => 'AktivGrotesk-Bold.ttf',
+            'I' => 'AktivGrotesk-MediumItalic.ttf',
+            'BI' => 'AktivGrotesk-BoldItalic.ttf',
         ],
         'Neue-Plak-Black' => [
-            'R' => 'Neue-Plak-Black.ttf',
-            'B' => 'Neue-Plak-Bold.ttf',
-            'I' => 'Neue-Plak-Black.ttf',
-            'BI' => 'Neue-Plak-Bold.ttf',
+            'R' => 'AktivGrotesk-Black.ttf',
+            'B' => 'AktivGrotesk-Bold.ttf',
+            'I' => 'AktivGrotesk-BlackItalic.ttf',
+            'BI' => 'AktivGrotesk-BoldItalic.ttf',
         ],
     ],
 

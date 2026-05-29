@@ -16,7 +16,7 @@
             </div>
 
             <button id="sendSuggestion"
-                class="w-full bg-black  text-white font-normal py-3 px-4 rounded-full transition-colors text-base">
+                class="w-full bg-white text-black border border-black font-normal py-3 px-4 rounded-full hover:bg-[#E7E7E7] transition-colors text-base">
                 Enviar sugestão
             </button>
 

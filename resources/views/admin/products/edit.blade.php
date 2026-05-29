@@ -65,7 +65,7 @@
 
                         <input type="number" step="0.01" name="price" id="price"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            value="{{ old('price', str_replace(',', '.', $product->price)) }}" required>
+                            value="{{ trim($product->price) }}" required>
                         @error('price')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -122,23 +122,46 @@
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    <div class="">
-                        <label for="silhueta" class="block text-sm font-medium text-gray-700">Silhueta</label>
-                        <input type="text" name="silhueta" id="silhueta"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            value="{{ old('silhueta', $product->silhueta) }}">
-                        @error('silhueta')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
                 </div>
 
                 <div class="mb-4">
                     <fieldset class="border border-1 bg-gray-100">
                         <legend class="block text-sm font-medium text-gray-700">Cores disponíveis
                         </legend>
-                        <div x-data="cores()">
+                        <div x-data="{
+                            campos: @js($colorsForm),
+                            adicionarCampo() {
+                                this.campos.push({
+                                    color_name: '',
+                                    color_description: '',
+                                    color_code: '',
+                                    color_genero: 'Masculino',
+                                    color_collection_id: '',
+                                    color_flag_product_ids: [],
+                                    color_shoe_grid_ids: [],
+                                    color_numeracao_id: '',
+                                    segmentacoes_cliente: [],
+                                    color_periodo_vendas: [],
+                                });
+                            },
+                            removerCampo(index) {
+                                this.campos.splice(index, 1);
+                                if (this.campos.length === 0) {
+                                    this.campos.push({
+                                        color_name: '',
+                                        color_description: '',
+                                        color_code: '',
+                                        color_genero: 'Masculino',
+                                        color_collection_id: '',
+                                        color_flag_product_ids: [],
+                                        color_shoe_grid_ids: [],
+                                        color_numeracao_id: '',
+                                        segmentacoes_cliente: [],
+                                        color_periodo_vendas: [],
+                                    });
+                                }
+                            }
+                        }">
 
                             <div class="grid grid-cols-1 ">
                                 <template x-for="(campo, index) in campos" :key="index">
@@ -171,10 +194,10 @@
                                                 <label class="block text-sm font-medium text-gray-700">Gênero</label>
                                                 <select :name="`color_genero[]`" x-model="campo.color_genero"
                                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                    <option value="Infantil">Infantil</option>
                                                     <option value="Masculino">Masculino</option>
                                                     <option value="Feminino">Feminino</option>
                                                     <option value="Unissex">Unissex</option>
+                                                    <option value="Infantil">Infantil</option>
                                                 </select>
                                             </div>
                                             <!-- Coluna 4: Coleção -->
@@ -188,21 +211,6 @@
                                                         <option value="{{ $collection->id }}"
                                                             {{ old('collection_id') == $collection->id ? 'selected' : '' }}>
                                                             {{ $collection->codigo_colecao . ' - ' . $collection->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <!-- Coluna 5: Flag -->
-                                            <div>
-                                                <label class="block text-sm font-medium text-gray-700">Flag</label>
-                                                <select :name="`color_flag_product_id[]`"
-                                                    x-model="campo.color_flag_product_id"
-                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                    <option value="">Selecione a Flag</option>
-                                                    @foreach ($flags as $flag)
-                                                        <option value="{{ $flag->id }}"
-                                                            {{ old('flag_product_id') == $flag->id ? 'selected' : '' }}>
-                                                            {{ $flag->flag_title }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -222,15 +230,97 @@
                                                     @endforeach
                                                 </select>
                                             </div>
+
+                                            @php
+                                                $mesesPeriodoVendas = [
+                                                    ['value' => 1, 'label' => 'Jan'],
+                                                    ['value' => 2, 'label' => 'Fev'],
+                                                    ['value' => 3, 'label' => 'Mar'],
+                                                    ['value' => 4, 'label' => 'Abr'],
+                                                    ['value' => 5, 'label' => 'Mai'],
+                                                    ['value' => 6, 'label' => 'Jun'],
+                                                    ['value' => 7, 'label' => 'Jul'],
+                                                    ['value' => 8, 'label' => 'Ago'],
+                                                    ['value' => 9, 'label' => 'Set'],
+                                                    ['value' => 10, 'label' => 'Out'],
+                                                    ['value' => 11, 'label' => 'Nov'],
+                                                    ['value' => 12, 'label' => 'Dez'],
+                                                ];
+                                            @endphp
+                                            <div class="col-span-full">
+                                                <label class="block text-sm font-medium text-gray-700">Período de
+                                                    Vendas</label>
+                                                <div
+                                                    class="grid grid-cols-3 md:grid-cols-6 gap-2 p-3 border border-gray-200 rounded-md bg-white">
+                                                    @foreach ($mesesPeriodoVendas as $mes)
+                                                        <label class="inline-flex items-center">
+                                                            <input type="checkbox"
+                                                                :name="`color_periodo_vendas[${index}][]`"
+                                                                x-model="campo.color_periodo_vendas"
+                                                                :value="{{ $mes['value'] }}"
+                                                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                            <span
+                                                                class="ml-2 text-xs text-gray-700">{{ $mes['label'] }}</span>
+                                                        </label>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+
+                                            <!-- Coluna 6.1: Grade (por cor) -->
+                                            <!--<div class="col-span-full">
+                                                                <label class="block text-sm font-medium text-gray-700">Grade</label>
+                                                                @foreach ($shoeGridGroups as $group)
+    <div class="mb-3">
+                                                                        <h4 class="text-sm font-medium text-gray-700 mb-2">
+                                                                            {{ $group->name }}</h4>
+                                                                        <div
+                                                                            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-3 border border-gray-200 rounded-md bg-gray-50 max-h-32 overflow-y-auto">
+                                                                            @foreach ($group->grids as $grid)
+    <label class="flex items-center text-xs">
+                                                                                    <input type="checkbox"
+                                                                                        :name="`color_shoe_grid_ids[${index}][]`"
+                                                                                        :value="{{ $grid->id }}"
+                                                                                        x-model="campo.color_shoe_grid_ids"
+                                                                                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                                                    <span class="ml-2 text-sm text-gray-700">
+                                                                                        {{ $grid->code }}{{ $grid->description ? ' - ' . $grid->description : '' }}
+                                                                                    </span>
+                                                                                </label>
+    @endforeach
+                                                                        </div>
+                                                                    </div>
+    @endforeach
+                                                            </div>-->
+
+                                            <!-- Coluna 5: Flag -->
+                                            <div class="col-span-full">
+                                                <label class="block text-sm font-medium text-gray-700">Flags</label>
+                                                <div
+                                                    class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-3 border border-gray-200 rounded-md bg-gray-50 max-h-32 overflow-y-auto">
+                                                    @foreach ($flags as $flag)
+                                                        <label class="flex items-center text-xs">
+                                                            <input type="checkbox"
+                                                                :name="`color_flag_product_ids[${index}][]`"
+                                                                :value="{{ $flag->id }}"
+                                                                x-model="campo.color_flag_product_ids"
+                                                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                            <span
+                                                                class="ml-2 text-sm text-gray-700">{{ $flag->flag_title }}</span>
+                                                        </label>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+
                                         </div>
 
                                         <!-- Coluna 6: Segmentação Cliente -->
-                                        <div class="md:col-span-5">
+                                        <div class="col-span-full">
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Segmentações de
                                                 Cliente</label>
                                             @if (isset($segmentacoesCliente) && $segmentacoesCliente->count() > 0)
                                                 <div class="flex items-center mb-2">
-                                                    <input type="checkbox" :id="'select_all_segmentacoes_cliente_' + index"
+                                                    <input type="checkbox"
+                                                        :id="'select_all_segmentacoes_cliente_' + index"
                                                         @change="
                                                             if ($event.target.checked) {
                                                                 campo.segmentacoes_cliente = {{ $segmentacoesCliente->pluck('id') }};
@@ -253,7 +343,8 @@
                                                             <input type="checkbox"
                                                                 :name="`color_segmentacoes_cliente[${index}][]`"
                                                                 :value="{{ $segmentacaoCliente->id }}"
-                                                                :checked="campo.segmentacoes_cliente && campo.segmentacoes_cliente
+                                                                :checked="campo.segmentacoes_cliente && campo
+                                                                    .segmentacoes_cliente
                                                                     .includes({{ $segmentacaoCliente->id }})"
                                                                 @change="
                                                        if ($event.target.checked) {
@@ -273,11 +364,13 @@
                                                         </label>
                                                     @endforeach
                                                 </div>
-                                                <p class="mt-1 text-xs text-gray-500">Selecione as segmentações de cliente
+                                                <p class="mt-1 text-xs text-gray-500">Selecione as segmentações de
+                                                    cliente
                                                     para esta cor</p>
                                             @else
                                                 <div class="p-3 border border-gray-200 rounded-md bg-gray-50 text-center">
-                                                    <p class="text-xs text-gray-500 mb-1">Nenhuma segmentação de cliente
+                                                    <p class="text-xs text-gray-500 mb-1">Nenhuma segmentação de
+                                                        cliente
                                                         disponível.</p>
                                                     <a href="{{ route('admin.segmentacao-cliente.create') }}"
                                                         class="text-blue-600 hover:text-blue-800 text-xs font-medium">
@@ -309,29 +402,29 @@
                     <fieldset class="border border-1 bg-gray-100">
                         <legend class="block text-sm font-medium text-gray-700">Características do produto
                         </legend>
-                        <div x-data="caracteristicas()">
-                            <div class="grid grid-cols-1 md:grid-cols-1" id="caracteristicas-container">
-                                <template x-for="(campo, index) in campos" :key="campo.id + '-' + forceUpdate">
-                                    <div class="grid grid-cols-1 md:grid-cols-[0.1fr_1fr_1fr_0.3fr_auto] gap-2 bg-gray-100 p-4 cursor-move hover:bg-gray-50 border border-gray-200 rounded-lg relative group transition-all duration-200"
-                                        :id="'caracteristica-' + campo.id">
-                                        <!-- Ícone de arrastar -->
-                                        <div alt="Arrastar" class="flex items-center justify-center px-2">
-                                            <div class="" title="Arraste para reordenar">
-                                                <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-600"
-                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <!-- Linha vertical -->
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M12 4v16" />
-                                                    <!-- Seta para cima -->
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M8 8l4-4 4 4" />
-                                                    <!-- Seta para baixo -->
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M16 16l-4 4-4-4" />
-                                                </svg>
-                                            </div>
-                                        </div>
-                                        <!-- Coluna 1: Título -->
+                        <div x-data="{
+                            campos: @js($caracteristicasForm),
+                            adicionarCampo() {
+                                this.campos.push({
+                                    caracteristica_title: '',
+                                    caracteristica_description: '',
+                                    caracteristica_destaque: 0,
+                                });
+                            },
+                            removerCampo(index) {
+                                this.campos.splice(index, 1);
+                                if (this.campos.length === 0) {
+                                    this.campos.push({
+                                        caracteristica_title: '',
+                                        caracteristica_description: '',
+                                        caracteristica_destaque: 0,
+                                    });
+                                }
+                            }
+                        }">
+                            <div class="grid grid-cols-1 md:grid-cols-1">
+                                <template x-for="(campo, index) in campos" :key="index">
+                                    <div class="grid grid-cols-1 md:grid-cols-[1fr_1fr_0.3fr_auto] gap-2  bg-gray-100 p-4">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700">Título</label>
                                             <input type="text" :name="`caracteristica_title[]`"
@@ -340,7 +433,6 @@
                                                 name="caracteristica_title[]">
                                         </div>
 
-                                        <!-- Coluna 2: Descrição -->
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700">Descrição</label>
                                             <textarea :name="`caracteristica_description[]`" x-model="campo.caracteristica_description"
@@ -358,10 +450,10 @@
                                                 @change="campo.caracteristica_destaque = $event.target.checked ? 1 : 0">
                                         </div>
 
-                                        <!-- Coluna 3: Botões -->
                                         <div class="mt-6 flex items-start justify-start w-auto">
                                             <button type="button" @click="adicionarCampo()"
                                                 class="px-3 py-1 h-8 mr-2 bg-green-500 text-white rounded hover:bg-green-600">+</button>
+
                                             <template x-if="campos.length > 1">
                                                 <button type="button" @click="removerCampo(index)"
                                                     class="px-3 py-1 h-8 bg-red-500 text-white rounded hover:bg-red-600">−</button>
@@ -377,7 +469,18 @@
                 <div class="mb-4">
                     <fieldset class="border border-1 bg-gray-100">
                         <legend class="block text-sm font-medium text-gray-700">Tamanhos disponíveis</legend>
-                        <div x-data="sizes()" x-init="init">
+                        <div x-data="{
+                            campos: @js($sizesForm),
+                            adicionarCampo() {
+                                this.campos.push({ size_id: '', stock: '' });
+                            },
+                            removerCampo(index) {
+                                this.campos.splice(index, 1);
+                                if (this.campos.length === 0) {
+                                    this.campos.push({ size_id: '', stock: '' });
+                                }
+                            }
+                        }">
                             <div class="grid grid-cols-1 md:grid-cols-1">
                                 <template x-for="(campo, index) in campos" :key="index">
                                     <div class="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2 bg-gray-100 px-4 py-2">
@@ -422,7 +525,18 @@
                 <div class="mb-4">
                     <fieldset class="border border-1 bg-gray-100">
                         <legend class="block text-sm font-medium text-gray-700">Numerações disponíveis</legend>
-                        <div x-data="numeracoes()" x-init="init">
+                        <div x-data="{
+                            campos: @js($numeracoesForm),
+                            adicionarCampo() {
+                                this.campos.push({ numeracao_id: '', stock: '' });
+                            },
+                            removerCampo(index) {
+                                this.campos.splice(index, 1);
+                                if (this.campos.length === 0) {
+                                    this.campos.push({ numeracao_id: '', stock: '' });
+                                }
+                            }
+                        }">
                             <div class="grid grid-cols-1 md:grid-cols-1">
                                 <template x-for="(campo, index) in campos" :key="index">
                                     <div class="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2 bg-gray-100 px-4 py-2">
@@ -507,7 +621,18 @@
                     <fieldset class="border border-1 bg-gray-100">
                         <legend class="block text-sm font-medium text-gray-700">Arquivos ou Links
                         </legend>
-                        <div x-data="links()" x-init="init">
+                        <div x-data="{
+                            campos: @js($linksForm),
+                            adicionarCampo() {
+                                this.campos.push({ link_title: '', link_url: '', access_levels: [] });
+                            },
+                            removerCampo(index) {
+                                this.campos.splice(index, 1);
+                                if (this.campos.length === 0) {
+                                    this.campos.push({ link_title: '', link_url: '', access_levels: [] });
+                                }
+                            }
+                        }">
 
                             <div class="grid grid-cols-1 md:grid-cols-1">
                                 <template x-for="(campo, index) in campos" :key="index">
@@ -532,15 +657,6 @@
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Classificações com
                                                 acesso</label>
                                             <div class="space-y-1">
-                                                @php
-                                                    $accessLevels = [
-                                                        'representante',
-                                                        'interno',
-                                                        'fornecedor',
-                                                        'convidado',
-                                                        'cliente',
-                                                    ];
-                                                @endphp
                                                 @foreach ($accessLevels as $level)
                                                     <label class="inline-flex items-center mr-4">
                                                         <input type="checkbox" :name="`access_levels[${index}][]`"
@@ -663,250 +779,53 @@
     </div>
 @endsection
 
-@php
-    $product['colors'] = $colors;
-    $product['caracteristicas'] = $caracteristicas;
-    $product['links'] = $links;
-@endphp
-
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('cores', () => ({
-                campos: {!! json_encode(
-                    $product->colors->map(function ($c) {
-                        return [
-                            'color_name' => $c->color_name,
-                            'color_description' => $c->color_description,
-                            'color_code' => $c->color_code,
-                            'color_genero' => $c->genero,
-                            'color_collection_id' => $c->collection_id,
-                            'color_flag_product_id' => $c->flag_product_id,
-                            'color_numeracao_id' => $c->numeracao_id,
-                            'segmentacoes_cliente' => $c->segmentacoesCliente->pluck('id')->toArray(),
-                        ];
-                    }),
-                ) !!} || [],
-                init() {
-                    if (!this.campos || this.campos.length === 0) {
-                        this.campos = [{
-                            color_name: '',
-                            color_description: '',
-                            color_code: '',
-                            color_genero: 'Masculino',
-                            color_collection_id: '',
-                            color_flag_product_id: '',
-                            color_numeracao_id: '',
-                            segmentacoes_cliente: []
-                        }];
-                    }
-                },
-                adicionarCampo() {
-                    this.campos.push({
-                        color_name: '',
-                        color_description: '',
-                        color_code: '',
-                        color_genero: 'Masculino',
-                        color_collection_id: '',
-                        color_flag_product_id: '',
-                        color_numeracao_id: '',
-                        segmentacoes_cliente: []
-                    });
-                },
-                removerCampo(index) {
-                    this.campos.splice(index, 1);
-                }
-            }));
-
-            Alpine.data('caracteristicas', () => ({
-                campos: {!! json_encode(
-                    $product->caracteristicas->map(function ($c, $index) {
-                        return (object) [
-                            'id' => uniqid('carac_'),
-                            'caracteristica_title' => $c->title,
-                            'caracteristica_description' => $c->description,
-                            'caracteristica_destaque' => $c->destaque,
-                        ];
-                    }),
-                ) !!} || [],
-                forceUpdate: Date.now(), // chave para forçar atualização
-                init() {
-                    if (this.campos.length === 0) {
-                        this.adicionarCampo();
-                    }
-
-                    new Sortable(document.getElementById('caracteristicas-container'), {
-                        animation: 150,
-                        handle: '.cursor-move',
-                        onEnd: (evt) => {
-                            const oldIndex = evt.oldIndex;
-                            const newIndex = evt.newIndex;
-
-                            if (oldIndex === newIndex) return;
-
-                            const movedItem = this.campos.splice(oldIndex, 1)[0];
-                            this.campos.splice(newIndex, 0, movedItem);
-                            // Força o Alpine a re-renderizar
-                            this.forceUpdate = Date.now();
-                        }
-                    });
-                },
-                adicionarCampo() {
-                    this.campos.push({
-                        id: 'carac_' + Date.now(),
-                        caracteristica_title: '',
-                        caracteristica_description: '',
-                        caracteristica_destaque: 0
-                    });
-                },
-                removerCampo(index) {
-                    this.campos.splice(index, 1);
-                }
-            }));
-
-            Alpine.data('links', () => ({
-                campos: [],
-                init() {
-                    const links = {!! json_encode(
-                        $product->links->map(function ($c) {
-                            return [
-                                'link_title' => $c->link_title,
-                                'link_url' => $c->link_url,
-                                'access_levels' => $c->access_levels ?? [],
-                            ];
-                        }),
-                    ) !!};
-                    this.campos =
-                        links && links.length ?
-                        links : [{
-                            link_title: '',
-                            link_url: '',
-                            access_levels: [],
-                        }, ];
-                },
-                adicionarCampo() {
-                    this.campos.push({
-                        link_title: '',
-                        link_url: '',
-                        access_levels: [],
-                    });
-                },
-                removerCampo(index) {
-                    this.campos.splice(index, 1);
-                    if (this.campos.length === 0) {
-                        this.campos.push({
-                            link_title: '',
-                            link_url: '',
-                            access_levels: [],
-                        });
-                    }
-                },
-            }));
-
-            Alpine.data('sizes', () => ({
-                campos: [],
-                init() {
-                    const sizes = {!! json_encode(
-                        $product->sizes->map(function ($s) {
-                            return [
-                                'size_id' => $s->id,
-                                'stock' => $s->pivot->stock,
-                            ];
-                        }),
-                    ) !!};
-                    this.campos = sizes && sizes.length ? sizes : [{
-                        size_id: '',
-                        stock: ''
-                    }];
-                },
-                adicionarCampo() {
-                    this.campos.push({
-                        size_id: '',
-                        stock: ''
-                    });
-                },
-                removerCampo(index) {
-                    this.campos.splice(index, 1);
-                }
-            }));
-
-            Alpine.data('numeracoes', () => ({
-                campos: [],
-                init() {
-                    const numeracoes = {!! json_encode(
-                        $product->numeracoes->map(function ($n) {
-                            return [
-                                'numeracao_id' => $n->id,
-                                'stock' => $n->pivot->stock,
-                            ];
-                        }),
-                    ) !!};
-                    this.campos = numeracoes && numeracoes.length ? numeracoes : [{
-                        numeracao_id: '',
-                        stock: ''
-                    }];
-                },
-                adicionarCampo() {
-                    this.campos.push({
-                        numeracao_id: '',
-                        stock: ''
-                    });
-                },
-                removerCampo(index) {
-                    this.campos.splice(index, 1);
-                }
-            }));
-        });
-
-        // Script para carregar subcategorias dinamicamente
-        document.getElementById('category_id').addEventListener('change', function() {
-            const categoryId = this.value;
-            const subcategorySelect = document.getElementById('subcategory_id');
-
-            // Limpar opções existentes
-            subcategorySelect.innerHTML = '<option value="">Carregando...</option>';
-            subcategorySelect.disabled = true;
-
-            if (categoryId) {
-                // Fazer requisição para buscar subcategorias
-                fetch(`/admin/products/subcategories/${categoryId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        subcategorySelect.innerHTML = '<option value="">Selecione uma subcategoria</option>';
-
-                        data.forEach(subcategory => {
-                            const option = document.createElement('option');
-                            option.value = subcategory.id;
-                            option.textContent = subcategory.faixa;
-
-                            // Verificar se esta subcategoria deve estar selecionada
-                            const oldSubcategoryId =
-                                '{{ old('subcategory_id', $product->subcategory_id ?? '') }}';
-                            if (subcategory.id == oldSubcategoryId) {
-                                option.selected = true;
-                            }
-
-                            subcategorySelect.appendChild(option);
-                        });
-
-                        subcategorySelect.disabled = false;
-                    })
-                    .catch(error => {
-                        console.error('Erro ao carregar subcategorias:', error);
-                        subcategorySelect.innerHTML =
-                            '<option value="">Erro ao carregar subcategorias</option>';
-                        subcategorySelect.disabled = false;
-                    });
-            } else {
-                subcategorySelect.innerHTML = '<option value="">Selecione uma categoria primeiro</option>';
-                subcategorySelect.disabled = true;
-            }
-        });
-
-        // Carregar subcategorias na inicialização se já houver uma categoria selecionada
         document.addEventListener('DOMContentLoaded', function() {
             const categorySelect = document.getElementById('category_id');
+            const subcategorySelect = document.getElementById('subcategory_id');
+
+            categorySelect.addEventListener('change', function() {
+                const categoryId = this.value;
+
+                subcategorySelect.innerHTML = '<option value="">Carregando...</option>';
+                subcategorySelect.disabled = true;
+
+                if (categoryId) {
+                    fetch(`/admin/products/subcategories/${categoryId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            subcategorySelect.innerHTML =
+                                '<option value="">Selecione uma subcategoria</option>';
+
+                            data.forEach(subcategory => {
+                                const option = document.createElement('option');
+                                option.value = subcategory.id;
+                                option.textContent = subcategory.faixa;
+
+                                const oldSubcategoryId =
+                                    '{{ old('subcategory_id', $product->subcategory_id ?? '') }}';
+                                if (subcategory.id == oldSubcategoryId) {
+                                    option.selected = true;
+                                }
+
+                                subcategorySelect.appendChild(option);
+                            });
+
+                            subcategorySelect.disabled = false;
+                        })
+                        .catch(() => {
+                            subcategorySelect.innerHTML =
+                                '<option value="">Erro ao carregar subcategorias</option>';
+                            subcategorySelect.disabled = false;
+                        });
+                } else {
+                    subcategorySelect.innerHTML =
+                        '<option value="">Selecione uma categoria primeiro</option>';
+                    subcategorySelect.disabled = true;
+                }
+            });
+
             if (categorySelect.value) {
                 categorySelect.dispatchEvent(new Event('change'));
             }

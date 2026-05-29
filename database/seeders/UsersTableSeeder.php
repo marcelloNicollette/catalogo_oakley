@@ -23,7 +23,7 @@ class UsersTableSeeder extends Seeder
             [
                 'id' => 1,
                 'name' => 'Admin',
-                'email' => 'admin@olympikus.com',
+                'email' => 'admin@oakley.com.br',
                 'email_verified_at' => null,
                 'password' => '$2y$12$ox1XfxL0YRkO4JD07f1GLOBQIl0QhbguXQFyX3nCC1Pq.KCqjAuMi',
                 'remember_token' => null,
@@ -39,7 +39,7 @@ class UsersTableSeeder extends Seeder
             [
                 'id' => 3,
                 'name' => 'User',
-                'email' => 'user@olympikus.com',
+                'email' => 'user@oakley.com.br',
                 'email_verified_at' => null,
                 'password' => '$2y$12$ox1XfxL0YRkO4JD07f1GLOBQIl0QhbguXQFyX3nCC1Pq.KCqjAuMi',
                 'remember_token' => null,

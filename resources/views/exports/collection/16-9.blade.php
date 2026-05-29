@@ -12,87 +12,143 @@
         }
 
         /* Em modo de prévia HTML (não-PDF), registrar fontes via navegador */
+        /* Em modo de prévia HTML (não-PDF), registrar fontes via navegador */
         @if (!isset($isPdf) || $isPdf === false)
             @font-face {
-                font-family: 'Neue-Plak';
+                font-family: 'Avenir Next';
                 font-style: normal;
                 font-weight: 400;
-                src: url('{{ asset('fonts/Neue-Plak-Regular.ttf') }}') format('truetype');
+                src: url('{{ asset('fonts/AvenirNext/AvenirNext-Regular.ttf') }}') format('truetype');
             }
 
             @font-face {
-                font-family: 'Neue-Plak';
+                font-family: 'Avenir Next';
                 font-style: normal;
                 font-weight: 600;
-                src: url('{{ asset('fonts/Neue-Plak-SemiBold.ttf') }}') format('truetype');
+                src: url('{{ asset('fonts/AvenirNext/AvenirNext-DemiBold.ttf') }}') format('truetype');
             }
 
             @font-face {
-                font-family: 'Neue-Plak';
+                font-family: 'Avenir Next';
                 font-style: normal;
                 font-weight: 700;
-                src: url('{{ asset('fonts/Neue-Plak-Bold.ttf') }}') format('truetype');
+                src: url('{{ asset('fonts/AvenirNext/AvenirNext-DemiBold.ttf') }}') format('truetype');
             }
 
             @font-face {
-                font-family: 'Neue-Plak';
+                font-family: 'Avenir Next';
                 font-style: normal;
                 font-weight: 900;
-                src: url('{{ asset('fonts/Neue-Plak-Black.ttf') }}') format('truetype');
+                src: url('{{ asset('fonts/AvenirNext/AvenirNext-DemiBold.ttf') }}') format('truetype');
+            }
+
+            @font-face {
+                font-family: 'Montserrat';
+                font-style: normal;
+                font-weight: 400;
+                src: url('{{ asset('fonts/FONT_MONTSERRAT/Montserrat-Regular.otf') }}') format('opentype');
+            }
+
+            @font-face {
+                font-family: 'Montserrat';
+                font-style: normal;
+                font-weight: 600;
+                src: url('{{ asset('fonts/FONT_MONTSERRAT/Montserrat-SemiBold.otf') }}') format('opentype');
+            }
+
+            @font-face {
+                font-family: 'Montserrat';
+                font-style: normal;
+                font-weight: 700;
+                src: url('{{ asset('fonts/FONT_MONTSERRAT/Montserrat-Bold.otf') }}') format('opentype');
+            }
+
+            @font-face {
+                font-family: 'Montserrat';
+                font-style: normal;
+                font-weight: 900;
+                src: url('{{ asset('fonts/FONT_MONTSERRAT/Montserrat-Black.otf') }}') format('opentype');
             }
         @endif
 
         /* Em modo PDF (Dompdf), registrar fontes via caminho absoluto local (file:///) */
         @if (isset($isPdf) && $isPdf === true)
             @font-face {
-                font-family: 'Neue-Plak';
+                font-family: 'Avenir Next';
                 font-style: normal;
                 font-weight: 400;
-                src: url('file://{{ public_path('fonts/Neue-Plak-Regular.ttf') }}') format('truetype');
+                src: url('file://{{ public_path('fonts/AvenirNext/AvenirNext-Regular.ttf') }}') format('truetype');
             }
 
             @font-face {
-                font-family: 'Neue-Plak';
+                font-family: 'Avenir Next';
                 font-style: normal;
                 font-weight: 600;
-                src: url('file://{{ public_path('fonts/Neue-Plak-SemiBold.ttf') }}') format('truetype');
+                src: url('file://{{ public_path('fonts/AvenirNext/AvenirNext-DemiBold.ttf') }}') format('truetype');
             }
 
             @font-face {
-                font-family: 'Neue-Plak';
+                font-family: 'Avenir Next';
                 font-style: normal;
                 font-weight: 700;
-                src: url('file://{{ public_path('fonts/Neue-Plak-Bold.ttf') }}') format('truetype');
+                src: url('file://{{ public_path('fonts/AvenirNext/AvenirNext-DemiBold.ttf') }}') format('truetype');
             }
 
             @font-face {
-                font-family: 'Neue-Plak';
+                font-family: 'Avenir Next';
                 font-style: normal;
                 font-weight: 900;
-                src: url('file://{{ public_path('fonts/Neue-Plak-Black.ttf') }}') format('truetype');
+                src: url('file://{{ public_path('fonts/AvenirNext/AvenirNext-DemiBold.ttf') }}') format('truetype');
             }
 
             @font-face {
-                font-family: 'Neue-Plak-Extended';
+                font-family: 'Montserrat';
+                font-style: normal;
+                font-weight: 400;
+                src: url('file://{{ public_path('fonts/FONT_MONTSERRAT/Montserrat-Regular.otf') }}') format('opentype');
+            }
+
+            @font-face {
+                font-family: 'Montserrat';
+                font-style: normal;
+                font-weight: 600;
+                src: url('file://{{ public_path('fonts/FONT_MONTSERRAT/Montserrat-SemiBold.otf') }}') format('opentype');
+            }
+
+            @font-face {
+                font-family: 'Montserrat';
+                font-style: normal;
+                font-weight: 700;
+                src: url('file://{{ public_path('fonts/FONT_MONTSERRAT/Montserrat-Bold.otf') }}') format('opentype');
+            }
+
+            @font-face {
+                font-family: 'Montserrat';
                 font-style: normal;
                 font-weight: 900;
-                src: url('file://{{ public_path('fonts/Neue-Plak-Extended-ExtraBlack.ttf') }}') format('truetype');
+                src: url('file://{{ public_path('fonts/FONT_MONTSERRAT/Montserrat-Black.otf') }}') format('opentype');
             }
+
         @endif
 
 
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Avenir Next', sans-serif;
             margin: 0px;
         }
 
         .font-neueplak {
-            font-family: 'Neue-Plak';
+            font-family: 'Avenir Next';
             font-size: 50px;
         }
 
         .font-fko {
-            font-family: 'Neue-Plak';
+            font-family: 'Avenir Next';
+            font-size: 50px;
+        }
+
+        .font-montserrat {
+            font-family: 'Montserrat';
             font-size: 50px;
         }
 
@@ -109,20 +165,20 @@
 <body style="margin: 0; padding: 0;">
     @unless ($remove_capa_retranca)
         <!-- CAPA -->
-        <div class="capa" style="background: #E31B23; height: 100%;">
+        <div class="capa" style="background: #021489; height: 100%;">
             <div style="padding: 5rem;">
 
-                <h1 class="font-neueplak"
-                    style="font-size: 130px; color: #fff; font-family: 'Neue-Plak-Extended'; font-weight: 900; margin:0; padding:0; line-height: 80px;">
+                <h1 class="font-montserrat"
+                    style="font-size: 130px; color: #fff; font-family: 'Montserrat'; font-weight: 900; margin:0; padding:0; line-height: 80px;">
                     {{ __('COLEÇÃO') }}
                 </h1>
-                <h1
-                    style="font-size: 130px; color: #fff; font-family: 'Neue-Plak-Extended'; font-weight: 900; margin:0; padding:0; line-height: 80px; text-transform: uppercase;">
+                <h1 class="font-montserrat"
+                    style="font-size: 130px; color: #fff; font-family: 'Montserrat'; font-weight: 900; margin:0; padding:0; line-height: 80px; text-transform: uppercase;">
                     {{ $collections->first()->collection->name }}
                 </h1>
 
-                <div style="position: absolute; bottom: 60px; right: -240px;">
-                    <img width="50%" src="{{ $base64Svg_preto }}" alt="">
+                <div style="position: absolute; bottom: 30px; right: -50px;">
+                    <img width="100%" src="{{ $base64Svg_preto }}" alt="">
                 </div>
             </div>
 
@@ -137,13 +193,13 @@
                 <!-- CATEGORIAS -->
                 <div class="capa" style="background: #000; height: 100%;">
                     <div style="padding: 5rem;">
-                        <h1
-                            style="font-size: 110px; color: #fff; font-family: 'Neue-Plak-Extended'; font-weight: 900;  margin:0; padding:0; line-height: 80px; text-transform: uppercase;">
+                        <h1 class="font-montserrat"
+                            style="font-size: 110px; color: #fff; font-family: 'Montserrat'; font-weight: 900;  margin:0; padding:0; line-height: 80px; text-transform: uppercase;">
                             {{ $collection->product->category->name }}
                         </h1>
 
-                        <div style="position: absolute; bottom: 60px; right: -240px;">
-                            <img width="50%" src="{{ $base64Svg_vermelho }}" alt="">
+                        <div style="position: absolute; bottom: 30px; right: -50px;">
+                            <img width="100%" src="{{ $base64Svg_preto }}" alt="">
                         </div>
                     </div>
                 </div>
@@ -155,14 +211,14 @@
             //dd(public_path('images/produtos/' . $image));
             $image = public_path('images/produtos/' . $image);
             //$image = '/images/produtos/' . $image;
-            $imageExists = $image && file_exists($image) && !is_dir($image);
-            $imageSrc = $imageExists ? $image : public_path('images/img-padrao-ua.png');
+            $imageExists = file_exists($image);
+            $imageSrc = $imageExists ? $image : public_path('images/img-padrao-mz.png');
         @endphp
 
 
         @if ($remove_capa_retranca)
             <div style="position: absolute; top: 30px; left: 30px;">
-                <img src="{{ public_path('/images/logo-vermelho.png') }}" alt="">
+                <img width="150%" src="{{ $base64Svg_azul }}" alt="">
             </div>
         @endif
         <table cellspacing="0" width="100%" cellpadding="0" border="0">
@@ -171,7 +227,7 @@
                     <table cellspacing="0" width="100%" cellpadding="0" style="">
                         <tr>
                             <td width="790">
-                                <img src="{{ $image }}" alt="{{ $collection->product->name }}"
+                                <img src="{{ $imageSrc }}" alt="{{ $collection->product->name }}"
                                     style="width: 100%; object-fit: cover; border-radius: 8px 0 0 8px; border-top:1px solid #CCC; border-left:1px solid #CCC; border-bottom:1px solid #CCC; border-right:0 solid #CCC;">
                             </td>
                             <td width="262.3">
@@ -213,9 +269,7 @@
 
                                         $fullImagePath = $imagePath;
                                         $imageExists = file_exists($fullImagePath);
-                                        $imageSrc = $imageExists
-                                            ? $imagePath
-                                            : public_path('images/img-padrao-oly.png');
+                                        $imageSrc = $imageExists ? $imagePath : public_path('images/img-padrao-mz.png');
 
                                         /* $imagePath =
                                             '/images/produtos/' .
@@ -257,16 +311,16 @@
                                                         $imageExists = file_exists($fullImagePath);
                                                         $imageSrc = $imageExists
                                                             ? public_path($imagePath)
-                                                            : public_path('images/img-padrao-oly.png');
+                                                            : public_path('images/img-padrao-mz.png');
                                                     @endphp
                                                     <img src="{{ $imageSrc }}" alt="{{ $collection->color_name }}"
                                                         style="width: 110px; height: 110px; border-radius: 13px;" />
                                                 </div>
                                                 <div
-                                                    style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 5px; text-align: center;">
+                                                    style="font-size: 14px; font-weight: bold; color: #000; margin-bottom: 5px; text-align: center;">
                                                     {{ \Illuminate\Support\Str::limit($collection->color_name, 12, '...') }}
                                                 </div>
-                                                <div style="font-size: 12px; color: #666; text-align: center;">
+                                                <div style="font-size: 12px; color: #000; text-align: center;">
                                                     {{ \Illuminate\Support\Str::limit($collection->color_description, 10, '...') }}
                                                 </div>
                                             </div>
@@ -288,8 +342,9 @@
                                                 style="color: #000; opacity: 0.5;">{{ $collection->product->code }}</span>
                                         @endif
                                     </div>
-                                    <h1
-                                        style="font-family: 'Neue-Plak-Extended'; font-weight: 900; margin: 20px 0 10px 0; line-height: 0.5;">
+                                    <h1 class="font-montserrat"
+                                        style="margin: 0px 0;
+                            font-size: 38.01px; font-weight: 900; line-height: 25px; letter-spacing: -1.52px;text-transform: uppercase;">
                                         {{ $collection->product->name }}</h1>
 
                                     <table width="100%">

@@ -1,4 +1,4 @@
-<x-layout-user title="Under Armour - Tecnologias">
+<x-layout-user title="Oakley - Tecnologias">
     <style>
         .check-icon {
             color: #000;
@@ -26,7 +26,7 @@
         <section class="flex-1 flex flex-col md:pr-0 md:pb-0 overflow-hidden">
             <!-- Filtros superiores -->
             <div
-                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 pr-4 bg-[#F1F1F1] z-50">
+                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 pb-3 pr-4 bg-white">
                 <!-- Esquerda: Coleção e Categoria -->
                 <div class="flex gap-2">
                     <div class="select-container">
@@ -90,7 +90,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-[#E6E6E6] rounded-tl-lg overflow-auto height-ultra custom-scrollbar">
+            <div class="bg-white rounded-tl-lg overflow-auto height-ultra custom-scrollbar">
                 <div class="my-custom-bg p-12 max-w-[999px] mx-auto pb-0">
                     @foreach ($tecnologias as $item)
                         <div class="mb-10" data-categoria-id="{{ $item->id }}">
@@ -101,7 +101,7 @@
                                     @foreach ($item->items as $tecnologia)
                                         <div class="flex items-start gap-4 tecnologia">
                                             <div
-                                                class="bg-black rounded-lg flex items-center justify-center w-[65px] h-[65px] flex-none">
+                                                class="bg-white border border-black rounded-lg flex items-center justify-center w-[65px] h-[65px] flex-none">
                                                 <img src="/{{ $tecnologia->icon }}" class="w-full rounded-lg"
                                                     alt="{{ $tecnologia->name }}" />
                                             </div>

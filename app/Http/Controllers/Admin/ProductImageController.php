@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
 class ProductImageController extends Controller
@@ -121,10 +120,7 @@ class ProductImageController extends Controller
 
     public function destroy(ProductImage $productImage)
     {
-        // Remove file on disk if exists
-        if ($productImage->path && File::exists(public_path($productImage->path))) {
-            File::delete(public_path($productImage->path));
-        }
+
         $productImage->delete();
 
         return redirect()->route('admin.product-images.index')

@@ -4,7 +4,7 @@
 @push('css')
 @endpush
 
-@section('page_title', 'Under Armour - Flags')
+@section('page_title', 'Oakley - Flags')
 
 @section('content-wrapper')
     <div class="flex justify-between items-center mb-6">

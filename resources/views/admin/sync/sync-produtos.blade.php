@@ -1,6 +1,6 @@
 @extends('layouts.admin-layout')
 
-@section('page_title', 'Under Armour - Sincronização Produtos Google Sheets')
+@section('page_title', 'Oakley - Sincronização Produtos Google Sheets')
 <style>
     h1 {
         color: #333;
@@ -71,12 +71,27 @@
         box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
     }
 
-    .btn-sync:hover {
+    .btn-sync-2 {
+        background: linear-gradient(135deg, #dc2b2b 0%, #572828 100%);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-sync:hover,
+    .btn-sync-2:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     }
 
-    .btn-sync:disabled {
+    .btn-sync:disabled,
+    .btn-sync-2:disabled {
         opacity: 0.7;
         cursor: not-allowed;
         transform: none;
@@ -189,7 +204,7 @@
             <h2 class="section-title">📦 Sincronização de Produtos</h2>
             <div class="info-box">
                 <h3>📋 Sobre a Sincronização de Produtos</h3>
-                <p>Este processo irá sincronizar os dados da aba <strong>PaginaVestuario</strong> da planilha Google
+                <p>Este processo irá sincronizar os dados da aba <strong>Oakley</strong> da planilha Google
                     Sheets com o banco de dados do sistema, incluindo:</p>
                 <ul>
                     <li><strong>Produtos:</strong> Nome, descrição, código, SKU, preço</li>
@@ -215,7 +230,16 @@
             <form action="{{ route('admin.sync-sheet') }}" method="get" class="sync-form">
                 <button type="submit" class="btn-sync"
                     onclick="this.disabled=true; this.innerHTML='🔄 Sincronizando...'; this.form.submit();">
-                    🚀 Iniciar Sincronização de Produtos
+                    Iniciar Sincronização de Produtos
+                </button>
+            </form>
+
+            <form action="{{ route('admin.sync-sheet-reverse') }}" method="get" class="sync-form"
+                style="margin-top: 12px;">
+                <input type="hidden" name="preview" value="1">
+                <button type="submit" class="btn-sync-2"
+                    onclick="this.disabled=true; this.innerHTML='⬆️ Enviando...'; this.form.submit();">
+                    ⬆️ Sincronizar Banco → Planilha
                 </button>
             </form>
         </div>

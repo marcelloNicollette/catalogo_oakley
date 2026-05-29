@@ -40,13 +40,30 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Categoria</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Order</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Status</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Ações</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
+                            @php
+                                $lastTechnologyCategoryId = null;
+                                $categoryHeaderColspan = 5;
+                            @endphp
                             @foreach ($items as $item)
+                                @if ($lastTechnologyCategoryId !== $item->technology_category_id)
+                                    <tr class="bg-indigo-50">
+                                        <td colspan="{{ $categoryHeaderColspan }}"
+                                            class="px-6 py-2 text-sm font-semibold text-indigo-900">
+                                            {{ $item->category->name }}
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $lastTechnologyCategoryId = $item->technology_category_id;
+                                    @endphp
+                                @endif
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if ($item->icon)
@@ -58,6 +75,19 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $item->name }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $item->category->name }}</td>
+                                    <!--<td class="px-6 py-4 whitespace-nowrap">
+                                                            <form action="{{ route('admin.technology.items.order', $item) }}" method="POST"
+                                                                class="flex items-center space-x-2">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <input type="number" name="order" min="1" value="{{ $item->order }}"
+                                                                    class="w-20 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                                <button type="submit"
+                                                                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-1 px-2 rounded">
+                                                                    OK
+                                                                </button>
+                                                            </form>
+                                                        </td>-->
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span
                                             class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $item->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">

@@ -1,4 +1,4 @@
-<x-layout-user title="Under Armour - Produtos">
+<x-layout-user title="Oakley - Produtos">
     @php
         $userWishlist = [];
         if (Illuminate\Support\Facades\Auth::check()) {
@@ -58,8 +58,12 @@
                 text-overflow: ellipsis;
 
                 /* 3 linhas × ~18px por linha */
-
-                line-height: 25px;
+                font-size: 22px;
+                font-style: normal;
+                line-height: 20px;
+                /* 90.909% */
+                letter-spacing: -0.66px;
+                text-transform: uppercase;
             }
 
             /* Alternativa: Se preferir que todos tenham exatamente a mesma altura */
@@ -149,6 +153,540 @@
                 height: calc(100vh - 160px);
                 padding-bottom: 100px;
                 /* ← adicionar isso */
+            }
+
+            #pedidoOverlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.55);
+
+                z-index: 900;
+            }
+
+            body.pedido-mode #pedidoOverlay {
+                display: block;
+            }
+
+            body.pedido-mode #produtos {
+                position: relative;
+            }
+
+            body.pedido-mode #produtos>a {
+                position: relative;
+                z-index: 910;
+            }
+
+            #pedidoModal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: #FFF;
+
+                z-index: 980;
+            }
+
+            #pedidoModal.active {
+                display: block;
+            }
+
+            #pedidoModalCard {
+                background: #fff;
+                width: 100%;
+                height: 100%;
+                border-radius: 14px;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+
+            #pedidoModalHeader {
+                display: flex;
+                align-items: center;
+                justify-content: end;
+                gap: 16px;
+                padding: 18px 24px;
+            }
+
+            #pedidoModalBody {
+                flex: 1;
+                overflow: auto;
+                padding: 0 24px;
+                width: 80vw;
+                margin: 0 auto;
+                text-align: center;
+                scrollbar-width: none;
+            }
+
+            #pedidoModalBody h3 {
+                font-size: 22px;
+                margin: 0;
+                font-weight: 400;
+                color: #000;
+                min-width: 450px;
+                padding: 5px;
+
+                color: #021489;
+                font-family: 'AktivGrotesk', Arial, sans-serif;
+                font-style: normal;
+                line-height: 20px;
+                /* 90.909% */
+            }
+
+            #pedidoTitleRow {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                margin: 18px auto;
+            }
+
+            #pedidoSaveBtn {
+
+                color: #000;
+                font-family: Roboto;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 15px;
+                /* 125% */
+                text-decoration-line: underline;
+                text-decoration-style: solid;
+                text-decoration-skip-ink: auto;
+                text-decoration-thickness: auto;
+                text-underline-offset: auto;
+                text-underline-position: from-font;
+                display: flex;
+                gap: 4px;
+            }
+
+            #pedidoTitleRow svg,
+            #pedidoTitleRow h3,
+            #pedidoTitleRow button {
+                align-self: baseline;
+            }
+
+            .pedido-modal-row {
+                display: grid;
+                grid-template-columns: 74px minmax(300px, 4fr) 1fr 1fr 1fr 1fr 1fr 1fr auto;
+                gap: 14px;
+                align-items: center;
+                border-bottom: 1px solid #ececec;
+                padding: 10px 0;
+                min-width: 1120px;
+            }
+
+            .pedido-modal-thumb {
+                width: 61px;
+                object-fit: contain;
+            }
+
+            .pedido-modal-title {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: #000;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-family: 'AktivGrotesk', Arial, sans-serif;
+                font-size: 20px;
+                font-style: normal;
+                font-weight: bold;
+                line-height: 24px;
+                /* 120% */
+                letter-spacing: -0.6px;
+                text-transform: uppercase;
+                text-align: left;
+            }
+
+            .pedido-modal-col {
+                font-size: 14px;
+                color: #000;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .pedido-modal-col.is-black {
+                color: #000;
+            }
+
+            .pedido-modal-col.is-12px {
+                font-size: 12px;
+            }
+
+            .pedido-modal-col.is-opacity {
+                opacity: 0.5;
+            }
+
+            .pedido-modal-price {
+                font-size: 16px;
+                color: #000;
+                white-space: nowrap;
+            }
+
+            .pedido-modal-price.is-16px {
+                font-size: 16px;
+            }
+
+            .pedido-modal-remove {
+                color: #000;
+                opacity: 0.5;
+                cursor: pointer;
+                padding: 0;
+                white-space: nowrap;
+                font-family: Roboto;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 14px;
+                /* 100% */
+                text-decoration-line: underline;
+                text-decoration-style: solid;
+                text-decoration-skip-ink: auto;
+                text-decoration-thickness: auto;
+                text-underline-offset: auto;
+                text-underline-position: from-font;
+            }
+
+            #pedidoModalEmpty {
+                display: none;
+                padding: 36px 8px;
+                text-align: center;
+                color: #666;
+                font-size: 18px;
+            }
+
+            #pedidoModalFooter {
+                padding: 14px 24px 20px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin: 0 auto;
+            }
+
+            .pedido-scroll-wrapper {
+                flex: 1;
+                display: flex;
+                overflow: hidden;
+                min-height: 0;
+                width: 80vw;
+                margin: 0 auto;
+                text-align: center;
+            }
+
+            #pedidoModalBody::-webkit-scrollbar {
+                display: none;
+            }
+
+            .pedido-custom-scrollbar {
+                width: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 4px 0;
+                gap: 2px;
+                flex-shrink: 0;
+            }
+
+            .pedido-scroll-btn {
+                width: 10px;
+                height: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                user-select: none;
+                flex-shrink: 0;
+            }
+
+            .pedido-scroll-track {
+                flex: 1;
+                width: 4px;
+                background: transparent;
+                border-radius: 999px;
+                position: relative;
+                cursor: pointer;
+            }
+
+            .pedido-scroll-thumb {
+                width: 4px;
+                background: #B4B2A9;
+                border-radius: 999px;
+                position: absolute;
+                left: 0;
+                top: 0;
+                cursor: grab;
+                transition: background 0.15s;
+            }
+
+            .pedido-scroll-thumb:hover {
+                background: #888780;
+            }
+
+            .pedido-modal-cta {
+                border-radius: 100px;
+                border: 1px solid #000;
+                padding: 18px 26px;
+                background: #fff;
+                color: #000;
+                font-size: 16px;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                white-space: nowrap;
+                line-height: 16px;
+                font-weight: 400;
+            }
+
+            .pedido-modal-cta.is-dark {
+                background: #000;
+                color: #fff;
+            }
+
+            .pedido-modal-cta svg {
+                display: block;
+                flex: 0 0 auto;
+            }
+
+            body.pedido-modal-open {
+                overflow: hidden;
+            }
+
+            #pedidoActions {
+                position: fixed;
+                right: 28px;
+                bottom: 28px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                z-index: 920;
+            }
+
+            #pedidoClearBtn {
+                display: none;
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+                background: #fff;
+                color: #000;
+                border: 1px solid #D9D9D9;
+                cursor: pointer;
+                display: none;
+                align-items: center;
+                justify-content: center;
+
+                user-select: none;
+                backdrop-filter: blur(2px);
+                padding: 8.9px;
+            }
+
+            #pedidoClearBtn:focus {
+                outline: none;
+            }
+
+            #pedidoClearBtn:focus-visible {
+                outline: 2px solid rgba(0, 0, 0, 0.7);
+                outline-offset: 3px;
+            }
+
+            #pedidoClearBtn svg {
+                opacity: 0.75;
+            }
+
+            #pedidoHistoryBtn,
+            #pedidoFavoritosBtn {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+                background: #fff;
+                color: #000;
+                border: 1px solid #D9D9D9;
+                cursor: pointer;
+                display: none;
+                align-items: center;
+                justify-content: center;
+
+                user-select: none;
+                backdrop-filter: blur(2px);
+                padding: 8.9px;
+            }
+
+            #pedidoFavoritosBtn .pedido-fav-icon-filled {
+                display: none;
+            }
+
+            #pedidoFavoritosBtn .pedido-fav-icon-outline {
+                display: block;
+            }
+
+            #pedidoFavoritosBtn.is-active .pedido-fav-icon-filled {
+                display: block;
+            }
+
+            #pedidoFavoritosBtn.is-active .pedido-fav-icon-outline {
+                display: none;
+            }
+
+            #pedidoHistoryModal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.45);
+                z-index: 981;
+                align-items: center;
+                justify-content: center;
+                padding: 16px;
+            }
+
+            #pedidoHistoryModal.active {
+                display: flex;
+            }
+
+            #pedidoHistoryModalCard {
+                background: #fff;
+                border-radius: 12px;
+                width: 100%;
+                max-width: 980px;
+                padding: 24px;
+                max-height: calc(100vh - 32px);
+                display: flex;
+                flex-direction: column;
+            }
+
+            #pedidoHistoryTableWrap {
+                overflow: auto;
+                max-height: calc(100vh - 280px);
+                margin-top: 16px;
+            }
+
+            #pedidoHistoryTable {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            #pedidoHistoryTable th,
+            #pedidoHistoryTable td {
+                text-align: left;
+                padding: 10px 12px;
+                border-bottom: 1px solid #eee;
+                font-size: 14px;
+            }
+
+            .pedido-history-open-btn {
+                color: #808080;
+                text-decoration: underline;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0;
+            }
+
+            .pedido-history-delete-btn {
+                color: #808080;
+                text-decoration: underline;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0;
+                margin-left: 14px;
+            }
+
+            #pedidoHistoryEmpty {
+                display: none;
+                text-align: center;
+                color: #777;
+                padding: 16px 0;
+                font-size: 14px;
+            }
+
+            #pedidoFab {
+                position: relative;
+                width: 60px;
+                height: 60px;
+                border-radius: 10px;
+                background: rgba(0, 0, 0, 0.20);
+                backdrop-filter: blur(2px);
+                color: #fff;
+                border: 0;
+                padding: 0;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: none;
+                user-select: none;
+            }
+
+            body.pedido-mode #pedidoFab {
+                background: #000;
+            }
+
+            #pedidoFabIcon {
+                width: 23.6px;
+                height: 23.5px;
+                display: block;
+            }
+
+            #pedidoFab:focus {
+                outline: none;
+            }
+
+            #pedidoFab:focus-visible {
+                outline: 2px solid rgba(255, 255, 255, 0.9);
+                outline-offset: 3px;
+            }
+
+            #pedidoCount {
+                display: none;
+                position: absolute;
+                top: -6px;
+                right: -6px;
+                min-width: 22px;
+                height: 22px;
+                padding: 0 6px;
+                border-radius: 999px;
+                background: #fff;
+                color: #000;
+                font-size: 12px;
+                font-weight: 600;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+            }
+
+            .pedido-item-btn {
+                display: none;
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                width: 39px;
+                height: 39px;
+                border-radius: 4px;
+                border: none;
+                cursor: pointer;
+                z-index: 30;
+                font-size: 34px;
+                line-height: 1;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                background: rgba(0, 0, 0, 0.50);
+                padding: 10px;
+                font-weight: 300;
+            }
+
+            body.pedido-mode .pedido-item-btn {
+                display: flex;
+            }
+
+            body.pedido-mode .favorite-btn {
+                display: none !important;
+            }
+
+            .pedido-item-btn.is-added {
+                background: rgba(0, 0, 0);
             }
 
             /* Estilos para dropdown aninhado de subcategorias */
@@ -698,6 +1236,345 @@
             ::-webkit-scrollbar-thumb:hover {
                 background-color: #333;
             }
+
+            #vitrineModal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.35);
+                z-index: 982;
+            }
+
+            #vitrineModal.active {
+                display: block;
+            }
+
+            #vitrineModalCard {
+                background: #fff;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+
+            #vitrineModalHeader {
+                display: flex;
+                align-items: center;
+                justify-content: end;
+                gap: 16px;
+                padding: 18px 24px;
+            }
+
+            #vitrineModalBody {
+                flex: 1;
+                overflow: hidden;
+                padding: 0 20px 16px;
+                width: 100%;
+                margin: 0;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+            }
+
+            #vitrineTitleRow {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            #vitrineModalBody h3 {
+                font-size: 22px;
+                margin: 0;
+                font-weight: 400;
+                color: #021489;
+                min-width: 450px;
+                padding: 5px;
+                font-family: 'AktivGrotesk', Arial, sans-serif;
+                font-style: normal;
+                line-height: 20px;
+            }
+
+            #vitrineTitleRow svg,
+            #vitrineTitleRow h3 {
+                align-self: baseline;
+            }
+
+            #vitrineGridWrap {
+                width: 100%;
+                height: 100%;
+                margin: 0 auto 20px;
+                border: 1px solid #D9D9D9;
+                border-radius: 10px;
+
+                display: block;
+                overflow-x: hidden;
+                overflow-y: auto;
+                box-sizing: border-box;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                display: inline-flex;
+                padding: 30px clamp(20px, 8vw, 100px) 0;
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+            }
+
+            #vitrineGridWrap::-webkit-scrollbar {
+                width: 0;
+                height: 0;
+                display: none;
+            }
+
+            #vitrineGrid {
+                min-width: 0;
+                min-height: 0;
+                justify-content: start;
+                align-content: start;
+                width: max-content;
+                margin: 0 auto;
+
+                display: inline-grid;
+                row-gap: 3px;
+                column-gap: 3px;
+                grid-template-rows: none;
+                grid-template-columns: none;
+            }
+
+            .vitrine-cell {
+                border: 1px solid #D9D9D9;
+                border-radius: 12px;
+                overflow: hidden;
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+                aspect-ratio: 1/1;
+
+            }
+
+            .vitrine-cell.is-over {
+                outline: 1px solid rgba(0, 0, 0, 1);
+                outline-offset: 0px;
+                background: #fff;
+            }
+
+            .vitrine-cell img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                background: #fff;
+            }
+
+            .vitrine-remove {
+                position: absolute;
+                right: 8.5px;
+                top: 8px;
+                cursor: pointer;
+            }
+
+            .vitrine-cell.is-dragging .vitrine-remove {
+                display: none;
+            }
+
+            .vitrine-controls {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 14px;
+                flex-wrap: wrap;
+                margin: 10px auto 0;
+            }
+
+            .vitrine-stepper {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .vitrine-stepper span {
+                color: #000;
+                text-align: center;
+                font-family: Roboto;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 16px;
+                opacity: 0.5;
+                /* 114.286% */
+            }
+
+            .vitrine-stepper button {
+
+                border-radius: 4px;
+                border: none;
+                cursor: pointer;
+                z-index: 30;
+                font-size: 34px;
+                line-height: 1;
+                justify-content: center;
+                color: #fff;
+                background: rgba(0, 0, 0, 1);
+                padding: 10px;
+                font-weight: 300;
+                display: flex;
+                width: 31px;
+                height: 31px;
+                padding: 10px;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .vitrine-stepper button:disabled {
+                opacity: 0.35;
+                cursor: not-allowed;
+            }
+
+            #vitrineProductsStrip {
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                gap: 2px;
+                width: 100%;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                box-sizing: border-box;
+                scroll-behavior: smooth;
+            }
+
+            #vitrineProductsStrip::-webkit-scrollbar {
+                width: 0;
+                height: 0;
+                display: none;
+            }
+
+            #vitrineProductsStrip {
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+            .vitrine-strip-wrapper {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                align-items: center;
+            }
+
+            .vitrine-custom-scrollbar {
+                width: 80%;
+                max-width: 880px;
+                display: none;
+                align-items: center;
+                gap: 8px;
+                padding: 0 8px 8px;
+                box-sizing: border-box;
+            }
+
+            .vitrine-scroll-btn {
+                width: 14px;
+                height: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                user-select: none;
+                flex-shrink: 0;
+            }
+
+            .vitrine-scroll-track {
+                flex: 1;
+                height: 4px;
+                background: transparent;
+                border-radius: 999px;
+                position: relative;
+                cursor: pointer;
+            }
+
+            .vitrine-scroll-thumb {
+                height: 4px;
+                background: #B4B2A9;
+                border-radius: 999px;
+                position: absolute;
+                left: 0;
+                top: 0;
+                cursor: grab;
+                transition: background 0.15s;
+            }
+
+            .vitrine-scroll-thumb:hover {
+                background: #888780;
+            }
+
+            .vitrine-prod {
+                display: flex;
+                width: 82px;
+                min-width: 82px;
+                padding-bottom: 10px;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                flex: 0 0 auto;
+            }
+
+            .vitrine-prod:active {
+                cursor: grabbing;
+            }
+
+            .vitrine-prod-thumb {
+                width: 100%;
+                height: 82px;
+                align-self: stretch;
+                aspect-ratio: 1/1;
+                border-radius: 12px;
+                border: 1px solid #D9D9D9;
+            }
+
+            .vitrine-prod-model,
+            .vitrine-prod-color {
+                color: #000;
+                text-align: center;
+                font-family: Roboto;
+                font-size: 10px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 12px;
+                /* 120% */
+                text-transform: uppercase;
+            }
+
+            .vitrine-prod-model {
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-height: 24px;
+            }
+
+            .vitrine-prod-color {
+                color: rgba(0, 0, 0, 0.50);
+                text-transform: capitalize;
+            }
+
+            #vitrineProductsEmpty {
+                display: none;
+                padding: 14px 8px 24px;
+                text-align: center;
+                color: #777;
+                font-size: 14px;
+            }
+
+            @media (max-width: 1024px) {
+                #vitrineGridWrap {
+                    width: 100%;
+                }
+            }
         </style>
 
         <!-- Conteúdo principal -->
@@ -716,7 +1593,7 @@
             @endphp
             <!-- Filtros superiores -->
             <div
-                class="fixed top-[70px] left-0 right-0 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-4 pb-3 px-[10px] bg-[#F1F1F1] z-10">
+                class="fixed top-[70px] left-0 right-0 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-4 pb-3 px-[10px] bg-white z-10">
 
                 <!-- Esquerda: Coleção e Categoria (FLEXÍVEL) -->
                 <div class="filters-left-section">
@@ -752,7 +1629,7 @@
                         <div class="options p-5" id="colecaoOptions">
                             @foreach ($colecoes as $colecao)
                                 <div class="option text-[18px]" data-slug="{{ $colecao->slug }}"
-                                    data-value="{{ $colecao->slug }}"
+                                    data-collection-id="{{ $colecao->id }}" data-value="{{ $colecao->slug }}"
                                     {{ $currentSlug == $colecao->slug ? 'selected' : '' }}
                                     style=" {{ $currentSlug == $colecao->slug ? 'padding: 6px 15px 6px 1px;' : '' }}">
                                     <span class="check-icon"
@@ -1046,7 +1923,7 @@
 
             <!-- Lista de Produtos -->
             <div id="produtos"
-                class="gap-[10px] bg-[#E6E6E6] p-[10px] lg:mt-[4.8rem] overflow-auto height-ultra custom-scrollbar">
+                class="gap-[10px] bg-white p-[10px] lg:mt-[4.8rem] overflow-auto height-ultra custom-scrollbar">
 
                 @if (empty($produtos) || count($produtos) == 0)
                     <div class="col-span-full flex items-center justify-center h-[100vh]">
@@ -1059,7 +1936,7 @@
                         <a href="" class="block h-full">
                             <div
                                 class="bg-white hover:shadow-md transition relative rounded-md border border-[#DEDEDE] flex flex-col group">
-                                <div class="badge-container pt-1 px-2" style="position:absolute; min-height: 35px;">
+                                <div class="badge-container pt-2 px-2" style="">
                                 </div>
 
                                 <button
@@ -1067,11 +1944,12 @@
                                     type="button" onclick="event.preventDefault();">
                                     <!-- Ícone Outline (vazio) -->
                                     <svg class="icon-outline w-6 h-6 float-right" xmlns="http://www.w3.org/2000/svg"
-                                        width="18" height="16" viewBox="0 0 18 16" fill="none">
+                                        width="20" height="18" viewBox="0 0 20 18" fill="none">
                                         <path
-                                            d="M0 5.26362C0 8.97604 3.23565 12.6275 8.34743 15.7647C8.53776 15.878 8.80967 16 9 16C9.19033 16 9.46224 15.878 9.66163 15.7647C14.7644 12.6275 18 8.97604 18 5.26362C18 2.17865 15.7976 0 12.861 0C11.1843 0 9.82477 0.766885 9 1.94336C8.19335 0.775599 6.81571 0 5.13897 0C2.20242 0 0 2.17865 0 5.26362ZM1.45921 5.26362C1.45921 2.94553 3.01813 1.40305 5.12085 1.40305C6.82477 1.40305 7.80363 2.42266 8.38369 3.29412C8.6284 3.6427 8.78248 3.73856 9 3.73856C9.21752 3.73856 9.35347 3.63399 9.61631 3.29412C10.2417 2.44009 11.1843 1.40305 12.8792 1.40305C14.9819 1.40305 16.5408 2.94553 16.5408 5.26362C16.5408 8.50545 12.9789 12 9.19033 14.4227C9.0997 14.4837 9.03625 14.5272 9 14.5272C8.96375 14.5272 8.9003 14.4837 8.81873 14.4227C5.02115 12 1.45921 8.50545 1.45921 5.26362Z"
+                                            d="M0 5.92157C0 10.098 3.59517 14.2059 9.27492 17.7353C9.4864 17.8627 9.78852 18 10 18C10.2115 18 10.5136 17.8627 10.7351 17.7353C16.4048 14.2059 20 10.098 20 5.92157C20 2.45098 17.5529 0 14.29 0C12.427 0 10.9164 0.862745 10 2.18627C9.10373 0.872549 7.57301 0 5.70997 0C2.44713 0 0 2.45098 0 5.92157ZM1.62135 5.92157C1.62135 3.31373 3.35347 1.57843 5.68983 1.57843C7.58308 1.57843 8.6707 2.72549 9.31521 3.70588C9.58711 4.09804 9.75831 4.20588 10 4.20588C10.2417 4.20588 10.3927 4.08824 10.6848 3.70588C11.3797 2.7451 12.427 1.57843 14.3102 1.57843C16.6465 1.57843 18.3787 3.31373 18.3787 5.92157C18.3787 9.56863 14.4209 13.5 10.2115 16.2255C10.1108 16.2941 10.0403 16.3431 10 16.3431C9.95972 16.3431 9.88922 16.2941 9.79859 16.2255C5.57905 13.5 1.62135 9.56863 1.62135 5.92157Z"
                                             fill="black" />
                                     </svg>
+
                                     <span
                                         class="favorite-text text-sm opacity-50 float-left pt-[2px] pr-2 hidden rounded px-1 shadow-sm absolute right-8 w-max z-30 pointer-events-none">Adicionado
                                         aos Favoritos</span>
@@ -1084,6 +1962,9 @@
                                             fill="black" />
                                     </svg>
                                 </button>
+
+                                <button class="pedido-item-btn" type="button"
+                                    aria-label="Adicionar ao pedido"></button>
 
                                 <img src="/images/tenis-1.jpg" alt="Tênis"
                                     class="w-full object-contain rounded-t-md" />
@@ -1291,6 +2172,304 @@
             </div>
         </div>
 
+        <div id="pedidoOverlay" aria-hidden="true">
+            <div class="flex justify-end" style="padding: 1.35rem 1.2rem">
+                <button id="pedidoOverlayBackBtn" type="button" aria-label="Voltar"
+                    class="flex items-center bg-white border border-black rounded-full px-4 py-2 text-sm hover:bg-gray-200 transition">
+                    Voltar
+                    <img src="/images/icon-voltar.png" alt="" class="ml-1 w-5 h-5" />
+                </button>
+            </div>
+        </div>
+
+        {{-- DEPOIS --}}
+        <div id="pedidoModal" aria-hidden="true">
+            <div id="pedidoModalCard">
+                <div id="pedidoModalHeader">
+                    <button id="pedidoModalBackBtn" type="button" aria-label="Voltar"
+                        class="flex items-center bg-[#FFF] border border-black rounded-full px-4 py-2 text-sm hover:bg-gray-200 transition">
+                        Voltar
+                        <img src="/images/icon-voltar.png" alt="" class="ml-1 w-5 h-5" />
+                    </button>
+                </div>
+
+                {{-- wrapper que cria a scrollbar customizada --}}
+                <div class="pedido-scroll-wrapper">
+                    <div id="pedidoModalBody">
+                        <div id="pedidoTitleRow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="162" height="25"
+                                viewBox="0 0 162 25" fill="none">
+                                <path
+                                    d="M114.907 14.9051C115.339 14.3924 115.586 13.7152 115.586 13.0063V10.3861H102.162V13.2975H109.579L103.083 20.462C102.651 20.9747 102.359 21.5886 102.359 22.3101V24.9747H115.777V22.0633H108.411L114.907 14.9051Z"
+                                    fill="#021489" />
+                                <path
+                                    d="M154.958 13.3038C155.764 13.3038 156.418 13.962 156.418 14.7658V20.6076C156.418 21.4114 155.764 22.0696 154.951 22.0696H152.741C151.929 22.0696 151.275 21.4114 151.275 20.6076V14.7658C151.275 13.962 151.929 13.3038 152.741 13.3038H154.951M148.633 10.3924C147.014 10.3924 145.68 11.7025 145.68 13.3101V22.057C145.68 23.6709 147.014 24.981 148.633 24.981H159.085C160.705 24.981 162 23.6772 162 22.057V13.3101C162 11.6962 160.705 10.3924 159.085 10.3924H148.633Z"
+                                    fill="#021489" />
+                                <path
+                                    d="M94.8339 10.3924H100.428V22.0633C100.428 23.6772 99.133 24.981 97.5137 24.981H94.8339V10.3924Z"
+                                    fill="#021489" />
+                                <path
+                                    d="M120.476 24.981C118.857 24.981 117.53 23.6772 117.53 22.0633V10.3987H123.124V20.6076C123.124 21.4114 123.797 22.076 124.604 22.076H126.401C127.207 22.076 127.849 21.4177 127.849 20.6139V10.3987H140.847C142.467 10.3987 143.769 11.7089 143.769 13.3165V24.981H138.174V14.7595C138.174 13.9494 137.514 13.3038 136.707 13.3038H133.443V22.057C133.443 23.6709 132.148 24.9747 130.528 24.9747H120.476"
+                                    fill="#021489" />
+                                <path
+                                    d="M86.6104 5.37342C84.5148 5.37342 82.6352 6.32279 81.4032 7.81646L67.1343 24.9747H75.2308L86.0579 11.9684C86.8708 11.0063 88.09 10.3861 89.4553 10.3861H92.3129L80.2284 24.9747H88.9155C90.9349 24.9747 92.5669 23.3418 92.5669 21.3228V5.37342H86.6167"
+                                    fill="#021489" />
+                                <path
+                                    d="M68.271 7.82278L54.0021 24.981H62.0986L72.9257 11.9747C73.7385 11.0127 74.9578 10.3924 76.3231 10.3924H79.2696V5.37342H73.4845C71.389 5.37342 69.5157 6.32279 68.2774 7.81646"
+                                    fill="#021489" />
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M26.1819 14.519C29.0395 14.6203 31.2303 14.3987 35.2119 13.5316C33.3322 14.9304 31.6748 17.4747 31.4907 19.4177C30.5 17.943 28.2076 15.6456 26.1819 14.5253M37.2122 25C36.4184 22.4684 35.25 16.7975 40.2793 13.2848C43.8672 10.7722 54.7705 7.8038 60.6063 5.67089L64.8038 0C60.8032 2.0443 55.6024 4.14557 50.8715 5.58861C40.3111 8.81646 33.9926 10.7278 25.858 10.8924C20.0031 11.0063 19.9206 8.24684 25.6167 3.31013C19.2157 5.78481 10.2683 8.71519 0 11.0127C9.16334 11.2722 16.1168 13.1266 20.2952 15.5443C26.2454 18.9873 27.6932 22.6076 28.3664 25H37.2122Z"
+                                    fill="#021489" />
+                            </svg>
+                            <h3 class="p-0" id="titlePedido" contenteditable="true" spellcheck="false">AW26
+                                Oportunidades_26052025_1</h3>
+                            <button id="pedidoSaveBtn" type="button">Renomear <svg
+                                    xmlns="http://www.w3.org/2000/svg" width="15" height="15"
+                                    viewBox="0 0 15 15" fill="none">
+                                    <path
+                                        d="M2.38059 15H11.2813C12.6459 15 13.4344 14.2103 13.4344 12.6459V4.52788L12.2138 5.75052V12.5851C12.2138 13.3749 11.7892 13.7774 11.2661 13.7774H2.40333C1.64518 13.7774 1.22062 13.3749 1.22062 12.5851V3.96593C1.22062 3.17615 1.64518 2.76608 2.40333 2.76608H9.31006L10.5307 1.54344H2.38059C0.80364 1.54344 0 2.33322 0 3.89758V12.6459C0 14.2178 0.80364 15 2.38059 15ZM5.14025 10.0791L6.61866 9.43363L13.6998 2.34841L12.6611 1.32322L5.58756 8.4084L4.90522 9.83612C4.84457 9.9652 4.99621 10.1398 5.14025 10.0791ZM14.2608 1.79405L14.8066 1.23209C15.0645 0.958708 15.0645 0.594194 14.8066 0.343592L14.6323 0.161336C14.3972 -0.0740778 14.0258 -0.0437017 13.7756 0.199306L13.2221 0.746073L14.2608 1.79405Z"
+                                        fill="black" />
+                                </svg></button>
+                        </div>
+                        <div id="pedidoModalItems"></div>
+                        <div id="pedidoModalEmpty">Nenhum item adicionado no pedido.</div>
+                    </div>
+
+                    {{-- scrollbar customizada --}}
+                    <div class="pedido-custom-scrollbar">
+                        <div class="pedido-scroll-btn" id="btnUp">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="7" height="6" viewBox="0 0 7 6"
+                                fill="none">
+                                <path d="M3.46484 0L6.92895 6H0.000742197L3.46484 0Z" fill="#A9A9A9" />
+                            </svg>
+                        </div>
+                        <div class="pedido-scroll-track" id="scrollTrack">
+                            <div class="pedido-scroll-thumb" id="scrollThumb"></div>
+                        </div>
+                        <div class="pedido-scroll-btn" id="btnDown">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="7" height="6" viewBox="0 0 7 6"
+                                fill="none">
+                                <path d="M3.46484 6L0.000742197 0H6.92895L3.46484 6Z" fill="#A9A9A9" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="pedidoModalFooter">
+                    <button type="button" class="pedido-modal-cta" id="pedidoModalVitrineBtn">
+                        <svg width="29" height="18" viewBox="0 0 29 18" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M2.55838 8.20416H5.82661C7.43854 8.20416 8.38499 7.29256 8.38499 5.65754V2.56109C8.38499 0.926046 7.43854 0 5.82661 0H2.55838C0.946454 0 0 0.926046 0 2.56109V5.65754C0 7.29256 0.946454 8.20416 2.55838 8.20416ZM2.83936 6.22193C2.30698 6.22193 2.0408 5.94696 2.0408 5.39713V2.7926C2.0408 2.25724 2.30698 1.98232 2.83936 1.98232H5.54563C6.06323 1.98232 6.35899 2.25724 6.35899 2.7926V5.39713C6.35899 5.94696 6.06323 6.22193 5.54563 6.22193H2.83936ZM12.8511 8.20416H16.1341C17.746 8.20416 18.6777 7.29256 18.6777 5.65754V2.56109C18.6777 0.926046 17.746 0 16.1341 0H12.8511C11.2392 0 10.3075 0.926046 10.3075 2.56109V5.65754C10.3075 7.29256 11.2392 8.20416 12.8511 8.20416ZM13.132 6.22193C12.5997 6.22193 12.3335 5.94696 12.3335 5.39713V2.7926C12.3335 2.25724 12.5997 1.98232 13.132 1.98232H15.8531C16.3708 1.98232 16.6517 2.25724 16.6517 2.7926V5.39713C16.6517 5.94696 16.3708 6.22193 15.8531 6.22193H13.132ZM23.1734 8.20416H26.4415C28.0535 8.20416 29 7.29256 29 5.65754V2.56109C29 0.926046 28.0535 0 26.4415 0H23.1734C21.5614 0 20.6149 0.926046 20.6149 2.56109V5.65754C20.6149 7.29256 21.5614 8.20416 23.1734 8.20416ZM23.4543 6.22193C22.922 6.22193 22.641 5.94696 22.641 5.39713V2.7926C22.641 2.25724 22.922 1.98232 23.4543 1.98232H26.1606C26.6782 1.98232 26.9592 2.25724 26.9592 2.7926V5.39713C26.9592 5.94696 26.6782 6.22193 26.1606 6.22193H23.4543ZM2.55838 18H5.82661C7.43854 18 8.38499 17.074 8.38499 15.4389V12.3569C8.38499 10.7219 7.43854 9.79585 5.82661 9.79585H2.55838C0.946454 9.79585 0 10.7219 0 12.3569V15.4389C0 17.074 0.946454 18 2.55838 18ZM2.83936 16.0032C2.30698 16.0032 2.0408 15.7283 2.0408 15.193V12.6029C2.0408 12.0531 2.30698 11.7782 2.83936 11.7782H5.54563C6.06323 11.7782 6.35899 12.0531 6.35899 12.6029V15.193C6.35899 15.7283 6.06323 16.0032 5.54563 16.0032H2.83936ZM12.8511 18H16.1341C17.746 18 18.6777 17.074 18.6777 15.4389V12.3569C18.6777 10.7219 17.746 9.79585 16.1341 9.79585H12.8511C11.2392 9.79585 10.3075 10.7219 10.3075 12.3569V15.4389C10.3075 17.074 11.2392 18 12.8511 18ZM13.132 16.0032C12.5997 16.0032 12.3335 15.7283 12.3335 15.193V12.6029C12.3335 12.0531 12.5997 11.7782 13.132 11.7782H15.8531C16.3708 11.7782 16.6517 12.0531 16.6517 12.6029V15.193C16.6517 15.7283 16.3708 16.0032 15.8531 16.0032H13.132ZM23.1734 18H26.4415C28.0535 18 29 17.074 29 15.4389V12.3569C29 10.7219 28.0535 9.79585 26.4415 9.79585H23.1734C21.5614 9.79585 20.6149 10.7219 20.6149 12.3569V15.4389C20.6149 17.074 21.5614 18 23.1734 18ZM23.4543 16.0032C22.922 16.0032 22.641 15.7283 22.641 15.193V12.6029C22.641 12.0531 22.922 11.7782 23.4543 11.7782H26.1606C26.6782 11.7782 26.9592 12.0531 26.9592 12.6029V15.193C26.9592 15.7283 26.6782 16.0032 26.1606 16.0032H23.4543Z"
+                                fill="black" />
+                        </svg>
+                        Vitrine
+                    </button>
+                    <button type="button" class="pedido-modal-cta is-dark" id="pedidoModalExportPdfBtn">PDF
+                        <svg width="10" height="14" viewBox="0 0 10 14" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M10 7.65881C10 7.32784 9.76257 7.07121 9.43272 7.07121C9.27444 7.07121 9.12269 7.12527 9.01715 7.23333L7.51323 8.74611L5.15172 11.4002L5.52111 11.5353L5.58708 9.52273V0.621648C5.58708 0.277223 5.34302 0.0273438 5.00001 0.0273438C4.657 0.0273438 4.41293 0.277223 4.41293 0.621648V9.52273L4.4789 11.5353L4.85489 11.4002L2.48681 8.74611L0.982849 7.23333C0.883905 7.12527 0.725593 7.07121 0.567282 7.07121C0.237467 7.07121 0 7.32784 0 7.65881C0 7.82086 0.059367 7.96269 0.184697 8.09777L4.55806 12.5889C4.68338 12.7239 4.8351 12.7914 5.00001 12.7914C5.16491 12.7914 5.31663 12.7239 5.44196 12.5889L9.8219 8.09777C9.94726 7.96269 10 7.82086 10 7.65881ZM10 13.3925C10 13.0413 9.76916 12.7914 9.43272 12.7914H0.580476C0.237467 12.7914 0 13.0413 0 13.3925C0 13.7437 0.237467 14.0003 0.580476 14.0003H9.43272C9.76916 14.0003 10 13.7437 10 13.3925Z"
+                                fill="white" />
+                        </svg>
+                    </button>
+                    <button type="button" class="pedido-modal-cta is-dark"
+                        id="pedidoModalExportPlanilhaBtn">Planilha
+                        <svg width="10" height="14" viewBox="0 0 10 14" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M10 7.65881C10 7.32784 9.76257 7.07121 9.43272 7.07121C9.27444 7.07121 9.12269 7.12527 9.01715 7.23333L7.51323 8.74611L5.15172 11.4002L5.52111 11.5353L5.58708 9.52273V0.621648C5.58708 0.277223 5.34302 0.0273438 5.00001 0.0273438C4.657 0.0273438 4.41293 0.277223 4.41293 0.621648V9.52273L4.4789 11.5353L4.85489 11.4002L2.48681 8.74611L0.982849 7.23333C0.883905 7.12527 0.725593 7.07121 0.567282 7.07121C0.237467 7.07121 0 7.32784 0 7.65881C0 7.82086 0.059367 7.96269 0.184697 8.09777L4.55806 12.5889C4.68338 12.7239 4.8351 12.7914 5.00001 12.7914C5.16491 12.7914 5.31663 12.7239 5.44196 12.5889L9.8219 8.09777C9.94726 7.96269 10 7.82086 10 7.65881ZM10 13.3925C10 13.0413 9.76916 12.7914 9.43272 12.7914H0.580476C0.237467 12.7914 0 13.0413 0 13.3925C0 13.7437 0.237467 14.0003 0.580476 14.0003H9.43272C9.76916 14.0003 10 13.7437 10 13.3925Z"
+                                fill="white" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="vitrineModal" aria-hidden="true">
+            <div id="vitrineModalCard">
+                <div id="vitrineModalHeader">
+                    <button id="vitrineModalBackBtn" type="button" aria-label="Voltar"
+                        class="flex items-center bg-[#FFF] border border-black rounded-full px-4 py-2 text-sm hover:bg-gray-200 transition">
+                        Voltar
+                        <img src="/images/icon-voltar.png" alt="" class="ml-1 w-5 h-5" />
+                    </button>
+                </div>
+                <div id="vitrineModalBody">
+                    <div id="vitrineGridWrap">
+                        <div id="vitrineTitleRow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="162" height="25"
+                                viewBox="0 0 162 25" fill="none">
+                                <path
+                                    d="M114.907 14.9051C115.339 14.3924 115.586 13.7152 115.586 13.0063V10.3861H102.162V13.2975H109.579L103.083 20.462C102.651 20.9747 102.359 21.5886 102.359 22.3101V24.9747H115.777V22.0633H108.411L114.907 14.9051Z"
+                                    fill="#021489" />
+                                <path
+                                    d="M154.958 13.3038C155.764 13.3038 156.418 13.962 156.418 14.7658V20.6076C156.418 21.4114 155.764 22.0696 154.951 22.0696H152.741C151.929 22.0696 151.275 21.4114 151.275 20.6076V14.7658C151.275 13.962 151.929 13.3038 152.741 13.3038H154.951M148.633 10.3924C147.014 10.3924 145.68 11.7025 145.68 13.3101V22.057C145.68 23.6709 147.014 24.981 148.633 24.981H159.085C160.705 24.981 162 23.6772 162 22.057V13.3101C162 11.6962 160.705 10.3924 159.085 10.3924H148.633Z"
+                                    fill="#021489" />
+                                <path
+                                    d="M94.8339 10.3924H100.428V22.0633C100.428 23.6772 99.133 24.981 97.5137 24.981H94.8339V10.3924Z"
+                                    fill="#021489" />
+                                <path
+                                    d="M120.476 24.981C118.857 24.981 117.53 23.6772 117.53 22.0633V10.3987H123.124V20.6076C123.124 21.4114 123.797 22.076 124.604 22.076H126.401C127.207 22.076 127.849 21.4177 127.849 20.6139V10.3987H140.847C142.467 10.3987 143.769 11.7089 143.769 13.3165V24.981H138.174V14.7595C138.174 13.9494 137.514 13.3038 136.707 13.3038H133.443V22.057C133.443 23.6709 132.148 24.9747 130.528 24.9747H120.476"
+                                    fill="#021489" />
+                                <path
+                                    d="M86.6104 5.37342C84.5148 5.37342 82.6352 6.32279 81.4032 7.81646L67.1343 24.9747H75.2308L86.0579 11.9684C86.8708 11.0063 88.09 10.3861 89.4553 10.3861H92.3129L80.2284 24.9747H88.9155C90.9349 24.9747 92.5669 23.3418 92.5669 21.3228V5.37342H86.6167"
+                                    fill="#021489" />
+                                <path
+                                    d="M68.271 7.82278L54.0021 24.981H62.0986L72.9257 11.9747C73.7385 11.0127 74.9578 10.3924 76.3231 10.3924H79.2696V5.37342H73.4845C71.389 5.37342 69.5157 6.32279 68.2774 7.81646"
+                                    fill="#021489" />
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M26.1819 14.519C29.0395 14.6203 31.2303 14.3987 35.2119 13.5316C33.3322 14.9304 31.6748 17.4747 31.4907 19.4177C30.5 17.943 28.2076 15.6456 26.1819 14.5253M37.2122 25C36.4184 22.4684 35.25 16.7975 40.2793 13.2848C43.8672 10.7722 54.7705 7.8038 60.6063 5.67089L64.8038 0C60.8032 2.0443 55.6024 4.14557 50.8715 5.58861C40.3111 8.81646 33.9926 10.7278 25.858 10.8924C20.0031 11.0063 19.9206 8.24684 25.6167 3.31013C19.2157 5.78481 10.2683 8.71519 0 11.0127C9.16334 11.2722 16.1168 13.1266 20.2952 15.5443C26.2454 18.9873 27.6932 22.6076 28.3664 25H37.2122Z"
+                                    fill="#021489" />
+                            </svg>
+                            <h3 class="p-0" id="vitrineTitle" contenteditable="true" spellcheck="false">Vitrine
+                            </h3>
+                        </div>
+                        <div id="vitrineGrid" role="grid" aria-label="Vitrine"></div>
+                    </div>
+
+                    <div class="vitrine-strip-wrapper" id="vitrineStripWrapper" aria-label="Produtos para arrastar">
+                        <div id="vitrineProductsStrip"></div>
+                        <div class="vitrine-custom-scrollbar" id="vitrineStripScrollbar" aria-hidden="true">
+                            <div class="vitrine-scroll-btn" id="vitrineStripBtnLeft"
+                                aria-label="Rolar para esquerda">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="7" height="6"
+                                    viewBox="0 0 7 6" fill="none">
+                                    <path d="M0.000742197 3L6.92895 6V0L0.000742197 3Z" fill="#A9A9A9" />
+                                </svg>
+                            </div>
+                            <div class="vitrine-scroll-track" id="vitrineStripTrack">
+                                <div class="vitrine-scroll-thumb" id="vitrineStripThumb"></div>
+                            </div>
+                            <div class="vitrine-scroll-btn" id="vitrineStripBtnRight"
+                                aria-label="Rolar para direita">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="7" height="6"
+                                    viewBox="0 0 7 6" fill="none">
+                                    <path d="M6.92895 3L0.000742197 0V6L6.92895 3Z" fill="#A9A9A9" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="vitrineProductsEmpty">Nenhum produto no pedido para montar a vitrine.</div>
+
+                    <div class="vitrine-controls" aria-label="Controles da vitrine">
+                        <div class="vitrine-stepper">
+                            <span>Linhas</span>
+                            <button type="button" id="vitrineRowsMinusBtn" aria-label="Diminuir linhas">−</button>
+                            <button type="button" id="vitrineRowsPlusBtn" aria-label="Aumentar linhas">+</button>
+                        </div>
+                        <div class="vitrine-stepper">
+                            <span>Colunas</span>
+                            <button type="button" id="vitrineColsMinusBtn" aria-label="Diminuir colunas">−</button>
+                            <button type="button" id="vitrineColsPlusBtn" aria-label="Aumentar colunas">+</button>
+                        </div>
+                        <button type="button" class="pedido-modal-cta" id="vitrineAddAllBtn">Adicionar
+                            todos</button>
+                        <button type="button" class="pedido-modal-cta" id="vitrineRemoveAllBtn"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18"
+                                fill="none">
+                                <path
+                                    d="M4.3719 3.69375H5.68595V1.96408C5.68595 1.50337 6.01653 1.20431 6.5124 1.20431H9.47108C9.96693 1.20431 10.2975 1.50337 10.2975 1.96408V3.69375H11.6115V1.88325C11.6115 0.71127 10.8347 0 9.56199 0H6.42149C5.14876 0 4.3719 0.71127 4.3719 1.88325V3.69375ZM0.619835 4.34036H15.3884C15.7273 4.34036 16 4.05747 16 3.72608C16 3.3947 15.7273 3.11989 15.3884 3.11989H0.619835C0.289256 3.11989 0 3.3947 0 3.72608C0 4.06555 0.289256 4.34036 0.619835 4.34036ZM4.21487 18H11.7934C12.9752 18 13.7686 17.2483 13.8265 16.0925L14.405 4.18679H13.0744L12.5207 15.9551C12.5042 16.44 12.1488 16.7795 11.6612 16.7795H4.33057C3.85951 16.7795 3.50413 16.4319 3.47934 15.9551L2.89256 4.18679H1.59504L2.18182 16.1006C2.23967 17.2563 3.01653 18 4.21487 18ZM5.55372 15.3974C5.86777 15.3974 6.07438 15.2034 6.06611 14.9205L5.80992 6.2721C5.80165 5.98921 5.59504 5.80331 5.29752 5.80331C4.98347 5.80331 4.77686 5.99729 4.78513 6.28019L5.03306 14.9205C5.04132 15.2115 5.24794 15.3974 5.55372 15.3974ZM8.00004 15.3974C8.31408 15.3974 8.53721 15.2034 8.53721 14.9205V6.28019C8.53721 5.99729 8.31408 5.80331 8.00004 5.80331C7.68592 5.80331 7.47111 5.99729 7.47111 6.28019V14.9205C7.47111 15.2034 7.68592 15.3974 8.00004 15.3974ZM10.4545 15.3974C10.7521 15.3974 10.9587 15.2115 10.967 14.9205L11.2148 6.28019C11.2232 5.99729 11.0165 5.80331 10.7025 5.80331C10.405 5.80331 10.1983 5.98921 10.1901 6.28019L9.94218 14.9205C9.93386 15.2034 10.1405 15.3974 10.4545 15.3974Z"
+                                    fill="black" />
+                            </svg> Remover todos</button>
+
+                        <button type="button" class="pedido-modal-cta is-dark" id="vitrineExportPdfBtn">PDF
+                            <svg width="10" height="14" viewBox="0 0 10 14" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M10 7.65881C10 7.32784 9.76257 7.07121 9.43272 7.07121C9.27444 7.07121 9.12269 7.12527 9.01715 7.23333L7.51323 8.74611L5.15172 11.4002L5.52111 11.5353L5.58708 9.52273V0.621648C5.58708 0.277223 5.34302 0.0273438 5.00001 0.0273438C4.657 0.0273438 4.41293 0.277223 4.41293 0.621648V9.52273L4.4789 11.5353L4.85489 11.4002L2.48681 8.74611L0.982849 7.23333C0.883905 7.12527 0.725593 7.07121 0.567282 7.07121C0.237467 7.07121 0 7.32784 0 7.65881C0 7.82086 0.059367 7.96269 0.184697 8.09777L4.55806 12.5889C4.68338 12.7239 4.8351 12.7914 5.00001 12.7914C5.16491 12.7914 5.31663 12.7239 5.44196 12.5889L9.8219 8.09777C9.94726 7.96269 10 7.82086 10 7.65881ZM10 13.3925C10 13.0413 9.76916 12.7914 9.43272 12.7914H0.580476C0.237467 12.7914 0 13.0413 0 13.3925C0 13.7437 0.237467 14.0003 0.580476 14.0003H9.43272C9.76916 14.0003 10 13.7437 10 13.3925Z"
+                                    fill="white" />
+                            </svg>
+                        </button>
+                        <button type="button" class="pedido-modal-cta is-dark" id="vitrineExportJpgBtn">JPG
+                            <svg width="10" height="14" viewBox="0 0 10 14" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M10 7.65881C10 7.32784 9.76257 7.07121 9.43272 7.07121C9.27444 7.07121 9.12269 7.12527 9.01715 7.23333L7.51323 8.74611L5.15172 11.4002L5.52111 11.5353L5.58708 9.52273V0.621648C5.58708 0.277223 5.34302 0.0273438 5.00001 0.0273438C4.657 0.0273438 4.41293 0.277223 4.41293 0.621648V9.52273L4.4789 11.5353L4.85489 11.4002L2.48681 8.74611L0.982849 7.23333C0.883905 7.12527 0.725593 7.07121 0.567282 7.07121C0.237467 7.07121 0 7.32784 0 7.65881C0 7.82086 0.059367 7.96269 0.184697 8.09777L4.55806 12.5889C4.68338 12.7239 4.8351 12.7914 5.00001 12.7914C5.16491 12.7914 5.31663 12.7239 5.44196 12.5889L9.8219 8.09777C9.94726 7.96269 10 7.82086 10 7.65881ZM10 13.3925C10 13.0413 9.76916 12.7914 9.43272 12.7914H0.580476C0.237467 12.7914 0 13.0413 0 13.3925C0 13.7437 0.237467 14.0003 0.580476 14.0003H9.43272C9.76916 14.0003 10 13.7437 10 13.3925Z"
+                                    fill="white" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="pedidoHistoryModal" aria-hidden="true">
+            <div id="pedidoHistoryModalCard">
+                <div class="flex justify-center items-center mb-4">
+                    <h2 class="text-xl font-medium text-center">Histórico de Pedidos</h2>
+                </div>
+                <div class="flex items-center border-b border-b-black px-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-black ml-1" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387a1 1 0 01-1.414 1.414l-4.387-4.387zM8 14a6 6 0 100-12 6 6 0 000 12z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <input type="text" placeholder="Buscar" id="pedidoHistorySearchInput"
+                        class="input-estilizado bg-transparent border-0 focus:outline-none focus:ring-0 p-1" />
+                </div>
+                <div id="pedidoHistoryTableWrap">
+                    <table id="pedidoHistoryTable">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Data</th>
+                                <th>Itens</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="pedidoHistoryTableBody"></tbody>
+                    </table>
+                    <div id="pedidoHistoryEmpty">Nenhum pedido salvo até o momento.</div>
+                </div>
+                <div class="pt-4 mt-2">
+                    <div class="flex justify-center gap-4">
+                        <button id="pedidoHistoryBackBtn" type="button"
+                            class="flex items-center border border-black rounded-full px-6 py-3 text-sm">
+                            Voltar
+                            <img src="/images/icon-voltar.png" alt="" class="ml-2 w-4 h-4" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="pedidoActions">
+
+
+            <button id="pedidoHistoryBtn" type="button" aria-label="Histórico de pedidos">
+                <img src="/images/icones/icone-pedido-history.svg" alt="" width="20" height="18" />
+            </button>
+            <button id="pedidoFavoritosBtn" type="button" aria-label="Favoritos">
+                <svg class="pedido-fav-icon-outline" xmlns="http://www.w3.org/2000/svg" width="20"
+                    height="18" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                        stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <svg class="pedido-fav-icon-filled" xmlns="http://www.w3.org/2000/svg" width="20" height="18"
+                    viewBox="0 0 18 16" fill="none">
+                    <path
+                        d="M0 5.26362C0 8.97604 3.23565 12.6275 8.34743 15.7647C8.53776 15.878 8.80967 16 9 16C9.19033 16 9.46224 15.878 9.66163 15.7647C14.7643 12.6275 18 8.97604 18 5.26362C18 2.17865 15.7976 0 12.861 0C11.1843 0 9.82477 0.766885 9 1.94336C8.19335 0.775599 6.81571 0 5.13897 0C2.20242 0 0 2.17865 0 5.26362Z"
+                        fill="black" />
+                </svg>
+            </button>
+
+            <button id="pedidoClearBtn" type="button" aria-label="Limpar pedido">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18"
+                    fill="none">
+                    <path
+                        d="M4.3719 3.69375H5.68595V1.96408C5.68595 1.50337 6.01653 1.20431 6.5124 1.20431H9.47108C9.96693 1.20431 10.2975 1.50337 10.2975 1.96408V3.69375H11.6115V1.88325C11.6115 0.71127 10.8347 0 9.56199 0H6.42149C5.14876 0 4.3719 0.71127 4.3719 1.88325V3.69375ZM0.619835 4.34036H15.3884C15.7273 4.34036 16 4.05747 16 3.72608C16 3.3947 15.7273 3.11989 15.3884 3.11989H0.619835C0.289256 3.11989 0 3.3947 0 3.72608C0 4.06555 0.289256 4.34036 0.619835 4.34036ZM4.21487 18H11.7934C12.9752 18 13.7686 17.2483 13.8265 16.0925L14.405 4.18679H13.0744L12.5207 15.9551C12.5042 16.44 12.1488 16.7795 11.6612 16.7795H4.33057C3.85951 16.7795 3.50413 16.4319 3.47934 15.9551L2.89256 4.18679H1.59504L2.18182 16.1006C2.23967 17.2563 3.01653 18 4.21487 18ZM5.55372 15.3974C5.86777 15.3974 6.07438 15.2034 6.06611 14.9205L5.80992 6.2721C5.80165 5.98921 5.59504 5.80331 5.29752 5.80331C4.98347 5.80331 4.77686 5.99729 4.78513 6.28019L5.03306 14.9205C5.04132 15.2115 5.24794 15.3974 5.55372 15.3974ZM8.00004 15.3974C8.31408 15.3974 8.53721 15.2034 8.53721 14.9205V6.28019C8.53721 5.99729 8.31408 5.80331 8.00004 5.80331C7.68592 5.80331 7.47111 5.99729 7.47111 6.28019V14.9205C7.47111 15.2034 7.68592 15.3974 8.00004 15.3974ZM10.4545 15.3974C10.7521 15.3974 10.9587 15.2115 10.967 14.9205L11.2148 6.28019C11.2232 5.99729 11.0165 5.80331 10.7025 5.80331C10.405 5.80331 10.1983 5.98921 10.1901 6.28019L9.94218 14.9205C9.93386 15.2034 10.1405 15.3974 10.4545 15.3974Z"
+                        fill="black" />
+                </svg>
+            </button>
+            <button id="pedidoFab" type="button" aria-label="Pedido" aria-expanded="false">
+                <span id="pedidoCount" aria-hidden="true"></span>
+                <img id="pedidoFabIcon" src="/images/icones/icone-pedido.svg" alt="" />
+            </button>
+        </div>
+
 
 
     </main>
@@ -1298,15 +2477,16 @@
     @push('scripts')
         <script>
             const userWishlist = @json($userWishlist);
+            const currentCollectionSlug = @json($currentSlug);
             const produtosData = [
                 @if (!empty($produtos) && count($produtos) > 0)
                     @foreach ($produtos as $produtoGroup)
                         @if ($produtoGroup && $produtoGroup->product)
                             @php
                                 $produto = $produtoGroup->product;
-                                $imgPath = '/images/produtos/' . $produto->code . '_' . str_replace('/', '_', $produtoGroup->color_code) . '.jpg';
+                                $imgPath = '/images/produtos/' . $produto->code . '_' . str_replace('/', '_', $produtoGroup->color_code) . '_A.jpg';
                                 $imgFullPath = public_path($imgPath);
-                                $img = file_exists($imgFullPath) ? $imgPath : '/images/img-padrao-oly.png';
+                                $img = file_exists($imgFullPath) ? $imgPath : '/images/img-padrao-mz.png';
                                 $numeracaoIdsProduct = $produto->numeracoes ? $produto->numeracoes->pluck('id')->toArray() : [];
                                 $numeracaoIdColor = $produtoGroup->numeracao ? $produtoGroup->numeracao->id : null;
                                 $numeracaoIds = $numeracaoIdsProduct;
@@ -1316,7 +2496,24 @@
                                 $numeracaoIds = array_values(array_unique($numeracaoIds));
                                 $tamanhoIds = $produto->sizes ? $produto->sizes->pluck('id')->toArray() : [];
                                 $precoNumerico = $produto->price ?? 0;
-                                $classificacaoId = $produtoGroup->flagProduct ? $produtoGroup->flagProduct->id : null;
+                                $badges = $produtoGroup->flagProducts
+                                    ? $produtoGroup->flagProducts
+                                        ->map(function ($flag) {
+                                            return [
+                                                'id' => $flag->id,
+                                                'title' => $flag->flag_title ?? '',
+                                                'icon' => $flag->icon ?? '',
+                                                'bg' => $flag->flag_bg ?? '',
+                                                'color' => $flag->flag_color_text_bg ?? '',
+                                                'align' => $flag->alinhamento ?? '',
+                                                'orderfilterflag' => $flag->orderfilterflag ?? 0,
+                                            ];
+                                        })
+                                        ->values()
+                                        ->toArray()
+                                    : [];
+                                $firstBadge = !empty($badges) ? $badges[0] : null;
+                                $classificacaoId = $firstBadge ? $firstBadge['id'] ?? null : ($produtoGroup->flagProduct ? $produtoGroup->flagProduct->id : null);
                                 $segmentacaoIds = $produtoGroup->segmentacoesCliente ? $produtoGroup->segmentacoesCliente->pluck('id')->toArray() : [];
                             @endphp {
                                 id: {{ $produto->id }},
@@ -1339,6 +2536,7 @@
                                 tamanhoIds: @json($tamanhoIds),
                                 classificacaoId: {{ $classificacaoId ?? 'null' }},
                                 segmentacaoIds: @json($segmentacaoIds),
+                                badges: @json($badges),
                                 badge_title: "{{ $produtoGroup->flagProduct->flag_title ?? '' }}",
                                 badge_icon: "{{ $produtoGroup->flagProduct->icon ?? '' }}",
                                 badge_bg: "{{ $produtoGroup->flagProduct->flag_bg ?? '' }}",
@@ -1356,6 +2554,32 @@
             const produtosContainer = document.getElementById("produtos");
             const template = document.getElementById("template-produto");
             const groupCheckbox = document.getElementById("groupColors");
+            const pedidoFab = document.getElementById("pedidoFab");
+            const pedidoOverlay = document.getElementById("pedidoOverlay");
+            const pedidoCountEl = document.getElementById("pedidoCount");
+            const pedidoClearBtn = document.getElementById("pedidoClearBtn");
+            const pedidoHistoryBtn = document.getElementById("pedidoHistoryBtn");
+            const pedidoFavoritosBtn = document.getElementById("pedidoFavoritosBtn");
+            const pedidoFabIcon = document.getElementById("pedidoFabIcon");
+            const pedidoOverlayBackBtn = document.getElementById("pedidoOverlayBackBtn");
+            const pedidoModal = document.getElementById("pedidoModal");
+            const pedidoModalBackBtn = document.getElementById("pedidoModalBackBtn");
+            const pedidoModalItems = document.getElementById("pedidoModalItems");
+            const pedidoModalEmpty = document.getElementById("pedidoModalEmpty");
+            const titlePedidoEl = document.getElementById("titlePedido");
+            const pedidoSaveBtn = document.getElementById("pedidoSaveBtn");
+            const pedidoHistoryModal = document.getElementById("pedidoHistoryModal");
+            const pedidoHistoryBackBtn = document.getElementById("pedidoHistoryBackBtn");
+            const pedidoHistorySearchInput = document.getElementById("pedidoHistorySearchInput");
+            const pedidoHistoryTableBody = document.getElementById("pedidoHistoryTableBody");
+            const pedidoHistoryEmpty = document.getElementById("pedidoHistoryEmpty");
+
+            const pedidoIconDefaultSrc = "/images/icones/icone-pedido.svg";
+            const pedidoIconSelectedSrc = "/images/icones/icone-pedido.svg";
+
+            const pedidoStorageKey = "pedido_itens_ua_v1";
+            let pedidoItens = carregarPedidoItens();
+            let pedidosHistorico = [];
 
             let selectedCategory = '';
             let selectedSubcategory = '';
@@ -1419,55 +2643,70 @@
 
                     const badgeContainer = clone.querySelector(".badge-container");
 
-                    if (produto.badge_title != "") {
-                        const badge_icon_align = produto.badge_icon_align;
+                    const badges = Array.isArray(produto.badges) && produto.badges.length ? produto.badges : (
+                        produto.badge_title ? [{
+                            title: produto.badge_title,
+                            icon: produto.badge_icon,
+                            bg: produto.badge_bg,
+                            color: produto.badge_color,
+                            align: produto.badge_icon_align
+                        }] : []
+                    );
 
-                        if (produto.badge_icon != "") {
-                            const badgeIconWrapper = document.createElement("div");
-                            badgeIconWrapper.className = "badge-icon-wrapper";
-                            badgeIconWrapper.style.position = "relative";
-                            badgeIconWrapper.style.display = "inline-block";
+                    if (badges.length) {
+                        badgeContainer.innerHTML = "";
 
-                            const badgeIcon = document.createElement("img");
-                            badgeIcon.className = "badge-icon";
-                            badgeIcon.src = "/" + produto.badge_icon;
-                            badgeIcon.alt = produto.badge_title;
-                            badgeIcon.style.width = "19px";
-                            badgeIcon.style.height = "19px";
-
-                            if (badge_icon_align == "right") {
-                                badgeContainer.style.right = "5px";
-                            }
-                            if (badge_icon_align == "left") {
-                                badgeContainer.style.left = "5px";
-                            }
-
-                            const badge = document.createElement("span");
-                            badge.className = "badge-tooltip";
-                            badge.textContent = produto.badge_title;
-                            badge.style.backgroundColor = 'transparent';
-                            badge.style.color = produto.badge_color;
-                            badge.style.fontSize = "10px";
-
-                            badgeIconWrapper.appendChild(badgeIcon);
-                            badgeIconWrapper.appendChild(badge);
-                            badgeContainer.appendChild(badgeIconWrapper);
-                        } else {
-                            const badge = document.createElement("span");
-                            badge.className = "badge";
-                            badge.textContent = produto.badge_title;
-                            badge.style.backgroundColor = produto.badge_bg;
-                            badge.style.color = produto.badge_color;
-
-                            if (badge_icon_align == "right") {
-                                badgeContainer.style.right = "5px";
-                            }
-                            if (badge_icon_align == "left") {
-                                badgeContainer.style.left = "5px";
-                            }
-
-                            badgeContainer.appendChild(badge);
+                        const align = (badges[0] && badges[0].align) ? badges[0].align : produto.badge_icon_align;
+                        if (align == "right") {
+                            badgeContainer.style.right = "0px";
+                            badgeContainer.style.left = "";
                         }
+                        if (align == "left") {
+                            badgeContainer.style.left = "0px";
+                            badgeContainer.style.right = "";
+                        }
+
+                        badges.forEach((badgeData) => {
+                            const title = badgeData && badgeData.title ? badgeData.title : "";
+                            if (!title) return;
+
+                            const icon = badgeData && badgeData.icon ? badgeData.icon : "";
+                            const bg = badgeData && badgeData.bg ? badgeData.bg : "";
+                            const color = badgeData && badgeData.color ? badgeData.color : "";
+
+                            if (icon) {
+                                const badgeIconWrapper = document.createElement("div");
+                                badgeIconWrapper.className = "badge-icon-wrapper";
+                                badgeIconWrapper.style.position = "relative";
+                                badgeIconWrapper.style.display = "block";
+
+                                const badgeIcon = document.createElement("img");
+                                badgeIcon.className = "badge-icon";
+                                badgeIcon.src = "/" + icon;
+                                badgeIcon.alt = title;
+                                badgeIcon.style.width = "19px";
+                                badgeIcon.style.height = "19px";
+
+                                const badge = document.createElement("span");
+                                badge.className = "badge-tooltip";
+                                badge.textContent = title;
+                                badge.style.backgroundColor = "transparent";
+                                badge.style.color = color;
+                                badge.style.fontSize = "10px";
+
+                                badgeIconWrapper.appendChild(badgeIcon);
+                                badgeIconWrapper.appendChild(badge);
+                                badgeContainer.appendChild(badgeIconWrapper);
+                            } else {
+                                const badge = document.createElement("span");
+                                badge.className = "badge";
+                                badge.textContent = title;
+                                badge.style.backgroundColor = bg;
+                                badge.style.color = color;
+                                //badge.style.display = "block";
+                                badgeContainer.appendChild(badge);
+                            }
+                        });
                     }
 
                     // Lógica de Favoritos
@@ -1477,6 +2716,47 @@
                     const favText = clone.querySelector('.favorite-text');
 
                     const prodKey = `${produto.id}-${produto.codigo_cor}`;
+
+                    const pedidoBtn = clone.querySelector('.pedido-item-btn');
+                    if (pedidoBtn) {
+                        pedidoBtn.dataset.prodKey = prodKey;
+                        aplicarEstadoPedidoBtn(pedidoBtn, prodKey);
+                        pedidoBtn.onclick = function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            if (pedidoItens.has(prodKey)) {
+                                pedidoItens.delete(prodKey);
+                            } else {
+                                pedidoItens.set(prodKey, {
+                                    key: prodKey,
+                                    product_id: produto.id,
+                                    color_code: produto.codigo_cor,
+                                    title: produto.title,
+                                    imagem: produto.imagem,
+                                    categoria: produto.categoria,
+                                    genero: produto.genero,
+                                    codigo: produto.codigo,
+                                    cor: produto.cor,
+                                    numeracao: produto.numeracao,
+                                    preco: produto.preco
+                                });
+                            }
+                            salvarPedidoItens();
+                            aplicarEstadoPedidoBtn(pedidoBtn, prodKey);
+                            atualizarPedidoBadge();
+                            if (pedidoModal && pedidoModal.classList.contains('active')) {
+                                renderPedidoModal();
+                            }
+                        };
+                    }
+
+                    link.addEventListener('click', (e) => {
+                        if (document.body.classList.contains('pedido-mode')) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                    });
 
                     // Verifica se userWishlist está definido (pode estar vazio se não logado)
                     const isFavorited = (typeof userWishlist !== 'undefined' && Array.isArray(userWishlist)) ?
@@ -1572,6 +2852,1922 @@
                     produtosContainer.appendChild(clone);
                 });
             }
+
+            function carregarPedidoItens() {
+                try {
+                    const raw = localStorage.getItem(pedidoStorageKey);
+                    if (!raw) return new Map();
+                    const parsed = JSON.parse(raw);
+                    const map = new Map();
+                    if (Array.isArray(parsed)) {
+                        parsed.forEach((item) => {
+                            if (!item) return;
+                            if (typeof item === 'string') {
+                                map.set(item, {
+                                    key: item
+                                });
+                                return;
+                            }
+                            if (item.key) map.set(item.key, item);
+                        });
+                    }
+                    return map;
+                } catch (e) {
+                    return new Map();
+                }
+            }
+
+            function salvarPedidoItens() {
+                try {
+                    localStorage.setItem(pedidoStorageKey, JSON.stringify(Array.from(pedidoItens.values())));
+                } catch (e) {}
+            }
+
+            function hasFavoritosNoPedido() {
+                if (!(typeof userWishlist !== 'undefined' && Array.isArray(userWishlist) && userWishlist.length > 0)) {
+                    return false;
+                }
+                const favSet = new Set(userWishlist);
+                for (const key of pedidoItens.keys()) {
+                    if (favSet.has(key)) return true;
+                }
+                return false;
+            }
+
+            function atualizarVisibilidadeCtasPedido() {
+                const pedidoAtivo = document.body.classList.contains('pedido-mode');
+                const count = pedidoItens.size;
+                if (pedidoClearBtn) {
+                    pedidoClearBtn.style.display = pedidoAtivo && count > 0 ? 'flex' : 'none';
+                }
+                if (pedidoHistoryBtn) {
+                    pedidoHistoryBtn.style.display = pedidoAtivo ? 'flex' : 'none';
+                }
+                if (pedidoFavoritosBtn) {
+                    pedidoFavoritosBtn.style.display = pedidoAtivo ? 'flex' : 'none';
+                    pedidoFavoritosBtn.classList.toggle('is-active', pedidoAtivo && hasFavoritosNoPedido());
+                }
+            }
+
+            function atualizarPedidoBadge() {
+                if (!pedidoCountEl) return;
+                const count = pedidoItens.size;
+                pedidoCountEl.textContent = String(count);
+                pedidoCountEl.style.display = count > 0 ? 'flex' : 'none';
+                atualizarVisibilidadeCtasPedido();
+            }
+
+            function atualizarBotoesPedidoNosCards() {
+                document.querySelectorAll('.pedido-item-btn').forEach((btn) => {
+                    const prodKey = btn.dataset.prodKey;
+                    if (!prodKey) return;
+                    aplicarEstadoPedidoBtn(btn, prodKey);
+                });
+            }
+
+            function aplicarEstadoPedidoBtn(btn, prodKey) {
+                const isAdded = pedidoItens.has(prodKey);
+                btn.classList.toggle('is-added', isAdded);
+                btn.textContent = isAdded ? '−' : '+';
+                btn.setAttribute('aria-label', isAdded ? 'Retirar do pedido' : 'Adicionar ao pedido');
+            }
+
+            function adicionarProdutoAoPedido(produto) {
+                const prodKey = `${produto.id}-${produto.codigo_cor}`;
+                if (pedidoItens.has(prodKey)) return false;
+                pedidoItens.set(prodKey, {
+                    key: prodKey,
+                    product_id: produto.id,
+                    color_code: produto.codigo_cor,
+                    title: produto.title,
+                    imagem: produto.imagem,
+                    categoria: produto.categoria,
+                    genero: produto.genero,
+                    codigo: produto.codigo,
+                    cor: produto.cor,
+                    numeracao: produto.numeracao,
+                    preco: produto.preco
+                });
+                return true;
+            }
+
+            function adicionarFavoritosAoPedido() {
+                if (!(typeof userWishlist !== 'undefined' && Array.isArray(userWishlist)) || userWishlist.length === 0) {
+                    alert('Você não tem favoritos para adicionar ao pedido.');
+                    return;
+                }
+
+                let added = 0;
+                userWishlist.forEach((key) => {
+                    const produto = buscarProdutoPorKey(key);
+                    if (!produto) return;
+                    if (adicionarProdutoAoPedido(produto)) added++;
+                });
+
+                if (!document.body.classList.contains('pedido-mode')) {
+                    setPedidoMode(true);
+                }
+
+                if (added === 0) {
+                    alert('Nenhum favorito desta coleção foi encontrado para adicionar ao pedido.');
+                    return;
+                }
+
+                salvarPedidoItens();
+                atualizarPedidoBadge();
+                atualizarBotoesPedidoNosCards();
+                if (pedidoModal && pedidoModal.classList.contains('active')) {
+                    renderPedidoModal();
+                }
+            }
+
+            function limparPedido() {
+                pedidoItens.clear();
+                salvarPedidoItens();
+                atualizarPedidoBadge();
+                atualizarBotoesPedidoNosCards();
+                if (pedidoModal && pedidoModal.classList.contains('active')) {
+                    renderPedidoModal();
+                }
+            }
+
+            function setPedidoMode(active) {
+                document.body.classList.toggle('pedido-mode', active);
+                if (pedidoFab) pedidoFab.setAttribute('aria-expanded', active ? 'true' : 'false');
+                if (pedidoOverlay) pedidoOverlay.setAttribute('aria-hidden', active ? 'false' : 'true');
+                if (pedidoFabIcon) pedidoFabIcon.src = active ? pedidoIconSelectedSrc : pedidoIconDefaultSrc;
+                atualizarVisibilidadeCtasPedido();
+            }
+
+            function buscarProdutoPorKey(prodKey) {
+                return produtosData.find((p) => `${p.id}-${p.codigo_cor}` === prodKey) || null;
+            }
+
+            function escapeHtml(value) {
+                return String(value || '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            function renderPedidoModal() {
+                if (!pedidoModalItems || !pedidoModalEmpty) return;
+                const itens = Array.from(pedidoItens.values());
+                if (itens.length === 0) {
+                    pedidoModalItems.innerHTML = '';
+                    pedidoModalEmpty.style.display = 'block';
+                    return;
+                }
+
+                pedidoModalEmpty.style.display = 'none';
+                pedidoModalItems.innerHTML = itens.map((item) => {
+                    const fallback = buscarProdutoPorKey(item.key);
+                    const imagem = item.imagem || fallback?.imagem || '/images/img-padrao-mz.png';
+                    const title = item.title || fallback?.title || '';
+                    const categoria = item.categoria || fallback?.categoria || '';
+                    const genero = item.genero || fallback?.genero || '';
+                    const codigo = item.codigo || fallback?.codigo || '';
+                    const cor = item.cor || fallback?.cor || '';
+                    const numeracao = item.numeracao || fallback?.numeracao || '';
+                    const preco = item.preco || fallback?.preco || '';
+
+                    return `
+                        <div class="pedido-modal-row">
+                            <img class="pedido-modal-thumb" src="${escapeHtml(imagem)}" alt="${escapeHtml(title)}">
+                            <div class="pedido-modal-title">${escapeHtml(title)}</div>
+                            <div class="pedido-modal-col is-black">${escapeHtml(categoria)}</div>
+                            <div class="pedido-modal-col is-opacity">${escapeHtml(genero)}</div>
+                            <div class="pedido-modal-col is-opacity">${escapeHtml(codigo)}</div>
+                            <div class="pedido-modal-col is-12px">${escapeHtml(cor)}</div>
+                            <!--<div class="pedido-modal-col is-12px">${escapeHtml(numeracao)}</div>-->
+                            <div class="pedido-modal-price is-16px">${escapeHtml(preco)}</div>
+                            <button class="pedido-modal-remove" type="button" data-remove-pedido="${escapeHtml(item.key)}">Remover</button>
+                        </div>
+                    `;
+                }).join('');
+
+                pedidoModalItems.querySelectorAll('[data-remove-pedido]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const prodKey = btn.getAttribute('data-remove-pedido');
+                        if (!prodKey) return;
+                        pedidoItens.delete(prodKey);
+                        salvarPedidoItens();
+                        atualizarPedidoBadge();
+                        atualizarBotoesPedidoNosCards();
+                        renderPedidoModal();
+                    });
+                });
+            }
+
+            function getNomeColecaoPedido() {
+                const raw = (colecaoSelectedText?.textContent || '').replace(/\s+/g, ' ').trim();
+                if (!raw || raw.toLowerCase() === 'selecione uma coleção') return 'Pedido';
+                return raw.replace(/\s*\([^)]*\)\s*/g, ' ').replace(/\s+/g, ' ').trim() || 'Pedido';
+            }
+
+            function getDataPedidoDDMMAAAA() {
+                const d = new Date();
+                const dd = String(d.getDate()).padStart(2, '0');
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const yyyy = String(d.getFullYear());
+                return `${dd}${mm}${yyyy}`;
+            }
+
+            function buildAutoPedidoTitle() {
+                const nomeColecao = getNomeColecaoPedido();
+                const data = getDataPedidoDDMMAAAA();
+                const current = (titlePedidoEl?.textContent || '').replace(/\s+/g, ' ').trim();
+                const basePrefix = `${nomeColecao}_${data}_`;
+                if (titlePedidoEl?.dataset?.autoGenerated === 'true' && current.startsWith(basePrefix)) {
+                    const match = current.match(/_(\d+)$/);
+                    const version = match ? match[1] : '1';
+                    return `${nomeColecao}_${data}_${version}`;
+                }
+                return `${nomeColecao}_${data}_1`;
+            }
+
+            function garantirTituloPedidoAuto() {
+                if (!titlePedidoEl) return;
+                const current = (titlePedidoEl.textContent || '').replace(/\s+/g, ' ').trim();
+                const isHardcodedDefault = current === 'AW26 Oportunidades_26052025_1';
+                const isEmptyOrPlaceholder = current === '' || current === 'Altere o título do pedido para salvar';
+                const canOverwrite = titlePedidoEl.dataset.autoGenerated === 'true' || isHardcodedDefault ||
+                    isEmptyOrPlaceholder;
+                if (!canOverwrite) return;
+                titlePedidoEl.textContent = buildAutoPedidoTitle();
+                titlePedidoEl.dataset.autoGenerated = 'true';
+            }
+
+            function abrirPedidoModal() {
+                if (!pedidoModal) return;
+                garantirTituloPedidoAuto();
+                renderPedidoModal();
+                pedidoModal.classList.add('active');
+                pedidoModal.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('pedido-modal-open');
+            }
+
+            function fecharPedidoModal() {
+                if (!pedidoModal) return;
+                pedidoModal.classList.remove('active');
+                pedidoModal.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('pedido-modal-open');
+            }
+
+            function getPedidoTitle() {
+                const title = (titlePedidoEl?.textContent || '').trim();
+                return title !== '' ? title : 'Altere o título do pedido para salvar';
+            }
+
+            function getPedidoItemsPayload() {
+                return Array.from(pedidoItens.values()).map((item) => {
+                    return {
+                        product_id: item.product_id,
+                        color_code: item.color_code || null,
+                        title: item.title || null,
+                        categoria: item.categoria || null,
+                        genero: item.genero || null,
+                        codigo: item.codigo || null,
+                        cor: item.cor || null,
+                        numeracao: item.numeracao || null,
+                        preco: item.preco || null,
+                        imagem: item.imagem || null,
+                    };
+                });
+            }
+
+            function salvarPedidoNoServidor() {
+                const title = getPedidoTitle();
+                const items = getPedidoItemsPayload();
+                if (title === 'Altere o título do pedido para salvar') {
+                    alert('Altere o título do pedido para salvar.');
+                    return;
+                }
+                if (items.length === 0) {
+                    alert('Adicione ao menos 1 item para salvar o pedido.');
+                    return;
+                }
+
+                const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                fetch('/user/pedidos', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrf || ''
+                        },
+                        body: JSON.stringify({
+                            title,
+                            items
+                        })
+                    }).then(async (res) => {
+                        if (res.status === 401) {
+                            alert('Você precisa estar logado para salvar pedidos.');
+                            window.location.href = '/login';
+                            return null;
+                        }
+                        if (!res.ok) {
+                            const data = await res.json().catch(() => null);
+                            const msg = data?.message || 'Não foi possível salvar o pedido.';
+                            throw new Error(msg);
+                        }
+                        return res.json();
+                    })
+                    .then((data) => {
+                        if (!data) return;
+                        alert(data.message || 'Pedido salvo com sucesso!');
+                        limparPedidoAtualAposSalvar();
+                        fecharPedidoModal();
+                    })
+                    .catch((err) => {
+                        alert(err?.message || 'Não foi possível salvar o pedido.');
+                    });
+            }
+
+            function limparPedidoAtualAposSalvar() {
+                pedidoItens.clear();
+                salvarPedidoItens();
+                atualizarPedidoBadge();
+                atualizarBotoesPedidoNosCards();
+                if (titlePedidoEl) {
+                    titlePedidoEl.textContent = buildAutoPedidoTitle();
+                    titlePedidoEl.dataset.autoGenerated = 'true';
+                }
+                if (pedidoModal && pedidoModal.classList.contains('active')) {
+                    renderPedidoModal();
+                }
+            }
+
+            function renderPedidoHistoryTable() {
+                if (!pedidoHistoryTableBody || !pedidoHistoryEmpty) return;
+                if (!Array.isArray(pedidosHistorico) || pedidosHistorico.length === 0) {
+                    pedidoHistoryTableBody.innerHTML = '';
+                    pedidoHistoryEmpty.textContent = 'Nenhum pedido salvo até o momento.';
+                    pedidoHistoryEmpty.style.display = 'block';
+                    return;
+                }
+
+                pedidoHistoryEmpty.style.display = 'none';
+                pedidoHistoryTableBody.innerHTML = pedidosHistorico.map((pedido) => `
+                    <tr class="pedido-history-row" data-search="${escapeHtml((pedido.title || '') + ' ' + (pedido.created_at_label || ''))}">
+                        <td>${escapeHtml(pedido.title || 'Pedido')}</td>
+                        <td>${escapeHtml(pedido.created_at_label || '')}</td>
+                        <td>${escapeHtml(String(pedido.items_count ?? 0))}</td>
+                        <td>
+                            <button type="button" class="pedido-history-open-btn" data-open-pedido-id="${escapeHtml(String(pedido.id))}">Abrir</button>
+                            <button type="button" class="pedido-history-delete-btn" data-delete-pedido-id="${escapeHtml(String(pedido.id))}">Excluir</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                pedidoHistoryTableBody.querySelectorAll('[data-open-pedido-id]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const id = Number(btn.getAttribute('data-open-pedido-id'));
+                        const pedido = pedidosHistorico.find((p) => Number(p.id) === id);
+                        if (!pedido) return;
+                        aplicarPedidoSalvo(pedido);
+                    });
+                });
+
+                pedidoHistoryTableBody.querySelectorAll('[data-delete-pedido-id]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const id = Number(btn.getAttribute('data-delete-pedido-id'));
+                        if (!id) return;
+                        const ok = confirm('Deseja excluir este pedido?');
+                        if (!ok) return;
+                        excluirPedidoDoHistorico(id);
+                    });
+                });
+            }
+
+            function aplicarFiltroHistoricoPedidos() {
+                const termo = (pedidoHistorySearchInput?.value || '').toLowerCase().trim();
+                document.querySelectorAll('.pedido-history-row').forEach((row) => {
+                    const txt = (row.getAttribute('data-search') || '').toLowerCase();
+                    row.style.display = txt.includes(termo) ? '' : 'none';
+                });
+            }
+
+            function carregarHistoricoPedidos() {
+                fetch('/user/pedidos', {
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(async (res) => {
+                        const text = await res.text();
+                        let data = null;
+                        try {
+                            data = JSON.parse(text);
+                        } catch (e) {}
+
+                        if (!res.ok || !data || data.success !== true) {
+                            if (text && text.toLowerCase().includes('<!doctype html')) {
+                                throw new Error('Sessão expirada. Faça login novamente.');
+                            }
+                            throw new Error('Falha ao carregar histórico.');
+                        }
+                        return data;
+                    })
+                    .then((data) => {
+                        pedidosHistorico = Array.isArray(data?.pedidos) ? data.pedidos : [];
+                        renderPedidoHistoryTable();
+                        aplicarFiltroHistoricoPedidos();
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        pedidosHistorico = [];
+                        renderPedidoHistoryTable();
+                        if (pedidoHistoryEmpty) {
+                            pedidoHistoryEmpty.textContent = err?.message || 'Erro ao carregar histórico.';
+                            pedidoHistoryEmpty.style.display = 'block';
+                        }
+                    });
+            }
+
+            function excluirPedidoDoHistorico(pedidoId) {
+                const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                fetch(`/user/pedidos/${pedidoId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': csrf || ''
+                        }
+                    })
+                    .then(async (res) => {
+                        const text = await res.text();
+                        let data = null;
+                        try {
+                            data = JSON.parse(text);
+                        } catch (e) {}
+                        if (!res.ok || !data || data.success !== true) {
+                            const msg = data?.message || 'Não foi possível excluir o pedido.';
+                            throw new Error(msg);
+                        }
+                        return data;
+                    })
+                    .then((data) => {
+                        pedidosHistorico = pedidosHistorico.filter((p) => Number(p.id) !== Number(pedidoId));
+                        renderPedidoHistoryTable();
+                        aplicarFiltroHistoricoPedidos();
+                        alert(data.message || 'Pedido excluído com sucesso!');
+                    })
+                    .catch((err) => {
+                        alert(err?.message || 'Não foi possível excluir o pedido.');
+                    });
+            }
+
+            function abrirPedidoHistoryModal() {
+                if (!pedidoHistoryModal) return;
+                renderPedidoHistoryTable();
+                pedidoHistoryModal.classList.add('active');
+                pedidoHistoryModal.setAttribute('aria-hidden', 'false');
+            }
+
+            function fecharPedidoHistoryModal() {
+                if (!pedidoHistoryModal) return;
+                pedidoHistoryModal.classList.remove('active');
+                pedidoHistoryModal.setAttribute('aria-hidden', 'true');
+            }
+
+            function aplicarPedidoSalvo(pedido) {
+                const title = (pedido?.title || '').trim();
+                if (titlePedidoEl) {
+                    titlePedidoEl.textContent = title !== '' ? title : buildAutoPedidoTitle();
+                    titlePedidoEl.dataset.autoGenerated = title === '';
+                }
+
+                const itens = Array.isArray(pedido?.items) ? pedido.items : [];
+                pedidoItens.clear();
+                itens.forEach((item) => {
+                    const productId = Number(item?.product_id || 0);
+                    if (!productId) return;
+                    const colorCode = item?.color_code ? String(item.color_code).replace(/\//g, '_') : '';
+                    const key = `${productId}-${colorCode}`;
+                    pedidoItens.set(key, {
+                        key,
+                        product_id: productId,
+                        color_code: colorCode,
+                        title: item?.title || '',
+                        imagem: item?.imagem || '',
+                        categoria: item?.categoria || '',
+                        genero: item?.genero || '',
+                        codigo: item?.codigo || '',
+                        cor: item?.cor || '',
+                        numeracao: item?.numeracao || '',
+                        preco: item?.preco || '',
+                    });
+                });
+
+                salvarPedidoItens();
+                atualizarPedidoBadge();
+                atualizarBotoesPedidoNosCards();
+                fecharPedidoHistoryModal();
+                abrirPedidoModal();
+            }
+
+            function getCurrentCollectionId() {
+                const optionBySelected = document.querySelector('#colecaoOptions .option[selected]');
+                const optionBySlug = currentCollectionSlug ?
+                    document.querySelector(`#colecaoOptions .option[data-slug="${currentCollectionSlug}"]`) :
+                    null;
+                const option = optionBySelected || optionBySlug;
+                const raw = option ? option.getAttribute('data-collection-id') : null;
+                const id = raw ? Number(raw) : 0;
+                return Number.isFinite(id) && id > 0 ? id : null;
+            }
+
+            function sanitizeFileName(name) {
+                const value = String(name || '').trim();
+                if (!value) return 'Pedido';
+                return value.replace(/[\\/:*?"<>|]+/g, '-').replace(/\s+/g, ' ').trim();
+            }
+
+            function getPedidoProdutosSelecionados() {
+                return Array.from(pedidoItens.values())
+                    .map((item) => {
+                        const id = Number(item?.product_id || 0);
+                        if (!id) return null;
+                        const colorCodeRaw = item?.color_code ? String(item.color_code) : '';
+                        const colorCode = colorCodeRaw ? colorCodeRaw.replace(/_/g, '/') : '';
+                        return {
+                            id,
+                            cor: item?.cor ? String(item.cor) : '',
+                            color_code: colorCode
+                        };
+                    })
+                    .filter(Boolean);
+            }
+
+            function submitPedidoExport(formato) {
+                const collectionId = getCurrentCollectionId();
+                if (!collectionId) {
+                    alert('Não foi possível identificar a coleção para exportação.');
+                    return;
+                }
+
+                const produtosSelecionados = getPedidoProdutosSelecionados();
+                if (!produtosSelecionados.length) {
+                    alert('Adicione ao menos 1 item no pedido para gerar o arquivo.');
+                    return;
+                }
+
+                const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = formato === 'planilha' ? '/user/export/pdf' : '/user/export/pedido/pdf';
+                form.style.display = 'none';
+
+                const inputToken = document.createElement('input');
+                inputToken.type = 'hidden';
+                inputToken.name = '_token';
+                inputToken.value = csrf;
+                form.appendChild(inputToken);
+
+                const inputCollectionId = document.createElement('input');
+                inputCollectionId.type = 'hidden';
+                inputCollectionId.name = 'collection_id';
+                inputCollectionId.value = String(collectionId);
+                form.appendChild(inputCollectionId);
+
+                const inputHistoryName = document.createElement('input');
+                inputHistoryName.type = 'hidden';
+                inputHistoryName.name = 'collectionHistoryName';
+                inputHistoryName.value = sanitizeFileName((titlePedidoEl?.textContent || '').trim());
+                form.appendChild(inputHistoryName);
+
+                const inputPedidoTitle = document.createElement('input');
+                inputPedidoTitle.type = 'hidden';
+                inputPedidoTitle.name = 'pedidoTitle';
+                inputPedidoTitle.value = (titlePedidoEl?.textContent || '').trim().replace(/\s+/g, ' ');
+                form.appendChild(inputPedidoTitle);
+
+                const inputProdutos = document.createElement('input');
+                inputProdutos.type = 'hidden';
+                inputProdutos.name = 'produtos';
+                inputProdutos.value = 'selecao';
+                form.appendChild(inputProdutos);
+
+                const inputGrupo = document.createElement('input');
+                inputGrupo.type = 'hidden';
+                inputGrupo.name = 'grupo_opcoes';
+                inputGrupo.value = 'separado';
+                form.appendChild(inputGrupo);
+
+                const inputFormato = document.createElement('input');
+                inputFormato.type = 'hidden';
+                inputFormato.name = 'formato';
+                inputFormato.value = formato === 'planilha' ? 'planilha' : 'a4';
+                form.appendChild(inputFormato);
+
+                produtosSelecionados.forEach((produto, index) => {
+                    const inputId = document.createElement('input');
+                    inputId.type = 'hidden';
+                    inputId.name = `produtos_selecionados[${index}][id]`;
+                    inputId.value = String(produto.id);
+                    form.appendChild(inputId);
+
+                    const inputCor = document.createElement('input');
+                    inputCor.type = 'hidden';
+                    inputCor.name = `produtos_selecionados[${index}][cor]`;
+                    inputCor.value = produto.cor || '';
+                    form.appendChild(inputCor);
+
+                    const inputColorCode = document.createElement('input');
+                    inputColorCode.type = 'hidden';
+                    inputColorCode.name = `produtos_selecionados[${index}][color_code]`;
+                    inputColorCode.value = produto.color_code || '';
+                    form.appendChild(inputColorCode);
+                });
+
+                document.body.appendChild(form);
+                form.submit();
+                setTimeout(() => form.remove(), 0);
+            }
+
+            if (pedidoFab) {
+                pedidoFab.addEventListener('click', () => {
+                    const active = document.body.classList.contains('pedido-mode');
+                    if (!active) {
+                        setPedidoMode(true);
+                        return;
+                    }
+
+                    if (pedidoItens.size === 0) {
+                        setPedidoMode(false);
+                    } else {
+                        setPedidoMode(false);
+                        abrirPedidoModal();
+                    }
+                });
+            }
+
+            if (pedidoOverlayBackBtn) {
+                pedidoOverlayBackBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setPedidoMode(false);
+                });
+            }
+
+            if (pedidoClearBtn) {
+                pedidoClearBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    limparPedido();
+                });
+            }
+
+            if (pedidoHistoryBtn) {
+                pedidoHistoryBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    carregarHistoricoPedidos();
+                    abrirPedidoHistoryModal();
+                });
+            }
+
+            if (pedidoFavoritosBtn) {
+                pedidoFavoritosBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    adicionarFavoritosAoPedido();
+                });
+            }
+
+            if (pedidoModalBackBtn) {
+                pedidoModalBackBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    fecharPedidoModal();
+                });
+            }
+
+            if (pedidoSaveBtn) {
+                pedidoSaveBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    salvarPedidoNoServidor();
+                });
+            }
+
+            if (pedidoHistoryBackBtn) {
+                pedidoHistoryBackBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    fecharPedidoHistoryModal();
+                });
+            }
+
+            if (pedidoHistorySearchInput) {
+                pedidoHistorySearchInput.addEventListener('input', () => {
+                    aplicarFiltroHistoricoPedidos();
+                });
+            }
+
+            const pedidoModalExportPdfBtn = document.getElementById('pedidoModalExportPdfBtn');
+            if (pedidoModalExportPdfBtn) {
+                pedidoModalExportPdfBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    submitPedidoExport('pdf');
+                });
+            }
+
+            const pedidoModalExportPlanilhaBtn = document.getElementById('pedidoModalExportPlanilhaBtn');
+            if (pedidoModalExportPlanilhaBtn) {
+                pedidoModalExportPlanilhaBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    submitPedidoExport('planilha');
+                });
+            }
+
+            const pedidoModalVitrineBtn = document.getElementById('pedidoModalVitrineBtn');
+            const vitrineModal = document.getElementById('vitrineModal');
+            const vitrineModalBackBtn = document.getElementById('vitrineModalBackBtn');
+            const vitrineTitleEl = document.getElementById('vitrineTitle');
+            const vitrineGrid = document.getElementById('vitrineGrid');
+            const vitrineGridWrap = document.getElementById('vitrineGridWrap');
+            const vitrineRowsMinusBtn = document.getElementById('vitrineRowsMinusBtn');
+            const vitrineRowsPlusBtn = document.getElementById('vitrineRowsPlusBtn');
+            const vitrineColsMinusBtn = document.getElementById('vitrineColsMinusBtn');
+            const vitrineColsPlusBtn = document.getElementById('vitrineColsPlusBtn');
+            const vitrineProductsStrip = document.getElementById('vitrineProductsStrip');
+            const vitrineStripWrapper = document.getElementById('vitrineStripWrapper');
+            const vitrineStripScrollbar = document.getElementById('vitrineStripScrollbar');
+            const vitrineStripTrack = document.getElementById('vitrineStripTrack');
+            const vitrineStripThumb = document.getElementById('vitrineStripThumb');
+            const vitrineStripBtnLeft = document.getElementById('vitrineStripBtnLeft');
+            const vitrineStripBtnRight = document.getElementById('vitrineStripBtnRight');
+            const vitrineProductsEmpty = document.getElementById('vitrineProductsEmpty');
+            const vitrineAddAllBtn = document.getElementById('vitrineAddAllBtn');
+            const vitrineRemoveAllBtn = document.getElementById('vitrineRemoveAllBtn');
+            const vitrineExportPdfBtn = document.getElementById('vitrineExportPdfBtn');
+            const vitrineExportJpgBtn = document.getElementById('vitrineExportJpgBtn');
+
+            const VITRINE_MAX_COLS = 10;
+            const vitrineStorageKey = `vitrine_layout_v1_${currentCollectionSlug || 'default'}`;
+            let vitrineReturnToPedido = false;
+            let vitrineBaseCellPx = null;
+
+            function calcularVitrineBaseCellPx() {
+                if (!vitrineGrid) return null;
+                const wrap = vitrineGridWrap || vitrineGrid.parentElement;
+                if (!wrap) return null;
+
+                let gap = 10;
+                try {
+                    const g = getComputedStyle(vitrineGrid).gap || '';
+                    const parsed = parseFloat(g);
+                    if (Number.isFinite(parsed)) gap = parsed;
+                } catch (e) {}
+
+                const wrapW = Math.max(0, wrap.clientWidth || 0);
+                const wrapH = Math.max(0, wrap.clientHeight || 0);
+                let padL = 0;
+                let padR = 0;
+                let padT = 0;
+                let padB = 0;
+                try {
+                    const wrapStyle = getComputedStyle(wrap);
+                    padL = parseFloat(wrapStyle.paddingLeft) || 0;
+                    padR = parseFloat(wrapStyle.paddingRight) || 0;
+                    padT = parseFloat(wrapStyle.paddingTop) || 0;
+                    padB = parseFloat(wrapStyle.paddingBottom) || 0;
+                } catch (e) {}
+
+                const availableW = Math.max(0, wrapW - padL - padR);
+                const availableH = Math.max(0, wrapH - padT - padB);
+                const minForMeasure = 50;
+                if (availableW < minForMeasure || availableH < minForMeasure) return null;
+
+                const baseCols = 5;
+                const baseRows = 3;
+                const baseMaxW = (availableW - gap * (baseCols - 1)) / baseCols;
+                const baseMaxH = (availableH - gap * (baseRows - 1)) / baseRows;
+                const baseCell = Math.floor(Math.min(baseMaxW, baseMaxH));
+                return Number.isFinite(baseCell) && baseCell > 0 ? baseCell : null;
+            }
+
+            function getDefaultVitrineState() {
+                return {
+                    rows: 3,
+                    cols: 5,
+                    cells: {}
+                };
+            }
+
+            function normalizarVitrineState(state) {
+                const base = getDefaultVitrineState();
+                const rows = Math.max(1, Number(state?.rows || base.rows) || base.rows);
+                const cols = Math.min(VITRINE_MAX_COLS, Math.max(1, Number(state?.cols || base.cols) || base.cols));
+                const total = rows * cols;
+                const cells = {};
+                const rawCells = state?.cells && typeof state.cells === 'object' ? state.cells : {};
+                Object.keys(rawCells).forEach((k) => {
+                    const idx = Number(k);
+                    if (!Number.isFinite(idx) || idx < 0 || idx >= total) return;
+                    const key = rawCells[k];
+                    if (!key) return;
+                    cells[String(idx)] = String(key);
+                });
+                return {
+                    rows,
+                    cols,
+                    cells
+                };
+            }
+
+            function carregarVitrineState() {
+                try {
+                    const raw = localStorage.getItem(vitrineStorageKey);
+                    if (!raw) return getDefaultVitrineState();
+                    const parsed = JSON.parse(raw);
+                    return normalizarVitrineState(parsed);
+                } catch (e) {
+                    return getDefaultVitrineState();
+                }
+            }
+
+            function salvarVitrineState(state) {
+                try {
+                    localStorage.setItem(vitrineStorageKey, JSON.stringify(state));
+                } catch (e) {}
+            }
+
+            let vitrineState = carregarVitrineState();
+
+            function getPedidoKeys() {
+                return Array.from(pedidoItens.keys());
+            }
+
+            function getVitrineTotalCells() {
+                return vitrineState.rows * vitrineState.cols;
+            }
+
+            function setVitrineCell(index, prodKey) {
+                const idx = Number(index);
+                if (!Number.isFinite(idx) || idx < 0) return;
+                const total = getVitrineTotalCells();
+                if (idx >= total) return;
+
+                if (!prodKey) {
+                    delete vitrineState.cells[String(idx)];
+                } else {
+                    vitrineState.cells[String(idx)] = String(prodKey);
+                }
+                salvarVitrineState(vitrineState);
+            }
+
+            function atualizarVitrineCounts() {
+                if (vitrineRowsMinusBtn) vitrineRowsMinusBtn.disabled = vitrineState.rows <= 1;
+                if (vitrineColsMinusBtn) vitrineColsMinusBtn.disabled = vitrineState.cols <= 1;
+                if (vitrineColsPlusBtn) vitrineColsPlusBtn.disabled = vitrineState.cols >= VITRINE_MAX_COLS;
+            }
+
+            function centralizarVitrineGridHorizontal() {
+                if (!vitrineGridWrap || !vitrineGrid) return;
+                const max = Math.max(0, (vitrineGridWrap.scrollWidth || 0) - (vitrineGridWrap.clientWidth || 0));
+                vitrineGridWrap.scrollLeft = Math.floor(max / 2);
+            }
+
+            let vitrineStripScrollInterval;
+            let vitrineStripDragging = false;
+            let vitrineStripStartX = 0;
+            let vitrineStripStartLeft = 0;
+
+            function updateVitrineStripScrollbar() {
+                if (!vitrineProductsStrip || !vitrineStripScrollbar || !vitrineStripTrack || !vitrineStripThumb) return;
+                const canScroll = vitrineProductsStrip.scrollWidth > vitrineProductsStrip.clientWidth + 1;
+                vitrineStripScrollbar.style.display = canScroll ? 'flex' : 'none';
+                vitrineProductsStrip.style.justifyContent = canScroll ? 'flex-start' : 'center';
+                if (!canScroll) return;
+                const trackW = vitrineStripTrack.clientWidth || 0;
+                const ratio = vitrineProductsStrip.clientWidth / vitrineProductsStrip.scrollWidth;
+                const thumbW = Math.max(28, trackW * ratio);
+                const maxLeft = Math.max(0, trackW - thumbW);
+                const scrollR = (vitrineProductsStrip.scrollWidth - vitrineProductsStrip.clientWidth) > 0 ?
+                    (vitrineProductsStrip.scrollLeft / (vitrineProductsStrip.scrollWidth - vitrineProductsStrip.clientWidth)) :
+                    0;
+                vitrineStripThumb.style.width = `${thumbW}px`;
+                vitrineStripThumb.style.left = `${scrollR * maxLeft}px`;
+            }
+
+            if (vitrineProductsStrip) {
+                vitrineProductsStrip.addEventListener('scroll', updateVitrineStripScrollbar);
+            }
+            if (vitrineStripWrapper && vitrineProductsStrip) {
+                vitrineStripWrapper.addEventListener('wheel', (e) => {
+                    const canScroll = vitrineProductsStrip.scrollWidth > vitrineProductsStrip.clientWidth + 1;
+                    if (!canScroll) return;
+
+                    const deltaY = Number(e.deltaY) || 0;
+                    const deltaX = Number(e.deltaX) || 0;
+                    if (Math.abs(deltaY) < Math.abs(deltaX)) return;
+
+                    const maxLeft = Math.max(0, vitrineProductsStrip.scrollWidth - vitrineProductsStrip.clientWidth);
+                    if (maxLeft <= 0) return;
+
+                    const prev = vitrineProductsStrip.scrollLeft;
+                    const next = Math.max(0, Math.min(maxLeft, prev + deltaY));
+                    if (next === prev) return;
+
+                    e.preventDefault();
+                    vitrineProductsStrip.scrollLeft = next;
+                }, {
+                    passive: false
+                });
+            }
+            window.addEventListener('resize', updateVitrineStripScrollbar);
+
+            if (vitrineStripBtnLeft && vitrineProductsStrip) {
+                vitrineStripBtnLeft.addEventListener('mousedown', () => {
+                    vitrineProductsStrip.scrollBy({
+                        left: -60,
+                        behavior: 'smooth'
+                    });
+                    vitrineStripScrollInterval = setInterval(() => vitrineProductsStrip.scrollBy({
+                        left: -60
+                    }), 100);
+                });
+            }
+            if (vitrineStripBtnRight && vitrineProductsStrip) {
+                vitrineStripBtnRight.addEventListener('mousedown', () => {
+                    vitrineProductsStrip.scrollBy({
+                        left: 60,
+                        behavior: 'smooth'
+                    });
+                    vitrineStripScrollInterval = setInterval(() => vitrineProductsStrip.scrollBy({
+                        left: 60
+                    }), 100);
+                });
+            }
+            document.addEventListener('mouseup', () => {
+                if (vitrineStripScrollInterval) clearInterval(vitrineStripScrollInterval);
+                vitrineStripScrollInterval = undefined;
+                vitrineStripDragging = false;
+            });
+
+            if (vitrineStripThumb && vitrineStripTrack && vitrineProductsStrip) {
+                vitrineStripThumb.addEventListener('mousedown', (e) => {
+                    vitrineStripDragging = true;
+                    vitrineStripStartX = e.clientX;
+                    vitrineStripStartLeft = vitrineProductsStrip.scrollLeft;
+                    e.preventDefault();
+                });
+                document.addEventListener('mousemove', (e) => {
+                    if (!vitrineStripDragging) return;
+                    const trackW = vitrineStripTrack.clientWidth - vitrineStripThumb.clientWidth;
+                    if (trackW <= 0) return;
+                    const delta = e.clientX - vitrineStripStartX;
+                    const ratio = delta / trackW;
+                    vitrineProductsStrip.scrollLeft = vitrineStripStartLeft + ratio * (vitrineProductsStrip
+                        .scrollWidth - vitrineProductsStrip.clientWidth);
+                });
+                vitrineStripTrack.addEventListener('click', (e) => {
+                    if (e.target === vitrineStripThumb) return;
+                    const rect = vitrineStripTrack.getBoundingClientRect();
+                    const ratio = (e.clientX - rect.left) / vitrineStripTrack.clientWidth;
+                    vitrineProductsStrip.scrollLeft = ratio * (vitrineProductsStrip.scrollWidth - vitrineProductsStrip
+                        .clientWidth);
+                });
+            }
+
+            const vitrineTransparentDragImg = new Image();
+            vitrineTransparentDragImg.src =
+                'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>';
+            let vitrineDragGhostEl = null;
+
+            function vitrineStopGhost() {
+                if (!vitrineDragGhostEl) return;
+                vitrineDragGhostEl.remove();
+                vitrineDragGhostEl = null;
+            }
+
+            function vitrineUpdateGhostPosition(e) {
+                if (!vitrineDragGhostEl) return;
+                if (!Number.isFinite(e.clientX) || !Number.isFinite(e.clientY)) return;
+                vitrineDragGhostEl.style.left = `${e.clientX}px`;
+                vitrineDragGhostEl.style.top = `${e.clientY}px`;
+            }
+
+            document.addEventListener('dragover', vitrineUpdateGhostPosition);
+            document.addEventListener('drag', vitrineUpdateGhostPosition);
+            document.addEventListener('drop', vitrineStopGhost);
+
+            function vitrineStartGhostFromImg(img) {
+                vitrineStopGhost();
+                if (!img) return;
+                const rect = img.getBoundingClientRect();
+                const w = Math.max(1, Math.round(rect.width || img.clientWidth || 1));
+                const h = Math.max(1, Math.round(rect.height || img.clientHeight || 1));
+
+                const ghost = document.createElement('div');
+                ghost.style.position = 'fixed';
+                ghost.style.left = '-9999px';
+                ghost.style.top = '0';
+                ghost.style.width = `${w}px`;
+                ghost.style.height = `${h}px`;
+                ghost.style.pointerEvents = 'none';
+                ghost.style.zIndex = '9999';
+                ghost.style.background = 'transparent';
+                ghost.style.boxShadow = 'none';
+                ghost.style.filter = 'none';
+                ghost.style.opacity = '1';
+                ghost.style.transform = 'translate(-50%, -50%)';
+
+                const ghostImg = img.cloneNode(true);
+                ghostImg.removeAttribute('draggable');
+                ghostImg.style.width = '100%';
+                ghostImg.style.height = '100%';
+                ghostImg.style.objectFit = 'contain';
+                ghostImg.style.background = 'transparent';
+                ghostImg.style.boxShadow = 'none';
+                ghostImg.style.borderRadius = '12px';
+                ghostImg.style.border = '1px solid #D9D9D9';
+                ghostImg.style.filter = 'none';
+                ghost.appendChild(ghostImg);
+
+                document.body.appendChild(ghost);
+                vitrineDragGhostEl = ghost;
+            }
+
+            function vitrineSetTransparentDragImage(e) {
+                try {
+                    e.dataTransfer.setDragImage(vitrineTransparentDragImg, 0, 0);
+                } catch (err) {}
+            }
+
+            function renderVitrineProductsList() {
+                if (!vitrineProductsStrip || !vitrineProductsEmpty) return;
+                const keys = getPedidoKeys();
+                if (!keys.length) {
+                    vitrineProductsStrip.innerHTML = '';
+                    vitrineProductsEmpty.style.display = 'block';
+                    return;
+                }
+                vitrineProductsEmpty.style.display = 'none';
+                vitrineProductsStrip.innerHTML = keys.map((prodKey) => {
+                    const produto = buscarProdutoPorKey(prodKey);
+                    const imagem = produto?.imagem || '/images/img-padrao-mz.png';
+                    const title = produto?.title || '';
+                    const cor = produto?.cor || '';
+                    return `
+                        <div class="vitrine-prod" data-vitrine-prodkey="${escapeHtml(prodKey)}">
+                            <img draggable="true" class="vitrine-prod-thumb" src="${escapeHtml(imagem)}" alt="${escapeHtml(title)}" />
+                            <div draggable="false" class="vitrine-prod-model">${escapeHtml(title)}</div>
+                            <div draggable="false" class="vitrine-prod-color">${escapeHtml(cor)}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                vitrineProductsStrip.querySelectorAll('[data-vitrine-prodkey] img').forEach((img) => {
+                    img.addEventListener('dragstart', (e) => {
+                        e.stopPropagation();
+                        const wrapper = img.closest('[data-vitrine-prodkey]');
+                        const prodKey = wrapper?.getAttribute('data-vitrine-prodkey') || '';
+                        if (!prodKey) return;
+                        e.dataTransfer.setData('text/plain', prodKey);
+                        e.dataTransfer.setData('application/x-vitrine-source-index', '');
+                        e.dataTransfer.effectAllowed = 'copyMove';
+                        vitrineSetTransparentDragImage(e);
+                        vitrineStartGhostFromImg(img);
+                        vitrineUpdateGhostPosition(e);
+                    });
+                    img.addEventListener('dragend', () => {
+                        vitrineStopGhost();
+                    });
+                });
+                requestAnimationFrame(updateVitrineStripScrollbar);
+            }
+
+            function renderVitrineGrid() {
+                if (!vitrineGrid) return;
+                atualizarVitrineCounts();
+
+                const total = getVitrineTotalCells();
+                const cols = vitrineState.cols;
+                const rows = vitrineState.rows;
+
+                let gapX = 3;
+                let gapY = 3;
+                try {
+                    const style = getComputedStyle(vitrineGrid);
+                    const gx = parseFloat(style.columnGap || style.gap || '');
+                    const gy = parseFloat(style.rowGap || style.gap || '');
+                    if (Number.isFinite(gx)) gapX = gx;
+                    if (Number.isFinite(gy)) gapY = gy;
+                } catch (e) {}
+
+                const wrap = vitrineGridWrap || vitrineGrid.parentElement;
+                const minForMeasure = 50;
+                const wrapW = Math.max(0, (wrap?.clientWidth || 0));
+                const wrapH = Math.max(0, (wrap?.clientHeight || 0));
+                let padL = 0;
+                let padR = 0;
+                let padT = 0;
+                let padB = 0;
+                let wrapGap = 0;
+                try {
+                    if (wrap) {
+                        const wrapStyle = getComputedStyle(wrap);
+                        padL = parseFloat(wrapStyle.paddingLeft) || 0;
+                        padR = parseFloat(wrapStyle.paddingRight) || 0;
+                        padT = parseFloat(wrapStyle.paddingTop) || 0;
+                        padB = parseFloat(wrapStyle.paddingBottom) || 0;
+                        const g = parseFloat(wrapStyle.gap || '');
+                        if (Number.isFinite(g)) wrapGap = g;
+                    }
+                } catch (e) {}
+                const availableW = Math.max(0, wrapW - padL - padR);
+                let availableH = Math.max(0, wrapH - padT - padB);
+                if (wrap === vitrineGridWrap) {
+                    const titleRowEl = document.getElementById('vitrineTitleRow');
+                    const titleH = titleRowEl ? Math.max(0, titleRowEl.offsetHeight || 0) : 0;
+                    availableH = Math.max(0, availableH - titleH - wrapGap);
+                }
+
+                const maxCellW = cols > 0 ? (availableW - gapX * (cols - 1)) / cols : 0;
+
+                const PREFERRED_VITRINE_CELL_PX = Number.isFinite(vitrineBaseCellPx) && vitrineBaseCellPx > 0 ?
+                    vitrineBaseCellPx : 123.5;
+
+                let cellByWidth = Math.floor(maxCellW);
+                if (!Number.isFinite(cellByWidth) || cellByWidth < 1) cellByWidth = 1;
+                if (availableW < minForMeasure) cellByWidth = 1;
+
+                const cell = Math.max(1, Math.min(PREFERRED_VITRINE_CELL_PX, cellByWidth));
+
+                vitrineGrid.style.gridTemplateColumns = `repeat(${cols}, ${cell}px)`;
+                vitrineGrid.style.gridTemplateRows = `repeat(${rows}, ${cell}px)`;
+                vitrineGrid.style.width = `${Math.max(0, cols * cell + gapX * (cols - 1))}px`;
+                vitrineGrid.style.height = `${Math.max(0, rows * cell + gapY * (rows - 1))}px`;
+
+                let html = '';
+                for (let i = 0; i < total; i++) {
+                    const prodKey = vitrineState.cells[String(i)] || '';
+                    if (!prodKey) {
+                        html += `<div class="vitrine-cell" data-vitrine-index="${i}"></div>`;
+                        continue;
+                    }
+                    const produto = buscarProdutoPorKey(prodKey);
+                    const imagem = produto?.imagem || '/images/img-padrao-mz.png';
+                    const title = produto?.title || '';
+                    html += `
+                        <div class="vitrine-cell" data-vitrine-index="${i}" data-vitrine-dragkey="${escapeHtml(prodKey)}">
+                            <img draggable="true" src="${escapeHtml(imagem)}" alt="${escapeHtml(title)}" />
+                            <button type="button" class="vitrine-remove" aria-label="Remover item" data-vitrine-remove="${i}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16" fill="none">
+<path opacity="0.5" d="M3.82541 3.28334H4.97521V1.74585C4.97521 1.33633 5.26446 1.07049 5.69835 1.07049H8.2872C8.72107 1.07049 9.01035 1.33633 9.01035 1.74585V3.28334H10.1601V1.674C10.1601 0.63224 9.48038 0 8.36674 0H5.6188C4.50516 0 3.82541 0.63224 3.82541 1.674V3.28334ZM0.542355 3.8581H13.4649C13.7614 3.8581 14 3.60664 14 3.31207C14 3.01751 13.7614 2.77323 13.4649 2.77323H0.542355C0.253099 2.77323 0 3.01751 0 3.31207C0 3.61382 0.253099 3.8581 0.542355 3.8581ZM3.68802 16H10.3192C11.3533 16 12.0475 15.3318 12.0982 14.3044L12.6044 3.72159H11.4401L10.9556 14.1823C10.9411 14.6133 10.6302 14.9151 10.2035 14.9151H3.78925C3.37707 14.9151 3.06612 14.6062 3.04442 14.1823L2.53099 3.72159H1.39566L1.90909 14.3116C1.95971 15.339 2.63946 16 3.68802 16ZM4.8595 13.6865C5.1343 13.6865 5.31508 13.5141 5.30785 13.2627L5.08368 5.5752C5.07645 5.32374 4.89566 5.1585 4.63533 5.1585C4.36054 5.1585 4.17975 5.33093 4.18699 5.58239L4.40393 13.2627C4.41116 13.5213 4.59194 13.6865 4.8595 13.6865ZM7.00003 13.6865C7.27482 13.6865 7.47006 13.5141 7.47006 13.2627V5.58239C7.47006 5.33093 7.27482 5.1585 7.00003 5.1585C6.72518 5.1585 6.53722 5.33093 6.53722 5.58239V13.2627C6.53722 13.5141 6.72518 13.6865 7.00003 13.6865ZM9.14772 13.6865C9.40806 13.6865 9.58887 13.5213 9.59609 13.2627L9.81299 5.58239C9.82027 5.33093 9.63947 5.1585 9.36468 5.1585C9.10434 5.1585 8.92353 5.32374 8.91631 5.58239L8.69941 13.2627C8.69213 13.5141 8.87293 13.6865 9.14772 13.6865Z" fill="black"/>
+</svg>
+                            </button>
+                        </div>
+                    `;
+                }
+                vitrineGrid.innerHTML = html;
+
+                vitrineGrid.querySelectorAll('[data-vitrine-remove]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const idx = Number(btn.getAttribute('data-vitrine-remove'));
+                        if (!Number.isFinite(idx)) return;
+                        setVitrineCell(idx, null);
+                        renderVitrineGrid();
+                    });
+                    btn.addEventListener('mousedown', (e) => {
+                        e.stopPropagation();
+                    });
+                    btn.addEventListener('dragstart', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                });
+
+                vitrineGrid.querySelectorAll('.vitrine-cell').forEach((cell) => {
+                    const idx = Number(cell.getAttribute('data-vitrine-index'));
+                    if (!Number.isFinite(idx)) return;
+
+                    cell.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        cell.classList.add('is-over');
+                        e.dataTransfer.dropEffect = 'move';
+                    });
+                    cell.addEventListener('dragleave', () => {
+                        cell.classList.remove('is-over');
+                    });
+                    cell.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        cell.classList.remove('is-over');
+                        const prodKey = e.dataTransfer.getData('text/plain') || '';
+                        if (!prodKey) return;
+                        const sourceIndexRaw = e.dataTransfer.getData('application/x-vitrine-source-index');
+                        const sourceIndex = sourceIndexRaw !== '' ? Number(sourceIndexRaw) : null;
+                        if (Number.isFinite(sourceIndex) && sourceIndex !== null && sourceIndex !== idx) {
+                            const targetExisting = vitrineState.cells[String(idx)] || '';
+                            setVitrineCell(idx, prodKey);
+                            if (targetExisting) {
+                                setVitrineCell(sourceIndex, targetExisting);
+                            } else {
+                                setVitrineCell(sourceIndex, null);
+                            }
+                            renderVitrineGrid();
+                            return;
+                        }
+                        setVitrineCell(idx, prodKey);
+                        renderVitrineGrid();
+                    });
+                });
+
+                vitrineGrid.querySelectorAll('[data-vitrine-dragkey]').forEach((cell) => {
+                    const idx = Number(cell.getAttribute('data-vitrine-index'));
+                    const img = cell.querySelector('img');
+                    if (!img) return;
+                    img.addEventListener('dragstart', (e) => {
+                        e.stopPropagation();
+                        const prodKey = cell.getAttribute('data-vitrine-dragkey') || '';
+                        if (!prodKey) return;
+                        cell.classList.add('is-dragging');
+                        e.dataTransfer.setData('text/plain', prodKey);
+                        e.dataTransfer.setData('application/x-vitrine-source-index', Number.isFinite(idx) ?
+                            String(idx) : '');
+                        e.dataTransfer.effectAllowed = 'copyMove';
+                        vitrineSetTransparentDragImage(e);
+                        vitrineStartGhostFromImg(img);
+                        vitrineUpdateGhostPosition(e);
+                    });
+                    img.addEventListener('dragend', () => {
+                        cell.classList.remove('is-dragging');
+                        vitrineStopGhost();
+                    });
+                });
+            }
+
+            function getVitrineExportFileName(ext) {
+                const raw = (vitrineTitleEl?.textContent || titlePedidoEl?.textContent || 'Vitrine').trim();
+                const base = sanitizeFileName(raw || 'Vitrine');
+                return `${base}.${ext}`;
+            }
+
+            function getAllInlineCssText() {
+                return Array.from(document.querySelectorAll('style'))
+                    .map((s) => s.textContent || '')
+                    .join('\n');
+            }
+
+            function absolutizeImgSrcs(root) {
+                root.querySelectorAll('img').forEach((img) => {
+                    const src = img.getAttribute('src') || '';
+                    if (!src) return;
+                    try {
+                        const abs = new URL(src, window.location.origin).toString();
+                        img.setAttribute('src', abs);
+                    } catch (e) {}
+                });
+            }
+
+            async function fetchAsDataUrl(url) {
+                const res = await fetch(url, {
+                    cache: 'force-cache'
+                });
+                if (!res.ok) throw new Error('Falha ao baixar imagem.');
+                const blob = await res.blob();
+                return await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(String(reader.result || ''));
+                    reader.onerror = () => reject(new Error('Falha ao ler imagem.'));
+                    reader.readAsDataURL(blob);
+                });
+            }
+
+            async function inlineImgSrcsAsDataUrl(root) {
+                const imgs = Array.from(root.querySelectorAll('img'));
+                const cache = new Map();
+                for (const img of imgs) {
+                    const src = img.getAttribute('src') || '';
+                    if (!src || src.startsWith('data:')) continue;
+                    if (cache.has(src)) {
+                        img.setAttribute('src', cache.get(src));
+                        continue;
+                    }
+                    try {
+                        const dataUrl = await fetchAsDataUrl(src);
+                        if (!dataUrl) continue;
+                        cache.set(src, dataUrl);
+                        img.setAttribute('src', dataUrl);
+                    } catch (e) {}
+                }
+            }
+
+            function inlineSvgsAsImgDataUrl(root) {
+                const svgs = Array.from(root.querySelectorAll('svg'));
+                if (!svgs.length) return;
+                const serializer = new XMLSerializer();
+                svgs.forEach((svg) => {
+                    try {
+                        if (!svg.getAttribute('xmlns')) {
+                            svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                        }
+                        const xml = serializer.serializeToString(svg);
+                        const dataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(xml)}`;
+                        const img = document.createElement('img');
+                        img.setAttribute('src', dataUrl);
+                        const w = svg.getAttribute('width');
+                        const h = svg.getAttribute('height');
+                        if (w) img.setAttribute('width', w);
+                        if (h) img.setAttribute('height', h);
+                        img.style.cssText = svg.getAttribute('style') || '';
+                        svg.replaceWith(img);
+                    } catch (e) {}
+                });
+            }
+
+            function vitrineParsePx(value, fallback) {
+                const n = parseFloat(String(value || ''));
+                return Number.isFinite(n) ? n : fallback;
+            }
+
+            async function vitrineLoadImg(src) {
+                const url = new URL(src, window.location.origin).toString();
+                const dataUrl = await fetchAsDataUrl(url);
+                return await new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = () => resolve(img);
+                    img.onerror = () => reject(new Error('Falha ao carregar imagem.'));
+                    img.src = dataUrl;
+                });
+            }
+
+            function vitrineRoundRectPath(ctx, x, y, w, h, r) {
+                const radius = Math.max(0, Math.min(r, Math.min(w, h) / 2));
+                ctx.beginPath();
+                ctx.moveTo(x + radius, y);
+                ctx.lineTo(x + w - radius, y);
+                ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+                ctx.lineTo(x + w, y + h - radius);
+                ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+                ctx.lineTo(x + radius, y + h);
+                ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+                ctx.lineTo(x, y + radius);
+                ctx.quadraticCurveTo(x, y, x + radius, y);
+                ctx.closePath();
+            }
+
+            function vitrineDrawContain(ctx, img, x, y, w, h, pad) {
+                const px = Math.max(0, pad || 0);
+                const innerW = Math.max(1, w - px * 2);
+                const innerH = Math.max(1, h - px * 2);
+                const iw = img.naturalWidth || img.width || 1;
+                const ih = img.naturalHeight || img.height || 1;
+                const scale = Math.min(innerW / iw, innerH / ih);
+                const dw = Math.max(1, Math.floor(iw * scale));
+                const dh = Math.max(1, Math.floor(ih * scale));
+                const dx = Math.floor(x + px + (innerW - dw) / 2);
+                const dy = Math.floor(y + px + (innerH - dh) / 2);
+                ctx.drawImage(img, dx, dy, dw, dh);
+            }
+
+            async function vitrineCaptureToCanvasManual() {
+                if (!vitrineGrid || !vitrineTitleEl) throw new Error('Elementos da vitrine não encontrados.');
+
+                const paddingX = 100;
+                const padTop = 28;
+                const padBottom = 28;
+                const headerGap = 22;
+                const cols = vitrineState?.cols || 5;
+                const rows = vitrineState?.rows || 3;
+
+                const anyCell = vitrineGrid.querySelector('.vitrine-cell');
+                const cellStyle = anyCell ? getComputedStyle(anyCell) : null;
+                const cellW = vitrineParsePx(cellStyle?.width, 123.5);
+                const cellH = vitrineParsePx(cellStyle?.height, 123.5);
+                const radius = vitrineParsePx(cellStyle?.borderRadius, 12);
+                const borderColor = cellStyle?.borderColor || '#D9D9D9';
+
+                const gridStyle = getComputedStyle(vitrineGrid);
+                const gapX = vitrineParsePx(gridStyle.columnGap || gridStyle.gap, 3);
+                const gapY = vitrineParsePx(gridStyle.rowGap || gridStyle.gap, 3);
+
+                const gridW = cols * cellW + Math.max(0, cols - 1) * gapX;
+                const gridH = rows * cellH + Math.max(0, rows - 1) * gapY;
+
+                const titleText = (vitrineTitleEl.textContent || '').trim();
+                const titleStyle = getComputedStyle(vitrineTitleEl);
+                const fontSize = vitrineParsePx(titleStyle.fontSize, 18);
+                const fontFamily = titleStyle.fontFamily || 'Arial';
+                const fontWeight = titleStyle.fontWeight || '400';
+                const fontStyle = titleStyle.fontStyle || 'normal';
+                const titleColor = titleStyle.color || '#000';
+
+                const titleRow = document.getElementById('vitrineTitleRow');
+                const logoSvg = titleRow ? titleRow.querySelector('svg') : null;
+                let logoImg = null;
+                let logoW = 0;
+                let logoH = 0;
+                if (logoSvg) {
+                    try {
+                        const serializer = new XMLSerializer();
+                        const xml = serializer.serializeToString(logoSvg);
+                        const dataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(xml)}`;
+                        logoW = vitrineParsePx(logoSvg.getAttribute('width'), 0);
+                        logoH = vitrineParsePx(logoSvg.getAttribute('height'), 0);
+                        logoImg = await new Promise((resolve, reject) => {
+                            const img = new Image();
+                            img.onload = () => resolve(img);
+                            img.onerror = () => reject(new Error('Falha ao carregar logo.'));
+                            img.src = dataUrl;
+                        });
+                    } catch (e) {}
+                }
+
+                const canvas = document.createElement('canvas');
+                const canvasW = Math.ceil(gridW + paddingX * 2);
+                const headerH = Math.max(logoH || 0, Math.ceil(fontSize * 1.6));
+                const canvasH = Math.ceil(padTop + headerH + headerGap + gridH + padBottom);
+                canvas.width = canvasW;
+                canvas.height = canvasH;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) throw new Error('Não foi possível criar canvas.');
+
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, canvasW, canvasH);
+
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = titleColor;
+                ctx.font = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`;
+                const textW = ctx.measureText(titleText).width;
+                const groupGap = 18;
+                const groupW = (logoImg ? (logoW || logoImg.width) + groupGap : 0) + textW;
+                const groupX = Math.max(0, Math.floor((canvasW - groupW) / 2));
+                const headerY = padTop + Math.floor(headerH / 2);
+                let xCursor = groupX;
+                if (logoImg) {
+                    const drawW = logoW || logoImg.width;
+                    const drawH = logoH || logoImg.height;
+                    ctx.drawImage(logoImg, xCursor, headerY - Math.floor(drawH / 2), drawW, drawH);
+                    xCursor += drawW + groupGap;
+                }
+                ctx.fillText(titleText, xCursor, headerY);
+
+                const startX = paddingX;
+                const startY = padTop + headerH + headerGap;
+
+                const keys = Object.values(vitrineState?.cells || {});
+                const unique = Array.from(new Set(keys.filter(Boolean)));
+                const imgMap = new Map();
+                await Promise.all(unique.map(async (key) => {
+                    const produto = buscarProdutoPorKey(key);
+                    const src = produto?.imagem || '/images/img-padrao-mz.png';
+                    try {
+                        const img = await vitrineLoadImg(src);
+                        imgMap.set(key, img);
+                    } catch (e) {}
+                }));
+
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        const i = r * cols + c;
+                        const x = startX + c * (cellW + gapX);
+                        const y = startY + r * (cellH + gapY);
+
+                        vitrineRoundRectPath(ctx, x, y, cellW, cellH, radius);
+                        ctx.fillStyle = '#fff';
+                        ctx.fill();
+                        ctx.strokeStyle = borderColor;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+
+                        const prodKey = vitrineState?.cells?.[String(i)] || '';
+                        if (prodKey && imgMap.has(prodKey)) {
+                            ctx.save();
+                            vitrineRoundRectPath(ctx, x, y, cellW, cellH, radius);
+                            ctx.clip();
+                            vitrineDrawContain(ctx, imgMap.get(prodKey), x, y, cellW, cellH, 10);
+                            ctx.restore();
+                        }
+                    }
+                }
+                return canvas;
+            }
+
+            async function vitrineCaptureToCanvas() {
+                try {
+                    if (!vitrineGridWrap) throw new Error('Elemento vitrineGridWrap não encontrado.');
+                    const contentW = Math.max(1, Math.ceil(vitrineGridWrap.scrollWidth || vitrineGridWrap.clientWidth ||
+                        1));
+                    const contentH = Math.max(1, Math.ceil(vitrineGridWrap.scrollHeight || vitrineGridWrap.clientHeight ||
+                        1));
+                    const paddingX = 100;
+                    const w = contentW + paddingX * 2;
+                    const h = contentH;
+
+                    const clone = vitrineGridWrap.cloneNode(true);
+                    clone.style.overflow = 'visible';
+                    clone.style.width = `${contentW}px`;
+                    clone.style.height = `${contentH}px`;
+                    clone.style.background = '#fff';
+                    clone.style.display = 'block';
+                    clone.querySelectorAll('.vitrine-remove').forEach((el) => el.remove());
+                    clone.querySelectorAll('.vitrine-cell').forEach((el) => {
+                        el.classList.remove('is-over');
+                        el.classList.remove('is-dragging');
+                    });
+                    absolutizeImgSrcs(clone);
+
+                    const outer = document.createElement('div');
+                    outer.style.width = `${w}px`;
+                    outer.style.height = `${h}px`;
+                    outer.style.background = '#fff';
+                    outer.style.boxSizing = 'border-box';
+                    outer.style.padding = `0 ${paddingX}px`;
+                    outer.appendChild(clone);
+                    inlineSvgsAsImgDataUrl(outer);
+                    await inlineImgSrcsAsDataUrl(outer);
+
+                    const css = getAllInlineCssText();
+                    const svg = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+                        <foreignObject width="100%" height="100%">
+                            <div xmlns="http://www.w3.org/1999/xhtml">
+                                <style>${css}</style>
+                                ${outer.outerHTML}
+                            </div>
+                        </foreignObject>
+                    </svg>
+                `;
+                    const blob = new Blob([svg], {
+                        type: 'image/svg+xml;charset=utf-8'
+                    });
+                    const url = URL.createObjectURL(blob);
+
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous';
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    if (!ctx) {
+                        URL.revokeObjectURL(url);
+                        throw new Error('Não foi possível criar canvas.');
+                    }
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(0, 0, w, h);
+
+                    await new Promise((resolve, reject) => {
+                        img.onload = () => resolve(null);
+                        img.onerror = () => reject(new Error('Falha ao renderizar imagem.'));
+                        img.src = url;
+                    }).finally(() => {
+                        URL.revokeObjectURL(url);
+                    });
+
+                    ctx.drawImage(img, 0, 0);
+                    return canvas;
+                } catch (e) {
+                    return await vitrineCaptureToCanvasManual();
+                }
+            }
+
+            function downloadDataUrl(dataUrl, filename) {
+                const a = document.createElement('a');
+                a.href = dataUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            }
+
+            function downloadBlob(blob, filename) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                setTimeout(() => URL.revokeObjectURL(url), 2000);
+            }
+
+            function dataUrlToUint8(dataUrl) {
+                const idx = dataUrl.indexOf(',');
+                const b64 = idx >= 0 ? dataUrl.slice(idx + 1) : dataUrl;
+                const bin = atob(b64);
+                const bytes = new Uint8Array(bin.length);
+                for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+                return bytes;
+            }
+
+            function concatUint8(chunks) {
+                const total = chunks.reduce((acc, c) => acc + c.length, 0);
+                const out = new Uint8Array(total);
+                let off = 0;
+                for (const c of chunks) {
+                    out.set(c, off);
+                    off += c.length;
+                }
+                return out;
+            }
+
+            function buildPdfA4FromJpegBytes(jpegBytes, imgW, imgH) {
+                const encoder = new TextEncoder();
+                const chunks = [];
+                let offset = 0;
+                const objOffsets = {};
+
+                function pushStr(s) {
+                    const b = encoder.encode(s);
+                    chunks.push(b);
+                    offset += b.length;
+                }
+
+                function pushBytes(b) {
+                    chunks.push(b);
+                    offset += b.length;
+                }
+
+                function addObj(id, bodyStr, streamBytes) {
+                    objOffsets[id] = offset;
+                    pushStr(`${id} 0 obj\n`);
+                    if (streamBytes) {
+                        pushStr(bodyStr);
+                        pushStr('\nstream\n');
+                        pushBytes(streamBytes);
+                        pushStr('\nendstream\nendobj\n');
+                        return;
+                    }
+                    pushStr(bodyStr);
+                    pushStr('\nendobj\n');
+                }
+
+                const pageW = 595.28;
+                const pageH = 841.89;
+                const scale = Math.min(pageW / Math.max(1, imgW), pageH / Math.max(1, imgH));
+                const drawW = imgW * scale;
+                const drawH = imgH * scale;
+                const x = (pageW - drawW) / 2;
+                const y = pageH - drawH;
+
+                const contentStream =
+                    `q\n${drawW.toFixed(2)} 0 0 ${drawH.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)} cm\n/Im0 Do\nQ\n`;
+                const contentBytes = encoder.encode(contentStream);
+
+                pushStr('%PDF-1.4\n');
+
+                addObj(1, '<< /Type /Catalog /Pages 2 0 R >>');
+                addObj(2, '<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
+                addObj(3,
+                    `<< /Type /Page /Parent 2 0 R /Resources << /XObject << /Im0 4 0 R >> /ProcSet [/PDF /ImageC] >> /MediaBox [0 0 ${pageW.toFixed(2)} ${pageH.toFixed(2)}] /Contents 5 0 R >>`
+                );
+                addObj(4,
+                    `<< /Type /XObject /Subtype /Image /Width ${Math.max(1, Math.round(imgW))} /Height ${Math.max(1, Math.round(imgH))} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.length} >>`,
+                    jpegBytes
+                );
+                addObj(5, `<< /Length ${contentBytes.length} >>`, contentBytes);
+
+                const xrefStart = offset;
+                pushStr('xref\n');
+                pushStr('0 6\n');
+                pushStr('0000000000 65535 f \n');
+                for (let id = 1; id <= 5; id++) {
+                    const off = objOffsets[id] || 0;
+                    pushStr(String(off).padStart(10, '0') + ' 00000 n \n');
+                }
+                pushStr('trailer\n');
+                pushStr('<< /Size 6 /Root 1 0 R >>\n');
+                pushStr('startxref\n');
+                pushStr(String(xrefStart) + '\n');
+                pushStr('%%EOF\n');
+
+                return concatUint8(chunks);
+            }
+
+            async function exportVitrineJpg() {
+                const canvas = await vitrineCaptureToCanvas();
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+                downloadDataUrl(dataUrl, getVitrineExportFileName('jpg'));
+            }
+
+            async function exportVitrinePdf() {
+                const canvas = await vitrineCaptureToCanvas();
+                const jpgDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+                const jpgBytes = dataUrlToUint8(jpgDataUrl);
+                const pdfBytes = buildPdfA4FromJpegBytes(jpgBytes, canvas.width, canvas.height);
+                const blob = new Blob([pdfBytes], {
+                    type: 'application/pdf'
+                });
+                downloadBlob(blob, getVitrineExportFileName('pdf'));
+            }
+
+            function aplicarVitrineRows(nextRows) {
+                const rows = Math.max(1, Number(nextRows) || 1);
+                if (rows === vitrineState.rows) return;
+                vitrineState.rows = rows;
+                const total = getVitrineTotalCells();
+                Object.keys(vitrineState.cells).forEach((k) => {
+                    const idx = Number(k);
+                    if (!Number.isFinite(idx) || idx < 0 || idx >= total) delete vitrineState.cells[k];
+                });
+                salvarVitrineState(vitrineState);
+                renderVitrineGrid();
+            }
+
+            function aplicarVitrineCols(nextCols) {
+                const cols = Math.min(VITRINE_MAX_COLS, Math.max(1, Number(nextCols) || 1));
+                const oldCols = vitrineState.cols;
+                if (cols === oldCols) return;
+                const rows = vitrineState.rows;
+                const newCells = {};
+                const maxCols = Math.min(oldCols, cols);
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < maxCols; c++) {
+                        const oldIndex = r * oldCols + c;
+                        const newIndex = r * cols + c;
+                        const key = vitrineState.cells[String(oldIndex)];
+                        if (key) newCells[String(newIndex)] = key;
+                    }
+                }
+                vitrineState.cols = cols;
+                vitrineState.cells = newCells;
+                salvarVitrineState(vitrineState);
+                renderVitrineGrid();
+                requestAnimationFrame(() => centralizarVitrineGridHorizontal());
+            }
+
+            function vitrineRemoveAll() {
+                vitrineState.cells = {};
+                salvarVitrineState(vitrineState);
+                renderVitrineGrid();
+            }
+
+            function vitrineAddAll() {
+                const keys = getPedidoKeys();
+                if (!keys.length) return;
+                const used = new Set(Object.values(vitrineState.cells || {}));
+                const queue = keys.filter((k) => !used.has(k));
+                if (!queue.length) return;
+
+                const total = getVitrineTotalCells();
+                for (let i = 0; i < total && queue.length; i++) {
+                    if (vitrineState.cells[String(i)]) continue;
+                    vitrineState.cells[String(i)] = queue.shift();
+                }
+                salvarVitrineState(vitrineState);
+                renderVitrineGrid();
+            }
+
+            function abrirVitrineModal() {
+                if (!vitrineModal) return;
+                vitrineReturnToPedido = Boolean(pedidoModal && pedidoModal.classList.contains('active'));
+                if (vitrineReturnToPedido) {
+                    try {
+                        document.activeElement?.blur?.();
+                    } catch (e) {}
+                    fecharPedidoModal();
+                }
+                vitrineState = carregarVitrineState();
+                if (vitrineTitleEl) {
+                    const baseTitle = (titlePedidoEl?.textContent || '').trim();
+                    vitrineTitleEl.textContent = baseTitle ? baseTitle : 'Vitrine';
+                }
+                vitrineModal.classList.add('active');
+                vitrineModal.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('pedido-modal-open');
+                requestAnimationFrame(() => {
+                    vitrineBaseCellPx = calcularVitrineBaseCellPx();
+                    renderVitrineGrid();
+                    renderVitrineProductsList();
+                    centralizarVitrineGridHorizontal();
+                    updateVitrineStripScrollbar();
+                });
+            }
+
+            function fecharVitrineModal() {
+                if (!vitrineModal) return;
+                vitrineModal.classList.remove('active');
+                vitrineModal.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('pedido-modal-open');
+                if (vitrineReturnToPedido) {
+                    vitrineReturnToPedido = false;
+                    abrirPedidoModal();
+                }
+            }
+
+            if (pedidoModalVitrineBtn) {
+                pedidoModalVitrineBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    abrirVitrineModal();
+                });
+            }
+
+            if (vitrineModalBackBtn) {
+                vitrineModalBackBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    fecharVitrineModal();
+                });
+            }
+
+            if (vitrineRowsPlusBtn) {
+                vitrineRowsPlusBtn.addEventListener('click', () => {
+                    aplicarVitrineRows(vitrineState.rows + 1);
+                });
+            }
+            if (vitrineRowsMinusBtn) {
+                vitrineRowsMinusBtn.addEventListener('click', () => {
+                    if (vitrineState.rows <= 1) return;
+                    aplicarVitrineRows(vitrineState.rows - 1);
+                });
+            }
+            if (vitrineColsPlusBtn) {
+                vitrineColsPlusBtn.addEventListener('click', () => {
+                    aplicarVitrineCols(vitrineState.cols + 1);
+                });
+            }
+            if (vitrineColsMinusBtn) {
+                vitrineColsMinusBtn.addEventListener('click', () => {
+                    if (vitrineState.cols <= 1) return;
+                    aplicarVitrineCols(vitrineState.cols - 1);
+                });
+            }
+            if (vitrineAddAllBtn) {
+                vitrineAddAllBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    vitrineAddAll();
+                });
+            }
+
+            if (vitrineRemoveAllBtn) {
+                vitrineRemoveAllBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    vitrineRemoveAll();
+                });
+            }
+
+            if (vitrineExportJpgBtn) {
+                vitrineExportJpgBtn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    try {
+                        await exportVitrineJpg();
+                    } catch (err) {
+                        try {
+                            console.error(err);
+                        } catch (e) {}
+                        const msg = err && typeof err === 'object' && 'message' in err && err.message ?
+                            `Não foi possível gerar o JPG. (${err.message})` :
+                            'Não foi possível gerar o JPG.';
+                        alert(msg);
+                    }
+                });
+            }
+
+            if (vitrineExportPdfBtn) {
+                vitrineExportPdfBtn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    try {
+                        await exportVitrinePdf();
+                    } catch (err) {
+                        try {
+                            console.error(err);
+                        } catch (e) {}
+                        const msg = err && typeof err === 'object' && 'message' in err && err.message ?
+                            `Não foi possível gerar o PDF. (${err.message})` :
+                            'Não foi possível gerar o PDF.';
+                        alert(msg);
+                    }
+                });
+            }
+
+            window.addEventListener('resize', () => {
+                if (vitrineModal && vitrineModal.classList.contains('active')) {
+                    renderVitrineGrid();
+                    requestAnimationFrame(() => centralizarVitrineGridHorizontal());
+                    requestAnimationFrame(() => updateVitrineStripScrollbar());
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key !== 'Escape') return;
+                if (vitrineModal && vitrineModal.classList.contains('active')) {
+                    fecharVitrineModal();
+                    return;
+                }
+                if (pedidoHistoryModal && pedidoHistoryModal.classList.contains('active')) {
+                    fecharPedidoHistoryModal();
+                    return;
+                }
+                if (pedidoModal && pedidoModal.classList.contains('active')) {
+                    fecharPedidoModal();
+                    return;
+                }
+                setPedidoMode(false);
+            });
 
             const searchInput = document.getElementById("search") ||
                 document.querySelector(".input-estilizado.bg-transparent") ||
@@ -1676,6 +4872,8 @@
             }
 
             renderProdutos(produtosData, false);
+            atualizarPedidoBadge();
+            atualizarVisibilidadeCtasPedido();
 
             window.addEventListener('storage', function(e) {
                 if (e.key === 'selectedSegmentacoes') {
@@ -3130,6 +6328,94 @@
                         }, 300);
                     });
                 }
+            })();
+
+
+            // ==================== SCROLLBAR CUSTOMIZADA DO MODAL ====================
+            (function() {
+                const content = document.getElementById('pedidoModalBody');
+                const thumb = document.getElementById('scrollThumb');
+                const track = document.getElementById('scrollTrack');
+                const btnUp = document.getElementById('btnUp');
+                const btnDown = document.getElementById('btnDown');
+
+                if (!content || !thumb || !track || !btnUp || !btnDown) return;
+
+                function updateThumb() {
+                    if (content.scrollHeight <= content.clientHeight) {
+                        thumb.style.display = 'none';
+                        return;
+                    }
+                    thumb.style.display = 'block';
+                    const trackH = track.clientHeight;
+                    const ratio = content.clientHeight / content.scrollHeight;
+                    const thumbH = Math.max(28, trackH * ratio);
+                    const maxTop = trackH - thumbH;
+                    const scrollR = content.scrollTop / (content.scrollHeight - content.clientHeight);
+                    thumb.style.height = thumbH + 'px';
+                    thumb.style.top = (scrollR * maxTop) + 'px';
+                }
+
+                content.addEventListener('scroll', updateThumb);
+                window.addEventListener('resize', updateThumb);
+
+                // re-calcular sempre que o modal abrir
+                document.getElementById('pedidoModal').addEventListener('transitionend', updateThumb);
+
+                // hook no abrirPedidoModal já existente
+                const _abrirOriginal = window.abrirPedidoModal;
+                if (typeof _abrirOriginal === 'function') {
+                    window.abrirPedidoModal = function() {
+                        _abrirOriginal.apply(this, arguments);
+                        setTimeout(updateThumb, 50);
+                    };
+                }
+
+                let scrollInterval;
+                btnUp.addEventListener('mousedown', () => {
+                    content.scrollBy({
+                        top: -40,
+                        behavior: 'smooth'
+                    });
+                    scrollInterval = setInterval(() => content.scrollBy({
+                        top: -40
+                    }), 100);
+                });
+                btnDown.addEventListener('mousedown', () => {
+                    content.scrollBy({
+                        top: 40,
+                        behavior: 'smooth'
+                    });
+                    scrollInterval = setInterval(() => content.scrollBy({
+                        top: 40
+                    }), 100);
+                });
+                document.addEventListener('mouseup', () => clearInterval(scrollInterval));
+
+                let dragging = false,
+                    startY, startTop;
+                thumb.addEventListener('mousedown', e => {
+                    dragging = true;
+                    startY = e.clientY;
+                    startTop = content.scrollTop;
+                    e.preventDefault();
+                });
+                document.addEventListener('mousemove', e => {
+                    if (!dragging) return;
+                    const delta = e.clientY - startY;
+                    const ratio = delta / (track.clientHeight - thumb.clientHeight);
+                    content.scrollTop = startTop + ratio * (content.scrollHeight - content.clientHeight);
+                });
+                document.addEventListener('mouseup', () => {
+                    dragging = false;
+                });
+
+                track.addEventListener('click', e => {
+                    if (e.target === thumb) return;
+                    const rect = track.getBoundingClientRect();
+                    const ratio = (e.clientY - rect.top) / track.clientHeight;
+                    content.scrollTop = ratio * (content.scrollHeight - content.clientHeight);
+                });
             })();
         </script>
     @endpush

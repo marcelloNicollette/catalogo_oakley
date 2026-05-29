@@ -5,9 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Under Armour</title>
+    <title>Oakley</title>
     <!-- Favicon -->
-    <link rel="icon" href="/images/Favicon_Olympikus.png" type="image/png">
+    <link rel="icon" href="/images/Oakley_logo.svg" type="image/svg+xml">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
@@ -29,32 +29,32 @@
 
         <!-- Lado direito (formulário) -->
         <div
-            class="lg:w-[40%] 2xl:w-[30%] 3xl:w-[20%] w-full bg-[#2735D4] flex flex-col items-center justify-start lg:justify-center p-6 lg:p-12 rounded-xl">
+            class="lg:w-[40%] 2xl:w-[30%] 3xl:w-[20%] w-full bg-white flex flex-col items-center justify-start lg:justify-center p-6 lg:p-12 rounded-xl border border-black">
             <!-- Logo -->
-            <img src="/images/logo-branco.png" alt="Under Armour" class="mb-6">
+            <img src="/images/Oakley_logo.svg" alt="Oakley" class="mb-6 h-10 w-auto">
 
             <!-- Título -->
-            <h2 class="text-xl text-white text-center m-5">Bem-vindo ao Painel administrativo do catálogo digital da
-                Under Armour.</h2>
+            <h2 class="text-xl text-black text-center m-5">Bem-vindo ao Painel administrativo do catálogo digital da
+                Oakley.</h2>
 
             <!-- Formulário -->
             <form class="w-full max-w-xs" method="POST" action="{{ url('/admin/login') }}">
                 @csrf
 
                 <input name="email" type="email" placeholder="E-mail"
-                    class="w-full text-white py-2 mb-4 placeholder-white input-estilizado bg-transparent border-0 focus:ring-0" />
+                    class="w-full text-black py-2 mb-4 placeholder-gray-500 input-estilizado bg-transparent border-0 focus:ring-0" />
                 <input name="password" type="password" placeholder="Senha"
-                    class="w-full text-white py-2 mb-4 placeholder-white input-estilizado bg-transparent border-0 focus:outline-none focus:ring-0" />
+                    class="w-full text-black py-2 mb-4 placeholder-gray-500 input-estilizado bg-transparent border-0 focus:outline-none focus:ring-0" />
 
-                <div class="text-sm text-white text-center m-4 opacity-70">Esqueceu a senha?</div>
+                <div class="text-sm text-black text-center m-4 opacity-70">Esqueceu a senha?</div>
 
                 <button type="submit"
-                    class="w-full border border-white text-white py-2 rounded-full hover:bg-white hover:text-[#2735D4] transition">
+                    class="w-full border border-black text-black py-2 rounded-full hover:bg-black hover:text-white transition">
                     Entrar
                 </button>
 
-                <div class="text-xs text-white text-center mt-4 opacity-70">
-                    Precisa de um login? <a href="#" class="text-white underline">Solicite um acesso</a>
+                <div class="text-xs text-black text-center mt-4 opacity-70">
+                    Precisa de um login? <a href="#" class="text-black underline">Solicite um acesso</a>
                 </div>
             </form>
         </div>

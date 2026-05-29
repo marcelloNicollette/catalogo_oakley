@@ -97,7 +97,7 @@
                 </div>
 
                 <button id="sendHistory"
-                    class="w-full bg-black text-white font-normal text-base py-3 px-4 rounded-full transition-colors">
+                    class="w-full bg-white text-black border border-black font-normal text-base py-3 px-4 rounded-full hover:bg-[#E7E7E7] transition-colors">
                     Gerar Link
                 </button>
 
@@ -132,7 +132,7 @@
                         rel="noopener noreferrer"></a>
                     <div class="w-full justify-center">
                         <button type="button" id="copyLinkBtn"
-                            class="w-full bg-black text-white font-normal text-base py-3 px-4 rounded-full transition-colors">
+                            class="w-full bg-white text-black border border-black font-normal text-base py-3 px-4 rounded-full hover:bg-[#E7E7E7] transition-colors">
                             Copiar Link
                         </button>
                         <a id="openLinkBtn" href="#" target="_blank"
@@ -206,7 +206,7 @@
 
 
             <button id="salvarSelecaoSegmentos"
-                class="bg-black text-white px-8 py-3 rounded-full transition-colors w-full font-normal">Salvar
+                class="bg-white text-black border border-black px-8 py-3 rounded-full hover:bg-[#E7E7E7] transition-colors w-full font-normal">Salvar
                 Seleção</button>
 
             <button id="cancelarSelecaoSegmentos"
@@ -283,7 +283,7 @@
         <div class="pt-4 mt-4">
             <div class="flex justify-center gap-4 mb-3">
                 <button type="button" id="salvarSelecao"
-                    class="bg-black text-white px-8 py-3 rounded-full transition-colors w-full font-normal">
+                    class="bg-white text-black border border-black px-8 py-3 rounded-full hover:bg-[#E7E7E7] transition-colors w-full font-normal">
                     Salvar
                 </button>
             </div>

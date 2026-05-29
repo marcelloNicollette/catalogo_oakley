@@ -13,7 +13,7 @@
     </style>
 @endpush
 
-@section('page_title', 'Under Armour - Características')
+@section('page_title', 'Oakley - Características')
 
 @section('content-wrapper')
     <div class="flex items-center space-x-2 mb-6">

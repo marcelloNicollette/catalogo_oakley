@@ -1,4 +1,4 @@
-<x-layout-user title="Under Armour - Favoritos">
+<x-layout-user title="Oakley - Favoritos">
     <main class="lg:flex flex-1 produtos-page">
         <style>
             .badge-icon-wrapper .badge-tooltip {
@@ -860,7 +860,7 @@
 
             <!-- Lista de Produtos -->
             <div id="produtos"
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 p-2 bg-[#E6E6E6] rounded-tl-lg overflow-auto custom-scrollbar height-ultra">
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 p-2 bg-white rounded-tl-lg overflow-auto custom-scrollbar height-ultra">
 
                 <!-- Template de Produto -->
                 <template id="template-produto">
@@ -889,7 +889,8 @@
                                     </svg>
                                 </button>
                             </div>
-                            <img src="/images/tenis-1.jpg" alt="Tênis" class="w-full object-contain rounded-md" />
+                            <img src="/images/tenis-1.jpg" alt="Tênis" class="w-full object-contain rounded-md"
+                                onerror="this.onerror=null;this.src='/images/img-padrao-mz.png';" />
                             <div class="p-4 flex-1 flex flex-col">
                                 <h2 class="title uppercase font-black font-fko text-[22px] leading-[18px] pb-2">
                                 </h2>
@@ -1106,34 +1107,62 @@
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                @php
+                    $flagsMap =
+                        $flags instanceof \Illuminate\Support\Collection
+                            ? $flags->mapWithKeys(function ($flag) {
+                                return [
+                                    (string) $flag->id => [
+                                        'id' => $flag->id,
+                                        'title' => $flag->flag_title,
+                                        'icon' => $flag->icon,
+                                        'bg' => $flag->flag_bg,
+                                        'color_text' => $flag->flag_color_text_bg,
+                                        'alinhamento' => $flag->alinhamento,
+                                        'orderfilterflag' => $flag->orderfilterflag,
+                                    ],
+                                ];
+                            })
+                            : collect();
+                @endphp
+                const flagsMap = @json($flagsMap);
                 const produtosData = [
                     @foreach ($produtos as $produto)
                         @php
-                            $img = '/images/produtos/' . $produto->product->code . '_' . str_replace('/', '_', $produto->color_code) . '.jpg';
-                            $flagId = optional(optional($produto->color)->flagProduct)->id;
+                            $productCode = optional($produto->product)->code ?? '';
+                            $img = '/images/produtos/' . $productCode . '_' . str_replace('/', '_', $produto->color_code) . '.jpg';
+                            $flagIds = [];
+                            if ($produto->color) {
+                                if (!empty($hasColorFlagProductTable)) {
+                                    $flagIds = $produto->color->flagProducts->pluck('id')->values()->all();
+                                }
+                            }
+                            $flagId = $flagIds[0] ?? optional(optional($produto->color)->flagProduct)->id;
                             $numeracaoId = optional($produto->color)->numeracao_id;
-                            $priceValue = (float) str_replace([','], ['.'], $produto->product->price);
+                            $priceRaw = optional($produto->product)->price ?? '0';
+                            $priceValue = (float) str_replace([','], ['.'], $priceRaw);
                         @endphp {
-                            id: "{{ $produto->product->id }}",
+                            id: "{{ optional($produto->product)->id ?? '' }}",
                             color_code: "{{ $produto->color_code }}",
-                            title: "{{ $produto->product->name }}",
+                            title: "{{ optional($produto->product)->name ?? '' }}",
                             imagem: "{{ $img }}",
-                            codigo: "{{ $produto->product->code }}",
-                            'title-caract-1': "{{ $produto->product->caracteristicasDestaque->first()->title ?? '' }}",
-                            'desc-caract-1': "{{ $produto->product->caracteristicasDestaque->first()->description ?? '' }}",
-                            cor: "{{ $produto->color->color_name }}",
-                            codigo_cor: "{{ str_replace('/', '_', $produto->color->color_code) }}",
+                            codigo: "{{ optional($produto->product)->code ?? '' }}",
+                            'title-caract-1': "{{ optional(optional(optional($produto->product)->caracteristicasDestaque)->first())->title ?? '' }}",
+                            'desc-caract-1': "{{ optional(optional(optional($produto->product)->caracteristicasDestaque)->first())->description ?? '' }}",
+                            cor: "{{ optional($produto->color)->color_name ?? '' }}",
+                            codigo_cor: "{{ str_replace('/', '_', optional($produto->color)->color_code ?? $produto->color_code) }}",
                             numeracao: "{{ $produto->numeracao ? $produto->numeracao->numero : '' }}",
                             numeracao_id: {{ $numeracaoId ?? 'null' }},
-                            categoria: "{{ $produto->product->category->name }}",
-                            subcategory_id: "{{ $produto->product->subcategory_id ?? '' }}",
-                            preco: "R${{ $produto->product->price }}",
+                            categoria: "{{ optional(optional($produto->product)->category)->name ?? '' }}",
+                            subcategory_id: "{{ optional($produto->product)->subcategory_id ?? '' }}",
+                            preco: "R${{ optional($produto->product)->price ?? '' }}",
                             price_value: {{ $priceValue ?: 0 }},
-                            slug: "{{ $produto->product->slug }}",
-                            slug_collection: "{{ $produto->color->collection->slug }}",
-                            collection: "{{ $produto->color->collection->codigo_colecao }}",
-                            segmento: "{{ $produto->product->category->segmentacao->slug }}",
+                            slug: "{{ optional($produto->product)->slug ?? '' }}",
+                            slug_collection: "{{ optional(optional($produto->color)->collection)->slug ?? '' }}",
+                            collection: "{{ optional(optional($produto->color)->collection)->codigo_colecao ?? '' }}",
+                            segmento: "{{ optional(optional(optional($produto->product)->category)->segmentacao)->slug ?? '' }}",
                             classification_id: {{ $flagId ?? 'null' }},
+                            classification_ids: @json($flagIds),
                         },
                     @endforeach
                 ];
@@ -1164,8 +1193,14 @@
                         //console.log(produto);
                         const clone = template.content.cloneNode(true);
                         const link = clone.querySelector("a");
-                        link.href =
-                            `/user/${produto.segmento}/colecoes/${produto.slug_collection}/${produto.codigo}/${produto.codigo_cor}`;
+                        const canNavigate = Boolean(produto.segmento && produto.slug_collection && produto
+                            .codigo && produto.codigo_cor);
+                        link.href = canNavigate ?
+                            `/user/${produto.segmento}/colecoes/${produto.slug_collection}/${produto.codigo}/${produto.codigo_cor}` :
+                            '#';
+                        if (!canNavigate) {
+                            link.style.pointerEvents = 'none';
+                        }
                         // Adicionar classe product-card ao div principal
                         const productDiv = clone.querySelector('div');
                         if (productDiv) {
@@ -1174,7 +1209,14 @@
 
                         //const link = clone.querySelector("a");
                         //link.href = `{{ $currentSlug }}/${produto.slug}`;
-                        clone.querySelector("img").src = produto.imagem;
+                        const productImg = clone.querySelector("img");
+                        if (productImg) {
+                            productImg.onerror = function() {
+                                this.onerror = null;
+                                this.src = '/images/img-padrao-mz.png';
+                            };
+                            productImg.src = produto.imagem;
+                        }
                         clone.querySelector("h2").textContent = produto.title;
                         clone.querySelector(".codigo").textContent = produto.codigo;
                         clone.querySelector(".cor").textContent = produto.cor;
@@ -1183,6 +1225,65 @@
                         clone.querySelector(".title-caract-1").textContent = produto['title-caract-1'];
                         clone.querySelector(".desc-caract-1").textContent = produto['desc-caract-1'];
                         clone.querySelector(".preco").textContent = produto.preco;
+                        const badgeContainer = clone.querySelector(".badge-container");
+                        if (badgeContainer) {
+                            badgeContainer.innerHTML = "";
+                            const idsRaw = Array.isArray(produto.classification_ids) ? produto
+                                .classification_ids : [];
+                            const idsWithFallback = idsRaw.length > 0 ? idsRaw : (produto.classification_id ? [
+                                produto.classification_id
+                            ] : []);
+                            const ids = idsWithFallback
+                                .map((id) => String(id))
+                                .filter((id) => Boolean(id) && flagsMap[id]);
+                            ids.sort((a, b) => {
+                                const oa = Number(flagsMap[a]?.orderfilterflag ?? 0);
+                                const ob = Number(flagsMap[b]?.orderfilterflag ?? 0);
+                                return oa - ob;
+                            });
+
+                            ids.forEach((id) => {
+                                const data = flagsMap[id];
+                                if (!data) {
+                                    return;
+                                }
+
+                                if (data.icon) {
+                                    const wrapper = document.createElement("div");
+                                    wrapper.className = "badge-icon-wrapper inline-block";
+                                    wrapper.style.position = "relative";
+                                    wrapper.style.marginRight = "3px";
+
+                                    const img = document.createElement("img");
+                                    img.src = `/${data.icon}`;
+                                    img.alt = data.title || "";
+                                    img.className = "badge-icon";
+                                    img.style.width = "19px";
+                                    img.style.height = "19px";
+
+                                    const tooltip = document.createElement("span");
+                                    tooltip.className = "badge-tooltip";
+                                    tooltip.style.color = data.color_text || "#000";
+                                    tooltip.textContent = data.title || "";
+
+                                    wrapper.appendChild(img);
+                                    wrapper.appendChild(tooltip);
+                                    badgeContainer.appendChild(wrapper);
+                                    return;
+                                }
+
+                                const label = document.createElement("span");
+                                label.textContent = data.title || "";
+                                label.style.backgroundColor = data.bg || "#fff";
+                                label.style.color = data.color_text || "#000";
+                                label.style.fontSize = "10px";
+                                label.style.padding = "2px 8px";
+                                label.style.borderRadius = "9999px";
+                                label.style.display = "inline-block";
+                                label.style.marginRight = "3px";
+                                badgeContainer.appendChild(label);
+                            });
+                        }
 
                         // Configurar botão de favoritos
                         const favoriteBtn = clone.querySelector('.favoriteBtn');
@@ -1369,8 +1470,12 @@
 
                     // Filtro de classificação
                     if (selectedFilters.classification.length > 0) {
-                        const classId = produto.classification_id;
-                        if (!classId || !selectedFilters.classification.includes(String(classId))) {
+                        const classIdsRaw = Array.isArray(produto.classification_ids) ? produto.classification_ids : [];
+                        const classIds = classIdsRaw.length > 0 ? classIdsRaw : (produto.classification_id ? [produto
+                            .classification_id
+                        ] : []);
+                        const hasMatch = classIds.some((id) => selectedFilters.classification.includes(String(id)));
+                        if (!hasMatch) {
                             return false;
                         }
                     }

@@ -1,4 +1,4 @@
-<x-layout-user-produto title="Under Armour - Produto">
+<x-layout-user-produto title="Oakley - Produto">
 
 
     @php
@@ -143,7 +143,7 @@
             </script>
 
             <button id="sendSuggestion"
-                class="w-full bg-black hover:bg-gray-800 text-white font-normal py-3 px-4 rounded-full transition-colors text-base">
+                class="w-full bg-white hover:bg-[#E7E7E7] text-black border border-black font-normal py-3 px-4 rounded-full transition-colors text-base">
                 Editar dados
             </button>
 

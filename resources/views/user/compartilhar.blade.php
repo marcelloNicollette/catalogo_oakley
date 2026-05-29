@@ -1,4 +1,4 @@
-<x-layout-user title="Olympikus - Compartilhar">
+<x-layout-user title="Oakley - Compartilhar">
     <style>
         .height-ultra {
             height: calc(100vh - 85px);
@@ -30,7 +30,7 @@
         <!-- Conteúdo principal -->
         <section class="flex-1 flex flex-col md:pr-0 md:pb-0 overflow-hidden">
             <!-- Filtros superiores -->
-            <div class="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-4 pt-4 pb-3 pr-4 bg-[#F1F1F1]">
+            <div class="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-4 pt-4 pb-3 pr-4 bg-white">
                 <!-- Esquerda: Coleção e Histórico -->
                 <div class="flex gap-2 w-full lg:w-auto">
                     <div class="select-container flex-1 lg:flex-initial">
@@ -163,7 +163,7 @@
 
 
             <!-- Grid de Coleções -->
-            <div class="bg-[#E6E6E6] p-[10px] rounded-tl-lg overflow-auto height-ultra custom-scrollbar">
+            <div class="bg-white p-[10px] rounded-tl-lg overflow-auto height-ultra custom-scrollbar">
                 <div id="colecoes-grid"
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-[10px]"
                     style="border-radius: 10px 0 0 0;">
@@ -177,10 +177,10 @@
                 <div class="colecao-card relative rounded overflow-hidden cursor-pointer border border-transparent hover:border-[#999]"
                     data-codigo="" data-name="" data-description="" data-slug="" data-segmentacao-id=""
                     onclick="openCompartilharModalWithCollection(this.dataset.name, this)">
-                    <div class="overlay absolute inset-0 bg-black bg-opacity-40 " style="display: none;"> </div>
-                    <div class="absolute inset-0 flex flex-col justify-center items-center text-white p-6">
+                    <div class="overlay absolute inset-0 bg-white bg-opacity-80" style="display: none;"> </div>
+                    <div class="absolute inset-0 flex flex-col justify-center items-center text-black p-6">
                         <h2 class="mb-2 codigo font-segmento neue-plak-extended"></h2>
-                        <p class="text-lg opacity-90 description uppercase absolute bottom-6"></p>
+                        <p class="text-white text-lg opacity-90 description uppercase absolute bottom-6"></p>
                     </div>
                 </div>
             </template>

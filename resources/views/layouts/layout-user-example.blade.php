@@ -19,7 +19,7 @@
     - Suporte a scripts e estilos adicionais
     
     Parâmetros disponíveis:
-    - title: Título da página (opcional, padrão: "Olympikus")
+    - title: Título da página (opcional, padrão: "Oakley")
     - footer: Conteúdo do footer (opcional)
     
     Stacks disponíveis:

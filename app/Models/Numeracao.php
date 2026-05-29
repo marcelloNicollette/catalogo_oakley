@@ -21,4 +21,9 @@ class Numeracao extends Model
     {
         return $this->belongsToMany(Product::class, 'numeracao');
     }
+
+    public function colors()
+    {
+        return $this->hasMany(Color::class, 'numeracao_id');
+    }
 }

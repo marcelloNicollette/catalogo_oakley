@@ -21,6 +21,6 @@ class TechnologyCategory extends Model
 
     public function items()
     {
-        return $this->hasMany(TechnologyItem::class);
+        return $this->hasMany(TechnologyItem::class)->orderBy('order')->orderBy('id');
     }
 }

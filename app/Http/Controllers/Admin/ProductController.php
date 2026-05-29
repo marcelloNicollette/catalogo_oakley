@@ -12,6 +12,7 @@ use App\Models\FlagProduct;
 use App\Models\LinksProduct;
 use App\Models\Size;
 use App\Models\Numeracao;
+use App\Models\ShoeGridGroup;
 use App\Models\TechnologyCategory;
 use App\Models\TechnologyItem;
 use App\Models\Calendario;
@@ -70,9 +71,13 @@ class ProductController extends Controller
         $technologies = TechnologyCategory::where('active', true)->with('items')->get();
         $sizes = Size::where('active', true)->get();
         $numeracoes = Numeracao::where('active', true)->get();
+        $shoeGridGroups = ShoeGridGroup::with(['grids' => fn($q) => $q->active()])
+            ->active()
+            ->get();
+        $accessLevels = ['representante', 'interno', 'fornecedor', 'convidado', 'cliente'];
         $segmentacoesCliente = \App\Models\SegmentacaoCliente::where('active', true)->get();
 
-        return view('admin.products.create', compact('collections', 'categories', 'colors', 'flags', 'technologies', 'sizes', 'numeracoes', 'segmentacoesCliente'));
+        return view('admin.products.create', compact('collections', 'categories', 'colors', 'flags', 'technologies', 'sizes', 'numeracoes', 'shoeGridGroups', 'accessLevels', 'segmentacoesCliente'));
     }
 
     public function show(Product $product)
@@ -86,7 +91,6 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'silhueta' => 'nullable|string|max:255',
             'price' => 'required|numeric|min:0',
             'linha' => 'nullable|string|max:255',
             'code' => 'required|string|unique:products,code',
@@ -94,6 +98,12 @@ class ProductController extends Controller
             'technologies' => 'nullable|array',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'nullable|exists:subcategories,id',
+            'color_shoe_grid_ids' => 'nullable|array',
+            'color_shoe_grid_ids.*' => 'nullable|array',
+            'color_shoe_grid_ids.*.*' => 'integer|exists:shoe_grids,id',
+            'color_periodo_vendas' => 'nullable|array',
+            'color_periodo_vendas.*' => 'nullable|array',
+            'color_periodo_vendas.*.*' => 'integer|min:1|max:12',
             'flag_calendario' => 'nullable|boolean',
             'data_mkt' => 'nullable|date',
             'data_trade' => 'nullable|date',
@@ -141,8 +151,11 @@ class ProductController extends Controller
                 'generos' => $request->input('color_genero', []),
                 'collections' => $request->input('color_collection_id', []),
                 'flags' => $request->input('color_flag_product_id', []),
+                'flag_ids' => $request->input('color_flag_product_ids', []),
                 'numeracao_ids' => $request->input('color_numeracao_id', []),
+                'shoe_grid_ids' => $request->input('color_shoe_grid_ids', []),
                 'segmentacoes_cliente' => $request->input('color_segmentacoes_cliente', []),
+                'periodo_vendas' => $request->input('color_periodo_vendas', []),
             ]);
         }
 
@@ -189,19 +202,121 @@ class ProductController extends Controller
     {
         $collections = Collection::get();
         $categories = Category::where('active', true)->get();
-        $colors = Color::where('product_id', $product->id)->with('segmentacoesCliente')->get();
+        $colors = Color::where('product_id', $product->id)->with(['segmentacoesCliente', 'flagProducts', 'shoeGrids'])->get();
         $caracteristicas = CaracteristicaProduct::where('product_id', $product->id)->get();
         $links = LinksProduct::where('product_id', $product->id)->get();
         $flags = FlagProduct::where('status', true)->get();
         $technologies = TechnologyCategory::where('active', true)->with('items')->get();
         $sizes = Size::where('active', true)->get();
         $numeracoes = Numeracao::where('active', true)->get();
+        $shoeGridGroups = ShoeGridGroup::with(['grids' => fn($q) => $q->active()])
+            ->active()
+            ->get();
+        $accessLevels = ['representante', 'interno', 'fornecedor', 'convidado', 'cliente'];
         $segmentacoesCliente = \App\Models\SegmentacaoCliente::where('active', true)->get();
 
         // Carregar relacionamentos de sizes e numeração do produto
         $product->load(['sizes', 'numeracoes']);
 
-        return view('admin.products.edit', compact('product', 'collections', 'categories', 'colors', 'caracteristicas', 'flags', 'technologies', 'links', 'sizes', 'numeracoes', 'segmentacoesCliente'));
+        $colorsForm = $colors->map(function ($c) {
+            $flagIds = [];
+            if ($c->relationLoaded('flagProducts') && $c->flagProducts) {
+                $flagIds = $c->flagProducts->pluck('id')->toArray();
+            }
+            if (empty($flagIds) && !empty($c->flag_product_id)) {
+                $flagIds = [$c->flag_product_id];
+            }
+
+            return [
+                'color_name' => $c->color_name,
+                'color_description' => $c->color_description,
+                'color_code' => $c->color_code,
+                'color_genero' => $c->genero ?? 'Masculino',
+                'color_collection_id' => $c->collection_id,
+                'color_flag_product_ids' => $flagIds,
+                'color_numeracao_id' => $c->numeracao_id,
+                'color_shoe_grid_ids' => $c->shoeGrids->pluck('id')->toArray(),
+                'segmentacoes_cliente' => $c->segmentacoesCliente->pluck('id')->toArray(),
+                'color_periodo_vendas' => $c->periodo_vendas ?? [],
+            ];
+        })->values()->all();
+
+        if (count($colorsForm) === 0) {
+            $colorsForm = [[
+                'color_name' => '',
+                'color_description' => '',
+                'color_code' => '',
+                'color_genero' => 'Masculino',
+                'color_collection_id' => '',
+                'color_flag_product_ids' => [],
+                'color_numeracao_id' => '',
+                'color_shoe_grid_ids' => [],
+                'segmentacoes_cliente' => [],
+                'color_periodo_vendas' => [],
+            ]];
+        }
+
+        $caracteristicasForm = $caracteristicas->map(function ($c) {
+            return [
+                'caracteristica_title' => $c->title,
+                'caracteristica_description' => $c->description,
+                'caracteristica_destaque' => $c->destaque,
+            ];
+        })->values()->all();
+
+        if (count($caracteristicasForm) === 0) {
+            $caracteristicasForm = [[
+                'caracteristica_title' => '',
+                'caracteristica_description' => '',
+                'caracteristica_destaque' => 0,
+            ]];
+        }
+
+        $sizesForm = $product->sizes->map(function ($s) {
+            return [
+                'size_id' => $s->id,
+                'stock' => $s->pivot->stock,
+            ];
+        })->values()->all();
+
+        if (count($sizesForm) === 0) {
+            $sizesForm = [[
+                'size_id' => '',
+                'stock' => '',
+            ]];
+        }
+
+        $numeracoesForm = $product->numeracoes->map(function ($n) {
+            return [
+                'numeracao_id' => $n->id,
+                'stock' => $n->pivot->stock,
+            ];
+        })->values()->all();
+
+        if (count($numeracoesForm) === 0) {
+            $numeracoesForm = [[
+                'numeracao_id' => '',
+                'stock' => '',
+            ]];
+        }
+
+        $linksForm = $links->map(function ($l) {
+            return [
+                'link_title' => $l->link_title,
+                'link_url' => $l->link_url,
+                'access_levels' => $l->access_levels ?? [],
+            ];
+        })->values()->all();
+
+        if (count($linksForm) === 0) {
+            $linksForm = [[
+                'link_title' => '',
+                'link_url' => '',
+                'access_levels' => [],
+            ]];
+        }
+
+        return view('admin.products.edit', compact('product', 'collections', 'categories', 'colors', 'caracteristicas', 'flags', 'technologies', 'links', 'sizes', 'numeracoes', 'shoeGridGroups', 'accessLevels', 'segmentacoesCliente', 'colorsForm', 'caracteristicasForm', 'sizesForm', 'numeracoesForm', 'linksForm'));
     }
 
     public function update(Request $request, Product $product)
@@ -209,7 +324,6 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'silhueta' => 'nullable|string|max:255',
             'price' => 'required|numeric|min:0',
             'linha' => 'nullable|string|max:255',
             'code' => 'required|string',
@@ -218,6 +332,12 @@ class ProductController extends Controller
             'technologies' => 'nullable|array',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'nullable|exists:subcategories,id',
+            'color_shoe_grid_ids' => 'nullable|array',
+            'color_shoe_grid_ids.*' => 'nullable|array',
+            'color_shoe_grid_ids.*.*' => 'integer|exists:shoe_grids,id',
+            'color_periodo_vendas' => 'nullable|array',
+            'color_periodo_vendas.*' => 'nullable|array',
+            'color_periodo_vendas.*.*' => 'integer|min:1|max:12',
             'flag_calendario' => 'nullable|boolean',
             'data_mkt' => 'nullable|date',
             'data_trade' => 'nullable|date',
@@ -268,8 +388,11 @@ class ProductController extends Controller
                 'generos' => $request->input('color_genero', []),
                 'collections' => $request->input('color_collection_id', []),
                 'flags' => $request->input('color_flag_product_id', []),
+                'flag_ids' => $request->input('color_flag_product_ids', []),
                 'numeracao_ids' => $request->input('color_numeracao_id', []),
+                'shoe_grid_ids' => $request->input('color_shoe_grid_ids', []),
                 'segmentacoes_cliente' => $request->input('color_segmentacoes_cliente', []),
+                'periodo_vendas' => $request->input('color_periodo_vendas', []),
             ]);
         }
 

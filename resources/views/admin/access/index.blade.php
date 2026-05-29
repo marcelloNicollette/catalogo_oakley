@@ -1,6 +1,6 @@
 @extends('layouts.admin-layout')
 
-@section('page_title', 'Olympikus - Solicitações de Acesso')
+@section('page_title', 'Oakley - Solicitações de Acesso')
 
 @section('content-wrapper')
     <div x-data="{ rejectionModalOpen: false, rejectionAction: '' }">

@@ -1,4 +1,4 @@
-<x-layout-user-produto-translate title="Under Armour - Detalhe Produto">
+<x-layout-user-produto-translate title="Oakley - Detalhe Produto">
     <style>
         .badge-icon-wrapper .badge-tooltip {
             visibility: hidden;
@@ -191,9 +191,9 @@
                         class="bg-white rounded-lg shadow-sm border border-[#CBCBCB] flex items-center justify-center hidden"
                         style="margin-top: 0px;">
                         <div class="transition-opacity">
-                            <img src="/images/img-padrao-ua.png" alt="Vista 1"
+                            <img src="/images/img-padrao-mz.png" alt="Vista 1"
                                 class="w-full object-contain rounded-lg "
-                                onerror="this.src='/images/img-padrao-ua.png'">
+                                onerror="this.src='/images/img-padrao-mz.png'">
                         </div>
                     </div>
 
@@ -274,7 +274,7 @@
                                                             '_' .
                                                             $baseColorCode .
                                                             '.jpg'
-                                                        : '/images/img-padrao-ua.png';
+                                                        : '/images/img-padrao-mz.png';
                                                 @endphp
                                                 <img src="{{ $imgSrc }}" alt="{{ $color->color_name }}"
                                                     class="w-full object-contain rounded-lg" loading="lazy" />
@@ -299,8 +299,8 @@
                                             </div>
 
                                             <div class="text-center pb-2">
-                                                <p class="text-xs text-black">{{ $color->color_name }}</p>
-                                                <p class="text-xs text-black opacity-50 word">
+                                                <p class="text-xs text-black notranslate ">{{ $color->color_name }}</p>
+                                                <p class="text-xs text-black opacity-50 word notranslate">
                                                     {{ $color->color_description }}</p>
                                             </div>
                                         </div>
@@ -373,7 +373,8 @@
                                 <div class="">
                                     @foreach ($produto->technologyItems as $item)
                                         <div class="mb-[30px] flex">
-                                            <div class="w-[65px] h-[65px] float-left mr-[10px] bg-black rounded-lg ">
+                                            <div
+                                                class="w-[65px] h-[65px] float-left mr-[10px] bg-white border border-black rounded-lg">
                                                 <img src="/{{ $item->icon }}" class="w-100 h-100 my-0 rounded-lg"
                                                     alt="{{ $item->name }}" />
                                             </div>
@@ -477,7 +478,7 @@
                                         alt="Vista {{ $vista }}"
                                         class="max-w-full max-h-full object-contain transition-transform duration-300 cursor-zoom-in"
                                         data-modal-image="/images/produtos/{{ $produto->code }}_{{ str_replace('/', '_', $produto->colors[0]->color_code) }}{{ $suffix }}.jpg"
-                                        onerror="this.src='/images/img-padrao-ua.png'" />
+                                        onerror="this.src='/images/img-padrao-mz.png'" />
                                 </div>
                             @endif
                             @php $vista++; @endphp
@@ -485,7 +486,7 @@
                     </div>
 
                     <!-- Navigation buttons -->
-                    <div class="swiper-button-next text-white">
+                    <div class="swiper-button-next text-black">
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"
                             fill="none">
                             <circle cx="20" cy="20" r="20" transform="rotate(-180 20 20)"
@@ -496,7 +497,7 @@
                                 stroke-linecap="round" />
                         </svg>
                     </div>
-                    <div class="swiper-button-prev text-white">
+                    <div class="swiper-button-prev text-black">
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"
                             fill="none">
                             <circle cx="20" cy="20" r="20" fill="white" fill-opacity="1" />
@@ -674,7 +675,7 @@
             <img src="${imgInfo.path}" 
                  alt="Vista ${imgInfo.index + 1}" 
                  class=""
-                 onerror="this.src='/images/img-padrao-ua.png'" />
+                 onerror="this.src='/images/img-padrao-mz.png'" />
         `;
 
                         desktopGrid.appendChild(imageDiv);
@@ -697,7 +698,7 @@
                                 <img src="${imgInfo.path}"
                                      alt="Vista ${imgInfo.index + 1}"
                                      class="max-w-[80%] max-h-[80%] object-contain"
-                                     onerror="this.src='/images/img-padrao-ua.png'" />
+                                     onerror="this.src='/images/img-padrao-mz.png'" />
                             </div>
                         `;
 
@@ -1282,7 +1283,7 @@
                                      alt="${cor.color_name}" 
                                      class="w-full object-contain rounded-lg"
                                      loading="lazy"
-                                     onerror="this.src='/images/img-padrao-ua.png'" />
+                                     onerror="this.src='/images/img-padrao-mz.png'" />
                                 ${flagHtml}
                             </div>
                             <div class="text-center pb-2">
