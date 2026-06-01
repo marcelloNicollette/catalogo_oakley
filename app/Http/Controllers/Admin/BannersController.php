@@ -37,6 +37,7 @@ class BannersController extends Controller
 
     public function store(Request $request)
     {
+        dd($request->all());
         $validated = $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'image_mobile' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
