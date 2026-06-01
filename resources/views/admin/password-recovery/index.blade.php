@@ -13,7 +13,7 @@
     </style>
 @endpush
 
-@section('page_title', 'UnderArmour - Recuperação de Senha')
+@section('page_title', 'Oakley - Recuperação de Senha')
 
 @section('content-wrapper')
     <div class="flex justify-between items-center mb-6">

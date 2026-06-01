@@ -13,7 +13,7 @@
     </style>
 @endpush
 
-@section('page_title', 'Under Amour - Produtos')
+@section('page_title', 'Oakley - Produtos')
 
 @section('content-wrapper')
     <div class="flex justify-between items-center mb-6">
@@ -109,7 +109,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Preço
                         </th>
                         <!--<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoria
-                                            </th>-->
+                                                </th>-->
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações
