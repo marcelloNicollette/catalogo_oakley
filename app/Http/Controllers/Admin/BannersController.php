@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class BannersController extends Controller
 {
@@ -58,16 +57,12 @@ class BannersController extends Controller
 
         //dd($validated);
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->extension();
-            $image->move(public_path('images/banners'), $imageName);
-            $validated['image'] = 'images/banners/' . $imageName;
+            $path = $request->file('image')->store('images/banners', 'public');
+            $validated['image'] = 'storage/' . $path;
         }
         if ($request->hasFile('image_mobile')) {
-            $image_mobile = $request->file('image_mobile');
-            $imageNameMobile = time() . '-mobile.' . $image_mobile->extension();
-            $image_mobile->move(public_path('images/banners'), $imageNameMobile);
-            $validated['image_mobile'] = 'images/banners/' . $imageNameMobile;
+            $pathMobile = $request->file('image_mobile')->store('images/banners', 'public');
+            $validated['image_mobile'] = 'storage/' . $pathMobile;
         }
         //dd($validated);
         Banner::create($validated);
@@ -103,16 +98,12 @@ class BannersController extends Controller
 
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->extension();
-            $image->move(public_path('images/banners'), $imageName);
-            $validated['image'] = 'images/banners/' . $imageName;
+            $path = $request->file('image')->store('images/banners', 'public');
+            $validated['image'] = 'storage/' . $path;
         }
         if ($request->hasFile('image_mobile')) {
-            $image_mobile = $request->file('image_mobile');
-            $imageNameMobile = time() . '-mobile.' . $image_mobile->extension();
-            $image_mobile->move(public_path('images/banners'), $imageNameMobile);
-            $validated['image_mobile'] = 'images/banners/' . $imageNameMobile;
+            $pathMobile = $request->file('image_mobile')->store('images/banners', 'public');
+            $validated['image_mobile'] = 'storage/' . $pathMobile;
         }
 
         $banner->update($validated);
