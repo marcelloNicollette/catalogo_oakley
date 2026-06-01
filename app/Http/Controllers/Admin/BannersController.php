@@ -37,7 +37,23 @@ class BannersController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+        dd($request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_mobile' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'active' => 'boolean',
+            'link' => [
+                'nullable',
+                'string',
+                'max:2048',
+                function ($attribute, $value, $fail) {
+                    if ($value && !preg_match('/^(https?:\\/\\/|\\/)/i', $value)) {
+                        $fail('O link deve iniciar com http(s):// ou /.');
+                    }
+                },
+            ],
+            'access_levels' => 'nullable|array',
+            'access_levels.*' => 'string|in:representante,interno,fornecedor,convidado,cliente',
+        ]));
         $validated = $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'image_mobile' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
