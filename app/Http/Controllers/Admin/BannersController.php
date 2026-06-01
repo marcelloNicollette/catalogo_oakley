@@ -37,7 +37,13 @@ class BannersController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+        $messages = [
+            'image.uploaded' => 'Falha ao enviar a imagem. Verifique o diretório temporário do PHP (upload_tmp_dir) e permissões.',
+            'image_mobile.uploaded' => 'Falha ao enviar a imagem mobile. Verifique o diretório temporário do PHP (upload_tmp_dir) e permissões.',
+            'image.mimes' => 'A imagem deve ser um arquivo do tipo: jpeg, png, jpg ou gif.',
+            'image_mobile.mimes' => 'A imagem mobile deve ser um arquivo do tipo: jpeg, png, jpg ou gif.',
+        ];
+
         $validated = $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'image_mobile' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -54,9 +60,8 @@ class BannersController extends Controller
             ],
             'access_levels' => 'nullable|array',
             'access_levels.*' => 'string|in:representante,interno,fornecedor,convidado,cliente',
-        ]);
+        ], $messages);
 
-        dd($validated);
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('images/banners', 'public');
             $validated['image'] = 'storage/' . $path;
@@ -79,6 +84,13 @@ class BannersController extends Controller
 
     public function update(Request $request, Banner $banner)
     {
+        $messages = [
+            'image.uploaded' => 'Falha ao enviar a imagem. Verifique o diretório temporário do PHP (upload_tmp_dir) e permissões.',
+            'image_mobile.uploaded' => 'Falha ao enviar a imagem mobile. Verifique o diretório temporário do PHP (upload_tmp_dir) e permissões.',
+            'image.mimes' => 'A imagem deve ser um arquivo do tipo: jpeg, png, jpg ou gif.',
+            'image_mobile.mimes' => 'A imagem mobile deve ser um arquivo do tipo: jpeg, png, jpg ou gif.',
+        ];
+
         $validated = $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'image_mobile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -95,7 +107,7 @@ class BannersController extends Controller
             ],
             'access_levels' => 'nullable|array',
             'access_levels.*' => 'string|in:representante,interno,fornecedor,convidado,cliente',
-        ]);
+        ], $messages);
 
 
         if ($request->hasFile('image')) {
