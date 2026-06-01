@@ -35,8 +35,8 @@
                     </label>
                     <input type="text" name="segmento" id="segmento"
                         class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition duration-150 ease-in-out"
-                        value="{{ old('name', $segmento->segmento) }}" required>
-                    @error('name')
+                        value="{{ old('segmento', $segmento->segmento) }}" required>
+                    @error('segmento')
                         <p class="mt-2 text-sm text-red-600 flex items-center">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -60,6 +60,7 @@
                         Imagem
                     </label>
                     <input type="file" name="image" id="image"
+                        accept="image/*"
                         class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition duration-150 ease-in-out">
                     @if ($segmento->image)
                         <div class="mt-2 relative group">
@@ -95,6 +96,7 @@
                         Imagem Mobile
                     </label>
                     <input type="file" name="image_mobile" id="image_mobile"
+                        accept="image/*"
                         class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition duration-150 ease-in-out">
                     @if ($segmento->image_mobile)
                         <div class="mt-2 relative group">

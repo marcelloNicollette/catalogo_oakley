@@ -32,20 +32,14 @@ class SegmentacaoController extends Controller
         ]);
 
         $validated['slug'] = Str::slug($validated['segmento']);
-        //dd($validated);
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->extension();
-            $image->move(public_path('images/segmentacao'), $imageName);
-            $validated['image'] = 'images/segmentacao/' . $imageName;
+            $path = $request->file('image')->store('images/segmentacao', 'public');
+            $validated['image'] = 'storage/' . $path;
         }
         if ($request->hasFile('image_mobile')) {
-            $image_mobile = $request->file('image_mobile');
-            $imageNameMobile = time() . '-mobile.' . $image_mobile->extension();
-            $image_mobile->move(public_path('images/segmentacao'), $imageNameMobile);
-            $validated['image_mobile'] = 'images/segmentacao/' . $imageNameMobile;
+            $pathMobile = $request->file('image_mobile')->store('images/segmentacao', 'public');
+            $validated['image_mobile'] = 'storage/' . $pathMobile;
         }
-        //dd($validated);
         Segmentacao::create($validated);
 
         return redirect()->route('admin.segmento.index')
@@ -69,16 +63,12 @@ class SegmentacaoController extends Controller
         $validated['slug'] = Str::slug($validated['segmento']);
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->extension();
-            $image->move(public_path('images/segmentacao'), $imageName);
-            $validated['image'] = 'images/segmentacao/' . $imageName;
+            $path = $request->file('image')->store('images/segmentacao', 'public');
+            $validated['image'] = 'storage/' . $path;
         }
         if ($request->hasFile('image_mobile')) {
-            $image_mobile = $request->file('image_mobile');
-            $imageNameMobile = time() . '-mobile.' . $image_mobile->extension();
-            $image_mobile->move(public_path('images/segmentacao'), $imageNameMobile);
-            $validated['image_mobile'] = 'images/segmentacao/' . $imageNameMobile;
+            $pathMobile = $request->file('image_mobile')->store('images/segmentacao', 'public');
+            $validated['image_mobile'] = 'storage/' . $pathMobile;
         }
 
         $segmento->update($validated);

@@ -45,18 +45,16 @@
                 <div class="flex gap-4">
                     <div class="mb-4 ">
                         <label for="image" class="block text-sm font-medium text-gray-700">Imagem desk</label>
-                        <input type="file" name="image" id="image"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            value="{{ old('image') }}">
+                        <input type="file" name="image" id="image" accept="image/*"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                         @error('image')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
                     <div class="mb-4">
                         <label for="image_mobile" class="block text-sm font-medium text-gray-700">Imagem mobile</label>
-                        <input type="file" name="image_mobile" id="image_mobile"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            value="{{ old('image_mobile') }}">
+                        <input type="file" name="image_mobile" id="image_mobile" accept="image/*"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                         @error('image_mobile')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
