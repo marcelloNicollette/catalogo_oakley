@@ -55,7 +55,7 @@ class BannersController extends Controller
             'access_levels.*' => 'string|in:representante,interno,fornecedor,convidado,cliente',
         ]);
 
-        //dd($validated);
+        dd($validated);
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('images/banners', 'public');
             $validated['image'] = 'storage/' . $path;
