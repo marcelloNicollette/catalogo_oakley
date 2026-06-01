@@ -607,7 +607,7 @@
                             @else
                                 <div class="p-3 border border-indigo-200 rounded-md bg-white text-center">
                                     <p class="text-xs text-gray-500 mb-1">Nenhuma tecnologia disponível.</p>
-                                    <a href="{{ route('admin.technology-categories.index') }}"
+                                    <a href="{{ route('admin.technology.categories.index') }}"
                                         class="text-blue-600 hover:text-blue-800 text-xs font-medium">
                                         Gerenciar tecnologias
                                     </a>
