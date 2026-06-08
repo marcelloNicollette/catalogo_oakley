@@ -1643,7 +1643,7 @@ class GoogleSheetController extends Controller
         // Aumentar o limite de memória
         ini_set('memory_limit', '512M');
 
-        $spreadsheetId = "1skMcMlapMDLis7oZCz2dyRzFPMBfEmDoMLzYqqIInkU";
+        $spreadsheetId = env('GOOGLE_SHEETS_SPREADSHEET_ID');
         $syncResults = [
             'success' => 0,
             'errors' => 0,
@@ -1892,7 +1892,7 @@ class GoogleSheetController extends Controller
     public function syncUsersAsync()
     {
         try {
-            $spreadsheetId = "1skMcMlapMDLis7oZCz2dyRzFPMBfEmDoMLzYqqIInkU";
+            $spreadsheetId = env('GOOGLE_SHEETS_SPREADSHEET_ID');
             $dataRange = "REPRESENTANTES!A2:F";
             $rows = $this->sheetService->readSheet($spreadsheetId, $dataRange);
 
@@ -2030,7 +2030,7 @@ class GoogleSheetController extends Controller
     public function prepareBatches()
     {
         try {
-            $spreadsheetId = "1skMcMlapMDLis7oZCz2dyRzFPMBfEmDoMLzYqqIInkU";
+            $spreadsheetId = env('GOOGLE_SHEETS_SPREADSHEET_ID');
             $representantesData = $this->sheetService->readSheet($spreadsheetId, 'REPRESENTANTES!A:Z');
 
             if (empty($representantesData)) {
@@ -2094,8 +2094,8 @@ class GoogleSheetController extends Controller
                         'representante_nome' => $row[0] ?? '', // Coluna A
                         'lider_ebm_comercial' => $row[1] ?? '', // Coluna B
                         'nome_fantasia_ebm' => $row[2] ?? '', // Coluna C
-                        'email' => $row[4] ?? '', // Coluna E
-                        'segmentacao_cliente' => $row[5] ?? '' // Coluna F
+                        'email' => $row[3] ?? '', // Coluna E
+                        'segmentacao_cliente' => $row[4] ?? '' // Coluna F
                     ];
 
                     // Pula linhas vazias ou sem dados essenciais

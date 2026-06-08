@@ -172,6 +172,12 @@ class Product extends Model
     public function addCaracteristicas(array $caracteristicaData): void
     {
         foreach ($caracteristicaData['titles'] as $index => $title) {
+            $title = is_string($title) ? trim($title) : $title;
+
+            if (empty($title)) {
+                continue;
+            }
+
             CaracteristicaProduct::create([
                 'title' => $title,
                 'description' => $caracteristicaData['descriptions'][$index] ?? null,
@@ -261,13 +267,21 @@ class Product extends Model
     {
         CaracteristicaProduct::where('product_id', $this->id)->delete();
 
-        foreach ($caracteristicaData['titles'] as $index => $title) {
-            CaracteristicaProduct::create([
-                'title' => $title,
-                'description' => $caracteristicaData['descriptions'][$index] ?? null,
-                'destaque' => $caracteristicaData['destaques'][$index] ?? 0,
-                'product_id' => $this->id,
-            ]);
+        if (isset($caracteristicaData['titles'])) {
+            foreach ($caracteristicaData['titles'] as $index => $title) {
+                $title = is_string($title) ? trim($title) : $title;
+
+                if (empty($title)) {
+                    continue;
+                }
+
+                CaracteristicaProduct::create([
+                    'title' => $title,
+                    'description' => $caracteristicaData['descriptions'][$index] ?? null,
+                    'destaque' => $caracteristicaData['destaques'][$index] ?? 0,
+                    'product_id' => $this->id,
+                ]);
+            }
         }
 
         ProductCaracteristicasSynced::dispatch($this);
