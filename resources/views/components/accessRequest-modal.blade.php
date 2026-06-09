@@ -98,8 +98,8 @@
             </form>
 
             <div class="text-center text-xs text-gray-600 mt-8">
-                Precisa de ajuda? Envie um e-mail para <a href="mailto:estudio@vulcabras.com"
-                    class="text-blue-600 underline">estudio@vulcabras.com</a>
+                Precisa de ajuda? Envie um e-mail para <a href="mailto:falecomaoakley@br.luxottica.com"
+                    class="text-blue-600 underline">falecomaoakley@br.luxottica.com</a>
             </div>
 
         </div>

@@ -77,7 +77,7 @@ class GoogleSheetController extends Controller
             DB::beginTransaction();
 
             // Lê os cabeçalhos das colunas
-            $headerRange = $planilha."!A2:AK";
+            $headerRange = $planilha."!A2:AL";
             
             $headerRows = $this->sheetService->readSheet($spreadsheetId, $headerRange);
 
@@ -88,7 +88,7 @@ class GoogleSheetController extends Controller
             $headers = $headerRows[0];
 
             // Lê os dados da planilha
-            $dataRange = $planilha."!A4:AK";
+            $dataRange = $planilha."!A4:AL";
             $rows = $this->sheetService->readSheet($spreadsheetId, $dataRange);
 
             if (empty($rows)) {
@@ -213,8 +213,8 @@ class GoogleSheetController extends Controller
             ]);
         }
         
-        $headerRange = "{$sheetName}!A3:AM";
-        $dataRange = "{$sheetName}!A4:AM";
+        $headerRange = "{$sheetName}!A3:AL";
+        $dataRange = "{$sheetName}!A4:AL";
 
         $syncResults = [
             'updated' => 0,

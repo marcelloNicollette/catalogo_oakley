@@ -174,8 +174,8 @@
                 <div class="text-center text-xs text-gray-600">
                     <p>
                         Precisa de ajuda? Envie um e-mail para
-                        <a href="mailto:estudio@vulcabras.com"
-                            class="text-gray-600 underline">estudio@vulcabras.com</a>
+                        <a href="mailto:falecomaoakley@br.luxottica.com"
+                            class="text-gray-600 underline">falecomaoakley@br.luxottica.com</a>
                     </p>
                 </div>
             </div>
@@ -201,8 +201,8 @@
                 <div class="text-center text-xs text-gray-600">
                     <p>
                         Precisa de ajuda? Envie um e-mail para
-                        <a href="mailto:estudio@vulcabras.com"
-                            class="text-gray-600 underline">estudio@vulcabras.com</a>
+                        <a href="mailto:falecomaoakley@br.luxottica.com"
+                            class="text-gray-600 underline">falecomaoakley@br.luxottica.com</a>
                     </p>
                 </div>
             </div>

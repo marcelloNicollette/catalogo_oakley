@@ -229,7 +229,7 @@ class ExportController extends Controller
                 }
                 $rows[] = $row;
 
-                $imgRel = 'images/produtos/' . ($color->product->code ?? '') . '_' . str_replace('/', '_', ($color->color_code ?? '')) . '.jpg';
+                $imgRel = 'images/produtos/' . ($color->product->code ?? '') . '_' . str_replace('/', '_', ($color->color_code ?? '')) . '_A.jpg';
                 $imgPath = public_path($imgRel);
                 if (!file_exists($imgPath)) {
                     $imgPath = public_path('images/img-padrao-mz.png');
@@ -599,7 +599,7 @@ class ExportController extends Controller
                     }
                     $rows[] = $row;
 
-                    $imgRel = 'images/produtos/' . ($item->product->code ?? '') . '_' . str_replace('/', '_', ($item->color_code ?? '')) . '.jpg';
+                    $imgRel = 'images/produtos/' . ($item->product->code ?? '') . '_' . str_replace('/', '_', ($item->color_code ?? '')) . '_A.jpg';
                     $imgPath = public_path($imgRel);
                     if (!file_exists($imgPath)) {
                         $imgPath = public_path('images/img-padrao-mz.png');

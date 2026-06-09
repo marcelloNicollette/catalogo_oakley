@@ -207,7 +207,7 @@
             @endif
         @endunless
         @php
-            $image = $collection->product->code . '_' . str_replace('/', '_', $collection->color_code) . '.jpg';
+            $image = $collection->product->code . '_' . str_replace('/', '_', $collection->color_code) . '_A.jpg';
             //dd(public_path('images/produtos/' . $image));
             $image = public_path('images/produtos/' . $image);
             //$image = '/images/produtos/' . $image;
@@ -232,20 +232,20 @@
                             </td>
                             <td width="262.3">
                                 @php
-                                    $suffixes = ['_A', '_B', '_C'];
+                                    $suffixes = ['_B', '_C', '_D'];
                                     $vista = 1;
                                 @endphp
 
                                 @foreach ($suffixes as $suffix)
                                     @php
-                                        if ($suffix == '_A') {
+                                        if ($suffix == '_B') {
                                             $rounded = '0 8px 0 0';
                                             $border_t = '1px solid #CCC';
                                             $border_l = '1px solid #CCC';
                                             $border_b = '0 solid #CCC';
                                             $border_r = '1px solid #CCC';
                                             $padding = 'padding-top: 1.1px;';
-                                        } elseif ($suffix == '_B') {
+                                        } elseif ($suffix == '_C') {
                                             $rounded = '0 0 0 0';
                                             $border_t = '1px solid #CCC';
                                             $border_l = '1px solid #CCC';
@@ -306,7 +306,7 @@
                                                             $collection->product->code .
                                                             '_' .
                                                             str_replace('/', '_', $collection->color_code) .
-                                                            '.jpg';
+                                                            '_A.jpg';
                                                         $fullImagePath = public_path($imagePath);
                                                         $imageExists = file_exists($fullImagePath);
                                                         $imageSrc = $imageExists
