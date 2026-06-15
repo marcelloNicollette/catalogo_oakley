@@ -130,6 +130,7 @@ class BannersController extends Controller
         return redirect()->route('admin.banners.index')
             ->with('success', 'Banner atualizado com sucesso.');
     }
+    
 
     public function destroy(Banner $banner)
     {
