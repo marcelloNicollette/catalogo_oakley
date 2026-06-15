@@ -425,7 +425,15 @@ class frontendController extends Controller
         $produtosFormatados = [];
         foreach ($produtos as $produtoGroup) {
             $produto = $produtoGroup;
-            $img = "/images/produtos/" . $produto->product->code . "_" . str_replace('/', '_', $produto->color_code) . ".jpg";
+            $product = $produto->product;
+            if (!$product) {
+                continue;
+            }
+
+            $colorCode = $produto->color_code ? str_replace('/', '_', $produto->color_code) : null;
+            $img = ($product->code && $colorCode)
+                ? ("/images/produtos/" . $product->code . "_" . $colorCode . ".jpg")
+                : "/images/img-padrao-mz.png";
 
             // Verificar se o produto está nos favoritos do usuário usando query direta na Wishlist
             $isFavorito = false;
