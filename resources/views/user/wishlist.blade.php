@@ -1130,7 +1130,7 @@
                     @foreach ($produtos as $produto)
                         @php
                             $productCode = optional($produto->product)->code ?? '';
-                            $img = '/images/produtos/' . $productCode . '_' . str_replace('/', '_', $produto->color_code) . '.jpg';
+                            $img = '/images/produtos/' . $productCode . '_' . str_replace('/', '_', $produto->color_code) . '_A.jpg';
                             $flagIds = [];
                             if ($produto->color) {
                                 if (!empty($hasColorFlagProductTable)) {

@@ -27,7 +27,7 @@ class ExportController extends Controller
             App::setLocale($request->user()->idioma);
         }
 
-        ini_set('memory_limit', '2048M'); // ou '3072M' se necessário
+        ini_set('memory_limit', '3072M'); // ou '3072M' se necessário
         ini_set('max_execution_time', '300'); // 5 minutos
         set_time_limit(300);
         //dd($request->all());
@@ -292,7 +292,7 @@ class ExportController extends Controller
                 }
             };
 
-            $filename = $request->collectionHistoryName . '.xls';
+            $filename = $request->collectionHistoryName . '.xlsx';
 
             ExportUser::create([
                 'user_id' => $request->user()->id,
@@ -310,7 +310,7 @@ class ExportController extends Controller
                 'filename' => $filename,
             ]);
 
-            return Excel::download($export, $filename, ExcelWriter::XLS);
+            return Excel::download($export, $filename, ExcelWriter::XLSX);
         }
 
 
@@ -663,9 +663,9 @@ class ExportController extends Controller
                 }
             };
 
-            $filename = $exportUser->collection_history_name . '.xls';
+            $filename = $exportUser->collection_history_name . '.xlsx';
 
-            return Excel::download($export, $filename, ExcelWriter::XLS);
+            return Excel::download($export, $filename, ExcelWriter::XLSX);
         }
 
 

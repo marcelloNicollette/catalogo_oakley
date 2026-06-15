@@ -431,21 +431,19 @@
                                             @endif
 
                                             @if ($collection->product->numeracoes)
-                                                @foreach ($collection->product->numeracoes as $numeracao)
-                                                    <tr>
-                                                        <td
-                                                            style="font-size: 12px; margin-bottom: 2px; padding-bottom: 10px;">
-                                                            <div>
-                                                                <div
-                                                                    style="color: #000; opacity: 0.5; margin-bottom: 2px;">
-                                                                    {{ __('Numeração') }}</div>
-                                                                <div style="font-size: 14px;">{!! nl2br(e($numeracao->numero)) !!}
-                                                                </div>
+                                                <tr>
+                                                    <td
+                                                        style="font-size: 12px; margin-bottom: 2px; padding-bottom: 10px;">
+                                                        <div>
+                                                            <div style="color: #000; opacity: 0.5; margin-bottom: 2px;">
+                                                                {{ __('Numeração') }}</div>
+                                                            <div style="font-size: 14px;">
+                                                                @foreach ($collection->product->numeracoes as $numeracao)
+                                                                    {!! nl2br(e($numeracao->numero)) !!}
+                                                                @endforeach
                                                             </div>
-                                                        </td>
-
-                                                    </tr>
-                                                @endforeach
+                                                    </td>
+                                                </tr>
                                             @endif
 
                                         </table>

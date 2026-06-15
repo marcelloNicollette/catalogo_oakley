@@ -109,6 +109,12 @@ class BannersController extends Controller
             'access_levels.*' => 'string|in:representante,interno,fornecedor,convidado,cliente',
         ], $messages);
 
+        $accessLevels = $request->input('access_levels');
+        if (is_array($accessLevels) && count($accessLevels) > 0) {
+            $validated['access_levels'] = array_values($accessLevels);
+        } else {
+            $validated['access_levels'] = null;
+        }
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('images/banners', 'public');
