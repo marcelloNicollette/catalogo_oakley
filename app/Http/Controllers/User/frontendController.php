@@ -176,7 +176,15 @@ class frontendController extends Controller
         $userSegmentacoesCliente = $user->segmentacoesCliente;
 
         $produtosQuery = Color::where('collection_id', $colecao->id)
-            ->with(['product', 'product.caracteristicasDestaque', 'product.category', 'flagProduct', 'flagProducts', 'segmentacoesCliente'])->orderBy('product_id', 'asc');
+            ->with([
+                'product',
+                'product.caracteristicasDestaque',
+                'product.category',
+                'flagProduct',
+                'flagProducts',
+                'segmentacoesCliente',
+                'shoeGrids' => fn($query) => $query->active(),
+            ])->orderBy('product_id', 'asc');
 
         // Verificar se há segmentações selecionadas no request (vindas do modal)
         $selectedSegmentacoes = $request->input('selected_segmentacoes');

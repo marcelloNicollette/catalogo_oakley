@@ -125,6 +125,44 @@
                 </div>
 
                 <div class="mb-4">
+                    <fieldset class="border-2 border-indigo-200 rounded-md bg-gray-100">
+                        <legend class="px-2 text-sm font-medium text-gray-700">Tabela de Medidas</legend>
+                        <div class="px-3 py-2">
+                            @php ($selectedMeasureCategoryIds = old('measure_category_ids', $product->measureCategories->pluck('id')->all())); @endphp
+                            @if (isset($measureCategories) && $measureCategories->count() > 0)
+                                <div
+                                    class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-3 border border-indigo-200 rounded-md bg-white max-h-40 overflow-y-auto">
+                                    @foreach ($measureCategories as $category)
+                                        <label class="flex items-center text-xs">
+                                            <input type="checkbox" name="measure_category_ids[]"
+                                                value="{{ $category->id }}"
+                                                {{ in_array($category->id, $selectedMeasureCategoryIds) ? 'checked' : '' }}
+                                                class="h-3 w-3 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-1">
+                                            <span class="text-gray-700">{{ $category->name }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                                <p class="mt-1 text-xs text-indigo-700">Selecione uma ou mais categorias de tabela de
+                                    medidas para este produto</p>
+                            @else
+                                <div class="p-3 border border-indigo-200 rounded-md bg-white text-center">
+                                    <p class="text-xs text-gray-500 mb-1">Nenhuma categoria de tabela de medidas
+                                        disponível.</p>
+                                    <a href="{{ route('admin.measure-tables.index') }}"
+                                        class="text-blue-600 hover:text-blue-800 text-xs font-medium">
+                                        Gerenciar tabelas
+                                    </a>
+                                </div>
+                            @endif
+                            @error('measure_category_ids')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="mb-4">
                     <fieldset class="border border-1 bg-gray-100">
                         <legend class="block text-sm font-medium text-gray-700">Cores disponíveis
                         </legend>
@@ -267,30 +305,30 @@
                                             </div>
 
                                             <!-- Coluna 6.1: Grade (por cor) -->
-                                            <!--<div class="col-span-full">
-                                                                <label class="block text-sm font-medium text-gray-700">Grade</label>
-                                                                @foreach ($shoeGridGroups as $group)
-    <div class="mb-3">
-                                                                        <h4 class="text-sm font-medium text-gray-700 mb-2">
-                                                                            {{ $group->name }}</h4>
-                                                                        <div
-                                                                            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-3 border border-gray-200 rounded-md bg-gray-50 max-h-32 overflow-y-auto">
-                                                                            @foreach ($group->grids as $grid)
-    <label class="flex items-center text-xs">
-                                                                                    <input type="checkbox"
-                                                                                        :name="`color_shoe_grid_ids[${index}][]`"
-                                                                                        :value="{{ $grid->id }}"
-                                                                                        x-model="campo.color_shoe_grid_ids"
-                                                                                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                                                                    <span class="ml-2 text-sm text-gray-700">
-                                                                                        {{ $grid->code }}{{ $grid->description ? ' - ' . $grid->description : '' }}
-                                                                                    </span>
-                                                                                </label>
-    @endforeach
-                                                                        </div>
-                                                                    </div>
-    @endforeach
-                                                            </div>-->
+                                            <div class="col-span-full  border border-gray-200 rounded-md bg-gray-50 p-4">
+                                                <label class="block text-sm font-medium text-gray-700">Grade</label>
+                                                @foreach ($shoeGridGroups as $group)
+                                                    <div class="mb-3">
+                                                        <h4 class="text-sm font-medium text-gray-700 mb-2">
+                                                            {{ $group->name }}</h4>
+                                                        <div
+                                                            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-3 border border-gray-200 rounded-md bg-gray-50 max-h-32 overflow-y-auto">
+                                                            @foreach ($group->grids as $grid)
+                                                                <label class="flex items-center text-xs">
+                                                                    <input type="checkbox"
+                                                                        :name="`color_shoe_grid_ids[${index}][]`"
+                                                                        :value="{{ $grid->id }}"
+                                                                        x-model="campo.color_shoe_grid_ids"
+                                                                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                                    <span class="ml-2 text-sm text-gray-700">
+                                                                        {{ $grid->code }}{{ $grid->description ? ' - ' . $grid->description : '' }}
+                                                                    </span>
+                                                                </label>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
 
                                             <!-- Coluna 5: Flag -->
                                             <div class="col-span-full">

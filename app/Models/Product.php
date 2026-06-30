@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Size;
 use App\Models\Numeracao;
+use App\Models\MeasureCategory;
 
 class Product extends Model
 {
@@ -86,6 +87,11 @@ class Product extends Model
         return $this->belongsToMany(Numeracao::class, 'product_numeracao')->withPivot('stock')->withTimestamps();
     }
 
+    public function measureCategories()
+    {
+        return $this->belongsToMany(MeasureCategory::class, 'product_measure_categories')->withTimestamps();
+    }
+
     public function calendario()
     {
         return $this->hasOne(Calendario::class);
@@ -146,6 +152,10 @@ class Product extends Model
                 'flag_product_id' => $primaryFlagId,
                 'numeracao_id' => $colorData['numeracao_ids'][$index] ?? null,
                 'periodo_vendas' => $periodoVendas,
+                'data_mkt' => $this->normalizeColorLaunchDate($colorData['data_mkt'][$index] ?? null),
+                'data_trade' => $this->normalizeColorLaunchDate($colorData['data_trade'][$index] ?? null),
+                'data_cliente' => $this->normalizeColorLaunchDate($colorData['data_cliente'][$index] ?? null),
+                'data_dtc' => $this->normalizeColorLaunchDate($colorData['data_dtc'][$index] ?? null),
                 'is_new' => false,
                 'active' => true,
             ]);
@@ -172,12 +182,6 @@ class Product extends Model
     public function addCaracteristicas(array $caracteristicaData): void
     {
         foreach ($caracteristicaData['titles'] as $index => $title) {
-            $title = is_string($title) ? trim($title) : $title;
-
-            if (empty($title)) {
-                continue;
-            }
-
             CaracteristicaProduct::create([
                 'title' => $title,
                 'description' => $caracteristicaData['descriptions'][$index] ?? null,
@@ -238,6 +242,10 @@ class Product extends Model
                 'flag_product_id' => $primaryFlagId,
                 'numeracao_id' => $colorData['numeracao_ids'][$index] ?? null,
                 'periodo_vendas' => $periodoVendas,
+                'data_mkt' => $this->normalizeColorLaunchDate($colorData['data_mkt'][$index] ?? null),
+                'data_trade' => $this->normalizeColorLaunchDate($colorData['data_trade'][$index] ?? null),
+                'data_cliente' => $this->normalizeColorLaunchDate($colorData['data_cliente'][$index] ?? null),
+                'data_dtc' => $this->normalizeColorLaunchDate($colorData['data_dtc'][$index] ?? null),
                 'is_new' => false,
                 'active' => true,
             ]);
@@ -267,21 +275,13 @@ class Product extends Model
     {
         CaracteristicaProduct::where('product_id', $this->id)->delete();
 
-        if (isset($caracteristicaData['titles'])) {
-            foreach ($caracteristicaData['titles'] as $index => $title) {
-                $title = is_string($title) ? trim($title) : $title;
-
-                if (empty($title)) {
-                    continue;
-                }
-
-                CaracteristicaProduct::create([
-                    'title' => $title,
-                    'description' => $caracteristicaData['descriptions'][$index] ?? null,
-                    'destaque' => $caracteristicaData['destaques'][$index] ?? 0,
-                    'product_id' => $this->id,
-                ]);
-            }
+        foreach ($caracteristicaData['titles'] as $index => $title) {
+            CaracteristicaProduct::create([
+                'title' => $title,
+                'description' => $caracteristicaData['descriptions'][$index] ?? null,
+                'destaque' => $caracteristicaData['destaques'][$index] ?? 0,
+                'product_id' => $this->id,
+            ]);
         }
 
         ProductCaracteristicasSynced::dispatch($this);
@@ -345,5 +345,16 @@ class Product extends Model
         }
 
         $this->numeracoes()->sync($numeracoesToSync);
+    }
+
+    private function normalizeColorLaunchDate($value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $text = trim((string) $value);
+
+        return $text === '' ? null : $text;
     }
 }

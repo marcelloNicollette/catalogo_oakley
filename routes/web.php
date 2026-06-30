@@ -38,6 +38,8 @@ use App\Models\ImgLogin;
 use App\Http\Controllers\Admin\MenuItemController;
 use App\Http\Controllers\Admin\ImgLoginController;
 use App\Http\Controllers\User\SharedCollectionController;
+use App\Http\Controllers\Admin\ShoeGridController;
+use App\Http\Controllers\Admin\MeasureTableController;
 
 
 Route::get('/shared/{uuid}', [SharedCollectionController::class, 'show'])->name('shared.collection');
@@ -339,6 +341,70 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('admin.clear-batches');
     Route::get('/admin/batch-status', [AdminGoogleSheetController::class, 'getBatchStatus'])
         ->name('admin.batch-status');
+
+
+Route::prefix('/admin/shoe-grids')->name('admin.shoe-grids.')->group(function () {
+
+    // ── Visualização principal (a tabela toda) ──────────────────────────────
+    Route::get('/', [ShoeGridController::class, 'index'])->name('index');
+
+    // ── Grupos ─────────────────────────────────────────────────────────────
+    Route::get('/groups/create',        [ShoeGridController::class, 'createGroup'])->name('groups.create');
+    Route::post('/groups',              [ShoeGridController::class, 'storeGroup'])->name('groups.store');
+    Route::get('/groups/{group}/edit',  [ShoeGridController::class, 'editGroup'])->name('groups.edit');
+    Route::put('/groups/{group}',       [ShoeGridController::class, 'updateGroup'])->name('groups.update');
+    Route::delete('/groups/{group}',    [ShoeGridController::class, 'destroyGroup'])->name('groups.destroy');
+
+    // ── Grades ─────────────────────────────────────────────────────────────
+    Route::get('/grids/create',         [ShoeGridController::class, 'createGrid'])->name('grids.create');
+    Route::post('/grids',               [ShoeGridController::class, 'storeGrid'])->name('grids.store');
+    Route::get('/grids/{grid}/edit',    [ShoeGridController::class, 'editGrid'])->name('grids.edit');
+    Route::put('/grids/{grid}',         [ShoeGridController::class, 'updateGrid'])->name('grids.update');
+    Route::delete('/grids/{grid}',      [ShoeGridController::class, 'destroyGrid'])->name('grids.destroy');
+
+    // ── Edição inline de célula via AJAX ────────────────────────────────────
+    Route::post('/items/update',        [ShoeGridController::class, 'updateItem'])->name('items.update');
+
+    // ── Tamanhos (BRA / USW / USM) ─────────────────────────────────────────
+    Route::get('/sizes',                [ShoeGridController::class, 'sizes'])->name('sizes.index');
+    Route::post('/sizes',               [ShoeGridController::class, 'storeSize'])->name('sizes.store');
+    Route::put('/sizes/{size}',         [ShoeGridController::class, 'updateSize'])->name('sizes.update');
+    Route::delete('/sizes/{size}',      [ShoeGridController::class, 'destroySize'])->name('sizes.destroy');
+});
+
+
+Route::prefix('/admin/measure-tables')->name('admin.measure-tables.')->group(function () {
+
+    // ── Index ────────────────────────────────────────────────────────────────
+    Route::get('/',  [MeasureTableController::class, 'index'])->name('index');
+
+    // ── Categorias ───────────────────────────────────────────────────────────
+    Route::get('/categories/create',           [MeasureTableController::class, 'createCategory'])->name('categories.create');
+    Route::post('/categories',                 [MeasureTableController::class, 'storeCategory'])->name('categories.store');
+    Route::get('/categories/{category}/edit',  [MeasureTableController::class, 'editCategory'])->name('categories.edit');
+    Route::put('/categories/{category}',       [MeasureTableController::class, 'updateCategory'])->name('categories.update');
+    Route::delete('/categories/{category}',    [MeasureTableController::class, 'destroyCategory'])->name('categories.destroy');
+
+    // ── Colunas (por categoria) ───────────────────────────────────────────────
+    Route::get('/categories/{category}/columns',        [MeasureTableController::class, 'columns'])->name('columns.index');
+    Route::post('/categories/{category}/columns',       [MeasureTableController::class, 'storeColumn'])->name('columns.store');
+    Route::put('/columns/{column}',                     [MeasureTableController::class, 'updateColumn'])->name('columns.update');
+    Route::delete('/columns/{column}',                  [MeasureTableController::class, 'destroyColumn'])->name('columns.destroy');
+
+    // ── Tabelas (Calçados Adultos, Camisetas Masculino...) ───────────────────
+    Route::get('/tables/create',              [MeasureTableController::class, 'createTable'])->name('tables.create');
+    Route::post('/tables',                    [MeasureTableController::class, 'storeTable'])->name('tables.store');
+    Route::get('/tables/{measureTable}/edit', [MeasureTableController::class, 'editTable'])->name('edit-table');
+    Route::put('/tables/{measureTable}',      [MeasureTableController::class, 'updateTable'])->name('tables.update');
+    Route::delete('/tables/{measureTable}',   [MeasureTableController::class, 'destroyTable'])->name('tables.destroy');
+
+    // ── Linhas ───────────────────────────────────────────────────────────────
+    Route::post('/tables/{measureTable}/rows', [MeasureTableController::class, 'storeRow'])->name('rows.store');
+    Route::delete('/rows/{row}',               [MeasureTableController::class, 'destroyRow'])->name('rows.destroy');
+
+    // ── Célula inline (AJAX) ─────────────────────────────────────────────────
+    Route::post('/cells/update', [MeasureTableController::class, 'updateCell'])->name('cells.update');
+});
 
 
     Route::resource('/admin/menu-items', MenuItemController::class)

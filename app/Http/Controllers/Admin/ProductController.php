@@ -13,6 +13,7 @@ use App\Models\LinksProduct;
 use App\Models\Size;
 use App\Models\Numeracao;
 use App\Models\ShoeGridGroup;
+use App\Models\MeasureCategory;
 use App\Models\TechnologyCategory;
 use App\Models\TechnologyItem;
 use App\Models\Calendario;
@@ -74,10 +75,11 @@ class ProductController extends Controller
         $shoeGridGroups = ShoeGridGroup::with(['grids' => fn($q) => $q->active()])
             ->active()
             ->get();
+        $measureCategories = MeasureCategory::active()->get();
         $accessLevels = ['representante', 'interno', 'fornecedor', 'convidado', 'cliente'];
         $segmentacoesCliente = \App\Models\SegmentacaoCliente::where('active', true)->get();
 
-        return view('admin.products.create', compact('collections', 'categories', 'colors', 'flags', 'technologies', 'sizes', 'numeracoes', 'shoeGridGroups', 'accessLevels', 'segmentacoesCliente'));
+        return view('admin.products.create', compact('collections', 'categories', 'colors', 'flags', 'technologies', 'sizes', 'numeracoes', 'shoeGridGroups', 'measureCategories', 'accessLevels', 'segmentacoesCliente'));
     }
 
     public function show(Product $product)
@@ -212,11 +214,12 @@ class ProductController extends Controller
         $shoeGridGroups = ShoeGridGroup::with(['grids' => fn($q) => $q->active()])
             ->active()
             ->get();
+        $measureCategories = MeasureCategory::active()->get();
         $accessLevels = ['representante', 'interno', 'fornecedor', 'convidado', 'cliente'];
         $segmentacoesCliente = \App\Models\SegmentacaoCliente::where('active', true)->get();
 
         // Carregar relacionamentos de sizes e numeração do produto
-        $product->load(['sizes', 'numeracoes']);
+        $product->load(['sizes', 'numeracoes', 'measureCategories']);
 
         $colorsForm = $colors->map(function ($c) {
             $flagIds = [];
@@ -238,6 +241,10 @@ class ProductController extends Controller
                 'color_shoe_grid_ids' => $c->shoeGrids->pluck('id')->toArray(),
                 'segmentacoes_cliente' => $c->segmentacoesCliente->pluck('id')->toArray(),
                 'color_periodo_vendas' => $c->periodo_vendas ?? [],
+                'color_data_mkt' => $c->data_mkt?->format('Y-m-d') ?? '',
+                'color_data_trade' => $c->data_trade?->format('Y-m-d') ?? '',
+                'color_data_cliente' => $c->data_cliente?->format('Y-m-d') ?? '',
+                'color_data_dtc' => $c->data_dtc?->format('Y-m-d') ?? '',
             ];
         })->values()->all();
 
@@ -253,6 +260,10 @@ class ProductController extends Controller
                 'color_shoe_grid_ids' => [],
                 'segmentacoes_cliente' => [],
                 'color_periodo_vendas' => [],
+                'color_data_mkt' => '',
+                'color_data_trade' => '',
+                'color_data_cliente' => '',
+                'color_data_dtc' => '',
             ]];
         }
 
@@ -316,7 +327,7 @@ class ProductController extends Controller
             ]];
         }
 
-        return view('admin.products.edit', compact('product', 'collections', 'categories', 'colors', 'caracteristicas', 'flags', 'technologies', 'links', 'sizes', 'numeracoes', 'shoeGridGroups', 'accessLevels', 'segmentacoesCliente', 'colorsForm', 'caracteristicasForm', 'sizesForm', 'numeracoesForm', 'linksForm'));
+        return view('admin.products.edit', compact('product', 'collections', 'categories', 'colors', 'caracteristicas', 'flags', 'technologies', 'links', 'sizes', 'numeracoes', 'shoeGridGroups', 'measureCategories', 'accessLevels', 'segmentacoesCliente', 'colorsForm', 'caracteristicasForm', 'sizesForm', 'numeracoesForm', 'linksForm'));
     }
 
     public function update(Request $request, Product $product)

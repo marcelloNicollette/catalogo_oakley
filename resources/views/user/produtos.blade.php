@@ -244,7 +244,6 @@
             #pedidoSaveBtn {
 
                 color: #000;
-                font-family: Roboto;
                 font-size: 12px;
                 font-style: normal;
                 font-weight: 400;
@@ -268,12 +267,111 @@
 
             .pedido-modal-row {
                 display: grid;
-                grid-template-columns: 74px minmax(300px, 4fr) 1fr 1fr 1fr 1fr 1fr 1fr auto;
-                gap: 14px;
+                grid-template-columns: 74px minmax(300px, 3fr) 1fr 1fr 1fr 1fr 1fr 1fr auto;
                 align-items: center;
                 border-bottom: 1px solid #ececec;
                 padding: 10px 0;
                 min-width: 1120px;
+            }
+
+            .pedido-modal-row .grade_box {
+                grid-column: 3 / -1;
+                /* começa na col 3, vai até o final */
+                grid-row: 2;
+                /* segunda linha */
+                text-align: left;
+                padding-top: 8px;
+            }
+
+            .grade-box-title {
+                margin-bottom: 8px;
+                font-size: 12px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                color: #000;
+            }
+
+            .grade-box-empty {
+                font-size: 13px;
+                color: rgba(0, 0, 0, 0.6);
+            }
+
+            .grade-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            .grade-table th,
+            .grade-table td {
+                padding: 0;
+                vertical-align: middle;
+            }
+
+            .grade-table th {
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: rgba(0, 0, 0, 0.6);
+            }
+
+            .grade-table tr.is-zero-qty {
+                background: rgba(0, 0, 0, 0.04);
+            }
+
+            .grade-table tr.is-zero-qty td {
+                opacity: 0.72;
+            }
+
+            .grade-table select {
+                min-width: 100px;
+                height: 34px;
+                border: 1px solid #d7d7d7;
+                background: #fff;
+                padding: 0 10px;
+                font-size: 13px;
+                color: #000;
+            }
+
+            .grade-table .grade-qty-select {
+                min-width: 50px;
+            }
+
+            .grade-table .grade-month-select {
+                min-width: 50px;
+            }
+
+            .grade-table-actions {
+                white-space: nowrap;
+            }
+
+            .grade-row-status {
+                display: block;
+                margin-top: 4px;
+                font-size: 11px;
+                line-height: 1.2;
+                color: #b42318;
+                text-transform: uppercase;
+            }
+
+            .grade-row-cta {
+                width: 30px;
+                height: 30px;
+                border: 1px solid #000;
+                background: #fff;
+                color: #000;
+                font-size: 18px;
+                line-height: 1;
+                cursor: pointer;
+            }
+
+            .grade-row-cta+.grade-row-cta {
+                margin-left: 6px;
+            }
+
+            .grade-row-cta:disabled {
+                opacity: 0.35;
+                cursor: not-allowed;
             }
 
             .pedido-modal-thumb {
@@ -624,8 +722,8 @@
             }
 
             #pedidoFabIcon {
-                width: 23.6px;
-                height: 23.5px;
+                width: 30px;
+                height: 30px;
                 display: block;
             }
 
@@ -2200,9 +2298,8 @@
                             <img src="/images/Oakley_logo.svg" alt="Oakley" class="h-6 w-auto">
                             <h3 class="p-0" id="titlePedido" contenteditable="true" spellcheck="false">AW26
                                 Oportunidades_26052025_1</h3>
-                            <button id="pedidoSaveBtn" type="button">Renomear <svg
-                                    xmlns="http://www.w3.org/2000/svg" width="15" height="15"
-                                    viewBox="0 0 15 15" fill="none">
+                            <button id="pedidoSaveBtn" type="button">Salvar <svg xmlns="http://www.w3.org/2000/svg"
+                                    width="15" height="15" viewBox="0 0 15 15" fill="none">
                                     <path
                                         d="M2.38059 15H11.2813C12.6459 15 13.4344 14.2103 13.4344 12.6459V4.52788L12.2138 5.75052V12.5851C12.2138 13.3749 11.7892 13.7774 11.2661 13.7774H2.40333C1.64518 13.7774 1.22062 13.3749 1.22062 12.5851V3.96593C1.22062 3.17615 1.64518 2.76608 2.40333 2.76608H9.31006L10.5307 1.54344H2.38059C0.80364 1.54344 0 2.33322 0 3.89758V12.6459C0 14.2178 0.80364 15 2.38059 15ZM5.14025 10.0791L6.61866 9.43363L13.6998 2.34841L12.6611 1.32322L5.58756 8.4084L4.90522 9.83612C4.84457 9.9652 4.99621 10.1398 5.14025 10.0791ZM14.2608 1.79405L14.8066 1.23209C15.0645 0.958708 15.0645 0.594194 14.8066 0.343592L14.6323 0.161336C14.3972 -0.0740778 14.0258 -0.0437017 13.7756 0.199306L13.2221 0.746073L14.2608 1.79405Z"
                                         fill="black" />
@@ -2420,7 +2517,7 @@
             </button>
             <button id="pedidoFab" type="button" aria-label="Pedido" aria-expanded="false">
                 <span id="pedidoCount" aria-hidden="true"></span>
-                <img id="pedidoFabIcon" src="/images/icones/icone-pedido.svg" alt="" />
+                <img id="pedidoFabIcon" src="/images/icones/bag.svg" alt="" />
             </button>
         </div>
 
@@ -2469,6 +2566,18 @@
                                 $firstBadge = !empty($badges) ? $badges[0] : null;
                                 $classificacaoId = $firstBadge ? $firstBadge['id'] ?? null : ($produtoGroup->flagProduct ? $produtoGroup->flagProduct->id : null);
                                 $segmentacaoIds = $produtoGroup->segmentacoesCliente ? $produtoGroup->segmentacoesCliente->pluck('id')->toArray() : [];
+                                $shoeGrids = $produtoGroup->shoeGrids
+                                    ? $produtoGroup->shoeGrids
+                                        ->map(function ($grid) {
+                                            return [
+                                                'id' => $grid->id,
+                                                'code' => $grid->code ?? '',
+                                                'description' => $grid->description ?? '',
+                                            ];
+                                        })
+                                        ->values()
+                                        ->toArray()
+                                    : [];
                             @endphp {
                                 id: {{ $produto->id }},
                                 title: "{{ $produto->name ?? '' }}",
@@ -2498,6 +2607,7 @@
                                 badge_icon_align: "{{ $produtoGroup->flagProduct->alinhamento ?? '' }}",
                                 orderfilterflag: {{ $produtoGroup->flagProduct->orderfilterflag ?? 0 }},
                                 slug: "{{ $produto->slug ?? '' }}",
+                                shoe_grids: @json($shoeGrids),
                                 order: {{ $produto->order ?? 0 }}
                             },
                         @endif
@@ -2528,12 +2638,15 @@
             const pedidoHistoryTableBody = document.getElementById("pedidoHistoryTableBody");
             const pedidoHistoryEmpty = document.getElementById("pedidoHistoryEmpty");
 
-            const pedidoIconDefaultSrc = "/images/icones/icone-pedido.svg";
-            const pedidoIconSelectedSrc = "/images/icones/icone-pedido.svg";
+            const pedidoIconDefaultSrc = "/images/icones/bag.svg";
+            const pedidoIconSelectedSrc = "/images/icones/bag-white.svg";
 
-            const pedidoStorageKey = "pedido_itens_ua_v1";
+            const pedidoStorageKey = "pedido_itens_oak_v1";
+            const pedidoMonthColumns = getPedidoMonthColumns();
             let pedidoItens = carregarPedidoItens();
             let pedidosHistorico = [];
+            let pedidoZeroQtyWarningsVisible = false;
+            let pedidoZeroQtyWarningsTimeout = null;
 
             let selectedCategory = '';
             let selectedSubcategory = '';
@@ -2682,7 +2795,7 @@
                             if (pedidoItens.has(prodKey)) {
                                 pedidoItens.delete(prodKey);
                             } else {
-                                pedidoItens.set(prodKey, {
+                                pedidoItens.set(prodKey, hydratePedidoItem({
                                     key: prodKey,
                                     product_id: produto.id,
                                     color_code: produto.codigo_cor,
@@ -2693,8 +2806,9 @@
                                     codigo: produto.codigo,
                                     cor: produto.cor,
                                     numeracao: produto.numeracao,
-                                    preco: produto.preco
-                                });
+                                    preco: produto.preco,
+                                    shoe_grids: produto.shoe_grids
+                                }, produto));
                             }
                             salvarPedidoItens();
                             aplicarEstadoPedidoBtn(pedidoBtn, prodKey);
@@ -2817,12 +2931,20 @@
                         parsed.forEach((item) => {
                             if (!item) return;
                             if (typeof item === 'string') {
-                                map.set(item, {
+                                map.set(item, hydratePedidoItem({
                                     key: item
-                                });
+                                }, buscarProdutoPorKey(item)));
                                 return;
                             }
-                            if (item.key) map.set(item.key, item);
+                            const colorCode = item?.color_code ? String(item.color_code).replace(/\//g, '_') : '';
+                            const key = item.key || (item?.product_id ? `${item.product_id}-${colorCode}` : '');
+                            if (!key) return;
+
+                            map.set(key, hydratePedidoItem({
+                                ...item,
+                                key,
+                                color_code: colorCode
+                            }, buscarProdutoPorKey(key)));
                         });
                     }
                     return map;
@@ -2889,7 +3011,7 @@
             function adicionarProdutoAoPedido(produto) {
                 const prodKey = `${produto.id}-${produto.codigo_cor}`;
                 if (pedidoItens.has(prodKey)) return false;
-                pedidoItens.set(prodKey, {
+                pedidoItens.set(prodKey, hydratePedidoItem({
                     key: prodKey,
                     product_id: produto.id,
                     color_code: produto.codigo_cor,
@@ -2900,8 +3022,9 @@
                     codigo: produto.codigo,
                     cor: produto.cor,
                     numeracao: produto.numeracao,
-                    preco: produto.preco
-                });
+                    preco: produto.preco,
+                    shoe_grids: produto.shoe_grids
+                }, produto));
                 return true;
             }
 
@@ -2966,6 +3089,375 @@
                     .replace(/'/g, '&#039;');
             }
 
+            function getPedidoMonthColumns() {
+                const monthLabels = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+                const today = new Date();
+                const cutoffDate = new Date(today.getFullYear(), today.getMonth() + 7, 1);
+                const cutoffMonth = cutoffDate.getMonth();
+                const semesterStartMonth = cutoffMonth <= 5 ? 0 : 6;
+                const baseDate = new Date(cutoffDate.getFullYear(), semesterStartMonth, 1);
+
+                return Array.from({
+                    length: 6
+                }, (_, index) => {
+                    const date = new Date(baseDate.getFullYear(), baseDate.getMonth() + index, 1);
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const year = String(date.getFullYear());
+
+                    return {
+                        code: `${year}-${month}`,
+                        label: `${monthLabels[date.getMonth()]}/${year.slice(-2)}`
+                    };
+                });
+            }
+
+            function buildDefaultMonthlyQuantities() {
+                return pedidoMonthColumns.reduce((acc, column) => {
+                    acc[column.code] = 0;
+                    return acc;
+                }, {});
+            }
+
+            function getMaxGradeTotalQuantity() {
+                return Math.max(15, pedidoMonthColumns.length * 5);
+            }
+
+            function normalizeMonthlyQuantities(monthlyQuantities) {
+                const normalized = monthlyQuantities && typeof monthlyQuantities === 'object' && !Array.isArray(monthlyQuantities) ? {
+                    ...monthlyQuantities
+                } : {};
+
+                pedidoMonthColumns.forEach((column) => {
+                    const qty = Number(normalized[column.code] ?? 0);
+                    normalized[column.code] = Number.isFinite(qty) ? Math.min(15, Math.max(0, Math.trunc(qty))) : 0;
+                });
+
+                return normalized;
+            }
+
+            function sumMonthlyQuantities(monthlyQuantities) {
+                const normalized = normalizeMonthlyQuantities(monthlyQuantities);
+                return pedidoMonthColumns.reduce((total, column) => {
+                    const qty = Number(normalized[column.code] ?? 0);
+                    return total + (Number.isFinite(qty) ? qty : 0);
+                }, 0);
+            }
+
+            function normalizeShoeGrids(shoeGrids) {
+                if (!Array.isArray(shoeGrids)) return [];
+                return shoeGrids
+                    .map((grid) => {
+                        const id = grid?.id != null ? String(grid.id) : '';
+                        if (!id) return null;
+                        return {
+                            id,
+                            code: String(grid?.code || '').trim(),
+                            description: String(grid?.description || '').trim()
+                        };
+                    })
+                    .filter(Boolean);
+            }
+
+            function getDefaultGradeRows(shoeGrids) {
+                if (!Array.isArray(shoeGrids) || shoeGrids.length === 0) return [];
+                return [{
+                    shoe_grid_id: String(shoeGrids[0].id),
+                    quantity: 0,
+                    monthly_quantities: buildDefaultMonthlyQuantities()
+                }];
+            }
+
+            function normalizeGradeRows(gradeRows, shoeGrids) {
+                const grids = normalizeShoeGrids(shoeGrids);
+                if (grids.length === 0) return [];
+
+                const allowedIds = new Set(grids.map((grid) => String(grid.id)));
+                const fallbackGridId = String(grids[0].id);
+                const normalized = Array.isArray(gradeRows) ? gradeRows.map((row) => {
+                    const shoeGridId = row?.shoe_grid_id != null ? String(row.shoe_grid_id) : '';
+                    const monthlyQuantities = normalizeMonthlyQuantities(row?.monthly_quantities);
+                    const monthlyTotalQuantity = sumMonthlyQuantities(monthlyQuantities);
+                    const quantity = Number(row?.quantity ?? 0);
+
+                    return {
+                        shoe_grid_id: allowedIds.has(shoeGridId) ? shoeGridId : fallbackGridId,
+                        quantity: monthlyTotalQuantity > 0 ?
+                            monthlyTotalQuantity :
+                            (Number.isFinite(quantity) ? Math.min(getMaxGradeTotalQuantity(), Math.max(0, Math.trunc(quantity))) : 0),
+                        monthly_quantities: monthlyQuantities
+                    };
+                }) : [];
+
+                return normalized.length > 0 ? normalized : getDefaultGradeRows(grids);
+            }
+
+            function hydratePedidoItem(item, fallbackProduto = null) {
+                const baseItem = item && typeof item === 'object' ? item : {};
+                const fallback = fallbackProduto && typeof fallbackProduto === 'object' ? fallbackProduto : {};
+                const colorCode = String(baseItem.color_code || fallback.codigo_cor || '').replace(/\//g, '_');
+                const productId = Number(baseItem.product_id || fallback.id || 0);
+                const key = baseItem.key || (productId ? `${productId}-${colorCode}` : '');
+                const shoeGrids = normalizeShoeGrids(baseItem.shoe_grids || fallback.shoe_grids);
+
+                return {
+                    key,
+                    product_id: productId,
+                    color_code: colorCode,
+                    title: baseItem.title || fallback.title || '',
+                    imagem: baseItem.imagem || fallback.imagem || '',
+                    categoria: baseItem.categoria || fallback.categoria || '',
+                    genero: baseItem.genero || fallback.genero || '',
+                    codigo: baseItem.codigo || fallback.codigo || '',
+                    cor: baseItem.cor || fallback.cor || '',
+                    numeracao: baseItem.numeracao || fallback.numeracao || '',
+                    preco: baseItem.preco || fallback.preco || '',
+                    shoe_grids: shoeGrids,
+                    grade_rows: normalizeGradeRows(baseItem.grade_rows, shoeGrids)
+                };
+            }
+
+            function renderGradeOptions(shoeGrids, selectedId) {
+                return shoeGrids.map((grid) => {
+                    const label = grid.description ? `${grid.code} - ${grid.description}` : grid.code;
+                    const selected = String(grid.id) === String(selectedId) ? 'selected' : '';
+                    return `<option value="${escapeHtml(String(grid.id))}" ${selected}>${escapeHtml(label)}</option>`;
+                }).join('');
+            }
+
+            function renderGradeQtyOptions(selectedQty) {
+                const maxQty = Math.max(getMaxGradeTotalQuantity(), Number(selectedQty) || 0);
+                return Array.from({
+                    length: maxQty + 1
+                }, (_, index) => {
+                    const qty = index;
+                    const selected = qty === Number(selectedQty) ? 'selected' : '';
+                    return `<option value="${qty}" ${selected}>${qty}</option>`;
+                }).join('');
+            }
+
+            function renderGradeMonthHeaders() {
+                return pedidoMonthColumns.map((column) => `<th>${escapeHtml(column.label)}</th>`).join('');
+            }
+
+            function renderGradeMonthCells(prodKey, rowIndex, row) {
+                const monthlyQuantities = normalizeMonthlyQuantities(row?.monthly_quantities);
+
+                return pedidoMonthColumns.map((column) => `
+                    <td>
+                        <select class="grade-month-select" data-grade-month-qty="${escapeHtml(prodKey)}" data-row-index="${rowIndex}" data-month-code="${escapeHtml(column.code)}">
+                            ${renderGradeQtyOptions(monthlyQuantities[column.code])}
+                        </select>
+                    </td>
+                `).join('');
+            }
+
+            function hasGradeRowsWithZeroQty() {
+                return Array.from(pedidoItens.values()).some((item) => {
+                    const gradeRows = Array.isArray(item?.grade_rows) ? item.grade_rows : [];
+                    return gradeRows.some((row) => Number(row?.quantity) === 0);
+                });
+            }
+
+            function shouldShowZeroQtyWarnings() {
+                return pedidoZeroQtyWarningsVisible && hasGradeRowsWithZeroQty();
+            }
+
+            function showTemporaryZeroQtyWarnings() {
+                if (!hasGradeRowsWithZeroQty()) return;
+
+                pedidoZeroQtyWarningsVisible = true;
+                if (pedidoModal && pedidoModal.classList.contains('active')) {
+                    renderPedidoModal();
+                }
+
+                if (pedidoZeroQtyWarningsTimeout) {
+                    clearTimeout(pedidoZeroQtyWarningsTimeout);
+                }
+
+                pedidoZeroQtyWarningsTimeout = setTimeout(() => {
+                    pedidoZeroQtyWarningsVisible = false;
+                    pedidoZeroQtyWarningsTimeout = null;
+                    if (pedidoModal && pedidoModal.classList.contains('active')) {
+                        renderPedidoModal();
+                    }
+                }, 3000);
+            }
+
+            function renderGradeBox(prodKey, shoeGrids, gradeRows) {
+                if (!Array.isArray(shoeGrids) || shoeGrids.length === 0) {
+                    return '<div class="grade-box-empty">Nenhuma grade cadastrada para este item.</div>';
+                }
+
+                const showZeroQtyWarnings = shouldShowZeroQtyWarnings();
+
+                return `                    
+                    <table class="grade-table">
+                        <thead>
+                            <tr>
+                                <th>Grade</th>
+                                <th>Qtd</th>
+                                ${renderGradeMonthHeaders()}
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${gradeRows.map((row, index) => {
+                                const showZeroQtyWarning = showZeroQtyWarnings && Number(row.quantity) === 0;
+                                return `
+                                                                                                        <tr class="${showZeroQtyWarning ? 'is-zero-qty' : ''}">
+                                                                                                                            <td>
+                                                                                                                                <select data-grade-select="${escapeHtml(prodKey)}" data-row-index="${index}">
+                                                                                                                                    ${renderGradeOptions(shoeGrids, row.shoe_grid_id)}
+                                                                                                                                </select>
+                                                                                                                            </td>
+                                                                                                                            <td>
+                                                                                                                                <select class="grade-qty-select" data-grade-qty="${escapeHtml(prodKey)}" data-row-index="${index}">
+                                                                                                                                    ${renderGradeQtyOptions(row.quantity)}
+                                                                                                                                </select>
+                                                                                                                            </td>
+                                                                                                                    ${renderGradeMonthCells(prodKey, index, row)}
+                                                                                                                            <td class="grade-table-actions">
+                                                                                                                                <button class="grade-row-cta" type="button" data-grade-add="${escapeHtml(prodKey)}" data-row-index="${index}" aria-label="Adicionar nova linha de grade">+</button>
+                                                                                                                                <button class="grade-row-cta" type="button" data-grade-remove="${escapeHtml(prodKey)}" data-row-index="${index}" aria-label="Remover linha de grade" ${gradeRows.length === 1 ? 'disabled' : ''}>-</button>
+                                                                                                                ${showZeroQtyWarning ? '<span class="grade-row-status">Nao sera enviada</span>' : ''}
+                                                                                                                            </td>
+                                                                                                                        </tr>
+                                                                                                                    `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                `;
+            }
+
+            function getPedidoItemWithGrades(prodKey) {
+                const currentItem = pedidoItens.get(prodKey);
+                if (!currentItem) return null;
+
+                const hydrated = hydratePedidoItem(currentItem, buscarProdutoPorKey(prodKey));
+                pedidoItens.set(prodKey, hydrated);
+                return hydrated;
+            }
+
+            function atualizarGradePedidoItem(prodKey, rowIndex, field, value) {
+                const item = getPedidoItemWithGrades(prodKey);
+                if (!item) return;
+
+                const index = Number(rowIndex);
+                if (!Number.isInteger(index) || !item.grade_rows[index]) return;
+
+                if (field === 'shoe_grid_id') {
+                    const allowedIds = new Set(item.shoe_grids.map((grid) => String(grid.id)));
+                    item.grade_rows[index].shoe_grid_id = allowedIds.has(String(value)) ? String(value) : item.grade_rows[index]
+                        .shoe_grid_id;
+                } else if (field === 'quantity') {
+                    const qty = Number(value);
+                    item.grade_rows[index].quantity = Number.isFinite(qty) ? Math.min(getMaxGradeTotalQuantity(), Math.max(0, Math.trunc(qty))) : 0;
+                } else if (field === 'monthly_quantities') {
+                    const {
+                        monthCode,
+                        quantity
+                    } = value || {};
+                    if (!monthCode) return;
+
+                    item.grade_rows[index].monthly_quantities = normalizeMonthlyQuantities({
+                        ...(item.grade_rows[index].monthly_quantities || {}),
+                        [monthCode]: quantity
+                    });
+                    item.grade_rows[index].quantity = sumMonthlyQuantities(item.grade_rows[index].monthly_quantities);
+                }
+
+                pedidoItens.set(prodKey, item);
+                salvarPedidoItens();
+                if (field === 'quantity' || field === 'monthly_quantities') {
+                    renderPedidoModal();
+                }
+            }
+
+            function adicionarGradePedidoItem(prodKey, rowIndex) {
+                const item = getPedidoItemWithGrades(prodKey);
+                if (!item || item.shoe_grids.length === 0) return;
+
+                const index = Number(rowIndex);
+                const insertAt = Number.isInteger(index) ? index + 1 : item.grade_rows.length;
+                item.grade_rows.splice(insertAt, 0, {
+                    shoe_grid_id: String(item.shoe_grids[0].id),
+                    quantity: 0,
+                    monthly_quantities: buildDefaultMonthlyQuantities()
+                });
+
+                pedidoItens.set(prodKey, item);
+                salvarPedidoItens();
+                renderPedidoModal();
+            }
+
+            function removerGradePedidoItem(prodKey, rowIndex) {
+                const item = getPedidoItemWithGrades(prodKey);
+                if (!item || item.grade_rows.length <= 1) return;
+
+                const index = Number(rowIndex);
+                if (!Number.isInteger(index) || !item.grade_rows[index]) return;
+
+                item.grade_rows.splice(index, 1);
+                pedidoItens.set(prodKey, item);
+                salvarPedidoItens();
+                renderPedidoModal();
+            }
+
+            function bindPedidoModalGradeEvents() {
+                pedidoModalItems.querySelectorAll('[data-grade-select]').forEach((select) => {
+                    select.addEventListener('change', () => {
+                        atualizarGradePedidoItem(
+                            select.getAttribute('data-grade-select'),
+                            select.getAttribute('data-row-index'),
+                            'shoe_grid_id',
+                            select.value
+                        );
+                    });
+                });
+
+                pedidoModalItems.querySelectorAll('[data-grade-qty]').forEach((select) => {
+                    select.addEventListener('change', () => {
+                        atualizarGradePedidoItem(
+                            select.getAttribute('data-grade-qty'),
+                            select.getAttribute('data-row-index'),
+                            'quantity',
+                            select.value
+                        );
+                    });
+                });
+
+                pedidoModalItems.querySelectorAll('[data-grade-month-qty]').forEach((select) => {
+                    select.addEventListener('change', () => {
+                        atualizarGradePedidoItem(
+                            select.getAttribute('data-grade-month-qty'),
+                            select.getAttribute('data-row-index'),
+                            'monthly_quantities', {
+                                monthCode: select.getAttribute('data-month-code'),
+                                quantity: select.value
+                            }
+                        );
+                    });
+                });
+
+                pedidoModalItems.querySelectorAll('[data-grade-add]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        adicionarGradePedidoItem(
+                            btn.getAttribute('data-grade-add'),
+                            btn.getAttribute('data-row-index')
+                        );
+                    });
+                });
+
+                pedidoModalItems.querySelectorAll('[data-grade-remove]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        removerGradePedidoItem(
+                            btn.getAttribute('data-grade-remove'),
+                            btn.getAttribute('data-row-index')
+                        );
+                    });
+                });
+            }
+
             function renderPedidoModal() {
                 if (!pedidoModalItems || !pedidoModalEmpty) return;
                 const itens = Array.from(pedidoItens.values());
@@ -2978,6 +3470,7 @@
                 pedidoModalEmpty.style.display = 'none';
                 pedidoModalItems.innerHTML = itens.map((item) => {
                     const fallback = buscarProdutoPorKey(item.key);
+                    const hydratedItem = hydratePedidoItem(item, fallback);
                     const imagem = item.imagem || fallback?.imagem || '/images/img-padrao-mz.png';
                     const title = item.title || fallback?.title || '';
                     const categoria = item.categoria || fallback?.categoria || '';
@@ -2986,6 +3479,9 @@
                     const cor = item.cor || fallback?.cor || '';
                     const numeracao = item.numeracao || fallback?.numeracao || '';
                     const preco = item.preco || fallback?.preco || '';
+                    const gradeBox = renderGradeBox(hydratedItem.key, hydratedItem.shoe_grids, hydratedItem.grade_rows);
+
+                    pedidoItens.set(hydratedItem.key, hydratedItem);
 
                     return `
                         <div class="pedido-modal-row">
@@ -2998,6 +3494,7 @@
                             <!--<div class="pedido-modal-col is-12px">${escapeHtml(numeracao)}</div>-->
                             <div class="pedido-modal-price is-16px">${escapeHtml(preco)}</div>
                             <button class="pedido-modal-remove" type="button" data-remove-pedido="${escapeHtml(item.key)}">Remover</button>
+                            <div class="grade_box">${gradeBox}</div>
                         </div>
                     `;
                 }).join('');
@@ -3013,6 +3510,8 @@
                         renderPedidoModal();
                     });
                 });
+
+                bindPedidoModalGradeEvents();
             }
 
             function getNomeColecaoPedido() {
@@ -3088,6 +3587,8 @@
                         numeracao: item.numeracao || null,
                         preco: item.preco || null,
                         imagem: item.imagem || null,
+                        shoe_grids: Array.isArray(item.shoe_grids) ? item.shoe_grids : [],
+                        grade_rows: Array.isArray(item.grade_rows) ? item.grade_rows : [],
                     };
                 });
             }
@@ -3300,19 +3801,12 @@
                     if (!productId) return;
                     const colorCode = item?.color_code ? String(item.color_code).replace(/\//g, '_') : '';
                     const key = `${productId}-${colorCode}`;
-                    pedidoItens.set(key, {
+                    pedidoItens.set(key, hydratePedidoItem({
+                        ...item,
                         key,
                         product_id: productId,
-                        color_code: colorCode,
-                        title: item?.title || '',
-                        imagem: item?.imagem || '',
-                        categoria: item?.categoria || '',
-                        genero: item?.genero || '',
-                        codigo: item?.codigo || '',
-                        cor: item?.cor || '',
-                        numeracao: item?.numeracao || '',
-                        preco: item?.preco || '',
-                    });
+                        color_code: colorCode
+                    }, buscarProdutoPorKey(key)));
                 });
 
                 salvarPedidoItens();
@@ -3346,10 +3840,23 @@
                         if (!id) return null;
                         const colorCodeRaw = item?.color_code ? String(item.color_code) : '';
                         const colorCode = colorCodeRaw ? colorCodeRaw.replace(/_/g, '/') : '';
+                        const shoeGrids = Array.isArray(item?.shoe_grids) ? item.shoe_grids : [];
+                        const gradeRows = Array.isArray(item?.grade_rows) ? item.grade_rows : [];
+
                         return {
                             id,
                             cor: item?.cor ? String(item.cor) : '',
-                            color_code: colorCode
+                            color_code: colorCode,
+                            grade_rows: gradeRows.map((row) => {
+                                const shoeGridId = row?.shoe_grid_id != null ? String(row.shoe_grid_id) : '';
+                                const matchedGrid = shoeGrids.find((grid) => String(grid?.id) === shoeGridId);
+                                return {
+                                    shoe_grid_id: shoeGridId,
+                                    grade_code: matchedGrid?.code ? String(matchedGrid.code) : '',
+                                    quantity: Number(row?.quantity ?? 0),
+                                    monthly_quantities: normalizeMonthlyQuantities(row?.monthly_quantities)
+                                };
+                            })
                         };
                     })
                     .filter(Boolean);
@@ -3434,6 +3941,43 @@
                     inputColorCode.name = `produtos_selecionados[${index}][color_code]`;
                     inputColorCode.value = produto.color_code || '';
                     form.appendChild(inputColorCode);
+
+                    if (Array.isArray(produto.grade_rows)) {
+                        produto.grade_rows.forEach((gradeRow, gradeIndex) => {
+                            const inputGradeId = document.createElement('input');
+                            inputGradeId.type = 'hidden';
+                            inputGradeId.name =
+                                `produtos_selecionados[${index}][grade_rows][${gradeIndex}][shoe_grid_id]`;
+                            inputGradeId.value = gradeRow.shoe_grid_id || '';
+                            form.appendChild(inputGradeId);
+
+                            const inputGradeCode = document.createElement('input');
+                            inputGradeCode.type = 'hidden';
+                            inputGradeCode.name =
+                                `produtos_selecionados[${index}][grade_rows][${gradeIndex}][grade_code]`;
+                            inputGradeCode.value = gradeRow.grade_code || '';
+                            form.appendChild(inputGradeCode);
+
+                            const inputGradeQty = document.createElement('input');
+                            inputGradeQty.type = 'hidden';
+                            inputGradeQty.name =
+                                `produtos_selecionados[${index}][grade_rows][${gradeIndex}][quantity]`;
+                            inputGradeQty.value = String(Number(gradeRow.quantity ?? 0));
+                            form.appendChild(inputGradeQty);
+
+                            const monthlyQuantities = gradeRow.monthly_quantities && typeof gradeRow.monthly_quantities === 'object' ?
+                                gradeRow.monthly_quantities : {};
+
+                            Object.entries(monthlyQuantities).forEach(([monthCode, monthQty]) => {
+                                const inputMonthQty = document.createElement('input');
+                                inputMonthQty.type = 'hidden';
+                                inputMonthQty.name =
+                                    `produtos_selecionados[${index}][grade_rows][${gradeIndex}][monthly_quantities][${monthCode}]`;
+                                inputMonthQty.value = String(Number(monthQty ?? 0));
+                                form.appendChild(inputMonthQty);
+                            });
+                        });
+                    }
                 });
 
                 document.body.appendChild(form);
@@ -3526,6 +4070,7 @@
                 pedidoModalExportPdfBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
+                    showTemporaryZeroQtyWarnings();
                     submitPedidoExport('pdf');
                 });
             }
@@ -3535,6 +4080,7 @@
                 pedidoModalExportPlanilhaBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
+                    showTemporaryZeroQtyWarnings();
                     submitPedidoExport('planilha');
                 });
             }

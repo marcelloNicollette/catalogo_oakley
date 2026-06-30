@@ -20,6 +20,146 @@ use Illuminate\Support\Facades\App;
 
 class ExportController extends Controller
 {
+    private function buildSelectedProductMeta(array $produtosSelecionados): array
+    {
+        $meta = [];
+
+        foreach ($produtosSelecionados as $selection) {
+            if (!is_array($selection)) {
+                continue;
+            }
+
+            $productId = $selection['id'] ?? null;
+            $colorCode = $selection['color_code'] ?? null;
+            if ($productId === null || !$colorCode) {
+                continue;
+            }
+
+            $gradeRows = is_array($selection['grade_rows'] ?? null) ? $selection['grade_rows'] : [];
+            $normalizedRows = [];
+
+            foreach ($gradeRows as $row) {
+                if (!is_array($row)) {
+                    continue;
+                }
+
+                $monthlyQuantities = [];
+                if (is_array($row['monthly_quantities'] ?? null)) {
+                    foreach ($row['monthly_quantities'] as $monthCode => $monthQty) {
+                        $monthlyQuantities[(string) $monthCode] = max(0, min(15, (int) $monthQty));
+                    }
+                }
+
+                $normalizedRows[] = [
+                    'shoe_grid_id' => isset($row['shoe_grid_id']) ? (string) $row['shoe_grid_id'] : '',
+                    'grade_code' => isset($row['grade_code']) ? trim((string) $row['grade_code']) : '',
+                    'quantity' => max(0, min(15, (int) ($row['quantity'] ?? 0))),
+                    'monthly_quantities' => $monthlyQuantities,
+                ];
+            }
+
+            $meta[$productId . '-' . $colorCode] = [
+                'grade_rows' => $normalizedRows,
+            ];
+        }
+
+        return $meta;
+    }
+
+    private function getPedidoMonthColumns(): array
+    {
+        $labels = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+        $cutoffDate = now()->startOfMonth()->addMonths(6);
+        $cutoffMonth = (int) $cutoffDate->format('n');
+        $semesterStartMonth = $cutoffMonth <= 6 ? 1 : 7;
+        $start = $cutoffDate->copy()->setMonth($semesterStartMonth)->startOfMonth();
+        $columns = [];
+
+        for ($index = 0; $index < 6; $index++) {
+            $date = $start->copy()->addMonths($index);
+            $columns[] = [
+                'code' => $date->format('Y-m'),
+                'label' => $labels[((int) $date->format('n')) - 1] . '/' . $date->format('y'),
+            ];
+        }
+
+        return $columns;
+    }
+
+    private function appendPlanilhaRows(
+        array &$rows,
+        array &$imagePaths,
+        $color,
+        array $opcoes,
+        array $gradeRows = [],
+        array $monthColumns = []
+    ): void {
+        $normalizedGradeRows = !empty($gradeRows) ? $gradeRows : [[
+            'grade_code' => '',
+            'quantity' => '',
+            'monthly_quantities' => [],
+        ]];
+        $positiveGradeRows = array_values(array_filter($normalizedGradeRows, function ($gradeRow) {
+            return isset($gradeRow['quantity']) && (int) $gradeRow['quantity'] > 0;
+        }));
+
+        if (!empty($positiveGradeRows)) {
+            $normalizedGradeRows = $positiveGradeRows;
+        } else {
+            $normalizedGradeRows = [[
+                'grade_code' => '',
+                'quantity' => '',
+                'monthly_quantities' => [],
+            ]];
+        }
+
+        $imgRel = 'images/produtos/' . ($color->product->code ?? '') . '_' . str_replace('/', '_', ($color->color_code ?? '')) . '_A.jpg';
+        $imgPath = public_path($imgRel);
+        if (!file_exists($imgPath)) {
+            $imgPath = public_path('images/img-padrao-mz.png');
+        }
+
+        foreach ($normalizedGradeRows as $gradeRow) {
+            $row = [];
+            $row[] = '';
+            $row[] = $color->collection->codigo_colecao ?? ($color->collection->name ?? '');
+            $row[] = optional($color->product->category)->name ?? '';
+            if (!in_array('remover_codigo', $opcoes)) {
+                $row[] = $color->product->code ?? '';
+            }
+            $row[] = $color->product->name ?? '';
+            $row[] = $color->color_code ?? '';
+            $row[] = $color->color_description ?? '';
+            $row[] = $color->genero ?? '';
+            $row[] = (string) ($gradeRow['grade_code'] ?? '');
+            $row[] = (string) ($gradeRow['quantity'] ?? '');
+            $monthlyQuantities = is_array($gradeRow['monthly_quantities'] ?? null) ? $gradeRow['monthly_quantities'] : [];
+            foreach ($monthColumns as $monthColumn) {
+                $monthCode = $monthColumn['code'] ?? '';
+                $monthValue = $monthCode !== '' ? ($monthlyQuantities[$monthCode] ?? '') : '';
+                $row[] = (string) $monthValue;
+            }
+            if (!in_array('remover_preco', $opcoes)) {
+                $row[] = $this->formatPriceForPlanilha($color->product->price ?? null);
+            }
+            // Coluna de descrição temporariamente oculta na planilha.
+            // if (!in_array('remover_descricao', $opcoes)) {
+            //     $row[] = $color->product->description ?? '';
+            // }
+
+            $rows[] = $row;
+            $imagePaths[] = $imgPath;
+        }
+    }
+
+    private function formatPriceForPlanilha($price): string
+    {
+        if ($price === null || $price === '') {
+            return '';
+        }
+
+        return number_format((float) $price, 2, ',', '.');
+    }
 
     public function exportPdf(Request $request)
     {
@@ -191,6 +331,7 @@ class ExportController extends Controller
         }
 
         if ($request->formato === 'planilha') {
+            $monthColumns = $this->getPedidoMonthColumns();
             $headings = ['Imagem', 'Coleção', 'Categoria'];
             if (!in_array('remover_codigo', $opcoes)) {
                 $headings[] = 'Código';
@@ -199,42 +340,44 @@ class ExportController extends Controller
             $headings[] = 'Cor código';
             $headings[] = 'Cor';
             $headings[] = 'Gênero';
+            $headings[] = 'Grade';
+            $headings[] = 'Qtd';
+            foreach ($monthColumns as $monthColumn) {
+                $headings[] = $monthColumn['label'] ?? '';
+            }
             if (!in_array('remover_preco', $opcoes)) {
                 $headings[] = 'Preço';
             }
-            if (!in_array('remover_descricao', $opcoes)) {
-                $headings[] = 'Descrição';
-            }
+            // Coluna de descrição temporariamente oculta na planilha.
+            // if (!in_array('remover_descricao', $opcoes)) {
+            //     $headings[] = 'Descrição';
+            // }
+            // }
 
             $rows = [];
             $imagePaths = [];
-            foreach ($produtos as $color) {
-                $row = [];
-                // placeholder for image column (handled by drawings)
-                $row[] = '';
-                $row[] = $color->collection->codigo_colecao ?? ($color->collection->name ?? '');
-                $row[] = optional($color->product->category)->name ?? '';
-                if (!in_array('remover_codigo', $opcoes)) {
-                    $row[] = $color->product->code ?? '';
-                }
-                $row[] = $color->product->name ?? '';
-                $row[] = $color->color_code ?? '';
-                $row[] = $color->color_description ?? '';
-                $row[] = $color->genero ?? '';
-                if (!in_array('remover_preco', $opcoes)) {
-                    $row[] = $color->product->price ?? '';
-                }
-                if (!in_array('remover_descricao', $opcoes)) {
-                    $row[] = $color->product->description ?? '';
-                }
-                $rows[] = $row;
+            $selectedMeta = $this->buildSelectedProductMeta((array) $produtosSelecionados);
+            $produtosByKey = $produtos->keyBy(function ($color) {
+                return ($color->product_id ?? '') . '-' . ($color->color_code ?? '');
+            });
 
-                $imgRel = 'images/produtos/' . ($color->product->code ?? '') . '_' . str_replace('/', '_', ($color->color_code ?? '')) . '_A.jpg';
-                $imgPath = public_path($imgRel);
-                if (!file_exists($imgPath)) {
-                    $imgPath = public_path('images/img-padrao-mz.png');
+            if ($tipoProdutos === 'selecao' && !empty($selectedMeta)) {
+                foreach ($selectedMeta as $selectionKey => $selectionMeta) {
+                    $color = $produtosByKey->get($selectionKey);
+                    if (!$color) {
+                        continue;
+                    }
+
+                    $gradeRows = is_array($selectionMeta['grade_rows'] ?? null) ? $selectionMeta['grade_rows'] : [];
+                    $this->appendPlanilhaRows($rows, $imagePaths, $color, $opcoes, $gradeRows, $monthColumns);
                 }
-                $imagePaths[] = $imgPath;
+            } else {
+                foreach ($produtos as $color) {
+                    $selectionKey = ($color->product_id ?? '') . '-' . ($color->color_code ?? '');
+                    $selectionMeta = $selectedMeta[$selectionKey] ?? [];
+                    $gradeRows = is_array($selectionMeta['grade_rows'] ?? null) ? $selectionMeta['grade_rows'] : [];
+                    $this->appendPlanilhaRows($rows, $imagePaths, $color, $opcoes, $gradeRows, $monthColumns);
+                }
             }
 
             $export = new class($rows, $headings, $imagePaths) implements \Maatwebsite\Excel\Concerns\FromArray, \Maatwebsite\Excel\Concerns\WithHeadings, WithDrawings, WithColumnWidths, WithEvents {
@@ -410,6 +553,13 @@ class ExportController extends Controller
             }
         }
 
+        // Garante 1 linha por produto/cor no PDF do pedido.
+        $items = $items
+            ->unique(function ($color) {
+                return ($color->product_id ?? '') . '-' . ($color->color_code ?? '');
+            })
+            ->values();
+
         $svgPathAzul = public_path('/images/Oakley_logo.svg');
         $svgContentAzul = file_exists($svgPathAzul) ? file_get_contents($svgPathAzul) : '';
         $base64SvgAzul = $svgContentAzul ? 'data:image/svg+xml;base64,' . base64_encode($svgContentAzul) : null;
@@ -422,9 +572,14 @@ class ExportController extends Controller
             $pedidoTitle = 'Pedido';
         }
 
+        $headings = ['Imagem', 'Produto', 'Categoria', 'Gênero', 'Código', 'Cor', 'Preço'];
+
         $data = [
             'items' => $items,
             'pedidoTitle' => $pedidoTitle,
+            'headings' => $headings,
+            'selectedMeta' => $this->buildSelectedProductMeta((array) $produtosSelecionados),
+            'monthColumns' => $this->getPedidoMonthColumns(),
             'isPdf' => true,
             'base64Svg_azul' => $base64SvgAzul,
         ];
@@ -556,6 +711,7 @@ class ExportController extends Controller
         }
 
         if ($exportUser->formato === 'planilha') {
+            $monthColumns = $this->getPedidoMonthColumns();
 
             $headings = ['Imagem', 'Coleção', 'Categoria'];
             if (!in_array('remover_codigo', $opcoes)) {
@@ -565,46 +721,39 @@ class ExportController extends Controller
             $headings[] = 'Cor código';
             $headings[] = 'Cor';
             $headings[] = 'Gênero';
+            $headings[] = 'Grade';
+            $headings[] = 'Qtd';
+            foreach ($monthColumns as $monthColumn) {
+                $headings[] = $monthColumn['label'] ?? '';
+            }
             if (!in_array('remover_preco', $opcoes)) {
                 $headings[] = 'Preço';
             }
-            if (!in_array('remover_descricao', $opcoes)) {
-                $headings[] = 'Descrição';
-            }
+            // Coluna de descrição temporariamente oculta na planilha.
+            // if (!in_array('remover_descricao', $opcoes)) {
+            //     $headings[] = 'Descrição';
+            // }
 
             $rows = [];
             $imagePaths = [];
+            $selectedMeta = $this->buildSelectedProductMeta((array) $produtosSelecionados);
+            $mergedByKey = $merged->keyBy(function ($item) {
+                return ($item->product_id ?? '') . '-' . ($item->color_code ?? '');
+            });
 
-            foreach ($produtos as $color) {
-                //dd($color);
-                foreach ($color as $item) {
-                    $row = [];
-                    // placeholder for image column (handled by drawings)
-                    $row[] = '';
-                    $row[] = $item->collection->codigo_colecao ?? ($item->collection->name ?? '');
-                    $row[] = optional($item->product->category)->name ?? '';
-                    if (!in_array('remover_codigo', $opcoes)) {
-                        $row[] = $item->product->code ?? '';
+            if (!empty($selectedMeta)) {
+                foreach ($selectedMeta as $selectionKey => $selectionMeta) {
+                    $item = $mergedByKey->get($selectionKey);
+                    if (!$item) {
+                        continue;
                     }
-                    $row[] = $item->product->name ?? '';
-                    $row[] = $item->color_code ?? '';
-                    $row[] = $item->color_description ?? '';
-                    $row[] = $item->genero ?? '';
 
-                    if (!in_array('remover_preco', $opcoes)) {
-                        $row[] = $item->product->price ?? '';
-                    }
-                    if (!in_array('remover_descricao', $opcoes)) {
-                        $row[] = $item->product->description ?? '';
-                    }
-                    $rows[] = $row;
-
-                    $imgRel = 'images/produtos/' . ($item->product->code ?? '') . '_' . str_replace('/', '_', ($item->color_code ?? '')) . '_A.jpg';
-                    $imgPath = public_path($imgRel);
-                    if (!file_exists($imgPath)) {
-                        $imgPath = public_path('images/img-padrao-mz.png');
-                    }
-                    $imagePaths[] = $imgPath;
+                    $gradeRows = is_array($selectionMeta['grade_rows'] ?? null) ? $selectionMeta['grade_rows'] : [];
+                    $this->appendPlanilhaRows($rows, $imagePaths, $item, $opcoes, $gradeRows, $monthColumns);
+                }
+            } else {
+                foreach ($merged as $item) {
+                    $this->appendPlanilhaRows($rows, $imagePaths, $item, $opcoes, [], $monthColumns);
                 }
             }
 

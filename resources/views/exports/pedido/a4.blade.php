@@ -140,6 +140,17 @@
 
         .list {
             margin-top: 20px;
+            border: 1px solid #e6e6e6;
+        }
+
+        .list thead th {
+            padding: 7px 10px;
+            border-bottom: 1px solid #d8d8d8;
+            font-size: 9px;
+            text-transform: uppercase;
+            color: #666;
+            font-weight: 700;
+            text-align: center;
         }
 
         .list td {
@@ -148,7 +159,7 @@
             vertical-align: middle;
         }
 
-        .list tr:last-child td {
+        .list > tbody > tr:last-child > td {
             border-bottom: none;
         }
 
@@ -172,7 +183,7 @@
 
         .col-name {
             width: 40%;
-            text-align: left;
+            text-align: center;
         }
 
         .col-img,
@@ -184,6 +195,52 @@
             width: 10%;
             text-align: center;
         }
+
+        .grade-inline {
+            padding: 2px 0 8px 0;
+        }
+
+        .grade-inline-title {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .grade-row tr:last-child {
+            padding-top: 0;
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        .grade-row td {
+            padding-top: 0;
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        .grade-row:last-child td {
+            border-bottom: none;
+        }
+
+        .grade-inline-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .grade-inline-table th,
+        .grade-inline-table td {
+            border: 1px solid #ececec;
+            padding: 3px 4px;
+            text-align: center;
+            font-size: 8px;
+            line-height: 1.15;
+        }
+
+        .grade-inline-table th {
+            background: #f7f7f7;
+            font-weight: 700;
+        }
+
     </style>
 </head>
 
@@ -200,11 +257,24 @@
     </table>
 
     <table class="list">
+        @if (!empty($headings))
+            <thead>
+                <tr>
+                    @foreach ($headings as $heading)
+                        <th>{{ $heading }}</th>
+                    @endforeach
+                </tr>
+            </thead>
+        @endif
+        <tbody>
         @foreach ($items as $item)
             @php
                 $code = $item->product->code ?? '';
                 $colorCode = $item->color_code ?? '';
-                $imgRel = 'images/produtos/' . $code . '_' . str_replace('/', '_', $colorCode) . '.jpg';
+                $selectionKey = ($item->product_id ?? '') . '-' . $colorCode;
+                $selectionMeta = $selectedMeta[$selectionKey] ?? ['grade_rows' => []];
+                $gradeRows = is_array($selectionMeta['grade_rows'] ?? null) ? $selectionMeta['grade_rows'] : [];
+                $imgRel = 'images/produtos/' . $code . '_' . str_replace('/', '_', $colorCode) . '_A.jpg';
                 $imgPath = public_path($imgRel);
                 if (!file_exists($imgPath)) {
                     $imgPath = public_path('images/img-padrao-mz.png');
@@ -235,7 +305,44 @@
 
                 <td class="col-price muted">{{ $priceText }}</td>
             </tr>
+            @if (!empty($gradeRows))
+                <tr class="grade-row">
+                    <td colspan="{{ !empty($headings) ? count($headings) : 7 }}">
+                        <div class="grade-inline">
+                            <div class="grade-inline-title">Grades do Pedido</div>
+                            <table class="grade-inline-table">
+                                <thead>
+                                    <tr>
+                                        <th>Grade</th>
+                                        <th>Qtd</th>
+                                        @foreach ($monthColumns as $monthColumn)
+                                            <th>{{ $monthColumn['label'] ?? '' }}</th>
+                                        @endforeach
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($gradeRows as $gradeRow)
+                                        @php
+                                            $monthlyQuantities = is_array($gradeRow['monthly_quantities'] ?? null)
+                                                ? $gradeRow['monthly_quantities']
+                                                : [];
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $gradeRow['grade_code'] ?? '' }}</td>
+                                            <td>{{ $gradeRow['quantity'] ?? 0 }}</td>
+                                            @foreach ($monthColumns as $monthColumn)
+                                                <td>{{ $monthlyQuantities[$monthColumn['code']] ?? 0 }}</td>
+                                            @endforeach
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            @endif
         @endforeach
+        </tbody>
     </table>
 </body>
 
