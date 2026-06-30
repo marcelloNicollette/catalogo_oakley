@@ -315,7 +315,7 @@ class frontendController extends Controller
         // Adicionar as cores com segmentações ao produto para uso no JavaScript
         $produto->allColors = $allColors;
         $produto->colors = $allColors; // Manter compatibilidade
-        dd($produto->colors);
+        //dd($produto->colors);
 
 
         $produtosQuery = Color::where('collection_id', $colecao->id)
