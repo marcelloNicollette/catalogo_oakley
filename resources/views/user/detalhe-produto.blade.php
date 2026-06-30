@@ -179,6 +179,48 @@
                         : [],
                 ];
             };
+
+            $buildShoeGridRowsPayload = function ($color) {
+                $formatBra = function ($bra) {
+                    if ($bra === null || $bra === '') {
+                        return '-';
+                    }
+                    $value = (float) $bra;
+                    if (abs($value - round($value)) < 0.00001) {
+                        return (string) ((int) round($value));
+                    }
+                    return str_replace(
+                        '.',
+                        ',',
+                        rtrim(rtrim(number_format($value, 1, '.', ''), '0'), '.'),
+                    );
+                };
+
+                $rows = [];
+                $shoeGrids = $color?->shoeGrids ?? collect();
+
+                foreach ($shoeGrids->where('active', true)->sortBy('sort_order') as $grid) {
+                    $items = ($grid->items ?? collect())
+                        ->filter(fn($it) => (int) ($it->quantity ?? 0) > 0 && $it->size)
+                        ->sortBy(fn($it) => (int) ($it->size->sort_order ?? 0))
+                        ->values();
+
+                    if ($items->isEmpty()) {
+                        continue;
+                    }
+
+                    $start = $formatBra($items->first()->size->bra ?? null);
+                    $end = $formatBra($items->last()->size->bra ?? null);
+
+                    $rows[] = [
+                        'code' => (string) ($grid->code ?? ''),
+                        'range' => $start . ' ao ' . $end,
+                        'quantities' => (string) $items->pluck('quantity')->implode(' - '),
+                    ];
+                }
+
+                return $rows;
+            };
         @endphp
         <div class="max-w-full px-2 pb-3">
             <div class="main-container">
@@ -460,46 +502,7 @@
                                 </div>-->
 
                                 @php
-                                    $formatBra = function ($bra) {
-                                        if ($bra === null || $bra === '') {
-                                            return '-';
-                                        }
-                                        $value = (float) $bra;
-                                        if (abs($value - round($value)) < 0.00001) {
-                                            return (string) ((int) round($value));
-                                        }
-                                        return str_replace(
-                                            '.',
-                                            ',',
-                                            rtrim(rtrim(number_format($value, 1, '.', ''), '0'), '.'),
-                                        );
-                                    };
-
-                                    $firstColorShoeGrids = $produto->colors->first()?->shoeGrids ?? collect();
-                                    $initialShoeGridRows = [];
-
-                                    foreach (
-                                        $firstColorShoeGrids->where('active', true)->sortBy('sort_order')
-                                        as $grid
-                                    ) {
-                                        $items = $grid->items ?? collect();
-                                        $items = $items
-                                            ->filter(fn($it) => (int) ($it->quantity ?? 0) > 0 && $it->size)
-                                            ->sortBy(fn($it) => (int) ($it->size->sort_order ?? 0))
-                                            ->values();
-
-                                        if ($items->isEmpty()) {
-                                            continue;
-                                        }
-
-                                        $start = $formatBra($items->first()->size->bra ?? null);
-                                        $end = $formatBra($items->last()->size->bra ?? null);
-                                        $initialShoeGridRows[] = [
-                                            'code' => $grid->code,
-                                            'range' => $start . ' ao ' . $end,
-                                            'quantities' => $items->pluck('quantity')->implode(' - '),
-                                        ];
-                                    }
+                                    $initialShoeGridRows = $buildShoeGridRowsPayload($produto->colors->first());
                                 @endphp
                                 <div>
                                     <p class="text-xs text-black opacity-50">Grade</p>
@@ -1342,6 +1345,7 @@
                             carregarImagensProdutoOtimizado(selectedColorCode);
                             // Atualizar numeração conforme a cor selecionada
                             updateNumeracaoByColorCode(selectedColorCode);
+                            updateShoeGridRowsByColorCode(selectedColorCode);
                             updateSizeRunByColorCode(selectedColorCode);
                             updatePeriodoVendasByColorCode(selectedColorCode);
                             updateLancamentosByColorCode(selectedColorCode);
@@ -1471,7 +1475,8 @@
                         data_cliente: "{{ $color->data_cliente?->format('Y-m-d') ?? '' }}",
                         data_dtc: "{{ $color->data_dtc?->format('Y-m-d') ?? '' }}",
                         segmentacaoIds: @json($color->segmentacoesCliente->pluck('id')->toArray()),
-                        size_run: @json($buildSizeRunPayload($color))
+                        size_run: @json($buildSizeRunPayload($color)),
+                        shoe_grid_rows: @json($buildShoeGridRowsPayload($color))
                     },
                 @endforeach
             ];
@@ -1611,6 +1616,38 @@
                     `;
                 } catch (e) {
                     console.error('Erro atualizando size run da cor:', e);
+                }
+            }
+
+            function renderShoeGridRows(rows) {
+                if (!Array.isArray(rows) || rows.length === 0) {
+                    return '<p class="text-sm">-</p>';
+                }
+
+                const body = rows.map((row) => `
+                    <tr>
+                        <td class="text-xs border border-[#7F7F7F] px-2 py-1 text-[#7F7F7F]">${row.code ?? ''}</td>
+                        <td class="text-xs border border-[#7F7F7F] px-2 py-1">${row.range ?? ''}</td>
+                        <td class="text-xs border border-[#7F7F7F] px-2 py-1">${row.quantities ?? ''}</td>
+                    </tr>
+                `).join('');
+
+                return `
+                    <table class="border border-gray-300">
+                        <tbody>${body}</tbody>
+                    </table>
+                `;
+            }
+
+            function updateShoeGridRowsByColorCode(colorCode) {
+                try {
+                    const cor = coresData.find(c => c.color_code === colorCode);
+                    const container = document.getElementById('shoe_grids_container');
+                    if (!container) return;
+
+                    container.innerHTML = renderShoeGridRows(cor && Array.isArray(cor.shoe_grid_rows) ? cor.shoe_grid_rows : []);
+                } catch (e) {
+                    console.error('Erro atualizando grades da cor:', e);
                 }
             }
 
@@ -1763,6 +1800,7 @@
                 if (coresFiltradas.length > 0) {
                     carregarImagensProdutoOtimizado(coresFiltradas[0].color_code);
                     updateNumeracaoByColorCode(coresFiltradas[0].color_code);
+                    updateShoeGridRowsByColorCode(coresFiltradas[0].color_code);
                     updateSizeRunByColorCode(coresFiltradas[0].color_code);
                     updatePeriodoVendasByColorCode(coresFiltradas[0].color_code);
                     updateLancamentosByColorCode(coresFiltradas[0].color_code);
@@ -1781,6 +1819,7 @@
                     if (coresFiltradas.length > 0) {
                         carregarImagensProdutoOtimizado(coresFiltradas[0].color_code);
                         updateNumeracaoByColorCode(coresFiltradas[0].color_code);
+                        updateShoeGridRowsByColorCode(coresFiltradas[0].color_code);
                         updateSizeRunByColorCode(coresFiltradas[0].color_code);
                         updatePeriodoVendasByColorCode(coresFiltradas[0].color_code);
                         updateLancamentosByColorCode(coresFiltradas[0].color_code);
