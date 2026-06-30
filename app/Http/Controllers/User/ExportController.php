@@ -69,7 +69,8 @@ class ExportController extends Controller
     private function getPedidoMonthColumns(): array
     {
         $labels = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
-        $cutoffDate = now()->startOfMonth()->addMonths(6);
+        // Mantem a mesma janela semestral usada no front-end do pedido.
+        $cutoffDate = now()->startOfMonth()->addMonths(7);
         $cutoffMonth = (int) $cutoffDate->format('n');
         $semesterStartMonth = $cutoffMonth <= 6 ? 1 : 7;
         $start = $cutoffDate->copy()->setMonth($semesterStartMonth)->startOfMonth();
