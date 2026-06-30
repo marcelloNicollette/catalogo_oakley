@@ -2529,6 +2529,7 @@
         <script>
             const userWishlist = @json($userWishlist);
             const currentCollectionSlug = @json($currentSlug);
+            const currentCollectionId = @json($colecao->id ?? null);
             const produtosData = [
                 @if (!empty($produtos) && count($produtos) > 0)
                     @foreach ($produtos as $produtoGroup)
@@ -2595,6 +2596,7 @@
                                 genero: "{{ $produtoGroup->genero ?? '' }}",
                                 silhueta: "{{ $produto->silhueta ?? '' }}",
                                 linha: "{{ $produto->linha ?? '' }}",
+                                collection_id: {{ $produtoGroup->collection_id ?? 'null' }},
                                 numeracaoIds: @json($numeracaoIds),
                                 tamanhoIds: @json($tamanhoIds),
                                 classificacaoId: {{ $classificacaoId ?? 'null' }},
@@ -2782,7 +2784,8 @@
                     const iconFilled = clone.querySelector('.icon-filled');
                     const favText = clone.querySelector('.favorite-text');
 
-                    const prodKey = `${produto.id}-${produto.codigo_cor}`;
+                    const wishlistKey = buildLegacyProductKey(produto.id, produto.codigo_cor);
+                    const prodKey = buildPedidoProductKey(produto.id, produto.codigo_cor, produto.collection_id);
 
                     const pedidoBtn = clone.querySelector('.pedido-item-btn');
                     if (pedidoBtn) {
@@ -2799,6 +2802,7 @@
                                     key: prodKey,
                                     product_id: produto.id,
                                     color_code: produto.codigo_cor,
+                                    collection_id: produto.collection_id,
                                     title: produto.title,
                                     imagem: produto.imagem,
                                     categoria: produto.categoria,
@@ -2828,7 +2832,7 @@
 
                     // Verifica se userWishlist está definido (pode estar vazio se não logado)
                     const isFavorited = (typeof userWishlist !== 'undefined' && Array.isArray(userWishlist)) ?
-                        userWishlist.includes(prodKey) :
+                        userWishlist.includes(wishlistKey) :
                         false;
 
                     if (isFavorited) {
@@ -2860,7 +2864,7 @@
                             favText.textContent = 'Removido dos Favoritos';
 
                             if (typeof userWishlist !== 'undefined') {
-                                const idx = userWishlist.indexOf(prodKey);
+                                const idx = userWishlist.indexOf(wishlistKey);
                                 if (idx > -1) userWishlist.splice(idx, 1);
                             }
                         } else {
@@ -2869,7 +2873,7 @@
                             favText.textContent = 'Adicionado aos Favoritos';
 
                             if (typeof userWishlist !== 'undefined') {
-                                userWishlist.push(prodKey);
+                                userWishlist.push(wishlistKey);
                             }
                         }
 
@@ -2931,20 +2935,23 @@
                         parsed.forEach((item) => {
                             if (!item) return;
                             if (typeof item === 'string') {
-                                map.set(item, hydratePedidoItem({
+                                const hydrated = hydratePedidoItem({
                                     key: item
-                                }, buscarProdutoPorKey(item)));
+                                }, buscarProdutoPorKey(item));
+                                if (hydrated?.key) {
+                                    map.set(hydrated.key, hydrated);
+                                }
                                 return;
                             }
                             const colorCode = item?.color_code ? String(item.color_code).replace(/\//g, '_') : '';
-                            const key = item.key || (item?.product_id ? `${item.product_id}-${colorCode}` : '');
-                            if (!key) return;
-
-                            map.set(key, hydratePedidoItem({
+                            const hydrated = hydratePedidoItem({
                                 ...item,
-                                key,
+                                key: item.key,
                                 color_code: colorCode
-                            }, buscarProdutoPorKey(key)));
+                            }, buscarProdutoPorKey(item.key || buildLegacyProductKey(item?.product_id, colorCode)));
+                            if (!hydrated?.key) return;
+
+                            map.set(hydrated.key, hydrated);
                         });
                     }
                     return map;
@@ -2964,8 +2971,9 @@
                     return false;
                 }
                 const favSet = new Set(userWishlist);
-                for (const key of pedidoItens.keys()) {
-                    if (favSet.has(key)) return true;
+                for (const item of pedidoItens.values()) {
+                    const legacyKey = buildLegacyProductKey(item?.product_id, item?.color_code);
+                    if (legacyKey && favSet.has(legacyKey)) return true;
                 }
                 return false;
             }
@@ -3009,12 +3017,13 @@
             }
 
             function adicionarProdutoAoPedido(produto) {
-                const prodKey = `${produto.id}-${produto.codigo_cor}`;
+                const prodKey = buildPedidoProductKey(produto.id, produto.codigo_cor, produto.collection_id);
                 if (pedidoItens.has(prodKey)) return false;
                 pedidoItens.set(prodKey, hydratePedidoItem({
                     key: prodKey,
                     product_id: produto.id,
                     color_code: produto.codigo_cor,
+                    collection_id: produto.collection_id,
                     title: produto.title,
                     imagem: produto.imagem,
                     categoria: produto.categoria,
@@ -3076,8 +3085,71 @@
                 atualizarVisibilidadeCtasPedido();
             }
 
+            function normalizePedidoCollectionId(value) {
+                const id = Number(value);
+                return Number.isFinite(id) && id > 0 ? id : null;
+            }
+
+            function buildLegacyProductKey(productId, colorCode) {
+                const normalizedColorCode = String(colorCode || '').replace(/\//g, '_');
+                const normalizedProductId = Number(productId);
+                if (!Number.isFinite(normalizedProductId) || !normalizedColorCode) return '';
+                return `${normalizedProductId}-${normalizedColorCode}`;
+            }
+
+            function buildPedidoProductKey(productId, colorCode, collectionId = null) {
+                const legacyKey = buildLegacyProductKey(productId, colorCode);
+                if (!legacyKey) return '';
+                const normalizedCollectionId = normalizePedidoCollectionId(collectionId) ?? normalizePedidoCollectionId(currentCollectionId);
+                return normalizedCollectionId ? `${legacyKey}-${normalizedCollectionId}` : legacyKey;
+            }
+
+            function parsePedidoProductKey(prodKey) {
+                const normalizedKey = String(prodKey || '').trim();
+                if (!normalizedKey) return null;
+
+                const parts = normalizedKey.split('-');
+                if (parts.length < 2) return null;
+
+                const productId = Number(parts[0]);
+                if (!Number.isFinite(productId)) return null;
+
+                if (parts.length >= 3) {
+                    const collectionId = normalizePedidoCollectionId(parts[parts.length - 1]);
+                    if (collectionId) {
+                        return {
+                            productId,
+                            colorCode: parts.slice(1, -1).join('-'),
+                            collectionId
+                        };
+                    }
+                }
+
+                return {
+                    productId,
+                    colorCode: parts.slice(1).join('-'),
+                    collectionId: null
+                };
+            }
+
             function buscarProdutoPorKey(prodKey) {
-                return produtosData.find((p) => `${p.id}-${p.codigo_cor}` === prodKey) || null;
+                const parsedKey = parsePedidoProductKey(prodKey);
+                const legacyKey = parsedKey ? buildLegacyProductKey(parsedKey.productId, parsedKey.colorCode) : String(prodKey || '');
+
+                if (parsedKey?.collectionId) {
+                    const exactMatch = produtosData.find((p) =>
+                        buildPedidoProductKey(p.id, p.codigo_cor, p.collection_id) === prodKey
+                    );
+                    if (exactMatch) return exactMatch;
+                }
+
+                const currentCollectionMatch = produtosData.find((p) =>
+                    buildLegacyProductKey(p.id, p.codigo_cor) === legacyKey &&
+                    normalizePedidoCollectionId(p.collection_id) === normalizePedidoCollectionId(currentCollectionId)
+                );
+                if (currentCollectionMatch) return currentCollectionMatch;
+
+                return produtosData.find((p) => buildLegacyProductKey(p.id, p.codigo_cor) === legacyKey) || null;
             }
 
             function escapeHtml(value) {
@@ -3196,13 +3268,16 @@
                 const fallback = fallbackProduto && typeof fallbackProduto === 'object' ? fallbackProduto : {};
                 const colorCode = String(baseItem.color_code || fallback.codigo_cor || '').replace(/\//g, '_');
                 const productId = Number(baseItem.product_id || fallback.id || 0);
-                const key = baseItem.key || (productId ? `${productId}-${colorCode}` : '');
+                const parsedKey = parsePedidoProductKey(baseItem.key);
+                const collectionId = normalizePedidoCollectionId(baseItem.collection_id || fallback.collection_id || parsedKey?.collectionId || currentCollectionId);
+                const key = buildPedidoProductKey(productId, colorCode, collectionId);
                 const shoeGrids = normalizeShoeGrids(baseItem.shoe_grids || fallback.shoe_grids);
 
                 return {
                     key,
                     product_id: productId,
                     color_code: colorCode,
+                    collection_id: collectionId,
                     title: baseItem.title || fallback.title || '',
                     imagem: baseItem.imagem || fallback.imagem || '',
                     categoria: baseItem.categoria || fallback.categoria || '',
