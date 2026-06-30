@@ -152,6 +152,33 @@
                     $currentSlug = $parts[4];
                 }
             }
+
+            $buildSizeRunPayload = function ($color) {
+                $assignment = $color?->sizeRun;
+                $sizeRun = $assignment?->sizeRun;
+                $enabled = (bool) ($assignment && $assignment->is_enabled && $sizeRun);
+
+                return [
+                    'enabled' => $enabled,
+                    'title' => $enabled ? ($sizeRun->title ?: $sizeRun->name) : '',
+                    'article_label' => $enabled ? ($assignment->article_label ?: 'Article') : 'Article',
+                    'article_value' => $enabled ? ((string) ($assignment->article_value ?? '')) : '',
+                    'size_label_left' => $enabled ? ((string) ($sizeRun->size_label_left ?? '')) : '',
+                    'size_label_right' => $enabled ? ((string) ($sizeRun->size_label_right ?? '')) : '',
+                    'note' => $enabled ? ((string) ($sizeRun->note ?? '')) : '',
+                    'items' => $enabled
+                        ? $sizeRun->items
+                            ->map(
+                                fn($item) => [
+                                    'left_value' => (string) $item->left_value,
+                                    'right_value' => (string) $item->right_value,
+                                ],
+                            )
+                            ->values()
+                            ->all()
+                        : [],
+                ];
+            };
         @endphp
         <div class="max-w-full px-2 pb-3">
             <div class="main-container">
@@ -159,8 +186,8 @@
                 <div class="left-section">
                     <!-- Grid de Imagens para Desktop (2 colunas x 4 linhas) -->
                     <div id="desktopGridWrapper"
-                        class="hidden lg:block bg-white rounded-lg border border-[#CBCBCB] overflow-hidden h-full">
-                        <div class="image-grid-container h-full" id="desktopGrid">
+                        class="hidden lg:block bg-white rounded-lg border border-[#CBCBCB] overflow-hidden">
+                        <div class="image-grid-container" id="desktopGrid">
                             <!-- Imagens serão carregadas dinamicamente via JavaScript -->
                         </div>
                     </div>
@@ -269,7 +296,6 @@
                                                             $baseColorCode .
                                                             '_A.jpg',
                                                     );
-
                                                     $imgSrc = file_exists($basePath)
                                                         ? '/images/produtos/' .
                                                             str_replace('/', '_', $produto->code) .
@@ -277,7 +303,6 @@
                                                             $baseColorCode .
                                                             '_A.jpg'
                                                         : '/images/img-padrao-mz.png';
-
                                                 @endphp
                                                 <img src="{{ $imgSrc }}" alt="{{ $color->color_name }}"
                                                     class="w-full object-contain rounded-lg" loading="lazy" />
@@ -414,25 +439,93 @@
 
                                 @php
                                     $firstColorNumeracao = optional($produto->colors->first()->numeracao)->numero;
-                                    $firstColorShoeGrids = $produto->colors->first()?->shoeGrids
-                                        ? $produto->colors->first()->shoeGrids->pluck('code')->filter()->implode(', ')
-                                        : '';
                                     $productNumeracoesText = $produto->numeracoes
                                         ? $produto->numeracoes->pluck('numero')->implode(', ')
                                         : '';
                                     $initialNumeracao = $firstColorNumeracao ?: $productNumeracoesText;
-                                    $initialShoeGrids = $firstColorShoeGrids !== '' ? $firstColorShoeGrids : '-';
+                                    $initialSizeRun = $buildSizeRunPayload($produto->colors->first());
                                 @endphp
                                 <div>
                                     <p class="text-xs text-black opacity-50">Tamanhos</p>
                                     <p class="text-sm" id="numeracao">{{ $initialNumeracao }}</p>
                                 </div>
+
+                                
+
+                                <!--<div>
+                                    <button id="openSizeTableModal"
+                                        class="text-xs text-black opacity-50 hover:opacity-100 hover:underline">
+                                        Tabela de Medidas
+                                    </button>
+                                </div>-->
+
+                                @php
+                                    $formatBra = function ($bra) {
+                                        if ($bra === null || $bra === '') {
+                                            return '-';
+                                        }
+                                        $value = (float) $bra;
+                                        if (abs($value - round($value)) < 0.00001) {
+                                            return (string) ((int) round($value));
+                                        }
+                                        return str_replace(
+                                            '.',
+                                            ',',
+                                            rtrim(rtrim(number_format($value, 1, '.', ''), '0'), '.'),
+                                        );
+                                    };
+
+                                    $firstColorShoeGrids = $produto->colors->first()?->shoeGrids ?? collect();
+                                    $initialShoeGridRows = [];
+
+                                    foreach (
+                                        $firstColorShoeGrids->where('active', true)->sortBy('sort_order')
+                                        as $grid
+                                    ) {
+                                        $items = $grid->items ?? collect();
+                                        $items = $items
+                                            ->filter(fn($it) => (int) ($it->quantity ?? 0) > 0 && $it->size)
+                                            ->sortBy(fn($it) => (int) ($it->size->sort_order ?? 0))
+                                            ->values();
+
+                                        if ($items->isEmpty()) {
+                                            continue;
+                                        }
+
+                                        $start = $formatBra($items->first()->size->bra ?? null);
+                                        $end = $formatBra($items->last()->size->bra ?? null);
+                                        $initialShoeGridRows[] = [
+                                            'code' => $grid->code,
+                                            'range' => $start . ' ao ' . $end,
+                                            'quantities' => $items->pluck('quantity')->implode(' - '),
+                                        ];
+                                    }
+                                @endphp
                                 <div>
                                     <p class="text-xs text-black opacity-50">Grade</p>
-                                    <p class="text-sm" id="shoe_grids">{{ $initialShoeGrids }}</p>
+                                    <div id="shoe_grids_container">
+                                        @if (count($initialShoeGridRows) > 0)
+<table class="border border-gray-300">
+                                                <tbody>
+                                                    @foreach ($initialShoeGridRows as $row)
+<tr>
+                                                            <td
+                                                                class="text-xs border border-[#7F7F7F] px-2 py-1 text-[#7F7F7F]">
+                                                                {{ $row['code'] }}</td>
+                                                            <td class="text-xs border border-[#7F7F7F] px-2 py-1">
+                                                                {{ $row['range'] }}</td>
+                                                            <td class="text-xs border border-[#7F7F7F] px-2 py-1">
+                                                                {{ $row['quantities'] }}</td>
+                                                        </tr>
+@endforeach
+                                                </tbody>
+                                            </table>
+@else
+<p class="text-sm">-</p>
+@endif
+                                    </div>
+                                    <p class="text-xs text-black opacity-50 mt-1">*Somente para a cor selecionada.</p>
                                 </div>
-
-
                                 @php
                                     $mesesAbrevPeriodoVendas = [
                                         1 => 'Jan',
@@ -460,11 +553,39 @@
                                         $initialPeriodoVendasText = '-';
                                     }
                                 @endphp
-                                <div>
+                                <!--<div>
                                     <p class="text-xs text-black opacity-50">Período de Vendas</p>
                                     <p class="text-sm" id="periodo_vendas">{{ $initialPeriodoVendasText }}</p>
-                                </div>
+                                </div>-->
 
+                                @php
+                                    $initialColor = $produto->colors->first();
+                                    $formatMesAno = function ($date) {
+                                        if (empty($date) || $date === '-') {
+                                            return null;
+                                        }
+
+                                        try {
+                                            $carbon =
+                                                $date instanceof \Carbon\Carbon ? $date : \Carbon\Carbon::parse($date);
+                                        } catch (\Exception $e) {
+                                            return null;
+                                        }
+
+                                        return $carbon->format('m/Y');
+                                    };
+
+                                    $lancamentosParts = [];
+                                    $lancamentoMkt = $formatMesAno($initialColor?->data_mkt ?? null);
+
+                                    $lancamentosText = $lancamentoMkt;
+                                @endphp
+                                @if (!empty($lancamentosText))
+                                    <div>
+                                        <p class="text-xs text-black opacity-50">Lançamento</p>
+                                        <p class="text-sm">{{ $lancamentosText }}</p>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -475,8 +596,7 @@
                                 <div class="">
                                     @foreach ($produto->technologyItems as $item)
                                         <div class="mb-[30px] flex">
-                                            <div
-                                                class="w-[65px] h-[65px] float-left mr-[10px] bg-white border border-black rounded-lg">
+                                            <div class="w-[65px] h-[65px] float-left mr-[10px] bg-black rounded-lg ">
                                                 <img src="/{{ $item->icon }}" class="w-100 h-100 my-0 rounded-lg"
                                                     alt="{{ $item->name }}" />
                                             </div>
@@ -563,7 +683,6 @@
                     <div class="swiper-wrapper">
                         @php
                             $suffixes = [
-                                '',
                                 '_A',
                                 '_B',
                                 '_C',
@@ -1223,8 +1342,9 @@
                             carregarImagensProdutoOtimizado(selectedColorCode);
                             // Atualizar numeração conforme a cor selecionada
                             updateNumeracaoByColorCode(selectedColorCode);
-                            updateShoeGridsByColorCode(selectedColorCode);
+                            updateSizeRunByColorCode(selectedColorCode);
                             updatePeriodoVendasByColorCode(selectedColorCode);
+                            updateLancamentosByColorCode(selectedColorCode);
 
                             // Verificar status da wishlist (pode ser assíncrono sem afetar UX)
                             checkWishlistStatus();
@@ -1332,7 +1452,6 @@
                         genero: "{{ $color->genero }}",
                         color_description: "{{ $color->color_description }}",
                         numeracao: "{{ optional($color->numeracao)->numero }}",
-                        shoe_grids: @json($color->shoeGrids->pluck('code')->filter()->values()->toArray()),
                         flag_product_id: {{ $color->flag_product_id ?? 'null' }},
                         flagProduct: @if ($color->flagProduct)
                             {
@@ -1347,7 +1466,12 @@
                         @endif ,
                         badges: @json($badgesPayload),
                         periodo_vendas: @json($color->periodo_vendas ?? []),
-                        segmentacaoIds: @json($color->segmentacoesCliente->pluck('id')->toArray())
+                        data_mkt: "{{ $color->data_mkt?->format('Y-m-d') ?? '' }}",
+                        data_trade: "{{ $color->data_trade?->format('Y-m-d') ?? '' }}",
+                        data_cliente: "{{ $color->data_cliente?->format('Y-m-d') ?? '' }}",
+                        data_dtc: "{{ $color->data_dtc?->format('Y-m-d') ?? '' }}",
+                        segmentacaoIds: @json($color->segmentacoesCliente->pluck('id')->toArray()),
+                        size_run: @json($buildSizeRunPayload($color))
                     },
                 @endforeach
             ];
@@ -1432,18 +1556,61 @@
                 }
             }
 
-            function updateShoeGridsByColorCode(colorCode) {
+            function updateSizeRunByColorCode(colorCode) {
                 try {
                     const cor = coresData.find(c => c.color_code === colorCode);
-                    const shoeGridsEl = document.getElementById('shoe_grids');
-                    if (shoeGridsEl) {
-                        const gradeText = cor && Array.isArray(cor.shoe_grids) && cor.shoe_grids.length ?
-                            cor.shoe_grids.join(', ') :
-                            '-';
-                        shoeGridsEl.textContent = gradeText;
+                    const sizeRun = cor && cor.size_run ? cor.size_run : null;
+                    const wrapper = document.getElementById('size_run_wrapper');
+                    const titleEl = document.getElementById('size_run_title');
+                    const articleLabelEl = document.getElementById('size_run_article_label');
+                    const articleValueEl = document.getElementById('size_run_article_value');
+                    const rowsEl = document.getElementById('size_run_rows');
+                    const noteEl = document.getElementById('size_run_note');
+
+                    if (!wrapper || !titleEl || !articleLabelEl || !articleValueEl || !rowsEl || !noteEl) {
+                        return;
                     }
+
+                    if (!sizeRun || !sizeRun.enabled || !Array.isArray(sizeRun.items) || sizeRun.items.length === 0) {
+                        wrapper.classList.add('hidden');
+                        rowsEl.innerHTML = '';
+                        return;
+                    }
+
+                    wrapper.classList.remove('hidden');
+                    titleEl.textContent = sizeRun.title || 'Size Run';
+                    articleLabelEl.textContent = sizeRun.article_label || 'Article';
+                    articleValueEl.textContent = sizeRun.article_value || '-';
+                    noteEl.textContent = sizeRun.note || '*Somente para a cor selecionada.';
+
+                    const leftCells = sizeRun.items.map((item) => `
+                        <td class="border border-[#AEAEAE] bg-white px-2 py-1.5 text-center font-semibold text-[#565656]">
+                            ${item.left_value ?? ''}
+                        </td>
+                    `).join('');
+
+                    const rightCells = sizeRun.items.map((item) => `
+                        <td class="border border-[#AEAEAE] bg-white px-2 py-1.5 text-center font-semibold text-[#565656]">
+                            ${item.right_value ?? ''}
+                        </td>
+                    `).join('');
+
+                    rowsEl.innerHTML = `
+                        <tr>
+                            <td id="size_run_label_left" class="border border-[#AEAEAE] bg-[#F5F5F5] px-2.5 py-1.5 text-[#8A8A8A]">
+                                ${sizeRun.size_label_left || 'BR SIZE'}
+                            </td>
+                            ${leftCells}
+                        </tr>
+                        <tr>
+                            <td id="size_run_label_right" class="border border-[#AEAEAE] bg-[#F5F5F5] px-2.5 py-1.5 text-[#8A8A8A]">
+                                ${sizeRun.size_label_right || 'US SIZE'}
+                            </td>
+                            ${rightCells}
+                        </tr>
+                    `;
                 } catch (e) {
-                    console.error('Erro atualizando grade da cor:', e);
+                    console.error('Erro atualizando size run da cor:', e);
                 }
             }
 
@@ -1480,6 +1647,44 @@
                     }
                 } catch (e) {
                     console.error('Erro atualizando período de vendas da cor:', e);
+                }
+            }
+
+            function formatLancamentoMesAno(dateString) {
+                if (!dateString || typeof dateString !== 'string') return null;
+
+                const parts = dateString.split('-');
+                if (parts.length < 2) return null;
+
+                const month = parts[1];
+                const year = parts[0];
+
+                if (!month || !year) return null;
+
+                return `${month}/${year}`;
+            }
+
+            function formatLancamentos(colorData) {
+                if (!colorData) return '';
+
+                const parts = [];
+                const dataMkt = formatLancamentoMesAno(colorData.data_mkt);
+
+                if (dataMkt) parts.push(dataMkt);
+
+                return parts.join(' | ');
+            }
+
+            function updateLancamentosByColorCode(colorCode) {
+                try {
+                    const cor = coresData.find(c => c.color_code === colorCode);
+                    const lancamentosEl = document.getElementById('lancamentos');
+                    if (lancamentosEl) {
+                        const text = formatLancamentos(cor);
+                        lancamentosEl.textContent = text || '-';
+                    }
+                } catch (e) {
+                    console.error('Erro atualizando lançamentos da cor:', e);
                 }
             }
 
@@ -1558,8 +1763,9 @@
                 if (coresFiltradas.length > 0) {
                     carregarImagensProdutoOtimizado(coresFiltradas[0].color_code);
                     updateNumeracaoByColorCode(coresFiltradas[0].color_code);
-                    updateShoeGridsByColorCode(coresFiltradas[0].color_code);
+                    updateSizeRunByColorCode(coresFiltradas[0].color_code);
                     updatePeriodoVendasByColorCode(coresFiltradas[0].color_code);
+                    updateLancamentosByColorCode(coresFiltradas[0].color_code);
                 }
             }
 
@@ -1575,8 +1781,9 @@
                     if (coresFiltradas.length > 0) {
                         carregarImagensProdutoOtimizado(coresFiltradas[0].color_code);
                         updateNumeracaoByColorCode(coresFiltradas[0].color_code);
-                        updateShoeGridsByColorCode(coresFiltradas[0].color_code);
+                        updateSizeRunByColorCode(coresFiltradas[0].color_code);
                         updatePeriodoVendasByColorCode(coresFiltradas[0].color_code);
+                        updateLancamentosByColorCode(coresFiltradas[0].color_code);
                     }
                 });
             }
