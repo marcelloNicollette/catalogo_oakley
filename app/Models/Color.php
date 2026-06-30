@@ -18,10 +18,6 @@ class Color extends Model
         'color_code',
         'genero',
         'periodo_vendas',
-        'data_mkt',
-        'data_trade',
-        'data_cliente',
-        'data_dtc',
         'product_id',
         'collection_id',
         'flag_product_id',
@@ -32,10 +28,6 @@ class Color extends Model
 
     protected $casts = [
         'periodo_vendas' => 'array',
-        'data_mkt' => 'date',
-        'data_trade' => 'date',
-        'data_cliente' => 'date',
-        'data_dtc' => 'date',
     ];
 
     public function product()
