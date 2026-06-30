@@ -353,14 +353,22 @@
 
                                 @php
                                     $firstColorNumeracao = optional($produto->colors->first()->numeracao)->numero;
+                                    $firstColorShoeGrids = $produto->colors->first()?->shoeGrids
+                                        ? $produto->colors->first()->shoeGrids->pluck('code')->filter()->implode(', ')
+                                        : '';
                                     $productNumeracoesText = $produto->numeracoes
                                         ? $produto->numeracoes->pluck('numero')->implode(', ')
                                         : '';
                                     $initialNumeracao = $firstColorNumeracao ?: $productNumeracoesText;
+                                    $initialShoeGrids = $firstColorShoeGrids !== '' ? $firstColorShoeGrids : '-';
                                 @endphp
                                 <div>
                                     <p class="text-xs text-black opacity-50">Tamanhos</p>
                                     <p class="text-sm" id="numeracao">{{ $initialNumeracao }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-black opacity-50">Grade</p>
+                                    <p class="text-sm" id="shoe_grids">{{ $initialShoeGrids }}</p>
                                 </div>
 
                             </div>
@@ -1100,6 +1108,7 @@
                             carregarImagensProdutoOtimizado(selectedColorCode);
                             // Atualizar numeração conforme a cor selecionada
                             updateNumeracaoByColorCode(selectedColorCode);
+                            updateShoeGridsByColorCode(selectedColorCode);
 
                             // Verificar status da wishlist (pode ser assíncrono sem afetar UX)
                             checkWishlistStatus();
@@ -1184,6 +1193,7 @@
                         genero: "{{ $color->genero }}",
                         color_description: "{{ $color->color_description }}",
                         numeracao: "{{ optional($color->numeracao)->numero }}",
+                        shoe_grids: @json($color->shoeGrids->pluck('code')->filter()->values()->toArray()),
                         flag_product_id: {{ $color->flag_product_id ?? 'null' }},
                         flagProduct: @if ($color->flagProduct)
                             {
@@ -1210,6 +1220,21 @@
                     }
                 } catch (e) {
                     console.error('Erro atualizando numeração da cor:', e);
+                }
+            }
+
+            function updateShoeGridsByColorCode(colorCode) {
+                try {
+                    const cor = coresData.find(c => c.color_code === colorCode);
+                    const shoeGridsEl = document.getElementById('shoe_grids');
+                    if (shoeGridsEl) {
+                        const gradeText = cor && Array.isArray(cor.shoe_grids) && cor.shoe_grids.length ?
+                            cor.shoe_grids.join(', ') :
+                            '-';
+                        shoeGridsEl.textContent = gradeText;
+                    }
+                } catch (e) {
+                    console.error('Erro atualizando grade da cor:', e);
                 }
             }
 
@@ -1307,6 +1332,7 @@
                 if (coresFiltradas.length > 0) {
                     carregarImagensProdutoOtimizado(coresFiltradas[0].color_code);
                     updateNumeracaoByColorCode(coresFiltradas[0].color_code);
+                    updateShoeGridsByColorCode(coresFiltradas[0].color_code);
                 }
             }
 
@@ -1322,6 +1348,7 @@
                     if (coresFiltradas.length > 0) {
                         carregarImagensProdutoOtimizado(coresFiltradas[0].color_code);
                         updateNumeracaoByColorCode(coresFiltradas[0].color_code);
+                        updateShoeGridsByColorCode(coresFiltradas[0].color_code);
                     }
                 });
             }

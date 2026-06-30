@@ -262,7 +262,7 @@ class frontendController extends Controller
         $userSegmentacoesCliente = $user->segmentacoesCliente;
 
         $hasColorFlagProductTable = Schema::hasTable('color_flag_product');
-        $colorRelations = ['numeracao', 'segmentacoesCliente', 'flagProduct'];
+        $colorRelations = ['numeracao', 'segmentacoesCliente', 'flagProduct', 'shoeGrids' => fn($query) => $query->active()];
         if ($hasColorFlagProductTable) {
             $colorRelations[] = 'flagProducts';
         }
@@ -323,10 +323,12 @@ class frontendController extends Controller
         $userSegmentacoesCliente = $user->segmentacoesCliente;
 
         $hasColorFlagProductTable = Schema::hasTable('color_flag_product');
-        $colorRelations = ['numeracao', 'segmentacoesCliente', 'flagProduct'];
+        $colorRelations = ['numeracao', 'segmentacoesCliente', 'flagProduct', 'shoeGrids' => fn($query) => $query->active()];
         if ($hasColorFlagProductTable) {
             $colorRelations[] = 'flagProducts';
         }
+
+        $colecao = Collection::where('slug', $colecao)->first();
 
 
         // Buscar o produto com suas relações
@@ -335,6 +337,7 @@ class frontendController extends Controller
         // Buscar apenas as cores do produto que estão vinculadas às segmentações do cliente
         if ($userSegmentacoesCliente->isNotEmpty()) {
             $allColorsQuery = Color::where('product_id', $produto->id)
+                ->where('collection_id', $colecao->id)
                 ->whereHas('segmentacoesCliente', function ($query) use ($userSegmentacoesCliente) {
                     $segmentacaoIds = $userSegmentacoesCliente->pluck('id')->toArray();
                     $query->whereIn('segmentacao_cliente_id', $segmentacaoIds);
@@ -343,6 +346,7 @@ class frontendController extends Controller
         } else {
             // Se o usuário não tem segmentações de cliente, buscar todas as cores
             $allColorsQuery = Color::where('product_id', $produto->id)
+                ->where('collection_id', $colecao->id)
                 ->with($colorRelations);
         }
 
@@ -356,8 +360,6 @@ class frontendController extends Controller
         // Adicionar as cores com segmentações ao produto para uso no JavaScript
         $produto->allColors = $allColors;
         $produto->colors = $allColors; // Manter compatibilidade
-
-        $colecao = Collection::where('slug', $colecao)->first();
 
         $produtosQuery = Color::where('collection_id', $colecao->id)
             ->with(['product', 'product.caracteristicasDestaque', 'product.category']);
