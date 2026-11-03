@@ -2707,7 +2707,7 @@
                     clone.querySelector(".genero").textContent = produto.genero;
                     clone.querySelector(".categoria").textContent = produto.categoria;
                     clone.querySelector(".title-caract-1").textContent = 'Numeração';
-                    clone.querySelector(".desc-caract-1").textContent = produto['numeracao'];
+                    //clone.querySelector(".desc-caract-1").textContent = produto['numeracao'];
                     clone.querySelector(".preco").textContent = produto.preco;
 
                     const badgeContainer = clone.querySelector(".badge-container");
