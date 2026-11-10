@@ -2581,7 +2581,7 @@
                                     : [];
                             @endphp {
                                 id: {{ $produto->id }},
-                                title: "{{ $produto->name ?? '' }}",
+                                title: @json($produto->name ?? ''),
                                 imagem: "{{ $img }}",
                                 codigo: "{{ $produto->code ?? '' }}",
                                 'title-caract-1': "{{ $produto->caracteristicasDestaque && $produto->caracteristicasDestaque->first() ? $produto->caracteristicasDestaque->first()->title : '' }}",
