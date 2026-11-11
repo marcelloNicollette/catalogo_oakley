@@ -137,7 +137,7 @@
             </form>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 gap-6">
             <div class="bg-white shadow-sm rounded p-6">
                 <h3 class="text-lg font-semibold mb-3">Imagens cadastradas (Banco)</h3>
                 <div class="mb-3">
